@@ -33,7 +33,7 @@ class PluginFormcreatorUpgradeTo2_13_4 {
    protected $migration;
 
    public function isResyncIssuesRequired() {
-      return true;
+      return false;
    }
 
    /**
@@ -41,6 +41,7 @@ class PluginFormcreatorUpgradeTo2_13_4 {
     */
    public function upgrade(Migration $migration) {
       $this->migration = $migration;
+      $this->updateConditions();
       $this->addServiceCatalogHopepage();
    }
 
@@ -52,5 +53,9 @@ class PluginFormcreatorUpgradeTo2_13_4 {
          'update' => '0',
          'condition' => 'WHERE `entities_id` = 0'
       ]);
+   }
+
+   public function updateConditions() {
+      $this->migration->changeField('glpi_plugin_formcreator_conditions', 'show_value', 'show_value', 'mediumtext');
    }
 }

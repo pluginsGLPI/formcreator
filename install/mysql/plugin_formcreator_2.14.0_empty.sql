@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_conditions` (
 	`items_id`                        int unsigned NOT NULL DEFAULT '0' COMMENT 'item ID of the item affected by the condition',
 	`plugin_formcreator_questions_id` int unsigned NOT NULL DEFAULT '0' COMMENT 'question to test for the condition',
 	`show_condition`                  int(11)      NOT NULL DEFAULT '0',
-	`show_value`                      varchar(255) NULL DEFAULT NULL,
+	`show_value`                      mediumtext   NULL DEFAULT NULL,
 	`show_logic`                      int(11)      NOT NULL DEFAULT '1',
 	`order`                           int(11)      NOT NULL DEFAULT '1',
 	`uuid`                            varchar(255) NULL DEFAULT NULL,
