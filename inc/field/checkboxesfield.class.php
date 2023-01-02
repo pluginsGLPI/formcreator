@@ -50,10 +50,21 @@ class CheckboxesField extends PluginFormcreatorAbstractField
    public function showForm(array $options): void {
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
+      $value = [];
+      $items = json_decode($this->question->fields['default_values']);
+      foreach ($items as $item) {
+         if (trim($item) === '') {
+            continue;
+         }
+         if (!in_array($item, $this->getAvailableValues())) {
+            continue;
+         }
+         $value[] = $item;
+      }
+      $this->question->fields['default_values'] = implode("\r\n", $value);
       $this->question->fields['values'] =  json_decode($this->question->fields['values']);
       $this->question->fields['values'] = is_array($this->question->fields['values']) ? $this->question->fields['values'] : [];
       $this->question->fields['values'] = implode("\r\n", $this->question->fields['values']);
-      $this->question->fields['default_values'] = Html::entities_deep($this->getValueForDesign());
       $this->deserializeValue($this->question->fields['default_values']);
 
       $parameters = $this->getParameters();
