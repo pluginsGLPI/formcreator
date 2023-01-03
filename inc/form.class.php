@@ -1423,8 +1423,6 @@ PluginFormcreatorTranslatableInterface
    }
 
    /**
-    * @since version 0.85
-    *
     * @see CommonDBTM::showMassiveActionsSubForm()
     */
    public static function showMassiveActionsSubForm(MassiveAction $ma) {
@@ -1442,8 +1440,6 @@ PluginFormcreatorTranslatableInterface
    /**
     * Execute massive action for PluginFormcreatorFrom
     *
-    * @since version 0.85
-    *
     * @see CommonDBTM::processMassiveActionsForOneItemtype()
     */
    public static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids) {
@@ -1455,6 +1451,7 @@ PluginFormcreatorTranslatableInterface
                return;
             }
             foreach ($ids as $id) {
+               /**@var self $item  */
                if ($item->getFromDB($id) && $item->duplicate() !== false) {
                   Session::addMessageAfterRedirect(sprintf(__('Form duplicated: %s', 'formcreator'), $item->getName()));
                   $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
