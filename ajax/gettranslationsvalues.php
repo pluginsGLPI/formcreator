@@ -40,7 +40,7 @@ if (strpos($_SERVER['PHP_SELF'], 'gettranslationsvalues.php')) {
 }
 
 // Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
+if (Plugin::isPluginActive('formcreator')) {
    Html::displayNotFoundError();
 }
 

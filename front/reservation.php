@@ -34,7 +34,7 @@ include ("../../../inc/includes.php");
 Session::checkLoginUser();
 
 // Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
+if (Plugin::isPluginActive('formcreator')) {
    Html::displayNotFoundError();
 }
 

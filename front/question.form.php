@@ -34,11 +34,10 @@ include ("../../../inc/includes.php");
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 // Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
+if (Plugin::isPluginActive('formcreator')) {
    Html::displayNotFoundError();
 }
 
 
 // Return to form list
 Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.php');
-

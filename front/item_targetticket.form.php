@@ -34,7 +34,7 @@ include ('../../../inc/includes.php');
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 // Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
+if (Plugin::isPluginActive('formcreator')) {
    Html::displayNotFoundError();
 }
 
@@ -44,4 +44,3 @@ if (isset($_POST['purge'])) {
    Html::back();
 }
 Html::displayErrorAndDie("lost");
-
