@@ -74,6 +74,23 @@ if ($formAnswer->add($_POST) === false) {
 $form->increaseUsageCount();
 $_SESSION['glpi_use_mode'] = $backup_debug;
 
+if (!PluginFormcreatorForm::isNewID($form->fields['plugin_formcreator_forms_id'])) {
+   $nextForm = new PluginFormcreatorForm();
+   $nextForm->getFromDBByCrit([
+      'id'         => $form->fields['plugin_formcreator_forms_id'],
+      'is_active'  => 1,
+      'is_deleted' => 0,
+   ]);
+   if (!$nextForm->isNewItem()) {
+      echo json_encode(
+         [
+            'redirect' => 'formdisplay.php?id=' . $nextForm->getID(),
+         ], JSON_FORCE_OBJECT
+      );
+      die();
+   }
+}
+
 if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
    // Form was saved by an annymous user
    unset($_SESSION['glpiname']);

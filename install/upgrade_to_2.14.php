@@ -45,6 +45,7 @@ class PluginFormcreatorUpgradeTo2_14 {
        $this->addTargetContract();
        $this->addEntityOption();
        $this->addMultiLevelValidation();
+       $this->addFormLink();
    }
 
    public function addEntityOption() {
@@ -193,5 +194,12 @@ class PluginFormcreatorUpgradeTo2_14 {
          'after' => 'items_id',
          'value' => '1',
       ]);
+   }
+
+   public function addFormLink() {
+      $table = 'glpi_plugin_formcreator_forms';
+
+      // Change default value in DB
+      $this->migration->addField($table, 'plugin_formcreator_forms_id', 'integer', ['after' => 'show_rule']);
    }
 }

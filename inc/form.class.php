@@ -288,6 +288,17 @@ PluginFormcreatorTranslatableInterface
          'massiveaction'      => true
       ];
 
+      $tab[] = [
+         'id'                 => '36',
+         'table'              => $this::getTable(),
+         'field'              => 'name',
+         'datatype'           => 'dropdown',
+         'name'               => __('Next form', 'formcreator'),
+         'massiveaction'      => true,
+         // Add virtual condition to relink table
+         'joinparams'        => ['condition' => [new QueryExpression("1=1")]]
+      ];
+
       return $tab;
    }
 
@@ -994,7 +1005,42 @@ PluginFormcreatorTranslatableInterface
          // }
       }
 
+      //Check form redirect
+      $used_id = [];
+      if (($input['plugin_formcreator_forms_id'] ?? 0) > 0) {
+         $used_id[] = $input['plugin_formcreator_forms_id'];
+         $loop = self::checkLoop($input['plugin_formcreator_forms_id'], $used_id);
+         if ($loop) {
+            Session::addMessageAfterRedirect(
+               __('A loop is generated!', 'formcreator'),
+               false,
+               ERROR
+            );
+            return [];
+         }
+      }
+
       return $input;
+   }
+
+   /**
+    * Check that building a sequence between 2 forms does not generate a loop
+    *
+    * @param int $form_id
+    * @param array $flow
+    * @return boolean true if a loop has been detected
+    */
+   public function checkLoop(int $form_id, array $flow): bool {
+      $form = new self();
+      if ($form->getFromDB($form_id) && $form->fields['plugin_formcreator_forms_id'] > 0) {
+         if (in_array($form->fields['plugin_formcreator_forms_id'], $flow)) {
+            return true;
+         } else {
+            $flow[] = $form->fields['plugin_formcreator_forms_id'];
+            return self::checkLoop($form->fields['plugin_formcreator_forms_id'], $flow);
+         }
+      }
+      return false;
    }
 
    /**
@@ -1130,6 +1176,22 @@ PluginFormcreatorTranslatableInterface
 
          if (!$this->checkValidators($input)) {
             $input['validation_required'] = self::VALIDATION_NONE;
+         }
+      }
+
+      //Check form redirect
+      $used_id = [];
+      if (($input['plugin_formcreator_forms_id'] ?? 0) > 0) {
+         $used_id[] = $input['id'];
+         $used_id[] = $input['plugin_formcreator_forms_id'];
+         $loop = self::checkLoop($input['plugin_formcreator_forms_id'], $used_id);
+         if ($loop) {
+            Session::addMessageAfterRedirect(
+               __('A loop is generated!', 'formcreator'),
+               false,
+               ERROR
+            );
+            return [];
          }
       }
 
@@ -1494,8 +1556,18 @@ PluginFormcreatorTranslatableInterface
          $export['_plugin_formcreator_category'] = $formCategory->fields['completename'];
       }
 
+      // replace form next id
+      $export['_plugin_formcreator_form'] = '';
+      if ($export['plugin_formcreator_forms_id'] > 0) {
+         $nextForm = self::getById($export['plugin_formcreator_forms_id']);
+         if ($nextForm instanceof self) {
+            $export['_plugin_formcreator_form'] = $nextForm->fields['uuid'];
+         }
+      }
+
       // remove non needed keys
       unset($export['plugin_formcreator_categories_id'],
+            $export['plugin_formcreator_forms_id'],
             $export['entities_id'],
             $export['usage_count']);
 
@@ -1766,6 +1838,26 @@ PluginFormcreatorTranslatableInterface
          ]);
       }
       $input[$formCategoryFk] = $formCategoryId;
+
+      // Import form next
+      $formNextFk = self::getForeignKeyField();
+      $formNextId = 0;
+      if ($input['_plugin_formcreator_form'] != '') {
+         /** @var self $formNext  */
+         $formNext = $linker->getObject($input['_plugin_formcreator_form'], self::class);
+         if ($formNext === false) {
+            $formNext = new self();
+            $formNext->getFromDBByCrit([
+               'uuid' => $input['_plugin_formcreator_form'],
+            ]);
+            if ($formNext->isNewItem()) {
+               $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+               return false;
+            }
+         }
+         $formNextId = $formNext->getID();
+         $input[$formNextFk] = $formNextId;
+      }
 
       // Escape text fields
       foreach (['name', 'description', 'content', 'formanswer_name'] as $key) {

@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `is_default`                       tinyint(1)   NOT NULL DEFAULT '0',
   `is_captcha_enabled`               tinyint(1)   NOT NULL DEFAULT '0',
   `show_rule`                        int(11)      NOT NULL DEFAULT '1' COMMENT 'Conditions setting to show the submit button',
+  `plugin_formcreator_forms_id`      int unsigned NOT NULL DEFAULT '0',
   `formanswer_name`                  varchar(255) NOT NULL DEFAULT '',
   `is_visible`                       tinyint      NOT NULL DEFAULT 1,
   `uuid`                             varchar(255) DEFAULT NULL,
