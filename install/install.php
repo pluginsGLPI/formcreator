@@ -126,36 +126,47 @@ class PluginFormcreatorInstall {
    }
 
    /**
+    * Check if tables shall be converted to innodb
+    *
+    * @return boolean false if tables must be converted
+    */
+   public function checkMyIsamTables(): bool {
+      global $DB;
+
+      if (version_compare(GLPI_VERSION, '9.5') < 0) {
+         return true;
+      }
+
+      $iterator = $DB->getMyIsamTables();
+      $hasMyisamTables = false;
+      foreach ($iterator as $table) {
+         if (strpos($table['TABLE_NAME'], 'glpi_plugin_formcreator_') === 0) {
+            $hasMyisamTables = true;
+            break;
+         }
+      }
+
+      return !$hasMyisamTables;
+   }
+
+   /**
     * Upgrade the plugin
     * @param Migration $migration
     * @param array $args arguments passed to CLI
     * @return bool
     */
    public function upgrade(Migration $migration, $args = []): bool {
-      global $DB;
-
-      if (version_compare(GLPI_VERSION, '9.5') >= 0) {
-         $iterator = $DB->getMyIsamTables();
-         $hasMyisamTables = false;
-         foreach ($iterator as $table) {
-            if (strpos($table['TABLE_NAME'], 'glpi_plugin_formcreator_') === 0) {
-               $hasMyisamTables = true;
-               break;
-            }
+      if (!$this->checkMyIsamTables()) {
+         $message = sprintf(
+            __('Upgrade tables to innoDB; run %s', 'formcreator'),
+            'php bin/console glpi:migration:myisam_to_innodb'
+         );
+         if (isCommandLine()) {
+            echo $message . PHP_EOL;
+         } else {
+            Session::addMessageAfterRedirect($message, false, ERROR);
          }
-         if ($hasMyisamTables) {
-            // Need to convert myisam tables into innodb first
-            $message = sprintf(
-               __('Upgrade tables to innoDB; run %s', 'formcreator'),
-               'php bin/console glpi:migration:myisam_to_innodb'
-            );
-            if (isCommandLine()) {
-               echo $message . PHP_EOL;
-            } else {
-               Session::addMessageAfterRedirect($message, false, ERROR);
-            }
-            return false;
-         }
+         return false;
       }
 
       // Check schema of tables before upgrading
