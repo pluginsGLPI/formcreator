@@ -81,7 +81,7 @@ class GlpiselectField extends DropdownField
       ]);
    }
 
-   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
+   public function displayTabContentForItem(CommonGLPI $item, string $tabnum): bool {
       switch ($tabnum) {
          case 1:
             $this->showFilter();

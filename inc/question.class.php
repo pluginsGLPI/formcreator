@@ -50,6 +50,8 @@ PluginFormcreatorTranslatableInterface
    static public $itemtype = PluginFormcreatorSection::class;
    static public $items_id = 'plugin_formcreator_sections_id';
 
+   public $dohistory = true;
+
    public $taborientation  = 'horizontal';
 
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
@@ -125,8 +127,9 @@ PluginFormcreatorTranslatableInterface
    public function defineTabs($options = []) {
       $tabs = [];
       $this->addDefaultFormTab($tabs);
+      $this->addStandardTab(PluginFormcreatorCondition::class, $tabs, $options);
       if ($this->loadField($this->fields['fieldtype'])) {
-         foreach ($this->field->getTabNameForItem($this) as $tabName) {
+         foreach ($this->field->getTabNameForItem($this) as $tabId => $tabName) {
             // $this->field->defineExtraTabs($tabs, $options);
             $this->addStandardTab(self::class, $tabs, $options);
          }
@@ -184,6 +187,15 @@ PluginFormcreatorTranslatableInterface
          'field'              => 'description',
          'name'               => __('Description'),
          'datatype'           => 'text',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this::getTable(),
+         'field'              => 'required',
+         'name'               => __('Required', 'formcreator'),
+         'datatype'           => 'int',
          'massiveaction'      => false
       ];
 
@@ -735,7 +747,7 @@ PluginFormcreatorTranslatableInterface
       $options['target'] = "javascript:;";
       $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', self::getType(), $this->getID());
 
-      // $options may contain values from a form (i.e. changing the question field type)
+      // $options may contain values from a form
       foreach ($options as $request_key => $request_value) {
          if (isset($this->fields[$request_key])) {
             $this->fields[$request_key] = $_REQUEST[$request_key];
@@ -744,6 +756,16 @@ PluginFormcreatorTranslatableInterface
          }
       }
       $this->fields['values'] = json_encode($values);
+
+      if (!$this->isNewItem()) {
+         $options['addbuttons'] = [
+            'apply' => [
+               'type' => 'button',
+               'text' => __('Apply', 'formcreator'),
+               'onclick' => 'plugin_formcreator.editQuestion(this)',
+            ],
+         ];
+      }
 
       $template = '@formcreator/field/undefinedfield.html.twig';
       if (!$this->loadField($this->fields['fieldtype'])) {

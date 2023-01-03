@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Event;
+
 include ('../../../inc/includes.php');
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
