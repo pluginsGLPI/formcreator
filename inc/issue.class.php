@@ -776,28 +776,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ];
       }
 
-      // if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-      //    $newtab = PluginAdvformIssue::rawSearchOptionFormApproverGroup();
-      // } else {
-      //    $newtab = [
-      //       'id'                 => '16',
-      //       'table'              => Group::getTable(),
-      //       'field'              => 'completename',
-      //       'linkfield'          => 'groups_id_validator',
-      //       'name'               => __('Form approver group', 'formcreator'),
-      //       'datatype'           => 'itemlink',
-      //       'massiveaction'      => false,
-      //       'joinparams'         => [
-      //          'beforejoin'          => [
-      //             'table'                => PluginFormcreatorFormAnswer::getTable(),
-      //             'joinparams'           => [
-      //                'jointype'          => 'itemtype_item_revert',
-      //                'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
-      //             ]
-      //          ],
-      //       ],
-      //    ];
-      // }
       $newtab = [
          'id'                 => '16',
          'table'              => Group::getTable(),
@@ -1093,60 +1071,58 @@ class PluginFormcreatorIssue extends CommonDBTM {
             ]
          ];
 
-         if (!Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-            $tab[] = [
-               'id'                 => '32',
-               'table'              => User::getTable(),
-               'field'              => 'name',
-               'linkfield'          => 'users_id_validator',
-               'name'               => __('Form approver substitute', 'formcreator'),
-               'datatype'           => 'itemlink',
-               'forcegroupby'       => true,
-               'massiveaction'      => false,
-               'joinparams' => [
-                  'beforejoin'         => [
-                     'table'           => ValidatorSubstitute::getTable(),
-                     'joinparams'         => [
-                        'jointype'           => 'child',
-                           // same condition on search option 30, but with swapped *SUB* expression
-                           // This workarounds identical complex join ID if a search use both search options 195 and 197
-                           'condition'          => [
-                           [
-                              'OR' => [
-                                 [
-                                    'REFTABLE.substitution_start_date' => ['<=', $_SESSION['glpi_currenttime']],
-                                 ], [
-                                    'REFTABLE.substitution_start_date' => null,
-                                 ],
+         $tab[] = [
+            'id'                 => '32',
+            'table'              => User::getTable(),
+            'field'              => 'name',
+            'linkfield'          => 'users_id_validator',
+            'name'               => __('Form approver substitute', 'formcreator'),
+            'datatype'           => 'itemlink',
+            'forcegroupby'       => true,
+            'massiveaction'      => false,
+            'joinparams' => [
+               'beforejoin'         => [
+                  'table'           => ValidatorSubstitute::getTable(),
+                  'joinparams'         => [
+                     'jointype'           => 'child',
+                        // same condition on search option 30, but with swapped *SUB* expression
+                        // This workarounds identical complex join ID if a search use both search options 195 and 197
+                        'condition'          => [
+                        [
+                           'OR' => [
+                              [
+                                 'REFTABLE.substitution_start_date' => ['<=', $_SESSION['glpi_currenttime']],
+                              ], [
+                                 'REFTABLE.substitution_start_date' => null,
                               ],
-                           ], [
-                              'OR' => [
-                                 [
-                                    'REFTABLE.substitution_end_date' => ['>=', $_SESSION['glpi_currenttime']],
-                                 ], [
-                                    'REFTABLE.substitution_end_date' => null,
-                                 ],
+                           ],
+                        ], [
+                           'OR' => [
+                              [
+                                 'REFTABLE.substitution_end_date' => ['>=', $_SESSION['glpi_currenttime']],
+                              ], [
+                                 'REFTABLE.substitution_end_date' => null,
                               ],
-                           ]
-                        ],
-                        'beforejoin'         => [
-                           'table'              => User::getTable(),
-                           'linkfield'          => 'users_id_validator',
-                           'joinparams'             => [
-                              'beforejoin'             => [
-                                 'table'                => PluginFormcreatorFormAnswer::getTable(),
-                                 'joinparams'           => [
-                                    'jointype'          => 'itemtype_item_revert',
-                                    'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
-                                 ]
+                           ],
+                        ]
+                     ],
+                     'beforejoin'         => [
+                        'table'              => User::getTable(),
+                        'linkfield'          => 'users_id_validator',
+                        'joinparams'             => [
+                           'beforejoin'             => [
+                              'table'                => PluginFormcreatorFormAnswer::getTable(),
+                              'joinparams'           => [
+                                 'jointype'          => 'itemtype_item_revert',
+                                 'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
                               ]
                            ]
                         ]
                      ]
-                  ],
-               ]
-            ];
-         }
+                  ]
+               ],
+            ]
+         ];
       }
 
       // This search option is identical to 'Form approver group'
