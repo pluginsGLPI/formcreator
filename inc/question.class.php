@@ -344,11 +344,9 @@ PluginFormcreatorTranslatableInterface
    private function checkBeforeSave($input) : array {
       // Control fields values :
       // - name is required
-      if (isset($input['name'])) {
-         if (empty($input['name'])) {
-            Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
-            return [];
-         }
+      if (isset($input['name']) && strlen($input['name']) === 0) {
+         Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
+         return [];
       }
 
       // - section is required
@@ -358,9 +356,7 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
 
-      if (!isset($input['fieldtype'])) {
-         $input['fieldtype'] = $this->fields['fieldtype'];
-      }
+      $input['fieldtype'] = $input['fieldtype'] ?? $this->fields['fieldtype'];
       $this->loadField($input['fieldtype']);
       if ($this->field === null) {
          Session::addMessageAfterRedirect(
@@ -475,10 +471,8 @@ PluginFormcreatorTranslatableInterface
       }
 
       if (!$this->skipChecks) {
-         if (!isset($input['plugin_formcreator_sections_id'])) {
-            $input['plugin_formcreator_sections_id'] = $this->fields['plugin_formcreator_sections_id'];
-         }
-
+         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+         $input[$sectionFk] = $input[$sectionFk] ?? $this->fields[$sectionFk];
          $input = $this->checkBeforeSave($input);
 
          if (!$this->checkConditionSettings($input)) {
