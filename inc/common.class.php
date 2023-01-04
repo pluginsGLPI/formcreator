@@ -783,20 +783,22 @@ JAVASCRIPT;
          'title'   => __('Seek assistance', 'formcreator'),
          'icon'    => 'fa-fw ti ti-headset',
       ];
-      $newMenu['my_assistance_requests'] = [
-         'default' => PluginFormcreatorIssue::getSearchURL(false),
-         'title'   => __('My requests for assistance', 'formcreator'),
-         'icon'    => 'fa-fw ti ti-list',
-         'content' => [
-            PluginFormcreatorIssue::class => [
-               'title' => __('My requests for assistance', 'formcreator'),
-               'icon'  => 'fa-fw ti ti-list',
-               'links'   => [
-                  'lists' => '',
+      if (Ticket::canView()) {
+         $newMenu['my_assistance_requests'] = [
+            'default' => PluginFormcreatorIssue::getSearchURL(false),
+            'title'   => __('My requests for assistance', 'formcreator'),
+            'icon'    => 'fa-fw ti ti-list',
+            'content' => [
+               PluginFormcreatorIssue::class => [
+                  'title' => __('My requests for assistance', 'formcreator'),
+                  'icon'  => 'fa-fw ti ti-list',
+                  'links'   => [
+                     'lists' => '',
+                  ],
                ],
             ],
-         ],
-      ];
+         ];
+      }
 
       if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_KB_DISTINCT
          && Session::haveRight('knowbase', KnowbaseItem::READFAQ)
