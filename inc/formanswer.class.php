@@ -164,6 +164,40 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
 
+      // Check if the current user is a requester of a ticket linked to a form answer typed
+      // Matches search option 42, 43 and 44 of PluginFormcreatorIssue (requester, watcher, assigned)
+      $ticket_table = Ticket::getTable();
+      $ticket_user_table = Ticket_User::getTable();
+      $item_ticket_table = Item_Ticket::getTable();
+      $request = [
+         'SELECT' => Ticket_User::getTableField(User::getForeignKeyField()),
+         'FROM' => $ticket_user_table,
+         'INNER JOIN' => [
+            $ticket_table => [
+               'FKEY' => [
+                  $ticket_table => 'id',
+                  $ticket_user_table => 'tickets_id',
+               ],
+            ],
+            $item_ticket_table => [
+               'FKEY' => [
+                  $item_ticket_table => 'tickets_id',
+                  $ticket_table => 'id',
+                  ['AND' => [
+                     Item_Ticket::getTableField('itemtype') =>  self::getType(),
+                  ]],
+               ],
+            ],
+
+         ]
+      ];
+
+      foreach ($DB->request($request) as $row) {
+         if ($row[User::getForeignKeyField()] == $currentUser) {
+            return true;
+         }
+      }
+
       return false;
    }
 
