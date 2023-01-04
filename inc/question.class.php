@@ -50,6 +50,8 @@ PluginFormcreatorTranslatableInterface
    static public $itemtype = PluginFormcreatorSection::class;
    static public $items_id = 'plugin_formcreator_sections_id';
 
+   public $dohistory = true;
+
    public $taborientation  = 'horizontal';
 
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
@@ -125,8 +127,9 @@ PluginFormcreatorTranslatableInterface
    public function defineTabs($options = []) {
       $tabs = [];
       $this->addDefaultFormTab($tabs);
+      $this->addStandardTab(PluginFormcreatorCondition::class, $tabs, $options);
       if ($this->loadField($this->fields['fieldtype'])) {
-         foreach ($this->field->getTabNameForItem($this) as $tabName) {
+         foreach ($this->field->getTabNameForItem($this) as $tabId => $tabName) {
             // $this->field->defineExtraTabs($tabs, $options);
             $this->addStandardTab(self::class, $tabs, $options);
          }
@@ -184,6 +187,15 @@ PluginFormcreatorTranslatableInterface
          'field'              => 'description',
          'name'               => __('Description'),
          'datatype'           => 'text',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this::getTable(),
+         'field'              => 'required',
+         'name'               => __('Required', 'formcreator'),
+         'datatype'           => 'int',
          'massiveaction'      => false
       ];
 
@@ -332,11 +344,9 @@ PluginFormcreatorTranslatableInterface
    private function checkBeforeSave($input) : array {
       // Control fields values :
       // - name is required
-      if (isset($input['name'])) {
-         if (empty($input['name'])) {
-            Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
-            return [];
-         }
+      if (isset($input['name']) && strlen($input['name']) === 0) {
+         Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
+         return [];
       }
 
       // - section is required
@@ -346,9 +356,7 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
 
-      if (!isset($input['fieldtype'])) {
-         $input['fieldtype'] = $this->fields['fieldtype'];
-      }
+      $input['fieldtype'] = $input['fieldtype'] ?? $this->fields['fieldtype'];
       $this->loadField($input['fieldtype']);
       if ($this->field === null) {
          Session::addMessageAfterRedirect(
@@ -463,10 +471,8 @@ PluginFormcreatorTranslatableInterface
       }
 
       if (!$this->skipChecks) {
-         if (!isset($input['plugin_formcreator_sections_id'])) {
-            $input['plugin_formcreator_sections_id'] = $this->fields['plugin_formcreator_sections_id'];
-         }
-
+         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+         $input[$sectionFk] = $input[$sectionFk] ?? $this->fields[$sectionFk];
          $input = $this->checkBeforeSave($input);
 
          if (!$this->checkConditionSettings($input)) {
@@ -735,7 +741,7 @@ PluginFormcreatorTranslatableInterface
       $options['target'] = "javascript:;";
       $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', self::getType(), $this->getID());
 
-      // $options may contain values from a form (i.e. changing the question field type)
+      // $options may contain values from a form
       foreach ($options as $request_key => $request_value) {
          if (isset($this->fields[$request_key])) {
             $this->fields[$request_key] = $_REQUEST[$request_key];
@@ -745,12 +751,23 @@ PluginFormcreatorTranslatableInterface
       }
       $this->fields['values'] = json_encode($values);
 
+      if (!$this->isNewItem()) {
+         $options['addbuttons'] = [
+            'apply' => [
+               'type' => 'button',
+               'text' => __('Apply', 'formcreator'),
+               'onclick' => 'plugin_formcreator.editQuestion(this)',
+            ],
+         ];
+      }
+
       $template = '@formcreator/field/undefinedfield.html.twig';
       if (!$this->loadField($this->fields['fieldtype'])) {
          TemplateRenderer::getInstance()->display($template, [
-            'item' => $this,
-            'params' => $options,
+            'item'      => $this,
+            'params'    => $options,
             'no_header' => true,
+            'target'    => 'javascript:plugin_formcreator.editQuestion();'
          ]);
          return true;
       }

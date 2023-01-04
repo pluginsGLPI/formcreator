@@ -65,7 +65,6 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       return _n('Condition', 'Conditions', $nb, 'formcreator');
    }
 
-
    public function prepareInputForAdd($input) {
       // generate a unique id
       if (!isset($input['uuid'])
@@ -312,7 +311,8 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       /** @var CommonDBTM $item */
       if ($item instanceof PluginFormcreatorForm) {
          return [];
-      } else if ($item instanceof PluginFormcreatorSection) {
+      }
+      if ($item instanceof PluginFormcreatorSection) {
          if ($item->isNewItem()) {
             $formFk = PluginFormcreatorForm::getForeignKeyField();
             $sectionsGenerator = PluginFormcreatorSection::getSectionsFromForm($item->fields[$formFk]);
@@ -332,7 +332,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
          return [PluginFormcreatorQuestion::getTable() . '.' . $sectionFk => ['<>', $item->getID()]];
       } else if ($item instanceof PluginFormcreatorQuestion) {
          if (!$item->isNewItem()) {
-            return [PluginFormcreatorQuestion::getTable() . '.id' => ['<>', $item->getID()]];
+            return [PluginFormcreatorQuestion::getTableField('id') => ['<>', $item->getID()]];
          }
          return [];
       }

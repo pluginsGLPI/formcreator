@@ -30,6 +30,8 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -60,11 +62,43 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
    }
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array {
-      return [];
+      return [
+         'condition' => PluginFormcreatorCondition::getTypeName(),
+      ];
    }
 
-   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
+   public function displayTabContentForItem(CommonGLPI $item, string $tabnum): bool {
+      switch ($tabnum) {
+         case 'condition':
+            $this->showCondition();
+            return true;
+      }
       return false;
+   }
+
+   public function showCondition() {
+      $template = '@formcreator/pages/question.condition.html.twig';
+      $parameters = $this->getParameters();
+      $options = [];
+      $options['candel'] = false;
+      $options['target'] = "javascript:;";
+      $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', $this->question::getType(), $this->question->getID());
+      $options['addbuttons'] = [
+         'apply' => [
+            'type' => 'button',
+            'text' => __('Apply', 'formcreator'),
+            'onclick' => 'plugin_formcreator.editQuestion(this)',
+         ],
+      ];
+
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+         'question_params' => $parameters,
+         'no_header' => true,
+      ]);
+
+      return true;
    }
 
    public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void {

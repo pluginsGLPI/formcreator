@@ -320,5 +320,5 @@ interface PluginFormcreatorFieldInterface
     */
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array;
 
-   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool;
+   public function displayTabContentForItem(CommonGLPI $item, string $tabnum): bool;
 }

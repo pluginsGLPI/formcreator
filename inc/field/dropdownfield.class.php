@@ -80,19 +80,19 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array {
-      return [
-         1 => __('Search filter', 'formcreator'),
-      ];
+      $tabs = parent::getTabNameForItem($item, $withtemplate);
+      $tabs[1] = __('Search filter', 'formcreator');
+      return $tabs;
    }
 
-   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
+   public function displayTabContentForItem(CommonGLPI $item, string $tabnum): bool {
       switch ($tabnum) {
          case 1:
             $this->showFilter();
             return true;
       }
 
-      return false;
+      return parent::displayTabContentForItem($item, $tabnum);
    }
 
    protected function showFilter() {
