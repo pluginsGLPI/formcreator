@@ -76,26 +76,28 @@ extends PluginFormcreatorAbstractQuestionParameter
       $name = '_parameters[' . $this->field->getFieldTypeName() . '][' . $this->fieldName . ']';
 
       // get the selected value in the dropdown
-      $selected = '';
       $this->getFromDBByCrit([
          'plugin_formcreator_questions_id' => $question->getID(),
          'fieldname' => $this->fieldName,
       ]);
 
       // build HTML code
-      // TODO: GLPI shoud be able to use predefinesd search criteria with very few changes
+      // TODO: GLPI should be able to use predefined search criteria with very few changes
       // @see Search::showGenericSearch() which calls Search::displayCriteria passing its criterias
       // @see Search::displayCriteria() which may receives criterias in $request['criteria'] but fully ignores it
+
+      // TODO: Improve GLPI, file templates/components/search/query_builder/main.html.twig
+      //       - add support for custom buttons, to add a "apply" button.
       $criteria_backup = $_SESSION['glpisearch'][$question->fields['itemtype']]['criteria'] ?? [];
       $_SESSION['glpisearch'][$question->fields['itemtype']]['criteria'] = $this->fields['filter'];
       $out = TemplateRenderer::getInstance()->render(
          '@formcreator/questionparameter/filter.html.twig',
          [
-            'item'   => $this,
+            'item'     => $this,
             'question' => $question,
-            'label'  => $this->label,
-            'params' => [
-               'name'  => $name,
+            'label'    => $this->label,
+            'params'   => [
+               'name'     => $name,
             ],
          ]
       );
