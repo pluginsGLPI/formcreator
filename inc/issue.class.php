@@ -455,7 +455,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $rows = $DB->request([
          'FROM'  => Item_Ticket::getTable(),
          'WHERE' => [
-            'itemtype' => 'PluginFormcreatorFormAnswer',
+            'itemtype' => PluginFormcreatorFormAnswer::getType(),
             'items_id' => $item->getID() // $item is a PluginFormcreatorFormAnswer
          ],
          'ORDER' => 'tickets_id ASC'
