@@ -57,4 +57,5 @@ if (!$success) {
    http_response_code(500);
    exit();
 }
-echo json_encode(['name' => $question->fields['name']], JSON_UNESCAPED_UNICODE);
+
+echo json_encode(['name' => $question->getDesignLabel()], JSON_UNESCAPED_UNICODE);

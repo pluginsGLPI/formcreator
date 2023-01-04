@@ -799,7 +799,7 @@ var plugin_formcreator = new function() {
          displayAjaxMessageAfterRedirect();
       }).done(function(data) {
          var question = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorQuestion"][data-id="' + questionId + '"]');
-         question.find('[data-field="name"]').text(data['name'])
+         $(question.find('[data-field="name"]')).replaceWith(data['name']);
          that.resetTabs();
       });
    };
