@@ -764,9 +764,10 @@ PluginFormcreatorTranslatableInterface
       $template = '@formcreator/field/undefinedfield.html.twig';
       if (!$this->loadField($this->fields['fieldtype'])) {
          TemplateRenderer::getInstance()->display($template, [
-            'item' => $this,
-            'params' => $options,
+            'item'      => $this,
+            'params'    => $options,
             'no_header' => true,
+            'target'    => 'javascript:plugin_formcreator.editQuestion();'
          ]);
          return true;
       }
