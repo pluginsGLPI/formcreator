@@ -607,28 +607,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       $tab[] = $newtab;
 
-      // if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-      //    $newtab = PluginAdvformIssue::rawSearchOptionFormApprover();
-      // } else {
-      //    $newtab = [
-      //       'id'                 => '9',
-      //       'table'              => User::getTable(),
-      //       'field'              => 'name',
-      //       'linkfield'          => 'users_id_validator',
-      //       'name'               => __('Form approver', 'formcreator'),
-      //       'datatype'           => 'dropdown',
-      //       'massiveaction'      => false,
-      //       'joinparams'         => [
-      //          'beforejoin'          => [
-      //             'table'                => PluginFormcreatorFormAnswer::getTable(),
-      //             'joinparams'           => [
-      //                'jointype'          => 'itemtype_item_revert',
-      //                'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
-      //             ]
-      //          ],
-      //       ],
-      //    ];
-      // }
       $newtab = [
          'id'                 => '9',
          'table'              => User::getTable(),
