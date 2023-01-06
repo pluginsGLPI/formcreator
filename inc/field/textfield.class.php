@@ -51,7 +51,7 @@ class TextField extends PluginFormcreatorAbstractField
 
    public function showForm(array $options): void {
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      // $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
       $this->deserializeValue($this->question->fields['default_values']);
       $parameters = $this->getParameters();
       TemplateRenderer::getInstance()->display($template, [
