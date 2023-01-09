@@ -265,27 +265,29 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          if (Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
             return '';
          }
-         if (!PluginFormcreatorCommon::canValidate()) {
-            return "`$table`.`requester_id` = $currentUser";
-         }
 
-         // check the user
+         // Check the user is a requester
+         $condition = "`$table`.`requester_id` = $currentUser";
+
+         // Check the user is a validator of the form answer
          $formanswerValidationTable = PluginFormcreatorFormanswerValidation::getTable();
          $userType = User::getType();
          $groupType = Group::getType();
-         $condition = "`$formanswerValidationTable`.`itemtype` = '$userType' AND `$formanswerValidationTable`.`items_id` = '$currentUser'";
+         $condition .= "OR `$formanswerValidationTable`.`itemtype` = '$userType' AND `$formanswerValidationTable`.`items_id` = '$currentUser'";
 
-         // check groups of the user
-         $groupList = [];
-         foreach (Group_User::getUserGroups($currentUser) as $group) {
-            $groupList[] = $group['id'];
-         }
-         if (count($groupList) <= 0) {
+         // check user is a member of validator groups of the form answer
+         $groups = Group_User::getUserGroups($currentUser);
+         if (count($groups) === 0) {
             // The user is not a member of any group
             return "($condition)";
          }
 
-         $groupList = implode("', '", $groupList);
+         $groupIDs = [];
+         foreach ($groups as $group) {
+            $groupIDs[] = $group['id'];
+         }
+
+         $groupIDs = implode("', '", $groupIDs);
          $condition .= " OR `$formanswerValidationTable`.`itemtype` = '$groupType' AND `$formanswerValidationTable`.`items_id` IN ('$groupList')";
          return "($condition)";
          break;
@@ -786,5 +788,40 @@ function plugin_formcreator_hook_update_user(CommonDBTM $item) {
          Session::addMessageAfterRedirect(__('Formcreator\'s mini dashboard not usable as default. This Setting has been ignored.', 'formcreator'), false, WARNING);
          unset($item->input['default_dashboard_mini_ticket']);
       }
+   }
+}
+
+function plugin_formcreator_transfer(array $options) {
+   if ($options['type'] != Ticket::class) {
+      return;
+   }
+
+   if ($options['id'] == $options['newID']) {
+      $issue = new PluginFormcreatorIssue();
+      if (!$issue->getFromDbByCrit([
+         'itemtype' => $options['type'],
+         'items_id' => $options['id'],
+      ])) {
+         // No matching issue found
+         return;
+      }
+      $issue->update([
+         'id' => $issue->getID(),
+         'entities_id' => $options['entities_id'],
+      ]);
+   } else {
+      $item_ticket = new Item_Ticket();
+      if (!$item_ticket->getFromDBByCrit([
+         'itemtype'   => PluginFormcreatorFormAnswer::class,
+         'tickets_id' => $options['id'],
+      ])) {
+         // No matching form answer found
+         return;
+      }
+      $item_ticket->add([
+         'itemtype'   => PluginFormcreatorFormAnswer::class,
+         'items_id'   => $item_ticket->fields['items_id'],
+         'tickets_id' => $options['newID'],
+      ]);
    }
 }

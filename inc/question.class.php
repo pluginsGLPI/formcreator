@@ -1045,7 +1045,7 @@ PluginFormcreatorTranslatableInterface
     * @param PluginFormcreatorForm $form
     * @param array $crit
     * @param string $name
-    * @param string $value
+    * @param string|array $value
     * @param array $options
     * @return string|int HTML output or random id
     */
@@ -1057,8 +1057,10 @@ PluginFormcreatorTranslatableInterface
       $options = $options + [
          'display' => $options['display'] ?? true,
       ];
-      if ($value !== null) {
+      if (is_string($value)) {
          $options['value'] = $value;
+      } else if (is_array($value)) {
+         $options['values'] = $value;
       }
       $output = Dropdown::showFromArray($name, $items, $options);
 
