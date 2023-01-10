@@ -868,6 +868,8 @@ var plugin_formcreator = new function() {
       });
    };
 
+   this.showFieldsDebounced = _.debounce(this.showFields, 400, false);
+
    // === SECTIONS ===
 
    this.deleteSection = function (item) {
@@ -1729,15 +1731,16 @@ function pluginFormcreatorInitializeTextarea(fieldName, rand) {
    var i = 0;
    var e;
    while (e = tinymce.get(i++)) {
-      var field = $('[name="' + fieldName + '"]');
-      var form = field[0].form;
-      if (e.formElement != form) {
+      if ($(e.targetElm).prop('name') != fieldName) {
          continue;
       }
+
+      const field = $('[name="' + fieldName + '"]');
+      const form = field[0].form
       // https://stackoverflow.com/a/63342064
       e.on('input NodeChange', function(e) {
          tinyMCE.triggerSave();
-         plugin_formcreator.showFields($(form));
+         plugin_formcreator.showFieldsDebounced($(form));
       });
       return;
   }
