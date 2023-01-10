@@ -820,7 +820,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          $formanswer,
          false
       );
-      $data['name'] = Toolbox::addslashes_deep($data['name']);
       $data['name'] = $formanswer->parseTags($data['name'], $this);
       $data['date'] = $_SESSION['glpi_currenttime'];
 
@@ -830,7 +829,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          $richText
       );
 
-      // $data['content'] = Toolbox::addslashes_deep($data['content']);
       $data['content'] = $formanswer->parseTags($data['content'], $this, $richText);
 
       $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];

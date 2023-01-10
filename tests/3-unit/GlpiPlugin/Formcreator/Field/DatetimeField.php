@@ -144,12 +144,41 @@ class DatetimeField extends CommonTestCase {
          'formcreator_field_' . $question->getID() => $value
       ]);
       $this->boolean($output)->isEqualTo($expected);
+   }
 
-      $outputValue = $instance->getValueForTargetText('', false);
+   public function providerGetValueForTargetText() {
+      return [
+         [
+            'question' => $this->getQuestion(),
+            'value' => '',
+            'expected' => true,
+            'expectedValue' => ' ',
+         ],
+         [
+            'question' => $this->getQuestion(),
+            'value' => '2018-12-25 23:00:00',
+            'expected' => true,
+            'expectedValue' => '2018-12-25 23:00',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForTargetText
+    *
+    * @return void
+    */
+   public function testGetValueForTargetText($question, $value, $expected, $expectedValue) {
+      $instance = $this->newTestedInstance($question);
+      $output = $instance->parseAnswerValues([
+         'formcreator_field_' . $question->getID() => $value
+      ]);
+
+      $output = $instance->getValueForTargetText('', false);
       if ($expected === false) {
-         $this->variable($outputValue)->isNull();
+         $this->variable($output)->isNull();
       } else {
-         $this->string($outputValue)
+         $this->string($output)
             ->isEqualTo($expectedValue);
       }
    }
