@@ -202,6 +202,11 @@ class TextField extends PluginFormcreatorAbstractField
          return false;
       }
 
+      // input is sanitized (it comes from $_POST),
+      // but unsanitize ignores pair count of consecutive backslashes
+      // when nothing else must be unsanitized
+      // We need to force it
+      $this->value = stripslashes($input[$key]);
       $this->value = Sanitizer::unsanitize($input[$key]);
       return true;
    }

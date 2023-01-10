@@ -1268,7 +1268,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @param  string $content                            String to be parsed
     * @param  PluginFormcreatorTargetInterface $target   Target for which output is being generated
     * @param  boolean $richText                          Disable rich text mode for field rendering
-    * @return string                                     Parsed string with tags replaced by form values
+    * @return string                                     Parsed string with tags replaced by form values. Not SQL nor HTML escaped
     */
    public function parseTags(string $content, PluginFormcreatorTargetInterface $target = null, $richText = false): string {
       // Prepare all fields of the form
@@ -1289,7 +1289,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $value = $this->questionFields[$questionId]->getValueForTargetText($domain, $richText);
          }
 
-         $content = str_replace('##question_' . $questionId . '##', Sanitizer::sanitize($name), $content);
+         // $content = str_replace('##question_' . $questionId . '##', Sanitizer::sanitize($name), $content);
+         $content = str_replace('##question_' . $questionId . '##', $name, $content);
          if ($question->fields['fieldtype'] === 'file') {
             if (strpos($content, '##answer_' . $questionId . '##') !== false) {
                if ($target !== null && $target instanceof PluginFormcreatorAbstractItilTarget) {
@@ -1299,7 +1300,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                }
             }
          }
-         $content = str_replace('##answer_' . $questionId . '##', Sanitizer::sanitize($value ?? ''), $content);
+         // $content = str_replace('##answer_' . $questionId . '##', Sanitizer::sanitize($value ?? ''), $content);
+         $content = str_replace('##answer_' . $questionId . '##', $value ?? '', $content);
 
          if ($this->questionFields[$questionId] instanceof DropdownField) {
             $content = $this->questionFields[$questionId]->parseObjectProperties($field->getValueForDesign(), $content);
@@ -1309,6 +1311,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       if ($richText) {
          // convert sanitization from old style GLPI ( up to 9.5 to modern style)
          $content = Sanitizer::unsanitize($content);
+         $content = Sanitizer::sanitize($content);
+      } else {
          $content = Sanitizer::sanitize($content);
       }
 

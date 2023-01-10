@@ -156,7 +156,7 @@ interface PluginFormcreatorFieldInterface
 
    /**
     * Read the value of the field from answers
-    * @param array $input answers of all questions of the form
+    * @param array $input answers of all questions of the form, sanitized
     * @param bool $nonDestructive for File field, ensure that the file uploads imported as document
     *
     * @return boolean true on sucess, false otherwise

@@ -175,7 +175,6 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
          $formanswer,
          true
       );
-      $data['name'] = Toolbox::addslashes_deep($data['name']);
       $data['name'] = $formanswer->parseTags($data['name'], $this);
 
       $problemFields = [
