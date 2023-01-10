@@ -974,8 +974,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function loadAnswers(): void {
       global $DB;
 
-      $this->answers = [];
       if ($this->isNewItem()) {
+         return;
+      }
+
+      if (count($this->answers) > 0) {
          return;
       }
 
@@ -986,11 +989,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             'plugin_formcreator_formanswers_id' => $this->getID()
          ]
       ]);
-      $answers_values = [];
       foreach ($answers as $found_answer) {
-         $answers_values['formcreator_field_' . $found_answer['plugin_formcreator_questions_id']] = $found_answer['answer'];
+         $this->answers['formcreator_field_' . $found_answer['plugin_formcreator_questions_id']] = $found_answer['answer'];
       }
-      $this->answers = $answers_values;
    }
 
    /**
@@ -1134,6 +1135,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       return $output;
+   }
+
+   public function post_getFromDB() {
+      $this->answers = [];
    }
 
    public function post_addItem() {
