@@ -113,7 +113,7 @@ trait PluginFormcreatorTranslatable
             continue;
          }
          $strings[$type] = array_unique($strings[$type]);
-         $strings[$type] = array_filter($strings[$type]);
+         $strings[$type] = array_filter($strings[$type], function ($value) { return $value != ''; });
       }
 
       return $strings;
