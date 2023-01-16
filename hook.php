@@ -263,7 +263,6 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[11]['joinparams']);
          $condition .= " OR `glpi_users_users_id_validate_$complexJoinId`.`id` = '$currentUser'";
 
-
          // condition where the current user is a requester of a ticket linked to a form answer typed issue
          $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[42]['joinparams']);
          $condition .= " OR `glpi_users_$complexJoinId`.`id` = '$currentUser'";
