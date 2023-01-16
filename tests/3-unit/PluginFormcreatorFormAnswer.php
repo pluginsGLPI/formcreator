@@ -30,17 +30,32 @@
  */
 namespace tests\units;
 
+use Change;
+use Change_Item;
 use CommonITILObject;
+use Document;
+use Document_Item;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Group;
+use Group_User;
+use Item_Ticket;
 use PluginFormcreatorAnswer;
+use PluginFormcreatorCondition;
 use PluginFormcreatorForm;
+use PluginFormcreatorFields;
+use PluginFormcreatorIssue;
+use PluginFormcreatorSection;
 use PluginFormcreatorForm_Validator;
 use PluginFormcreatorTargetTicket;
 use PluginFormcreatorTargetChange;
 use PluginFormcreatorTargetProblem;
+use Problem;
 use Session;
 use Ticket;
+use TicketValidation;
+use Toolbox;
 use User;
+
 class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
@@ -61,7 +76,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function providerPrepareInputForAdd() {
       $question = $this->getQuestion(['fieldtype' => 'text']);
       $form = new PluginFormcreatorForm();
-      $form = \PluginFormcreatorForm::getByItem($question);
+      $form = PluginFormcreatorForm::getByItem($question);
       $this->boolean($form->isNewItem())->isFalse();
       $success = $form->update([
          'id' => $form->getID(),
@@ -69,6 +84,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       ]);
       $this->boolean($success)->isTrue();
 
+      $testedClassName = $this->getTestedClassName();
       $data = [
          'form FK required' => [
             'input' => [],
@@ -84,12 +100,12 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
                'plugin_formcreator_forms_id'             => $form->getID(),
                'formcreator_field_' . $question->getID() => 'foo',
                'name'                                    => 'foo',
-               'entities_id'                             => \Session::getActiveEntity(),
+               'entities_id'                             => Session::getActiveEntity(),
                'is_recursive'                            => 0,
-               'requester_id'                            => \Session::getLoginUserID(),
+               'requester_id'                            => Session::getLoginUserID(),
                'users_id_validator'                      => 0,
                'groups_id_validator'                     => 0,
-               'status'                                  => \PluginFormcreatorFormAnswer::STATUS_ACCEPTED,
+               'status'                                  => $testedClassName::STATUS_ACCEPTED,
                'request_date'                            => $_SESSION['glpi_currenttime'],
                'comment'                                 => '',
                'validation_percent'                      => 100,
@@ -100,9 +116,9 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       $question = $this->getQuestion(['fieldtype' => 'text']);
       $form = new PluginFormcreatorForm();
-      $form = \PluginFormcreatorForm::getByItem($question);
+      $form = PluginFormcreatorForm::getByItem($question);
       $this->boolean($form->isNewItem())->isFalse();
-      $user = new \User();
+      $user = new User();
       $user->getFromDBbyName('tech');
       $formValidator = new PluginFormcreatorForm_Validator();
       $formValidator->add([
@@ -121,13 +137,13 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
             'plugin_formcreator_forms_id'             => $form->getID(),
             'formcreator_field_' . $question->getID() => 'foo',
             'name'                                    => $form->fields['name'],
-            'entities_id'                             => \Session::getActiveEntity(),
+            'entities_id'                             => Session::getActiveEntity(),
             'is_recursive'                            => 0,
-            'requester_id'                            => \Session::getLoginUserID(),
+            'requester_id'                            => Session::getLoginUserID(),
             'formcreator_validator'                   => $user::getType() . '_' . $user->getID(),
             'users_id_validator'                      => $user->getID(),
             'groups_id_validator'                     => 0,
-            'status'                                  => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+            'status'                                  => $testedClassName::STATUS_WAITING,
             'request_date'                            => $_SESSION['glpi_currenttime'],
             'comment'                                 => '',
             'validation_percent'                      => 100,
@@ -162,43 +178,43 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function providerGetFullForm() {
       $form = $this->getForm();
       $section1 = $this->getSection([
-         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
-         'name' => \Toolbox::addslashes_deep("section 1"),
+         PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+         'name' => Toolbox::addslashes_deep("section 1"),
       ]);
       $question1 = $this->getQuestion([
-         \PluginFormcreatorSection::getForeignKeyField() => $section1->getID(),
-         'name' => \Toolbox::addslashes_deep("radios for section"),
+         PluginFormcreatorSection::getForeignKeyField() => $section1->getID(),
+         'name' => Toolbox::addslashes_deep("radios for section"),
          'fieldtype'  => 'radios',
          'values'     => 'yes\r\nno',
       ]);
       $question2 = $this->getQuestion([
-         \PluginFormcreatorSection::getForeignKeyField() => $section1->getID(),
-         'name' => \Toolbox::addslashes_deep("radios for question"),
+         PluginFormcreatorSection::getForeignKeyField() => $section1->getID(),
+         'name' => Toolbox::addslashes_deep("radios for question"),
          'fieldtype'  => 'radios',
          'values'     => 'yes\r\nno',
       ]);
       $section2 = $this->getSection([
-         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
-         'name' => \Toolbox::addslashes_deep("section 2"),
-         'show_rule' => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+         PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+         'name' => Toolbox::addslashes_deep("section 2"),
+         'show_rule' => PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
          '_conditions' => [
             'plugin_formcreator_questions_id' => [$question1->getID()],
-            'show_condition' => [\PluginFormcreatorCondition::SHOW_CONDITION_EQ],
+            'show_condition' => [PluginFormcreatorCondition::SHOW_CONDITION_EQ],
             'show_value'     => ['yes'],
-            'show_logic'     => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
+            'show_logic'     => [PluginFormcreatorCondition::SHOW_LOGIC_AND],
          ]
       ]);
       $question3 = $this->getQuestion([
-         \PluginFormcreatorSection::getForeignKeyField() => $section2->getID(),
-         'name' => \Toolbox::addslashes_deep("text"),
+         PluginFormcreatorSection::getForeignKeyField() => $section2->getID(),
+         'name' => Toolbox::addslashes_deep("text"),
          'fieldtype'  => 'text',
          'values'     => 'hello',
-         'show_rule' => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+         'show_rule' => PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
          '_conditions' => [
             'plugin_formcreator_questions_id' => [$question2->getID()],
-            'show_condition' => [\PluginFormcreatorCondition::SHOW_CONDITION_EQ],
+            'show_condition' => [PluginFormcreatorCondition::SHOW_CONDITION_EQ],
             'show_value'     => ['yes'],
-            'show_logic'     => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
+            'show_logic'     => [PluginFormcreatorCondition::SHOW_LOGIC_AND],
          ]
       ]);
 
@@ -206,7 +222,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          // fullForm matches all question and section names
          [
             'answers' => [
-               \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+               PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
                'formcreator_field_' . $question1->getID() => 'yes',
                'formcreator_field_' . $question2->getID() => 'yes',
                'formcreator_field_' . $question3->getID() => 'foo',
@@ -222,7 +238,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          // fullForm matches only visible section names
          [
             'answers' => [
-               \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+               PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
                'formcreator_field_' . $question1->getID() => 'no',
                'formcreator_field_' . $question2->getID() => 'yes',
                'formcreator_field_' . $question3->getID() => 'foo',
@@ -238,7 +254,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          // fullForm matches only visible question names
          [
             'answers' => [
-               \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+               PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
                'formcreator_field_' . $question1->getID() => 'yes',
                'formcreator_field_' . $question2->getID() => 'no',
                'formcreator_field_' . $question3->getID() => 'foo',
@@ -261,7 +277,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $instance = $this->newTestedInstance();
       $output = $instance->add($answers);
       $this->boolean($instance->isNewItem())->isFalse();
-      \PluginFormcreatorFields::resetVisibilityCache();
+      PluginFormcreatorFields::resetVisibilityCache();
       $output = $instance->getFullForm(true);
       $expected($output);
    }
@@ -275,9 +291,9 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       // prepare a form with targets
       $question = $this->getQuestion();
-      $form = new \PluginFormcreatorForm();
-      $form  = \PluginFormcreatorForm::getByItem($question);
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $form = new PluginFormcreatorForm();
+      $form  = PluginFormcreatorForm::getByItem($question);
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $this->getTargetTicket([
          $formFk => $form->getID(),
       ]);
@@ -293,35 +309,35 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       ];
 
       // send form answer
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = $this->newTestedInstance();
       $formAnswerId = $formAnswer->add($input);
       $this->boolean($formAnswer->isNewItem())->isFalse();
 
       // check existence of generated target
       // - ticket
-      $item_ticket = new \Item_Ticket;
+      $item_ticket = new Item_Ticket;
       $this->boolean($item_ticket->getFromDBByCrit([
-         'itemtype' => \PluginFormcreatorFormAnswer::class,
+         'itemtype' => $formAnswer::getType(),
          'items_id' => $formAnswerId,
       ]))->isTrue();
-      $ticket = new \Ticket;
+      $ticket = new Ticket;
       $this->boolean($ticket->getFromDB($item_ticket->fields['tickets_id']))->isTrue();
       $this->string($ticket->fields['content'])->contains($answer);
 
       // - change
-      $change_item = new \Change_Item;
+      $change_item = new Change_Item;
       $this->boolean($change_item->getFromDBByCrit([
-         'itemtype' => \PluginFormcreatorFormAnswer::class,
+         'itemtype' => $formAnswer::getType(),
          'items_id' => $formAnswerId,
       ]))->isTrue();
-      $change = new \Change;
+      $change = new Change;
       $this->boolean($change->getFromDB($change_item->fields['changes_id']))->isTrue();
       $this->string($change->fields['content'])->contains($answer);
 
       // - issue
-      $issue = new \PluginFormcreatorIssue;
+      $issue = new PluginFormcreatorIssue;
       $this->boolean($issue->getFromDBByCrit([
-        'itemtype' => \Ticket::class,
+        'itemtype' => Ticket::class,
         'items_id'  => $ticket->getID()
       ]))->isTrue();
 
@@ -339,18 +355,18 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       ]);
       $this->boolean($form_validator->isNewItem())->isFalse();
 
-      $group = new \Group();
+      $group = new Group();
       $group->add([
          'name' => $this->getUniqueString(),
       ]);
       $this->boolean($group->isNewItem())->isFalse();
-      $groupUser = new \Group_User();
+      $groupUser = new Group_User();
       $groupUser->add([
          'users_id' => $validatorUserId,
          'groups_id' => $group->getID(),
       ]);
       $form2 = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_GROUP,
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_GROUP,
          '_validator_groups' => $group->getID()
       ]);
       $this->boolean($form2->isNewItem())->isFalse();
@@ -364,42 +380,42 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       return [
          'having validate incident right, validator user can validate' => [
-            'right'     => \TicketValidation::VALIDATEINCIDENT,
+            'right'     => TicketValidation::VALIDATEINCIDENT,
             'validator' => $validatorUserId,
             'userId'    => $validatorUserId,
             'form'      => $form1,
             'expected'  => true,
          ],
          'having validate incident right, member of a validator group can validate' => [
-            'right'     => \TicketValidation::VALIDATEINCIDENT,
+            'right'     => TicketValidation::VALIDATEINCIDENT,
             'validator' => $group->getID(),
             'userId'    => $validatorUserId,
             'form'      => $form2,
             'expected'  => true,
          ],
          'having validate incident right, not a validator user cannot validate' => [
-            'right'     => \TicketValidation::VALIDATEINCIDENT,
+            'right'     => TicketValidation::VALIDATEINCIDENT,
             'validator' => $group->getID(),
             'userId'    => 2, // glpi
             'form'      => $form2,
             'expected'  => false,
          ],
          'having validate request right, member of a validator group can validate' => [
-            'right'     => \TicketValidation::VALIDATEREQUEST,
+            'right'     => TicketValidation::VALIDATEREQUEST,
             'validator' => $group->getID(),
             'userId'    => $validatorUserId,
             'form'      => $form2,
             'expected'  => true,
          ],
          'having validate request right and validate incident, member of a validator group can validate' => [
-            'right'     => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
+            'right'     => TicketValidation::VALIDATEREQUEST | TicketValidation::VALIDATEINCIDENT,
             'validator' => $group->getID(),
             'userId'    => $validatorUserId,
             'form'      => $form2,
             'expected'  => true,
          ],
          'having validate request right and validate incident, not member of a validator group can validate' => [
-            'right'     => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
+            'right'     => TicketValidation::VALIDATEREQUEST | TicketValidation::VALIDATEINCIDENT,
             'validator' => $group->getID(),
             'userId'    => 2, // glpi
             'form'      => $form2,
@@ -511,10 +527,11 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $instance = $this->newTestedInstance();
       $instance->getFromDB($formAnswerId);
       $this->boolean($instance->isNewItem())->isFalse();
+      $testedClassName = $this->getTestedClassName();
       $input = [
          'plugin_formcreator_forms_id'             => $form->getID(),
          'accept_formanswer'                       => 'accept',
-         'status'                                  => \PluginFormcreatorFormAnswer::STATUS_ACCEPTED,
+         'status'                                  => $testedClassName::STATUS_ACCEPTED,
       ];
       $input = $instance->prepareInputForUpdate($input);
       $this->array($input)->size->isGreaterThan(0);
@@ -550,7 +567,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'id'                                      => $instance->getID(),
          'plugin_formcreator_forms_id'             => $form->getID(),
          'accept_formanswer'                       => 'accept',
-         'status'                                  => \PluginFormcreatorFormAnswer::STATUS_ACCEPTED,
+         'status'                                  => $testedClassName::STATUS_ACCEPTED,
          'formcreator_field_' . $question->getID() => 'bar',
       ];
       $input = $instance->prepareInputForUpdate($input);
@@ -608,17 +625,17 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       $this->array($output)->hasSize(count($targets));
       $typeCount = [
-         \Ticket::getType()  => 0,
-         \Change::getType()  => 0,
-         \Problem::getType() => 0,
+         Ticket::getType()  => 0,
+         Change::getType()  => 0,
+         Problem::getType() => 0,
       ];
       foreach ($output as $generatedTarget) {
          $typeCount[$generatedTarget::getType()]++;
       }
       $this->array($typeCount)->isEqualTo([
-         \Ticket::getType()  => 2,
-         \Change::getType()  => 2,
-         \Problem::getType() => 2,
+         Ticket::getType()  => 2,
+         Change::getType()  => 2,
+         Problem::getType() => 2,
       ]);
    }
 
@@ -846,13 +863,13 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          ],
       ]);
 
-      $documentItem = new \Document_Item();
+      $documentItem = new Document_Item();
       $documentItem->getFromDBByCrit([
          'itemtype' => $formAnswer->getType(),
          'items_id' => $formAnswer->getID(),
       ]);
       $this->boolean($documentItem->isNewItem())->isFalse();
-      $document = \Document::getById($documentItem->fields['documents_id']);
+      $document = Document::getById($documentItem->fields['documents_id']);
       $output = $formAnswer->getFileProperties();
       $this->array($output)->isIdenticalTo([
          '_filename'     => [

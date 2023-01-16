@@ -469,7 +469,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $rows = $DB->request([
          'FROM'  => Item_Ticket::getTable(),
          'WHERE' => [
-            'itemtype' => 'PluginFormcreatorFormAnswer',
+            'itemtype' => PluginFormcreatorFormAnswer::getType(),
             'items_id' => $item->getID() // $item is a PluginFormcreatorFormAnswer
          ],
          'ORDER' => 'tickets_id ASC'
@@ -486,8 +486,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                $item = $ticket;
             }
          } else {
-            // multiple tickets, ticket specified, then substitute the ticket to the form answer
             if (isset($options['tickets_id'])) {
+               // multiple tickets, ticket specified, then substitute the ticket to the form answer
                $ticket = Ticket::getById((int) $options['tickets_id']);
                if ($ticket) {
                   $item = $ticket;
@@ -665,17 +665,50 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'massiveaction'      => false,
          'joinparams'         => [
             'beforejoin'         => [
-               'table'              => TicketValidation::getTable(),
-               'joinparams'         => [
-                  'jointype'           => 'child',
-                  'beforejoin'         => [
-                     'table'              => Ticket::getTable(),
-                     'joinparams'         => [
-                        'jointype'        => 'itemtype_item_revert',
-                        'specific_itemtype'  => Ticket::class,
+               [
+                  'table'              => TicketValidation::getTable(),
+                  'joinparams'         => [
+                     'jointype'           => 'child',
+                     'beforejoin'         => [
+                        'table'              => Ticket::getTable(),
+                        'joinparams'         => [
+                           'jointype'        => 'itemtype_item_revert',
+                           'specific_itemtype'  => Ticket::class,
+                        ]
                      ]
                   ]
-               ]
+               ],
+               [
+                  'table'              => TicketValidation::getTable(),
+                  'joinparams'         => [
+                     'jointype'           => 'child',
+                     'beforejoin'         => [
+                        'table'              => Ticket::getTable(),
+                        'joinparams'      => [
+                           'jointype'        => 'empty',
+                           'condition'       => [
+                              new \QueryExpression(
+                                 '1=1'
+                              ),
+                           ],
+                           'beforejoin'      => [
+                              'table'           => Item_Ticket::getTable(),
+                              'joinparams'      => [
+                                 'jointype'        => 'itemtype_item',
+                                 'specific_itemtype' => PluginFormcreatorFormAnswer::class,
+                                 'beforejoin'      => [
+                                    'table'           => PluginFormcreatorFormAnswer::getTable(),
+                                    'joinparams'      => [
+                                       'jointype'          => 'itemtype_item_revert',
+                                       'specific_itemtype' => PluginFormcreatorFormAnswer::class,
+                                    ],
+                                 ],
+                              ],
+                           ],
+                        ],
+                     ]
+                  ]
+               ],
             ],
          ]
       ];
@@ -1179,7 +1212,151 @@ class PluginFormcreatorIssue extends CommonDBTM {
           && Session::getCurrentInterface() == 'helpdesk') {
          $newtab['right']       = 'id';
       }
+
       $tab[] = $newtab;
+
+      $tab[] = [
+         'id'                 => '42',
+         'table'              => User::getTable(),
+         'field'              => 'name',
+         'name'               => __('Ticket requester', 'formcreator'),
+         'massiveaction'      => false,
+         'datatype'           => 'dropdown',
+         'forcegroupby'       => true,
+         'joinparams'         => [
+            'jointype'        => 'empty',
+            'beforejoin'      => [
+               'table'           => Ticket_User::getTable(),
+               'joinparams'      => [
+                  'jointype'        => 'child',
+                  'condition'       => [
+                     'NEWTABLE.type' => CommonITILActor::REQUESTER,
+                  ],
+                  'beforejoin'      => [
+                     'table'           => Ticket::getTable(),
+                     'joinparams'      => [
+                        'jointype'        => 'empty',
+                        'condition'       => [
+                           new \QueryExpression(
+                              '1=1'
+                           ),
+                        ],
+                        'beforejoin'      => [
+                           'table'           => Item_Ticket::getTable(),
+                           'joinparams'      => [
+                              'jointype'        => 'itemtype_item',
+                              'specific_itemtype' => PluginFormcreatorFormAnswer::class,
+                              'beforejoin'      => [
+                                 'table'           => PluginFormcreatorFormAnswer::getTable(),
+                                 'joinparams'      => [
+                                    'jointype'          => 'itemtype_item_revert',
+                                    'specific_itemtype' => PluginFormcreatorFormAnswer::class,
+                                 ],
+                              ],
+                           ],
+                        ],
+                     ],
+                  ],
+               ],
+            ],
+         ],
+      ];
+
+      $tab[] = [
+         'id'                 => '43',
+         'table'              => User::getTable(),
+         'field'              => 'name',
+         'name'               => __('Ticket observer', 'formcreator'),
+         'massiveaction'      => false,
+         'nosearch'           => true,
+         'datatype'           => 'dropdown',
+         'forcegroupby'       => true,
+         'joinparams'         => [
+            'jointype'        => 'empty',
+            'beforejoin'      => [
+               'table'           => Ticket_User::getTable(),
+               'joinparams'      => [
+                  'jointype'        => 'child',
+                  'condition'       => [
+                     'NEWTABLE.type' => CommonITILActor::OBSERVER,
+                  ],
+                  'beforejoin'      => [
+                     'table'           => Ticket::getTable(),
+                     'joinparams'      => [
+                        'jointype'        => 'empty',
+                        'condition'       => [
+                           new \QueryExpression(
+                              '1=1'
+                           ),
+                        ],
+                        'beforejoin'      => [
+                           'table'           => Item_Ticket::getTable(),
+                           'joinparams'      => [
+                              'jointype'        => 'itemtype_item',
+                              'specific_itemtype' => PluginFormcreatorFormAnswer::class,
+                              'beforejoin'      => [
+                                 'table'           => PluginFormcreatorFormAnswer::getTable(),
+                                 'joinparams'      => [
+                                    'jointype'          => 'itemtype_item_revert',
+                                    'specific_itemtype' => PluginFormcreatorFormAnswer::class,
+                                 ],
+                              ],
+                           ],
+                        ],
+                     ],
+                  ],
+               ],
+            ],
+         ],
+      ];
+
+      $tab[] = [
+         'id'                 => '44',
+         'table'              => User::getTable(),
+         'field'              => 'name',
+         'name'               => __('Ticket technician', 'formcreator'),
+         'massiveaction'      => false,
+         'nosearch'           => true,
+         'datatype'           => 'dropdown',
+         'forcegroupby'       => true,
+         'joinparams'         => [
+            'jointype'        => 'empty',
+            'beforejoin'      => [
+               'table'           => Ticket_User::getTable(),
+               'joinparams'      => [
+                  'jointype'        => 'child',
+                  'condition'       => [
+                     'NEWTABLE.type' => CommonITILActor::ASSIGN,
+                  ],
+                  'beforejoin'      => [
+                     'table'           => Ticket::getTable(),
+                     'joinparams'      => [
+                        'jointype'        => 'empty',
+                        'condition'       => [
+                           new \QueryExpression(
+                              '1=1'
+                           ),
+                        ],
+                        'beforejoin'      => [
+                           'table'           => Item_Ticket::getTable(),
+                           'joinparams'      => [
+                              'jointype'        => 'itemtype_item',
+                              'specific_itemtype' => PluginFormcreatorFormAnswer::class,
+                              'beforejoin'      => [
+                                 'table'           => PluginFormcreatorFormAnswer::getTable(),
+                                 'joinparams'      => [
+                                    'jointype'          => 'itemtype_item_revert',
+                                    'specific_itemtype' => PluginFormcreatorFormAnswer::class,
+                                 ],
+                              ],
+                           ],
+                        ],
+                     ],
+                  ],
+               ],
+            ],
+         ],
+      ];
 
       return $tab;
    }

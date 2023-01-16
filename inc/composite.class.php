@@ -146,6 +146,13 @@ class PluginFormcreatorComposite
                   if ($answer->isNewItem()) {
                      break;
                   }
+                  if (Ticket::isNewID($answer->fields['answer'])) {
+                     break;
+                  }
+                  $ticket = new Ticket();
+                  if (!$ticket->getFromDB($answer->fields['answer'])) {
+                     break;
+                  }
                   $this->ticket_ticket->add([
                      'link' => $row['link'],
                      'tickets_id_1' => $generatedObject->getID(),

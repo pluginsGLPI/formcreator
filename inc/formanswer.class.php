@@ -193,6 +193,40 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
 
+      // Check if the current user is a requester of a ticket linked to a form answer typed
+      // Matches search option 42, 43 and 44 of PluginFormcreatorIssue (requester, watcher, assigned)
+      $ticket_table = Ticket::getTable();
+      $ticket_user_table = Ticket_User::getTable();
+      $item_ticket_table = Item_Ticket::getTable();
+      $request = [
+         'SELECT' => Ticket_User::getTableField(User::getForeignKeyField()),
+         'FROM' => $ticket_user_table,
+         'INNER JOIN' => [
+            $ticket_table => [
+               'FKEY' => [
+                  $ticket_table => 'id',
+                  $ticket_user_table => 'tickets_id',
+               ],
+            ],
+            $item_ticket_table => [
+               'FKEY' => [
+                  $item_ticket_table => 'tickets_id',
+                  $ticket_table => 'id',
+                  ['AND' => [
+                     Item_Ticket::getTableField('itemtype') =>  self::getType(),
+                  ]],
+               ],
+            ],
+
+         ]
+      ];
+
+      foreach ($DB->request($request) as $row) {
+         if ($row[User::getForeignKeyField()] == $currentUser) {
+            return true;
+         }
+      }
+
       return false;
    }
 
@@ -1081,8 +1115,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function loadAnswers(): void {
       global $DB;
 
-      $this->answers = [];
       if ($this->isNewItem()) {
+         return;
+      }
+
+      if (count($this->answers) > 0) {
          return;
       }
 
@@ -1093,11 +1130,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             'plugin_formcreator_formanswers_id' => $this->getID()
          ]
       ]);
-      $answers_values = [];
       foreach ($answers as $found_answer) {
-         $answers_values['formcreator_field_' . $found_answer['plugin_formcreator_questions_id']] = $found_answer['answer'];
+         $this->answers['formcreator_field_' . $found_answer['plugin_formcreator_questions_id']] = $found_answer['answer'];
       }
-      $this->answers = $answers_values;
    }
 
    /**
@@ -1243,6 +1278,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       return $output;
    }
 
+   public function post_getFromDB() {
+      $this->answers = [];
+   }
+
    public function post_addItem() {
       // Save questions answers
       $formAnswerId = $this->getID();
@@ -1373,7 +1412,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @param  string $content                            String to be parsed
     * @param  PluginFormcreatorTargetInterface $target   Target for which output is being generated
     * @param  boolean $richText                          Disable rich text mode for field rendering
-    * @return string                                     Parsed string with tags replaced by form values
+    * @return string                                     Parsed string with tags replaced by form values. Not SQL nor HTML escaped
     */
    public function parseTags(string $content, PluginFormcreatorTargetInterface $target = null, $richText = false): string {
       // Prepare all fields of the form
@@ -1394,7 +1433,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $value = $this->questionFields[$questionId]->getValueForTargetText($domain, $richText);
          }
 
-         $content = str_replace('##question_' . $questionId . '##', Sanitizer::sanitize($name), $content);
+         // $content = str_replace('##question_' . $questionId . '##', Sanitizer::sanitize($name), $content);
+         $content = str_replace('##question_' . $questionId . '##', $name, $content);
          if ($question->fields['fieldtype'] === 'file') {
             if (strpos($content, '##answer_' . $questionId . '##') !== false) {
                if ($target !== null && $target instanceof PluginFormcreatorAbstractItilTarget) {
@@ -1404,7 +1444,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                }
             }
          }
-         $content = str_replace('##answer_' . $questionId . '##', Sanitizer::sanitize($value ?? ''), $content);
+         // $content = str_replace('##answer_' . $questionId . '##', Sanitizer::sanitize($value ?? ''), $content);
+         $content = str_replace('##answer_' . $questionId . '##', $value ?? '', $content);
 
          if ($this->questionFields[$questionId] instanceof DropdownField) {
             $content = $this->questionFields[$questionId]->parseObjectProperties($field->getValueForDesign(), $content);
@@ -1414,6 +1455,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       if ($richText) {
          // convert sanitization from old style GLPI ( up to 9.5 to modern style)
          $content = Sanitizer::unsanitize($content);
+         $content = Sanitizer::sanitize($content);
+      } else {
          $content = Sanitizer::sanitize($content);
       }
 

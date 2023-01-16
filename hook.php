@@ -99,7 +99,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
             $ref_table,
             $already_link_tables,
             $issueSo[9]['table'],
-            'users_id',
+            $issueSo[9]['linkfield'],
             0,
             0,
             $issueSo[9]['joinparams']
@@ -109,7 +109,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
             $ref_table,
             $already_link_tables,
             $issueSo[11]['table'],
-            'users_id_validate',
+            $issueSo[11]['linkfield'],
             0,
             0,
             $issueSo[11]['joinparams']
@@ -119,7 +119,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
             $ref_table,
             $already_link_tables,
             $issueSo[16]['table'],
-            'groups_id',
+            $issueSo[16]['linkfield'],
             0,
             0,
             $issueSo[16]['joinparams']
@@ -130,7 +130,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                $ref_table,
                $already_link_tables,
                $issueSo[30]['table'],
-               'users_id_substitute',
+               $issueSo[30]['linkfield'],
                0,
                0,
                $issueSo[30]['joinparams']
@@ -140,7 +140,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                $ref_table,
                $already_link_tables,
                $issueSo[31]['table'],
-               'users_id_substitute',
+               $issueSo[31]['linkfield'],
                0,
                0,
                $issueSo[31]['joinparams']
@@ -150,10 +150,40 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                $ref_table,
                $already_link_tables,
                $issueSo[32]['table'],
-               'users_id_substitute',
+               $issueSo[32]['linkfield'],
                0,
                0,
                $issueSo[32]['joinparams']
+            );
+            $join .= Search::addLeftJoin(
+               $itemtype,
+               $ref_table,
+               $already_link_tables,
+               $issueSo[42]['table'],
+               $issueSo[42]['linkfield'],
+               0,
+               0,
+               $issueSo[42]['joinparams']
+            );
+            $join .= Search::addLeftJoin(
+               $itemtype,
+               $ref_table,
+               $already_link_tables,
+               $issueSo[43]['table'],
+               $issueSo[43]['linkfield'],
+               0,
+               0,
+               $issueSo[43]['joinparams']
+            );
+            $join .= Search::addLeftJoin(
+               $itemtype,
+               $ref_table,
+               $already_link_tables,
+               $issueSo[44]['table'],
+               $issueSo[44]['linkfield'],
+               0,
+               0,
+               $issueSo[44]['joinparams']
             );
          }
          break;
@@ -233,6 +263,19 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[11]['joinparams']);
          $condition .= " OR `glpi_users_users_id_validate_$complexJoinId`.`id` = '$currentUser'";
 
+
+         // condition where the current user is a requester of a ticket linked to a form answer typed issue
+         $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[42]['joinparams']);
+         $condition .= " OR `glpi_users_$complexJoinId`.`id` = '$currentUser'";
+
+         // condition where the current user is a watcher of a ticket linked to a form answer typed issue
+         $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[43]['joinparams']);
+         $condition .= " OR `glpi_users_$complexJoinId`.`id` = '$currentUser'";
+
+         // condition where the current user is assigned of a ticket linked to a form answer typed issue
+         $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[44]['joinparams']);
+         $condition .= " OR `glpi_users_$complexJoinId`.`id` = '$currentUser'";
+
          if (version_compare(GLPI_VERSION, '10.1') >= 0) {
             // the current user is a substitute of the validator of the issue
             $condition .= ' OR ';
@@ -251,7 +294,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          // Add users_id_recipient
          $condition .= " OR `glpi_plugin_formcreator_issues`.`users_id_recipient` = $currentUser ";
          return "($condition)";
-      break;
+         break;
 
       case PluginFormcreatorFormAnswer::class:
          $table = $itemtype::getTable();
@@ -273,7 +316,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          $formanswerValidationTable = PluginFormcreatorFormanswerValidation::getTable();
          $userType = User::getType();
          $groupType = Group::getType();
-         $condition .= "OR `$formanswerValidationTable`.`itemtype` = '$userType' AND `$formanswerValidationTable`.`items_id` = '$currentUser'";
+         $condition .= " OR `$formanswerValidationTable`.`itemtype` = '$userType' AND `$formanswerValidationTable`.`items_id` = '$currentUser'";
 
          // check user is a member of validator groups of the form answer
          $groups = Group_User::getUserGroups($currentUser);

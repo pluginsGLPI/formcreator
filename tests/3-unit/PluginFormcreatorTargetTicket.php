@@ -31,18 +31,34 @@
 
 namespace tests\units;
 use CommonDBTM;
+use Computer;
+use Entity;
 use GlpiPlugin\Formcreator\Tests\CommonTargetTestCase;
+use Group_Ticket;
+use Item_Ticket;
+use ITILCategory;
+use Location;
+use Monitor;
 use PluginFormcreatorCommon;
-use PluginFormcreatorForm_Validator;
+use PluginFormcreatorCondition;
+use PluginFormcreatorFields;
 use PluginFormcreatorForm;
 use PluginFormcreatorFormAnswer;
+use PluginFormcreatorForm_Validator;
+use PluginFormcreatorItem_TargetTicket;
 use PluginFormcreatorSection;
-use User;
 use Profile;
 use Profile_User;
-use Entity;
 use Session;
+use Supplier_Ticket;
+use TaskCategory;
 use Ticket;
+use TicketTemplate;
+use TicketTemplatePredefinedField;
+use Ticket_User;
+use Ticket_Ticket;
+use Toolbox;
+use User;
 
 class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
@@ -206,28 +222,28 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
    public function testGetItem_User() {
       $instance = $this->newTestedInstance();
       $output = $this->callPrivateMethod($instance, 'getItem_User');
-      $this->object($output)->isInstanceOf(\Ticket_User::class);
+      $this->object($output)->isInstanceOf(Ticket_User::class);
       $this->boolean($output->isNewItem())->isTrue();
    }
 
    public function testGetItem_Group() {
       $instance = $this->newTestedInstance();
       $output = $this->callPrivateMethod($instance, 'getItem_Group');
-      $this->object($output)->isInstanceOf(\Group_Ticket::class);
+      $this->object($output)->isInstanceOf(Group_Ticket::class);
       $this->boolean($output->isNewItem())->isTrue();
    }
 
    public function testGetItem_Supplier() {
       $instance = $this->newTestedInstance();
       $output = $this->callPrivateMethod($instance, 'getItem_Supplier');
-      $this->object($output)->isInstanceOf(\Supplier_Ticket::class);
+      $this->object($output)->isInstanceOf(Supplier_Ticket::class);
       $this->boolean($output->isNewItem())->isTrue();
    }
 
    public function testGetItem_Item() {
       $instance = $this->newTestedInstance();
       $output = $this->callPrivateMethod($instance, 'getItem_Item');
-      $this->object($output)->isInstanceOf(\Item_Ticket::class);
+      $this->object($output)->isInstanceOf(Item_Ticket::class);
       $this->boolean($output->isNewItem())->isTrue();
    }
 
@@ -254,7 +270,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
    public function testGetTargetItemtypeName() {
       $instance = $this->newTestedInstance();
       $output = $this->callPrivateMethod($instance, 'getTargetItemtypeName');
-      $this->string($output)->isEqualTo(\Ticket::class);
+      $this->string($output)->isEqualTo(Ticket::class);
    }
 
    /**
@@ -269,7 +285,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $CFG_GLPI['use_notifications'] = '0';
 
       // setup the test
-      $ticket = new \Ticket();
+      $ticket = new Ticket();
       $ticket->add([
          'name'               => 'ticket',
          'content'            => 'help !',
@@ -277,7 +293,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       ]);
       $this->boolean($ticket->isNewItem())->isFalse();
 
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $form = $this->getForm(['name' => 'a form']);
 
       $targetTicket_1 = $this->newTestedInstance();
@@ -295,19 +311,19 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $this->boolean($targetTicket_2->isNewItem())->isFalse();
 
       $targetTicketFk = \PluginFormcreatorTargetTicket::getForeignKeyField();
-      $item_targetticket_1 = new \PluginFormcreatorItem_TargetTicket();
+      $item_targetticket_1 = new PluginFormcreatorItem_TargetTicket();
       $item_targetticket_1->add([
          $targetTicketFk   => $targetTicket_1->getID(),
-         'link'            => \Ticket_Ticket::LINK_TO,
-         'itemtype'        => \Ticket::class,
+         'link'            => Ticket_Ticket::LINK_TO,
+         'itemtype'        => Ticket::class,
          'items_id'        => $ticket->getID(),
       ]);
       $this->boolean($item_targetticket_1->isNewItem())->isFalse();
 
-      $item_targetticket_2 = new \PluginFormcreatorItem_TargetTicket();
+      $item_targetticket_2 = new PluginFormcreatorItem_TargetTicket();
       $item_targetticket_2->add([
          $targetTicketFk   => $targetTicket_1->getID(),
-         'link'            => \Ticket_Ticket::LINK_TO,
+         'link'            => Ticket_Ticket::LINK_TO,
          'itemtype'        => \PluginFormcreatorTargetTicket::class,
          'items_id'        => $targetTicket_2->getID(),
       ]);
@@ -332,7 +348,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $CFG_GLPI['use_notifications'] = '0';
 
       $form = $this->getForm();
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $targetTicket = $this->getTargetTicket([
          $formFk => $form->getID(),
       ]);
@@ -342,25 +358,25 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $instance->getFromDB($targetTicket->getID());
 
       // Test current entity of the requester
-      $entity = new \Entity();
+      $entity = new Entity();
       $entityId = $entity->import([
          'entities_id' => '0',
          'name' => $this->getUniqueString()
       ]);
-      \Session::changeActiveEntities($entityId);
+      Session::changeActiveEntities($entityId);
       $targetTicket->update([
          'id' => $targetTicket->getID(),
          'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_CURRENT,
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetTicket->getID());
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,
       ]);
       $formAnswer->getFromDB($formAnswer->getID());
-      $requesterId = \Session::getLoginUserID();
+      $requesterId = Session::getLoginUserID();
       $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
@@ -375,8 +391,8 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,
       ]);
-      \Session::changeActiveEntities($entityId);
-      $requesterId = \Session::getLoginUserID();
+      Session::changeActiveEntities($entityId);
+      $requesterId = Session::getLoginUserID();
       $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo(0);
 
@@ -547,7 +563,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
                'requester_id' => 2, // glpi user id
                'status' => PluginFormcreatorFormAnswer::STATUS_WAITING,
                'formcreator_validator' => 2, // Glpi user ID
-               'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
+               'formcreator_field_' . $question1->getID() => (string) Ticket::INCIDENT_TYPE,
             ]),
             'expected'   => Ticket::INCIDENT_TYPE,
          ],
@@ -571,7 +587,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
                'requester_id' => 2, // glpi user id
                'status' => PluginFormcreatorFormAnswer::STATUS_WAITING,
                'formcreator_validator' => 2, // Glpi user ID
-               'formcreator_field_' . $question2->getID() => (string) \Ticket::DEMAND_TYPE,
+               'formcreator_field_' . $question2->getID() => (string) Ticket::DEMAND_TYPE,
             ]),
             'expected'   => Ticket::DEMAND_TYPE,
          ],
@@ -652,12 +668,12 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
                0 => 'Form data' . $eolSimple
                   . '=================' . $eolSimple
                   . $eolSimple
-                  . $eolSimple . \Toolbox::addslashes_deep($sectionName) . $eolSimple
+                  . $eolSimple . $sectionName . $eolSimple
                   . '---------------------------------' . $eolSimple
                   . '1) ' . $questionTag . ' : ' . $answerTag . $eolSimple . $eolSimple,
-               1 => '&#60;h1&#62;Form data&#60;/h1&#62;'
-                  . '&#60;h2&#62;' . \Toolbox::addslashes_deep($sectionName) . '&#60;/h2&#62;'
-                  . '&#60;div&#62;&#60;b&#62;1) ' . $questionTag . ' : &#60;/b&#62;' . $answerTag . '&#60;/div&#62;',
+               1 => '<h1>Form data</h1>'
+                  . '<h2>' . $sectionName . '</h2>'
+                  . '<div><b>1) ' . $questionTag . ' : </b>' . $answerTag . '</div>',
             ],
          ],
       ];
@@ -801,7 +817,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
    public function providerSetTargetCategory_nothing() {
       $form = $this->getForm();
-      $formanswer = new \PluginFormcreatorFormanswer();
+      $formanswer = new PluginFormcreatorFormanswer();
       $formanswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -825,12 +841,12 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
    }
 
    public function providerSetTargetCategory_noTemplate() {
-      $category1 = new \ITILCategory();
+      $category1 = new ITILCategory();
       $category1Id = $category1->import([
          'name' => 'category 1',
          'entities_id' => 0,
       ]);
-      $category2 = new \ITILCategory();
+      $category2 = new ITILCategory();
       $category2Id = $category2->import([
          'name' => 'category 2',
          'entities_id' => 0,
@@ -840,7 +856,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       // same as the ticket categories created above
       $taskCategoryId = 0;
       do {
-         $taskCategory = new \TaskCategory();
+         $taskCategory = new TaskCategory();
          $taskCategoryId = $taskCategory->import([
             'name' => $this->getUniqueString(),
             'entities_id' => 0,
@@ -852,19 +868,19 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype' => 'requesttype',
       ]);
       $this->boolean($question1->isNewItem())->isFalse();
-      $section = new \PluginFormcreatorSection();
+      $section = new PluginFormcreatorSection();
       $section->getFromDB($question1->fields['plugin_formcreator_sections_id']);
       $this->boolean($section->isNewItem())->isFalse();
       $question2 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $section->getID(),
          'name'                           => 'request category',
          'fieldtype'                      => 'dropdown',
-         'itemtype'                       => \ITILCategory::class,
-         'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+         'itemtype'                       => ITILCategory::class,
+         'show_rule'  => PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
          '_conditions'                    => [
-            'show_logic' => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
+            'show_logic' => [PluginFormcreatorCondition::SHOW_LOGIC_AND],
             'plugin_formcreator_questions_id' => [$question1->getID()],
-            'show_condition'                  => [\PluginFormcreatorCondition::SHOW_CONDITION_EQ],
+            'show_condition'                  => [PluginFormcreatorCondition::SHOW_CONDITION_EQ],
             'show_value'                      => ['Incident'],
          ]
       ]);
@@ -872,12 +888,12 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'plugin_formcreator_sections_id' => $section->getID(),
          'name'                           => 'incident category',
          'fieldtype'                      => 'dropdown',
-         'itemtype'                       => \ITILCategory::class,
-         'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+         'itemtype'                       => ITILCategory::class,
+         'show_rule'  => PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
          '_conditions'                    => [
-            'show_logic' => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
+            'show_logic' => [PluginFormcreatorCondition::SHOW_LOGIC_AND],
             'plugin_formcreator_questions_id' => [$question1->getID()],
-            'show_condition'                  => [\PluginFormcreatorCondition::SHOW_CONDITION_EQ],
+            'show_condition'                  => [PluginFormcreatorCondition::SHOW_CONDITION_EQ],
             'show_value'                      => ['Request'],
          ]
       ]);
@@ -885,7 +901,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'plugin_formcreator_sections_id' => $section->getID(),
          'name'                           => 'other category',
          'fieldtype'                      => 'dropdown',
-         'itemtype'                       => \TaskCategory::class,
+         'itemtype'                       => TaskCategory::class,
          '_conditions'                    => [
             'show_logic' => [],
             'plugin_formcreator_questions_id' => [],
@@ -894,28 +910,28 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          ]
       ]);
 
-      $formanswer1 = new \PluginFormcreatorFormAnswer();
+      $formanswer1 = new PluginFormcreatorFormAnswer();
       $formanswer1->add([
          'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
-         'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
+         'formcreator_field_' . $question1->getID() => (string) Ticket::INCIDENT_TYPE,
          'formcreator_field_' . $question2->getID() => (string) $category1Id,
          'formcreator_field_' . $question3->getID() => (string) $category2Id,
          'formcreator_field_' . $question4->getID() => (string) $taskCategoryId,
       ]);
 
-      $formanswer2 = new \PluginFormcreatorFormAnswer();
+      $formanswer2 = new PluginFormcreatorFormAnswer();
       $formanswer2->add([
          'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
-         'formcreator_field_' . $question1->getID() => (string) \Ticket::DEMAND_TYPE,
+         'formcreator_field_' . $question1->getID() => (string) Ticket::DEMAND_TYPE,
          'formcreator_field_' . $question2->getID() => (string) $category1Id,
          'formcreator_field_' . $question3->getID() => (string) $category2Id,
          'formcreator_field_' . $question4->getID() => (string) $taskCategoryId,
       ]);
 
-      $formanswer3 = new \PluginFormcreatorFormAnswer();
+      $formanswer3 = new PluginFormcreatorFormAnswer();
       $formanswer3->add([
          'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
-         'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
+         'formcreator_field_' . $question1->getID() => (string) Ticket::INCIDENT_TYPE,
          'formcreator_field_' . $question2->getID() => (string) $category1Id,
          'formcreator_field_' . $question3->getID() => (string) 0,
          'formcreator_field_' . $question4->getID() => (string) $taskCategoryId,
@@ -958,18 +974,18 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
     */
    public function providerSetTargetCategory_FromTemplate() {
       // When the target ticket uses a ticket template and does not specify a category
-      $category1 = new \ITILCategory();
+      $category1 = new ITILCategory();
       $category1Id = $category1->import([
          'name' => 'category 1',
          'entities_id' => 0,
       ]);
 
       $ticketTemplate = $this->getGlpiCoreItem(
-         \TicketTemplate::getType(), [
+         TicketTemplate::getType(), [
             'name' => 'template with predefined category',
          ]
       );
-      $this->getGlpiCoreItem(\TicketTemplatePredefinedField::getType(), [
+      $this->getGlpiCoreItem(TicketTemplatePredefinedField::getType(), [
          'tickettemplates_id' => $ticketTemplate->getID(),
          'num'                => 7, // ITIL category
          'value'              => $category1Id
@@ -977,7 +993,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
       $form = $this->getForm();
 
-      $formanswer1 = new \PluginFormcreatorFormAnswer();
+      $formanswer1 = new PluginFormcreatorFormAnswer();
       $formanswer1->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -1014,7 +1030,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
     * @dataProvider providerSetTargetCategory
     */
    public function testSetTargetCategory($instance, $formanswer, $expected) {
-      \PluginFormcreatorFields::resetVisibilityCache();
+      PluginFormcreatorFields::resetVisibilityCache();
       $data = $this->callPrivateMethod($instance, 'getDefaultData', $formanswer);
       $output = $this->callPrivateMethod($instance, 'setTargetCategory', $data, $formanswer);
 
@@ -1025,12 +1041,12 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       // Prepare form
       $question = $this->getQuestion([
          'fieldtype' => 'glpiselect',
-         'itemtype' => \Computer::class,
+         'itemtype' => Computer::class,
       ]);
-      $form = \PluginFormcreatorForm::getByItem($question);
+      $form = PluginFormcreatorForm::getByItem($question);
 
       // Have an item to associate
-      $computer = new \Computer();
+      $computer = new Computer();
       $computer->add([
          'name' => $this->getUniqueString(),
          'entities_id' => '0',
@@ -1038,12 +1054,12 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $this->boolean($computer->isNewItem())->isFalse();
 
       // Prepare form answer
-      $formAnswer = new \PluginFormcreatorFormAnswer;
+      $formAnswer = new PluginFormcreatorFormAnswer;
       $formAnswer->add([
-         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+         PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
          'name' => $form->fields['name'],
          'requester_d' => 2, // glpi user id
-         'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+         'status' => PluginFormcreatorFormAnswer::STATUS_WAITING,
          'formcreator_field_' . $question->getID() => (string) $computer->getID(),
       ]);
       $this->boolean($formAnswer->isNewItem())->isFalse();
@@ -1053,7 +1069,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $instance->add([
          'name' => 'foo',
          'target_name' => '',
-         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+         PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
          'content' => '##FULLFORM',
          'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_ANSWER,
          'associate_question' => $question->getID(),
@@ -1078,10 +1094,10 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
       // Prepare form
       $validItemtype = $CFG_GLPI["asset_types"][0];
-      if (array_search(\Computer::getType(), $CFG_GLPI['asset_types']) === false) {
-         $CFG_GLPI['asset_types'][] = \Computer::getType();
+      if (array_search(Computer::getType(), $CFG_GLPI['asset_types']) === false) {
+         $CFG_GLPI['asset_types'][] = Computer::getType();
       }
-      $invalidItemtype = \Monitor::getType();
+      $invalidItemtype = Monitor::getType();
 
       // Ensure an itemtype is not in the asset types
       $CFG_GLPI['asset_types'] = array_filter($CFG_GLPI['asset_types'], function ($itemtype) use ($invalidItemtype) {
@@ -1091,13 +1107,13 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $item1 = new $validItemtype();
       $item1->add([
          'name' => $this->getUniqueString(),
-         'entities_id' => \Session::getActiveEntity(),
+         'entities_id' => Session::getActiveEntity(),
       ]);
       $this->boolean($item1->isNewItem())->isFalse();
       $item2 = new $validItemtype();
       $item2->add([
          'name' => $this->getUniqueString(),
-         'entities_id' => \Session::getActiveEntity(),
+         'entities_id' => Session::getActiveEntity(),
       ]);
       $this->boolean($item2->isNewItem())->isFalse();
 
@@ -1105,7 +1121,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype' => 'glpiselect',
          'itemtype'  => $validItemtype,
       ]);
-      $form1 = \PluginFormcreatorForm::getByItem($question1);
+      $form1 = PluginFormcreatorForm::getByItem($question1);
       $sectionId = $question1->fields['plugin_formcreator_sections_id'];
       $question2 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
@@ -1116,13 +1132,13 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
-         \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+         PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
          'content' => '##FULLFORM',
          'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER,
          'associate_question' => $question2->getID(),
       ]);
       $this->boolean($instance1->isNewItem())->isFalse();
-      $formAnswer1 = new \PluginFormcreatorFormAnswer();
+      $formAnswer1 = new PluginFormcreatorFormAnswer();
       $formAnswer1->add([
          'plugin_formcreator_forms_id' => $form1->getID(),
          'formcreator_field_' . $question1->getID() => (string) $item1->getID(),
@@ -1134,7 +1150,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype' => 'glpiselect',
          'itemtype'  => $validItemtype,
       ]);
-      $form2 = \PluginFormcreatorForm::getByItem($question3);
+      $form2 = PluginFormcreatorForm::getByItem($question3);
       $sectionId = $question3->fields['plugin_formcreator_sections_id'];
       $question4 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
@@ -1146,15 +1162,15 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $instance2->add([
          'name' => 'foo',
          'target_name' => '',
-         \PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
+         PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
          'content' => '##FULLFORM',
          'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER,
          'associate_question' => $question3->getID(),
       ]);
       $this->boolean($instance2->isNewItem())->isFalse();
-      $monitor = $this->getGlpiCoreItem(\Monitor::getType(), ['name' => $this->getUniqueString()]);
+      $monitor = $this->getGlpiCoreItem(Monitor::getType(), ['name' => $this->getUniqueString()]);
       $this->boolean($monitor->isNewItem())->isFalse();
-      $formAnswer2 = new \PluginFormcreatorFormAnswer();
+      $formAnswer2 = new PluginFormcreatorFormAnswer();
       $formAnswer2->add([
          'plugin_formcreator_forms_id' => $form2->getID(),
          'formcreator_field_' . $question3->getID() => (string) $item1->getID(),
@@ -1166,7 +1182,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype' => 'glpiselect',
          'itemtype'  => $invalidItemtype,
       ]);
-      $form3 = \PluginFormcreatorForm::getByItem($question5);
+      $form3 = PluginFormcreatorForm::getByItem($question5);
       $sectionId = $question5->fields['plugin_formcreator_sections_id'];
       $question6 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
@@ -1177,17 +1193,17 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $instance3->add([
          'name' => 'foo',
          'target_name' => '',
-         \PluginFormcreatorForm::getForeignKeyField() => $form3->getID(),
+         PluginFormcreatorForm::getForeignKeyField() => $form3->getID(),
          'content' => '##FULLFORM',
          'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER,
          'associate_question' => $question5->getID(),
       ]);
       $this->boolean($instance3->isNewItem())->isFalse();
-      $monitor = $this->getGlpiCoreItem(\Monitor::getType(), ['name' => $this->getUniqueString()]);
+      $monitor = $this->getGlpiCoreItem(Monitor::getType(), ['name' => $this->getUniqueString()]);
       $this->boolean($monitor->isNewItem())->isFalse();
-      $monitor2 = $this->getGlpiCoreItem(\Monitor::getType(), ['name' => $this->getUniqueString()]);
+      $monitor2 = $this->getGlpiCoreItem(Monitor::getType(), ['name' => $this->getUniqueString()]);
       $this->boolean($monitor->isNewItem())->isFalse();
-      $formAnswer3 = new \PluginFormcreatorFormAnswer();
+      $formAnswer3 = new PluginFormcreatorFormAnswer();
       $formAnswer3->add([
          'plugin_formcreator_forms_id' => $form3->getID(),
          'formcreator_field_' . $question5->getID() => (string) $monitor->getID(),
@@ -1199,7 +1215,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype' => 'glpiselect',
          'itemtype'  => $validItemtype,
       ]);
-      $form4 = \PluginFormcreatorForm::getByItem($question7);
+      $form4 = PluginFormcreatorForm::getByItem($question7);
       $sectionId = $question7->fields['plugin_formcreator_sections_id'];
       $question8 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
@@ -1211,24 +1227,24 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $instance4->add([
          'name' => 'foo',
          'target_name' => '',
-         \PluginFormcreatorForm::getForeignKeyField() => $form4->getID(),
+         PluginFormcreatorForm::getForeignKeyField() => $form4->getID(),
          'content' => '##FULLFORM',
          'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER,
          'associate_question' => $question7->getID(),
       ]);
       $this->boolean($instance4->isNewItem())->isFalse();
-      $formAnswer4 = new \PluginFormcreatorFormAnswer();
+      $formAnswer4 = new PluginFormcreatorFormAnswer();
       // use non existing items ids and existing itemtypes
       $item7 = new $validItemtype();
       $item7->add([
          'name' => $this->getUniqueString(),
-         'entities_id' => \Session::getActiveEntity(),
+         'entities_id' => Session::getActiveEntity(),
       ]);
       $this->boolean($item7->isNewItem())->isFalse();
       $item8 = new $validItemtype();
       $item8->add([
          'name' => $this->getUniqueString(),
-         'entities_id' => \Session::getActiveEntity(),
+         'entities_id' => Session::getActiveEntity(),
       ]);
       $this->boolean($item8->isNewItem())->isFalse();
       $formAnswer4->add([
@@ -1343,7 +1359,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
                'target_name' => $name,
                'content' => '##FULLFORM##',
                'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
-               'type_question' => \Ticket::INCIDENT_TYPE,
+               'type_question' => Ticket::INCIDENT_TYPE,
                'source_rule'   => \PluginFormcreatorTargetTicket::REQUESTSOURCE_FORMCREATOR,
                'source_question' => $sourceId,
             ],
@@ -1354,7 +1370,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
                $formFk => $form->getID(),
                'name' => $name,
                'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
-               'type_question' => \Ticket::DEMAND_TYPE,
+               'type_question' => Ticket::DEMAND_TYPE,
                'source_rule'   => \PluginFormcreatorTargetTicket::REQUESTSOURCE_NONE,
             ],
             'expected' => [
@@ -1363,7 +1379,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
                'target_name' => $name,
                'content' => '##FULLFORM##',
                'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
-               'type_question' => \Ticket::DEMAND_TYPE,
+               'type_question' => Ticket::DEMAND_TYPE,
                'source_rule'   => \PluginFormcreatorTargetTicket::REQUESTSOURCE_NONE,
                'source_question' => 0,
             ],
@@ -1398,13 +1414,13 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
-         \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+         PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
          'content' => '##FULLFORM',
          'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE,
          'location_question' => '0',
       ]);
       $this->boolean($instance1->isNewItem())->isFalse();
-      $formAnswer1 = new \PluginFormcreatorFormAnswer();
+      $formAnswer1 = new PluginFormcreatorFormAnswer();
       $formAnswer1->add([
          'plugin_formcreator_forms_id' => $form1->getID(),
       ]);
@@ -1421,19 +1437,19 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
    public function providerSetTargetLocation_LastItem() {
       // Prepare form
-      $validItemtype = \Location::class;
-      $invalidItemtype = \Monitor::getType();
+      $validItemtype = Location::class;
+      $invalidItemtype = Monitor::getType();
 
       $item1 = new $validItemtype();
       $item1->add([
          'name' => $this->getUniqueString(),
-         'entities_id' => \Session::getActiveEntity(),
+         'entities_id' => Session::getActiveEntity(),
       ]);
       $this->boolean($item1->isNewItem())->isFalse();
       $item2 = new $validItemtype();
       $item2->add([
          'name' => $this->getUniqueString(),
-         'entities_id' => \Session::getActiveEntity(),
+         'entities_id' => Session::getActiveEntity(),
       ]);
       $this->boolean($item2->isNewItem())->isFalse();
 
@@ -1441,7 +1457,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype' => 'dropdown',
          'itemtype'  => $validItemtype,
       ]);
-      $form1 = \PluginFormcreatorForm::getByItem($question1);
+      $form1 = PluginFormcreatorForm::getByItem($question1);
       $sectionId = $question1->fields['plugin_formcreator_sections_id'];
       $question2 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
@@ -1452,13 +1468,13 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
-         \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+         PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
          'content' => '##FULLFORM',
          'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_LAST_ANSWER,
          'location_question' => '0',
       ]);
       $this->boolean($instance1->isNewItem())->isFalse();
-      $formAnswer1 = new \PluginFormcreatorFormAnswer();
+      $formAnswer1 = new PluginFormcreatorFormAnswer();
       $formAnswer1->add([
          'plugin_formcreator_forms_id' => $form1->getID(),
          'formcreator_field_' . $question1->getID() => (string) $item1->getID(),
@@ -1477,7 +1493,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
    public function providerSetRequestSource_none(): array {
       $form = $this->getForm();
-      $formanswer = new \PluginFormcreatorFormanswer();
+      $formanswer = new PluginFormcreatorFormanswer();
       $formanswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -1502,7 +1518,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
    public function providerSetRequestSource_specific(): array {
       $form = $this->getForm();
-      $formanswer = new \PluginFormcreatorFormanswer();
+      $formanswer = new PluginFormcreatorFormanswer();
       $formanswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -1513,7 +1529,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'target_name' => 'target ticket',
          'plugin_formcreator_forms_id' => $form->getID(),
          'source_rule' => \PluginFormcreatorTargetTicket::REQUESTSOURCE_FORMCREATOR,
-         'source_question' => \PluginFormcreatorCommon::getFormcreatorRequestTypeId(),
+         'source_question' => PluginFormcreatorCommon::getFormcreatorRequestTypeId(),
       ]);
       $this->boolean($targetTicket->isNewItem())->isFalse();
 
@@ -1569,12 +1585,12 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
    }
 
    public function providerSetTargetLocation_noTemplate() {
-      $location1 = new \Location();
+      $location1 = new Location();
       $location1Id = $location1->import([
          'name' => 'location 1',
          'entities_id' => 0,
       ]);
-      $location2 = new \Location();
+      $location2 = new Location();
       $location2Id = $location2->import([
          'name' => 'location 2',
          'entities_id' => 0,
@@ -1592,7 +1608,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'plugin_formcreator_sections_id' => $section->getID(),
          'name'                           => 'location',
          'fieldtype'                      => 'dropdown',
-         'itemtype'                       => \Location::class,
+         'itemtype'                       => Location::class,
          'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
          '_conditions'                    => [
             'show_logic' => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
@@ -1605,7 +1621,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'plugin_formcreator_sections_id' => $section->getID(),
          'name'                           => 'other location',
          'fieldtype'                      => 'dropdown',
-         'itemtype'                       => \Location::class,
+         'itemtype'                       => Location::class,
          'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
          '_conditions'                    => [
             'show_logic' => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
@@ -1615,26 +1631,26 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          ]
       ]);
 
-      $formanswer1 = new \PluginFormcreatorFormAnswer();
+      $formanswer1 = new PluginFormcreatorFormAnswer();
       $formanswer1->add([
          'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
-         'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
+         'formcreator_field_' . $question1->getID() => (string) Ticket::INCIDENT_TYPE,
          'formcreator_field_' . $question2->getID() => (string) $location1Id,
          'formcreator_field_' . $question3->getID() => (string) $location2Id,
       ]);
 
-      $formanswer2 = new \PluginFormcreatorFormAnswer();
+      $formanswer2 = new PluginFormcreatorFormAnswer();
       $formanswer2->add([
          'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
-         'formcreator_field_' . $question1->getID() => (string) \Ticket::DEMAND_TYPE,
+         'formcreator_field_' . $question1->getID() => (string) Ticket::DEMAND_TYPE,
          'formcreator_field_' . $question2->getID() => (string) $location1Id,
          'formcreator_field_' . $question3->getID() => (string) $location2Id,
       ]);
 
-      $formanswer3 = new \PluginFormcreatorFormAnswer();
+      $formanswer3 = new PluginFormcreatorFormAnswer();
       $formanswer3->add([
          'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
-         'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
+         'formcreator_field_' . $question1->getID() => (string) Ticket::INCIDENT_TYPE,
          'formcreator_field_' . $question2->getID() => (string) $location1Id,
          'formcreator_field_' . $question3->getID() => (string) 0,
       ]);
@@ -1672,18 +1688,18 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
    public function providerSetTargetLocation_FromTemplate() {
       // When the target ticket uses a ticket template and does not specify a location
-      $location1 = new \Location();
+      $location1 = new Location();
       $location1Id = $location1->import([
          'name' => 'location 1',
          'entities_id' => 0,
       ]);
 
       $ticketTemplate = $this->getGlpiCoreItem(
-         \TicketTemplate::getType(), [
+         TicketTemplate::getType(), [
             'name' => 'template with predefined location',
          ]
       );
-      $this->getGlpiCoreItem(\TicketTemplatePredefinedField::getType(), [
+      $this->getGlpiCoreItem(TicketTemplatePredefinedField::getType(), [
          'tickettemplates_id' => $ticketTemplate->getID(),
          'num'                => 83, // Location
          'value'              => $location1Id
@@ -1691,7 +1707,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
       $form = $this->getForm();
 
-      $formanswer1 = new \PluginFormcreatorFormAnswer();
+      $formanswer1 = new PluginFormcreatorFormAnswer();
       $formanswer1->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);

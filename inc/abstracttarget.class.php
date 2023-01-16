@@ -190,7 +190,7 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
     * @param string $template
     * @param PluginFormcreatorFormAnswer $formAnswer form answer to render
     * @param bool $richText Disable rich text output
-    * @return string
+    * @return string without sql or html escaping
     */
    protected function prepareTemplate($template, PluginFormcreatorFormAnswer $formAnswer, $richText = false) {
       if (strpos($template, '##FULLFORM##') !== false) {
@@ -208,7 +208,6 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
 
       if ($richText) {
          $template = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $template);
-         $template = Sanitizer::sanitize($template);
       }
 
       return $template;
