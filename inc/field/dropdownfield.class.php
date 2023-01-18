@@ -63,6 +63,7 @@ use QueryUnion;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
 use QueryExpression;
+use State;
 
 class DropdownField extends PluginFormcreatorAbstractField
 {
@@ -510,8 +511,8 @@ class DropdownField extends PluginFormcreatorAbstractField
 
    public function getRenderedHtml($domain, $canEdit = true): string {
       $itemtype = $this->getSubItemtype();
+      $item = new $itemtype();
       if (!$canEdit) {
-         $item = new $itemtype();
          $value = '';
          if ($item->getFromDB($this->value)) {
             $column = 'name';
@@ -532,6 +533,9 @@ class DropdownField extends PluginFormcreatorAbstractField
       $dparams = $this->buildParams($rand);
       $dparams['display'] = false;
       $dparams['_idor_token'] = Session::getNewIDORToken($itemtype);
+      if ($item->isField('states_id')) {
+         $dparams['condition'] = State::getDisplayConditionForAssistance();
+      }
       $html .= $itemtype::dropdown($dparams);
       $html .= PHP_EOL;
       $html .= Html::scriptBlock("$(function() {
