@@ -533,7 +533,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $dparams = $this->buildParams($rand);
       $dparams['display'] = false;
       $dparams['_idor_token'] = Session::getNewIDORToken($itemtype);
-      if ($item->isField('states_id')) {
+      if (version_compare(GLPI_VERSION, '10.1') >= 0 && $item->isField('states_id')) {
          $dparams['condition'] = State::getDisplayConditionForAssistance();
       }
       $html .= $itemtype::dropdown($dparams);
