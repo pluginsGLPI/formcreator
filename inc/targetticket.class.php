@@ -1189,7 +1189,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
     * @return array
     */
    protected function setTargetAssociatedItem(array $data, PluginFormcreatorFormAnswer $formanswer) : array {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       switch ($this->fields['associate_rule']) {
          case self::ASSOCIATE_RULE_ANSWER:
@@ -1265,6 +1265,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
                ]
             ]);
 
+            $valid_associated_itemtypes = $_SESSION["glpiactiveprofile"]["helpdesk_item_type"];
             foreach ($answers as $answer) {
                // Skip if the object type is not valid asset type
                $question = new PluginFormcreatorQuestion();
@@ -1273,7 +1274,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
                $field = $question->getSubField();
                $field->deserializeValue($answer['answer']);
                $itemtype = $field->getSubItemtype();
-               if (!in_array($itemtype, $CFG_GLPI['asset_types'])) {
+               if (!in_array($itemtype, $valid_associated_itemtypes)) {
                   continue;
                }
 
