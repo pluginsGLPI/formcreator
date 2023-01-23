@@ -1382,7 +1382,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
       $form1 = $this->getForm();
 
-      $instance1 = new PluginFormcreatorTargetTicket();
+      $instance1 = $this->newTestedInstance();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1436,7 +1436,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype'                      => 'dropdown',
          'itemtype'                       => $validItemtype
       ]);
-      $instance1 = new PluginFormcreatorTargetTicket();
+      $instance1 = $this->newTestedInstance();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
