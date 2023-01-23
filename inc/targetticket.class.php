@@ -1189,7 +1189,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
     * @return array
     */
    protected function setTargetAssociatedItem(array $data, PluginFormcreatorFormAnswer $formanswer) : array {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       switch ($this->fields['associate_rule']) {
          case self::ASSOCIATE_RULE_ANSWER:
@@ -1274,7 +1274,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
                $field = $question->getSubField();
                $field->deserializeValue($answer['answer']);
                $itemtype = $field->getSubItemtype();
-               $target_itemtype = self::getTargetItemtypeName();
                if (!in_array($itemtype, $valid_associated_itemtypes)) {
                   continue;
                }
