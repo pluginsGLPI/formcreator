@@ -100,98 +100,108 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
     * @param string $expected
     */
    public function testGetTypeName($number, $expected) {
-      $output = \PluginFormcreatorTargetTicket::getTypeName($number);
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getTypeName($number);
       $this->string($output)->isEqualTo($expected);
    }
 
    public function testGetEnumRequestTypeRule(): void {
-      $output = \PluginFormcreatorTargetTicket::getEnumRequestTypeRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumRequestTypeRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::REQUESTTYPE_NONE      => 'Default or from a template',
-         \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC  => "Specific type",
-         \PluginFormcreatorTargetTicket::REQUESTTYPE_ANSWER    => "Equals to the answer to the question",
+         $testedClass::REQUESTTYPE_NONE      => 'Default or from a template',
+         $testedClass::REQUESTTYPE_SPECIFIC  => "Specific type",
+         $testedClass::REQUESTTYPE_ANSWER    => "Equals to the answer to the question",
       ]);
    }
 
    public function testGetEnumRequestSourceRule(): void {
-      $output = \PluginFormcreatorTargetTicket::getEnumRequestSourceRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumRequestSourceRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::REQUESTTYPE_NONE      => 'Source from template or user default or GLPI default',
-         \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC  => "Formcreator",
+         $testedClass::REQUESTTYPE_NONE      => 'Source from template or user default or GLPI default',
+         $testedClass::REQUESTTYPE_SPECIFIC  => "Formcreator",
       ]);
    }
 
    public function testGetEnumDestinationEntity() {
-      $output = \PluginFormcreatorTargetTicket::getEnumDestinationEntity();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumDestinationEntity();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_CURRENT      => 'Current active entity',
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER  => "Default requester user's entity",
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER_DYN_FIRST    => "First dynamic requester user's entity (alphabetical)",
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER_DYN_LAST      => "Last dynamic requester user's entity (alphabetical)",
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_FORM  => 'The form entity',
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_VALIDATOR    => 'Default entity of the validator',
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_SPECIFIC      => 'Specific entity',
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_USER  => 'Default entity of a user type question answer',
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_ENTITY    => 'From a GLPI object > Entity type question answer',
+         $testedClass::DESTINATION_ENTITY_CURRENT      => 'Current active entity',
+         $testedClass::DESTINATION_ENTITY_REQUESTER  => "Default requester user's entity",
+         $testedClass::DESTINATION_ENTITY_REQUESTER_DYN_FIRST    => "First dynamic requester user's entity (alphabetical)",
+         $testedClass::DESTINATION_ENTITY_REQUESTER_DYN_LAST      => "Last dynamic requester user's entity (alphabetical)",
+         $testedClass::DESTINATION_ENTITY_FORM  => 'The form entity',
+         $testedClass::DESTINATION_ENTITY_VALIDATOR    => 'Default entity of the validator',
+         $testedClass::DESTINATION_ENTITY_SPECIFIC      => 'Specific entity',
+         $testedClass::DESTINATION_ENTITY_USER  => 'Default entity of a user type question answer',
+         $testedClass::DESTINATION_ENTITY_ENTITY    => 'From a GLPI object > Entity type question answer',
       ]);
    }
 
    public function testGetEnumTagType() {
-      $output = \PluginFormcreatorTargetTicket::getEnumTagType();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumTagType();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::TAG_TYPE_NONE                   => __('None'),
-         \PluginFormcreatorTargetTicket::TAG_TYPE_QUESTIONS              => __('Tags from questions', 'formcreator'),
-         \PluginFormcreatorTargetTicket::TAG_TYPE_SPECIFICS              => __('Specific tags', 'formcreator'),
-         \PluginFormcreatorTargetTicket::TAG_TYPE_QUESTIONS_AND_SPECIFIC => __('Tags from questions and specific tags', 'formcreator'),
-         \PluginFormcreatorTargetTicket::TAG_TYPE_QUESTIONS_OR_SPECIFIC  => __('Tags from questions or specific tags', 'formcreator')
+         $testedClass::TAG_TYPE_NONE                   => __('None'),
+         $testedClass::TAG_TYPE_QUESTIONS              => __('Tags from questions', 'formcreator'),
+         $testedClass::TAG_TYPE_SPECIFICS              => __('Specific tags', 'formcreator'),
+         $testedClass::TAG_TYPE_QUESTIONS_AND_SPECIFIC => __('Tags from questions and specific tags', 'formcreator'),
+         $testedClass::TAG_TYPE_QUESTIONS_OR_SPECIFIC  => __('Tags from questions or specific tags', 'formcreator')
       ]);
    }
 
    public function testGetEnumDateType() {
-      $output = \PluginFormcreatorTargetTicket::getEnumDueDateRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumDueDateRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_ANSWER => __('equals to the answer to the question', 'formcreator'),
-         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_TICKET => __('calculated from the ticket creation date', 'formcreator'),
-         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_CALC => __('calculated from the answer to the question', 'formcreator'),
+         $testedClass::DUE_DATE_RULE_ANSWER => __('equals to the answer to the question', 'formcreator'),
+         $testedClass::DUE_DATE_RULE_TICKET => __('calculated from the ticket creation date', 'formcreator'),
+         $testedClass::DUE_DATE_RULE_CALC => __('calculated from the answer to the question', 'formcreator'),
       ]);
    }
 
    public function testGetEnumLocationType() {
-      $output = \PluginFormcreatorTargetTicket::getEnumLocationRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumLocationRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE        => __('Location from template or none', 'formcreator'),
-         \PluginFormcreatorTargetTicket::LOCATION_RULE_SPECIFIC    => __('Specific location', 'formcreator'),
-         \PluginFormcreatorTargetTicket::LOCATION_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
-         \PluginFormcreatorTargetTicket::LOCATION_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),
+         $testedClass::LOCATION_RULE_NONE        => __('Location from template or none', 'formcreator'),
+         $testedClass::LOCATION_RULE_SPECIFIC    => __('Specific location', 'formcreator'),
+         $testedClass::LOCATION_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
+         $testedClass::LOCATION_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),
       ]);
    }
 
    public function testGetEnumUrgencyRule() {
-      $output = \PluginFormcreatorTargetTicket::getEnumUrgencyRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumUrgencyRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::URGENCY_RULE_NONE      => 'Urgency from template or Medium',
-         \PluginFormcreatorTargetTicket::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
-         \PluginFormcreatorTargetTicket::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
+         $testedClass::URGENCY_RULE_NONE      => 'Urgency from template or Medium',
+         $testedClass::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
+         $testedClass::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
       ]);
    }
 
    public function testGetEnumAssociateRule() {
-      $output = \PluginFormcreatorTargetTicket::getEnumAssociateRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumAssociateRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_NONE         => 'None',
-         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_SPECIFIC     => 'Specific asset',
-         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_ANSWER       => 'Equals to the answer to the question',
-         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER  => 'Last valid answer',
+         $testedClass::ASSOCIATE_RULE_NONE         => 'None',
+         $testedClass::ASSOCIATE_RULE_SPECIFIC     => 'Specific asset',
+         $testedClass::ASSOCIATE_RULE_ANSWER       => 'Equals to the answer to the question',
+         $testedClass::ASSOCIATE_RULE_LAST_ANSWER  => 'Last valid answer',
       ]);
    }
 
    public function testGetEnumCategoryRule() {
-      $output = \PluginFormcreatorTargetTicket::getEnumCategoryRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumCategoryRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE          => 'Category from template or none',
-         \PluginFormcreatorTargetTicket::CATEGORY_RULE_SPECIFIC      => 'Specific category',
-         \PluginFormcreatorTargetTicket::CATEGORY_RULE_ANSWER        => 'Equals to the answer to the question',
-         \PluginFormcreatorTargetTicket::CATEGORY_RULE_LAST_ANSWER   => 'Last valid answer',
+         $testedClass::CATEGORY_RULE_NONE          => 'Category from template or none',
+         $testedClass::CATEGORY_RULE_SPECIFIC      => 'Specific category',
+         $testedClass::CATEGORY_RULE_ANSWER        => 'Equals to the answer to the question',
+         $testedClass::CATEGORY_RULE_LAST_ANSWER   => 'Last valid answer',
       ]);
    }
 
