@@ -1126,6 +1126,15 @@ PluginFormcreatorTranslatableInterface
     * @return void
     */
    public function post_updateItem($history = 1) {
+      $this->input = $this->addFiles(
+         $this->input,
+         [
+            'force_update'  => true,
+            'content_field' => 'content',
+            'name'          => 'content',
+         ]
+      );
+
       $this->updateValidators();
       $this->updateConditions($this->input);
 

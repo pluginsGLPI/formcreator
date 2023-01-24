@@ -154,7 +154,7 @@ class DropdownField extends PluginFormcreatorAbstractField
             $dparams['right'] = 'all';
             $currentEntity = Session::getActiveEntity();
             $ancestorEntities = getAncestorsOf(Entity::getTable(), $currentEntity);
-            $decodedValues['entity_restrict'] = $decodedValues['entity_restrict'] ?? 2;
+            $decodedValues['entity_restrict'] = $decodedValues['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
             switch ($decodedValues['entity_restrict']) {
                case self::ENTITY_RESTRICT_FORM:
                   $currentEntity = $form->fields['entities_id'];
@@ -240,14 +240,17 @@ class DropdownField extends PluginFormcreatorAbstractField
                ];
             }
             if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
-               $requestersObserversGroupsQuery = new QuerySubQuery([
+               $sub_query = [
                   'SELECT' => 'tickets_id',
                   'FROM' => Group_Ticket::getTable(),
                   'WHERE' => [
-                     'groups_id' => $_SESSION['glpigroups'],
                      'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
                   ],
-               ]);
+               ];
+               if (count($_SESSION['glpigroups']) > '0') {
+                  $sub_query['WHERE']['groups_id'] = $_SESSION['glpigroups'];
+               }
+               $requestersObserversGroupsQuery = new QuerySubQuery($sub_query);
                if (!isset($dparams_cond_crit['OR']['id'])) {
                   $dparams_cond_crit['OR'] = [
                      'id' => $requestersObserversGroupsQuery,
@@ -337,7 +340,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       if ($itemtype != Entity::class) {
          $dparams['display_emptychoice'] = ($this->question->fields['show_empty'] !== '0');
       } else {
-         if ($this->question->fields['show_empty'] !== '0') {
+         if ($this->question->fields['show_empty'] != '0') {
             $dparams['toadd'] = [
                -1 => Dropdown::EMPTY_VALUE,
             ];
@@ -351,6 +354,9 @@ class DropdownField extends PluginFormcreatorAbstractField
       }
       if (isset($emptyItem->fields['otherserial'])) {
          $dparams['displaywith'][] = 'otherserial';
+      }
+      if ($itemtype === Ticket::class && !array_search('id', $dparams['displaywith'])) {
+         $dparams['displaywith'][] = 'id';
       }
 
       return $dparams;

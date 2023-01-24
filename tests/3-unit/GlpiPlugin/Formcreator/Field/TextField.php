@@ -330,4 +330,95 @@ class TextField extends CommonTestCase {
       $output = $instance->getValueForApi();
       $this->string($output)->isEqualTo($expected);
    }
+
+   public function providerParseAnswerValues() {
+      return [
+         [
+            'question' => $this->getQuestion(),
+            'value' => '',
+            'expected' => true,
+            'expectedValue' => '',
+         ],
+         [
+            'question' => $this->getQuestion(),
+            'value' => 'foo',
+            'expected' => true,
+            'expectedValue' => 'foo',
+         ],
+         [
+            'question' => $this->getQuestion(),
+            'value' => 'foo\\bar',
+            'expected' => true,
+            'expectedValue' => 'foo\\bar',
+         ],
+         [
+            'question' => $this->getQuestion(),
+            'value' => 'foo\\\\bar',
+            'expected' => true,
+            'expectedValue' => 'foo\\bar',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerParseAnswerValues
+    */
+   public function testParseAnswerValues($question, $value, $expected, $expectedValue) {
+      $instance = $this->newTestedInstance($question);
+      $output = $instance->parseAnswerValues([
+         'formcreator_field_' . $question->getID() => $value
+      ]);
+      $this->boolean($output)->isEqualTo($expected);
+   }
+
+   public function providerGetValueForTargetText() {
+      return [
+         [
+            'question' => $this->getQuestion(),
+            'value' => '',
+            'expected' => true,
+            'expectedValue' => '',
+         ],
+         [
+            'question' => $this->getQuestion(),
+            'value' => 'foo',
+            'expected' => true,
+            'expectedValue' => 'foo',
+         ],
+         [
+            'question' => $this->getQuestion(),
+            'value' => 'foo\\bar',
+            'expected' => true,
+            'expectedValue' => 'foo\\bar',
+         ],
+         [
+            'question' => $this->getQuestion(),
+            'value' => 'foo\\\\bar',
+            'expected' => true,
+            'expectedValue' => 'foo\\bar',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForTargetText
+    *
+    * @return void
+    */
+   public function testGetValueForTargetText($question, $value, $expected, $expectedValue) {
+      $instance = $this->newTestedInstance($question);
+      $output = $instance->parseAnswerValues([
+         'formcreator_field_' . $question->getID() => $value
+      ]);
+
+      $output = $instance->getValueForTargetText('', false);
+      if ($expected === false) {
+         $this->variable($output)->isNull();
+      } else {
+         $this->string($output)
+            ->isEqualTo($expectedValue);
+      }
+   }
+
+
 }

@@ -51,7 +51,7 @@ class TextField extends PluginFormcreatorAbstractField
 
    public function showForm(array $options): void {
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      // $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
       $this->deserializeValue($this->question->fields['default_values']);
       $parameters = $this->getParameters();
       TemplateRenderer::getInstance()->display($template, [
@@ -202,6 +202,11 @@ class TextField extends PluginFormcreatorAbstractField
          return false;
       }
 
+      // input is sanitized (it comes from $_POST),
+      // but unsanitize ignores pair count of consecutive backslashes
+      // when nothing else must be unsanitized
+      // We need to force it
+      $this->value = stripslashes($input[$key]);
       $this->value = Sanitizer::unsanitize($input[$key]);
       return true;
    }

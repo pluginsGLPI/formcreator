@@ -79,6 +79,7 @@ class PluginFormcreatorInstall {
       '2.12.5' => '2.13',
       '2.13'   => '2.13.1',
       '2.13.1' => '2.13.3',
+      '2.13.3' => '2.13.4',
    ];
 
    protected bool $resyncIssues = false;
@@ -700,7 +701,7 @@ class PluginFormcreatorInstall {
          ],
       ]]);
 
-      $this->adRightsToMiniDashboard($dashboard->fields['id']);
+      $this->addRightsToMiniDashboard($dashboard->fields['id']);
    }
 
    protected function createMiniDashboardBigNumbers() {
@@ -771,10 +772,10 @@ class PluginFormcreatorInstall {
          $x += ($w + $s);
       }
 
-      $this->adRightsToMiniDashboard($dashboard->fields['id']);
+      $this->addRightsToMiniDashboard($dashboard->fields['id']);
    }
 
-   protected function adRightsToMiniDashboard(int $dashboardId) {
+   protected function addRightsToMiniDashboard(int $dashboardId) {
       // Give rights to all self service profiles
       $profile = new Profile();
       $helpdeskProfiles = $profile->find([

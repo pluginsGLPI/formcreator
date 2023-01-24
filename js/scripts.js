@@ -845,7 +845,7 @@ var plugin_formcreator = new function() {
             var sectionId = parseInt(sectionKey);
             if (!isNaN(sectionId)) {
                if (sectionToShow[sectionId]) {
-                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"][data-id="' + sectionId+ '"]').removeAttr('hidden', '');
+                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"][data-id="' + sectionId+ '"]').removeAttr('hidden');
                } else {
                   $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"][data-id="' + sectionId+ '"]').attr('hidden', '');
                }
@@ -857,7 +857,7 @@ var plugin_formcreator = new function() {
             questionId = parseInt(questionKey.replace('formcreator_field_', ''));
             if (!isNaN(questionId)) {
                if (questionToShow[questionKey]) {
-                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-id="' + questionKey + '"]').removeAttr('hidden', '');
+                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-id="' + questionKey + '"]').removeAttr('hidden');
                } else {
                   $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-id="' + questionKey + '"]').attr('hidden', '');
                }
@@ -867,6 +867,8 @@ var plugin_formcreator = new function() {
          $('[name="submit_formcreator"]').toggle(submitButtonToShow == true);
       });
    };
+
+   this.showFieldsDebounced = _.debounce(this.showFields, 400, false);
 
    // === SECTIONS ===
 
@@ -1729,15 +1731,16 @@ function pluginFormcreatorInitializeTextarea(fieldName, rand) {
    var i = 0;
    var e;
    while (e = tinymce.get(i++)) {
-      var field = $('[name="' + fieldName + '"]');
-      var form = field[0].form;
-      if (e.formElement != form) {
+      if ($(e.targetElm).prop('name') != fieldName) {
          continue;
       }
+
+      const field = $('[name="' + fieldName + '"]');
+      const form = field[0].form
       // https://stackoverflow.com/a/63342064
       e.on('input NodeChange', function(e) {
          tinyMCE.triggerSave();
-         plugin_formcreator.showFields($(form));
+         plugin_formcreator.showFieldsDebounced($(form));
       });
       return;
   }

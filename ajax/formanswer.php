@@ -54,6 +54,8 @@ if (!isset($_SESSION['glpiname'])) {
 }
 
 // Save form
+$backup_debug = $_SESSION['glpi_use_mode'];
+$_SESSION['glpi_use_mode'] = \Session::NORMAL_MODE;
 $formAnswer = PluginFormcreatorCommon::getFormAnswer();
 if ($formAnswer->add($_POST) === false) {
    http_response_code(400);
@@ -66,9 +68,11 @@ if ($formAnswer->add($_POST) === false) {
          'message' => $messages
       ]);
    }
+   $_SESSION['glpi_use_mode'] = $backup_debug;
    die();
 }
 $form->increaseUsageCount();
+$_SESSION['glpi_use_mode'] = $backup_debug;
 
 if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
    // Form was saved by an annymous user
@@ -84,7 +88,7 @@ if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
 }
 
 // redirect to created item
-if ($_SESSION['glpibackcreated']) {
+if ($_SESSION['glpibackcreated'] && Ticket::canView()) {
    if (strpos($_SERVER['HTTP_REFERER'], 'form.form.php') === false) {
       // User was not testing the form from preview
       if (count($formAnswer->targetList) == 1) {
@@ -112,10 +116,16 @@ if ($_SESSION['glpibackcreated']) {
 }
 
 if (plugin_formcreator_replaceHelpdesk()) {
+   if (Ticket::canView()) {
+      $redirect = PluginFormcreatorIssue::getSearchURL();
+   } else {
+      $redirect = 'wizard.php';
+   }
+
    // Form was saved from the service catalog
    echo json_encode(
       [
-         'redirect' => PluginFormcreatorIssue::getSearchURL(),
+         'redirect' => $redirect,
       ], JSON_FORCE_OBJECT
    );
    die();

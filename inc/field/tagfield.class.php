@@ -73,7 +73,7 @@ class TagField extends DropdownField
       if (!$canEdit) {
          $html .= '<div class="form_field">';
          $tagNames = [];
-         if (count($this->value) > 0) {
+         if (is_array($this->value) && count($this->value) > 0) {
             foreach ($this->value as $tagId) {
                $tag = new PluginTagTag();
                if (!$tag->getFromDB($tagId)) {

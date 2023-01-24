@@ -102,7 +102,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                $ref_table,
                $already_link_tables,
                $issueSo[9]['table'],
-               'users_id_validator',
+               $issueSo[9]['linkfield'],
                0,
                0,
                $issueSo[9]['joinparams']
@@ -112,7 +112,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                $ref_table,
                $already_link_tables,
                $issueSo[11]['table'],
-               'users_id_validate',
+               $issueSo[11]['linkfield'],
                0,
                0,
                $issueSo[11]['joinparams']
@@ -122,10 +122,40 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                $ref_table,
                $already_link_tables,
                $issueSo[16]['table'],
-               'groups_id_validator',
+               $issueSo[16]['linkfield'],
                0,
                0,
                $issueSo[16]['joinparams']
+            );
+            $join .= Search::addLeftJoin(
+               $itemtype,
+               $ref_table,
+               $already_link_tables,
+               $issueSo[42]['table'],
+               $issueSo[42]['linkfield'],
+               0,
+               0,
+               $issueSo[42]['joinparams']
+            );
+            $join .= Search::addLeftJoin(
+               $itemtype,
+               $ref_table,
+               $already_link_tables,
+               $issueSo[43]['table'],
+               $issueSo[43]['linkfield'],
+               0,
+               0,
+               $issueSo[43]['joinparams']
+            );
+            $join .= Search::addLeftJoin(
+               $itemtype,
+               $ref_table,
+               $already_link_tables,
+               $issueSo[44]['table'],
+               $issueSo[44]['linkfield'],
+               0,
+               0,
+               $issueSo[44]['joinparams']
             );
          }
          break;
@@ -185,6 +215,19 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          // condition where current user is a validator of a issue of type ticket
          $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[11]['joinparams']);
          $condition .= " OR `glpi_users_users_id_validate_$complexJoinId`.`id` = '$currentUser'";
+
+         // condition where the current user is a requester of a ticket linked to a form answer typed issue
+         $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[42]['joinparams']);
+         $condition .= " OR `glpi_users_$complexJoinId`.`id` = '$currentUser'";
+
+         // condition where the current user is a watcher of a ticket linked to a form answer typed issue
+         $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[43]['joinparams']);
+         $condition .= " OR `glpi_users_$complexJoinId`.`id` = '$currentUser'";
+
+         // condition where the current user is assigned of a ticket linked to a form answer typed issue
+         $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[44]['joinparams']);
+         $condition .= " OR `glpi_users_$complexJoinId`.`id` = '$currentUser'";
+
          // Add users_id_recipient
          $condition .= " OR `glpi_plugin_formcreator_issues`.`users_id_recipient` = $currentUser ";
          return "($condition)";
@@ -202,17 +245,17 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          if (Session::haveRight('config', UPDATE)) {
             return '';
          }
-         if (!PluginFormcreatorCommon::canValidate()) {
-            return "`$table`.`requester_id` = $currentUser";
-         }
+
+         // Check the user is a requester
+         $condition = "`$table`.`requester_id` = $currentUser";
 
          if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
             return PluginAdvformCommon::addDefaultWhere($itemtype);
          } else {
-            // check the user
-            $condition = " (`$table`.`users_id_validator` = $currentUser";
+            // Check the user is a validator of the form answer
+            $condition .= " OR (`$table`.`users_id_validator` = $currentUser";
 
-            // check groups of the user
+            // check user is a member of validator groups of the form answer
             $groups = Group_User::getUserGroups($currentUser);
             if (count($groups) < 1) {
                // The user is not a member of any group
@@ -714,5 +757,40 @@ function plugin_formcreator_hook_update_user(CommonDBTM $item) {
          Session::addMessageAfterRedirect(__('Formcreator\'s mini dashboard not usable as default. This Setting has been ignored.', 'formcreator'), false, WARNING);
          unset($item->input['default_dashboard_mini_ticket']);
       }
+   }
+}
+
+function plugin_formcreator_transfer(array $options) {
+   if ($options['type'] != Ticket::class) {
+      return;
+   }
+
+   if ($options['id'] == $options['newID']) {
+      $issue = new PluginFormcreatorIssue();
+      if (!$issue->getFromDbByCrit([
+         'itemtype' => $options['type'],
+         'items_id' => $options['id'],
+      ])) {
+         // No matching issue found
+         return;
+      }
+      $issue->update([
+         'id' => $issue->getID(),
+         'entities_id' => $options['entities_id'],
+      ]);
+   } else {
+      $item_ticket = new Item_Ticket();
+      if (!$item_ticket->getFromDBByCrit([
+         'itemtype'   => PluginFormcreatorFormAnswer::class,
+         'tickets_id' => $options['id'],
+      ])) {
+         // No matching form answer found
+         return;
+      }
+      $item_ticket->add([
+         'itemtype'   => PluginFormcreatorFormAnswer::class,
+         'items_id'   => $item_ticket->fields['items_id'],
+         'tickets_id' => $options['newID'],
+      ]);
    }
 }

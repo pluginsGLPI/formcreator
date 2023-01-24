@@ -33,7 +33,7 @@ use Glpi\Plugin\Hooks;
 
 global $CFG_GLPI;
 // Version of the plugin (major.minor.bugfix)
-define('PLUGIN_FORMCREATOR_VERSION', '2.13.3');
+define('PLUGIN_FORMCREATOR_VERSION', '2.13.4');
 // Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.13');
 // is or is not an official release of the plugin
@@ -305,6 +305,9 @@ function plugin_formcreator_permanent_hook(): void {
    ];
    // hook to add custom actions on a ticket in service catalog
    $PLUGIN_HOOKS[Hooks::TIMELINE_ACTIONS]['formcreator'] = 'plugin_formcreator_timelineActions';
+
+   $PLUGIN_HOOKS[Hooks::ITEM_TRANSFER]['formcreator'] = 'plugin_formcreator_transfer';
+
 }
 
 /**
@@ -425,7 +428,17 @@ function plugin_formcreator_redirect() {
                && isset($_SESSION['glpiactive_entity'])) {
             // Interface and active entity are set in session
             if (plugin_formcreator_replaceHelpdesk()) {
-               Html::redirect(FORMCREATOR_ROOTDOC."/front/wizard.php");
+               switch (PluginFormcreatorEntityConfig::getUsedConfig('service_catalog_home', $_SESSION['glpiactive_entity'])) {
+                  default:
+                  case PluginFormcreatorEntityConfig::CONFIG_SERVICE_CATALOG_HOME_SEARCH:
+                     $homepage = '/front/wizard.php';
+                     break;
+
+                  case PluginFormcreatorEntityConfig::CONFIG_SERVICE_CATALOG_HOME_ISSUE:
+                     $homepage = '/front/issue.php';
+                     break;
+               }
+               Html::redirect(Plugin::getWebDir('formcreator') . $homepage);
             }
          }
       }
