@@ -1055,10 +1055,12 @@ PluginFormcreatorTranslatableInterface
       $options = $options + [
          'display' => $options['display'] ?? true,
       ];
-      if (is_string($value)) {
-         $options['value'] = $value;
-      } else if (is_array($value)) {
-         $options['values'] = $value;
+      if ($value !== null) {
+         if (is_array($value)) {
+            $options['values'] = $value;
+         } else {
+            $options['value'] = $value;
+         }
       }
       $output = Dropdown::showFromArray($name, $items, $options);
 
