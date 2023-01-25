@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Toolbox\Sanitizer;
+
 include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
@@ -57,4 +59,4 @@ if (!$success) {
    http_response_code(500);
    exit();
 }
-echo json_encode(['name' => $question->fields['name']], JSON_UNESCAPED_UNICODE);
+echo json_encode(['name' => Sanitizer::unsanitize($question->fields['name'])], JSON_UNESCAPED_UNICODE);
