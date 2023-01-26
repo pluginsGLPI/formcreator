@@ -1646,8 +1646,8 @@ msgstr "Denetim listesi"
 #: inc/questionfilter.class.php:52
 msgid "Question filter"
 msgid_plural "Question filters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soru süzgeci"
+msgstr[1] "Soru süzgeçleri"
 
 #: inc/questionfilter.class.php:62 entrée standard:68
 msgid "Filter"
@@ -2160,7 +2160,7 @@ msgstr "Sözleşme"
 
 #: inc/abstractitiltarget.class.php:1294
 msgid "Contract "
-msgstr ""
+msgstr "Sözleşme"
 
 #: inc/abstractitiltarget.class.php:1605
 msgid "The description cannot be empty!"

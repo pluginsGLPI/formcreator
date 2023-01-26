@@ -2186,7 +2186,7 @@ PluginFormcreatorTranslatableInterface
       ]);
       echo '</td>';
 
-      echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
+      echo '<td width="15%"><strong>'._n('Type', 'Types', 1, 'formcreator').' <span style="color:red;">*</span></strong></td>';
       echo '<td width="30%">';
       $targetTypes = [];
       foreach (PluginFormcreatorForm::getTargetTypes() as $targetType) {

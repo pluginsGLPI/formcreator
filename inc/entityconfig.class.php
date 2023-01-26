@@ -471,7 +471,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          unset($elements[self::CONFIG_PARENT]);
       }
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".__('Category', 'formcreator')."</td>";
+      echo "<td>"._n("Category", "Categories", 1, 'formcreator')."</td>";
       echo "<td>";
       Dropdown::showFromArray('is_category_visible', $elements, ['value' => $this->fields['is_category_visible']]);
       if ($this->fields['is_category_visible'] == self::CONFIG_PARENT) {

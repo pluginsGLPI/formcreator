@@ -1,3 +1,47 @@
+<a name="2.13.4"></a>
+## [2.13.4](https://github.com/pluginsGLPI/formcreator/compare/2.13.3..2.13.4) (2023-01-24)
+
+
+### Bug Fixes
+
+*  handle undefined setting for service catalog homepage ([411ae3597](https://github.com/pluginsGLPI/formcreator/commit/411ae3597))
+*  typo in french locale ([f61ded17a](https://github.com/pluginsGLPI/formcreator/commit/f61ded17a))
+* **abstractitiltarget:** multiple tag questions set but not displayed in designer ([90f2a95d8](https://github.com/pluginsGLPI/formcreator/commit/90f2a95d8))
+* **checkboxesfield,multiselectfield:** default value not displayed ([8f36ab726](https://github.com/pluginsGLPI/formcreator/commit/8f36ab726))
+* **composite:** ignore link to non existing ticket ([8502d4b16](https://github.com/pluginsGLPI/formcreator/commit/8502d4b16))
+* **condition:** allow longer texts ([eecdf8a2a](https://github.com/pluginsGLPI/formcreator/commit/eecdf8a2a))
+* **condition:** display of tested question shows wrong item ([5d34da8b4](https://github.com/pluginsGLPI/formcreator/commit/5d34da8b4))
+* **condition:** width of question dropdown ([ce0389efd](https://github.com/pluginsGLPI/formcreator/commit/ce0389efd))
+* **dropdownfield:** empty SQL IN statement when restricted tickets rights ([5c5244a85](https://github.com/pluginsGLPI/formcreator/commit/5c5244a85))
+* **form:** image upload handling in header field ([5dc66a5ef](https://github.com/pluginsGLPI/formcreator/commit/5dc66a5ef))
+* **formanswer:** default search filter hides legit access ([2dc9f8e3f](https://github.com/pluginsGLPI/formcreator/commit/2dc9f8e3f))
+* **formanswer:** malformed search option ([5339b7912](https://github.com/pluginsGLPI/formcreator/commit/5339b7912))
+* **formanswer:** missing newline between sections of fullform tag ([61122bc93](https://github.com/pluginsGLPI/formcreator/commit/61122bc93))
+* **formanswer:** temporary disable debug mode ([e9e8da484](https://github.com/pluginsGLPI/formcreator/commit/e9e8da484))
+* **formanswer, textfield, textareafield:** escaping ([3e0666d4d](https://github.com/pluginsGLPI/formcreator/commit/3e0666d4d))
+* **glpiselectfield:** cannot set empty value by default for entity question ([fe2130bbe](https://github.com/pluginsGLPI/formcreator/commit/fe2130bbe))
+* **glpiselectfield:** restore entity restriction for users ([e525b3a82](https://github.com/pluginsGLPI/formcreator/commit/e525b3a82))
+* **helpdesk:** better handling of users that can't see tickets ([a93f03126](https://github.com/pluginsGLPI/formcreator/commit/a93f03126))
+* **install:** add empty schema for new version ([817a9ec7e](https://github.com/pluginsGLPI/formcreator/commit/817a9ec7e))
+* **install:** resync not needed in upgrade to 2.13.4 ([d66a12017](https://github.com/pluginsGLPI/formcreator/commit/d66a12017))
+* **install:** typo in method name ([eac5d77ac](https://github.com/pluginsGLPI/formcreator/commit/eac5d77ac))
+* **issue:** follow entity change on ticket transfer ([434bd3572](https://github.com/pluginsGLPI/formcreator/commit/434bd3572))
+* **issues:** Tooltip consistency with core ([c45d21550](https://github.com/pluginsGLPI/formcreator/commit/c45d21550))
+* **question:** subtype plural and appliance in bad group ([1f780370a](https://github.com/pluginsGLPI/formcreator/commit/1f780370a))
+* **tagfield:** php warning ([cc4b673a8](https://github.com/pluginsGLPI/formcreator/commit/cc4b673a8))
+* **targetticket:** allow more itemtypes to associated elements (#3155) ([cee504c24](https://github.com/pluginsGLPI/formcreator/commit/cee504c24))
+* **textfield:** useless HTML entity encode ([c3d03b51e](https://github.com/pluginsGLPI/formcreator/commit/c3d03b51e))
+
+
+### Features
+
+*  drop support for GLPI 10.1 ([a99a8bcb2](https://github.com/pluginsGLPI/formcreator/commit/a99a8bcb2))
+* **dropdownfield:** always show ticket id ([0190adac9](https://github.com/pluginsGLPI/formcreator/commit/0190adac9))
+* **issue:** access tickets from service catalog ([a6b4f19d0](https://github.com/pluginsGLPI/formcreator/commit/a6b4f19d0))
+* **question:** add support for database sub itemtype ([45126012d](https://github.com/pluginsGLPI/formcreator/commit/45126012d))
+* **wizard:** selectable home page in service catalog ([95103fe54](https://github.com/pluginsGLPI/formcreator/commit/95103fe54))
+
+
 <a name="2.13.3"></a>
 ## [2.13.3](https://github.com/pluginsGLPI/formcreator/compare/2.13.2..2.13.3) (2022-11-24)
 

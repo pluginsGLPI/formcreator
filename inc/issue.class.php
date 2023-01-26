@@ -544,7 +544,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'id'                 => '3',
          'table'              => self::getTable(),
          'field'              => 'itemtype',
-         'name'               => _n('Type', 'Types', 1),
+         'name'               => _n('Type', 'Types', 1, 'formcreator'),
          'searchtype'         => [
             '0'                  => 'equals',
             '1'                  => 'notequals'

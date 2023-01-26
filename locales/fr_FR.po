@@ -11,7 +11,7 @@
 # gerald antoniolli <deeper26@gmail.com>, 2022
 # tguichard25 <t.guichard@mut25.fr>, 2022
 # 06c8e5f1ec78ded2ceb41498ec52b068, 2022
-# Thierry Bugier <tbugier@teclib.com>, 2022
+# Thierry Bugier <tbugier@teclib.com>, 2023
 # 
 #, fuzzy
 msgid ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-04 11:04+0100\n"
 "PO-Revision-Date: 2022-06-15 12:10+0000\n"
-"Last-Translator: Thierry Bugier <tbugier@teclib.com>, 2022\n"
+"Last-Translator: Thierry Bugier <tbugier@teclib.com>, 2023\n"
 "Language-Team: French (France) (https://www.transifex.com/teclib/teams/28042/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -697,7 +697,7 @@ msgstr "Groupe validateur de formulaire"
 
 #: inc/issue.class.php:779
 msgid "Ticket approver group"
-msgstr ""
+msgstr "Groupe approbateur du ticket"
 
 #: inc/issue.class.php:813 inc/abstractitiltarget.class.php:755
 msgid "Time to resolve"
@@ -2573,12 +2573,12 @@ msgstr "Actions"
 
 #: entrée standard:33
 msgid "No form answer yet"
-msgstr ""
+msgstr "Aucune réponse au formulaire pour l'instant"
 
 #: entrée standard:38
 #, php-format
 msgid "%s latest items"
-msgstr ""
+msgstr "%s derniers éléments"
 
 #: entrée standard:83
 msgid "Add a question"

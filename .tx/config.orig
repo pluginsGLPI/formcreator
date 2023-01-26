@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[glpi-project-plugin-formcreator.2_14_0]
+file_filter = locales/<lang>.po
+source_file = locales/glpi.pot
+source_lang = en_GB
+type = PO

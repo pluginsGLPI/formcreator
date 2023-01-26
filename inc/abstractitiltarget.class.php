@@ -1296,8 +1296,6 @@ SCRIPT;
    }
 
    protected function showContractSettings($rand) {
-      global $DB;
-
       echo '<tr>';
       echo '<td width="15%">' . __('Contract') . '</td>';
       echo '<td width="45%">';
@@ -1310,7 +1308,7 @@ SCRIPT;
       echo Html::scriptBlock("plugin_formcreator_change_contract($rand)");
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="contract_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="contract_question_title" style="display: none">' . PluginFormcreatorQuestion::getTypeName(1) . '</span>';
       echo '<span id="contract_specific_title" style="display: none">' . __('Contract ', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';

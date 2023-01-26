@@ -124,6 +124,36 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
             0,
             $issueSo[16]['joinparams']
          );
+         $join .= Search::addLeftJoin(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[42]['table'],
+            $issueSo[42]['linkfield'],
+            0,
+            0,
+            $issueSo[42]['joinparams']
+         );
+         $join .= Search::addLeftJoin(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[43]['table'],
+            $issueSo[43]['linkfield'],
+            0,
+            0,
+            $issueSo[43]['joinparams']
+         );
+         $join .= Search::addLeftJoin(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[44]['table'],
+            $issueSo[44]['linkfield'],
+            0,
+            0,
+            $issueSo[44]['joinparams']
+         );
          if (version_compare(GLPI_VERSION, '10.1') >= 0) {
             $join .= Search::addLeftJoin(
                $itemtype,
@@ -154,36 +184,6 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                0,
                0,
                $issueSo[32]['joinparams']
-            );
-            $join .= Search::addLeftJoin(
-               $itemtype,
-               $ref_table,
-               $already_link_tables,
-               $issueSo[42]['table'],
-               $issueSo[42]['linkfield'],
-               0,
-               0,
-               $issueSo[42]['joinparams']
-            );
-            $join .= Search::addLeftJoin(
-               $itemtype,
-               $ref_table,
-               $already_link_tables,
-               $issueSo[43]['table'],
-               $issueSo[43]['linkfield'],
-               0,
-               0,
-               $issueSo[43]['joinparams']
-            );
-            $join .= Search::addLeftJoin(
-               $itemtype,
-               $ref_table,
-               $already_link_tables,
-               $issueSo[44]['table'],
-               $issueSo[44]['linkfield'],
-               0,
-               0,
-               $issueSo[44]['joinparams']
             );
          }
          break;
@@ -245,6 +245,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          $issueSearchOptions = Search::getOptions($itemtype);
          $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[9]['joinparams']);
          $colname = $issueSearchOptions[9]['linkfield'];
+         // $condition .= "`glpi_users_${colname}_$complexJoinId`.`id` = '$currentUser'";
          $condition .= "`glpi_users_$complexJoinId`.`id` = '$currentUser'";
 
          // condition where current user is a member of a validator group of the issue
@@ -256,6 +257,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
             $groupList = implode("', '", $groupList);
             $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[16]['joinparams']);
             $colname = $issueSearchOptions[16]['linkfield'];
+            // $condition .= " OR `glpi_groups_${colname}_$complexJoinId`.`id` IN ('$groupList')";
             $condition .= " OR `glpi_groups_$complexJoinId`.`id` IN ('$groupList')";
          }
 

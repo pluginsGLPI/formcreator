@@ -1090,17 +1090,15 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
    }
 
    public function providerSetTargetAssociatedItem_LastItem() {
-      global $CFG_GLPI;
-
       // Prepare form
-      $validItemtype = $CFG_GLPI["asset_types"][0];
-      if (array_search(Computer::getType(), $CFG_GLPI['asset_types']) === false) {
-         $CFG_GLPI['asset_types'][] = Computer::getType();
+      $validItemtype = $_SESSION["glpiactiveprofile"]["helpdesk_item_type"][0];
+      if (array_search(Computer::getType(), $_SESSION["glpiactiveprofile"]["helpdesk_item_type"]) === false) {
+         $_SESSION["glpiactiveprofile"]["helpdesk_item_type"][] = Computer::getType();
       }
       $invalidItemtype = Monitor::getType();
 
       // Ensure an itemtype is not in the asset types
-      $CFG_GLPI['asset_types'] = array_filter($CFG_GLPI['asset_types'], function ($itemtype) use ($invalidItemtype) {
+      $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = array_filter($_SESSION["glpiactiveprofile"]["helpdesk_item_type"], function ($itemtype) use ($invalidItemtype) {
          return ($itemtype != $invalidItemtype);
       });
 

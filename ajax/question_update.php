@@ -29,7 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
-use Glpi\Event;
+use Glpi\Toolbox\Sanitizer;
 
 include ('../../../inc/includes.php');
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
@@ -59,5 +59,4 @@ if (!$success) {
    http_response_code(500);
    exit();
 }
-
 echo json_encode(['name' => $question->getDesignLabel()], JSON_UNESCAPED_UNICODE);
