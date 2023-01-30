@@ -90,7 +90,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       $tabNames = [];
       if (!$withtemplate) {
          if ($item->getType() == 'Entity') {
-            $tabNames[1] = _n('Form', 'Forms', 2, 'formcreator');
+            $tabNames[1] = self::createTabEntry(_n('Form', 'Forms', Session::getPluralNumber(), 'formcreator'), 0, PluginFormcreatorForm::getType(), self::getIcon());
          }
       }
       return $tabNames;
@@ -197,6 +197,10 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          self::CONFIG_LEFT_MENU_FOLDED     => __('Folded', 'formcreator'),
          self::CONFIG_LEFT_MENU_UNFOLDED   => __('Unfolded', 'formcreator'),
       ];
+   }
+
+   public static function getIcon() {
+      return 'fas fa-edit';
    }
 
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
