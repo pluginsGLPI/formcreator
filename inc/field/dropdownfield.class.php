@@ -440,7 +440,7 @@ class DropdownField extends PluginFormcreatorAbstractField
 
       $default_join = Search::addDefaultJoin($itemtype, $itemtable, $already_link_tables);
 
-      $searchopt        = &Search::getOptions($itemtype);
+      $searchopt        = Search::getOptions($itemtype);
 
       $criteria_joins = '';
       foreach ($filter as $criteria) {
