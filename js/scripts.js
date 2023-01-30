@@ -1154,6 +1154,7 @@ var plugin_formcreator = new function() {
       var translationId = $(element.closest('[data-itemtype="PluginFormcreatorTranslation"]')).attr('data-id');
       var modal;
       modal = glpi_ajax_dialog({
+         dialogclass: 'modal-xl',
          url: '../ajax/form_language.php',
          params: {
             action: 'translation',
