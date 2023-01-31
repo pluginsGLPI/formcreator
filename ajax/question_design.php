@@ -36,7 +36,7 @@ if (!isset($_REQUEST['id'])) {
    http_response_code(400);
    exit();
 }
-if (!isset($_REQUEST['fieldtype'])) {
+if (empty($_REQUEST['id']) && !isset($_REQUEST['fieldtype'])) {
    http_response_code(400);
    exit();
 }
@@ -63,11 +63,10 @@ foreach ($_REQUEST as $request_key => $request_value) {
 
 $question->fields['values'] = json_encode($values);
 $field = PluginFormcreatorFields::getFieldInstance(
-   $_REQUEST['fieldtype'],
+   $_REQUEST['fieldtype'] ?? $question->fields['fieldtype'],
    $question
 );
-$question->fields['fieldtype'] = '';
-if ($field !== null) {
+if (empty($_REQUEST['id']) && !isset($_REQUEST['fieldtype'])) {
    $question->fields['fieldtype'] = $_REQUEST['fieldtype'];
 }
 $question->showForm($question->getID());
