@@ -497,7 +497,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          if (empty($user->getAnonymizedName(Session::getActiveEntity()))) {
             $hide_technician = true;
          }
-         $group = new \Group();
+         $group = new Group();
          if (empty($group->getAnonymizedName(Session::getActiveEntity()))) {
             $hide_technician_group = true;
          }
