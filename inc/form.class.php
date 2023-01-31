@@ -2456,6 +2456,16 @@ PluginFormcreatorTranslatableInterface
          return false;
       }
 
+      // CLeanup obsolete strings
+      $existing_strings = $this->getTranslatableStrings();
+      foreach (array_keys($translations) as $original) {
+         if (!in_array($original, $existing_strings['itemlink'])
+            && !in_array($original, $existing_strings['string'])
+            && !in_array($original, $existing_strings['text'])) {
+            unset($translations[$original]);
+         }
+      }
+
       $output = "<?php" . PHP_EOL . "return " . var_export($translations, true) . ";";
       $written = file_put_contents(
          $file,

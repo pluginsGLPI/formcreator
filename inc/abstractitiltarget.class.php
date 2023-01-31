@@ -983,7 +983,7 @@ PluginFormcreatorTranslatableInterface
 
    protected function showCategorySettings($rand) {
       echo '<tr>';
-      echo '<td width="15%">' . PluginFormcreatorCategory::getTypeName(1) . '</td>';
+      echo '<td width="15%">' . ITILCategory::getTypeName(1) . '</td>';
       echo '<td width="25%">';
       Dropdown::showFromArray(
          'category_rule',

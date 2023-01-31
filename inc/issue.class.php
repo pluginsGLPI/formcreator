@@ -507,11 +507,16 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $tab = [];
       $hide_technician = false;
+      $hide_technician_group = false;
       if (!Session::isCron()) {
-         $hide_technician = \Entity::getUsedConfig(
-            'anonymize_support_agents',
-            Session::getActiveEntity()
-         );
+         $user = new User();
+         if (empty($user->getAnonymizedName(Session::getActiveEntity()))) {
+            $hide_technician = true;
+         }
+         $group = new Group();
+         if (empty($group->getAnonymizedName(Session::getActiveEntity()))) {
+            $hide_technician_group = true;
+         }
       }
 
       $tab[] = [
@@ -763,8 +768,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'datatype'           => 'dropdown',
             'forcegroupby'       => true,
             'massiveaction'      => false,
-            'nodisplay'          => $hide_technician,
-            'nosearch'           => $hide_technician,
+            'nodisplay'          => $hide_technician_group,
+            'nosearch'           => $hide_technician_group,
             'condition'          => ['is_assign' => 1],
             'joinparams'         => [
                'beforejoin'         => [
