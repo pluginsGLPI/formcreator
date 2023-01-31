@@ -1165,7 +1165,9 @@ var plugin_formcreator = new function() {
          close: function () {
             // Remove unclosed TinyMCE toolbar
             var tinyToolbar = document.querySelector('.tox-tinymce-aux');
-            tinyToolbar.parentNode.removeChild(tinyToolbar);
+            if (tinyToolbar) {
+               tinyToolbar.parentNode.removeChild(tinyToolbar);
+            }
             // Reload the tab
             reloadTab();
          },
