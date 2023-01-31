@@ -356,9 +356,18 @@ implements PluginFormcreatorExportableInterface
       echo $header;
       echo '</thead>';
 
+      $all_translated_strings = $form->getTranslatableStrings([
+         'translated' => true,
+         'language'   => $this->fields['name']
+      ]);
+
       echo '<tbody>';
       foreach ($translations as $original => $translated) {
          $id = PluginFormcreatorTranslation::getTranslatableStringId($original);
+         if (!in_array($id, array_keys($all_translated_strings['id']))) {
+            // String is translated but no longer used in the form or its sub objects
+            continue;
+         }
          echo '<tr data-itemtype="PluginFormcreatorTranslation" data-id="' . $id . '">';
          echo '<td>'
          . Html::getCheckbox([
