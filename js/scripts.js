@@ -1163,6 +1163,10 @@ var plugin_formcreator = new function() {
          },
          title: i18n.textdomain('formcreator').__('Update a translation', 'formcreator'),
          close: function () {
+            // Remove unclosed TinyMCE toolbar
+            var tinyToolbar = document.querySelector('.tox-tinymce-aux');
+            tinyToolbar.parentNode.removeChild(tinyToolbar);
+            // Reload the tab
             reloadTab();
          },
          fail: function () {
