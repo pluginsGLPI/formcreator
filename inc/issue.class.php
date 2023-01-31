@@ -493,7 +493,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $hide_technician = false;
       $hide_technician_group = false;
       if (!Session::isCron()) {
-         $user = new \User();
+         $user = new User();
          if (empty($user->getAnonymizedName(Session::getActiveEntity()))) {
             $hide_technician = true;
          }
