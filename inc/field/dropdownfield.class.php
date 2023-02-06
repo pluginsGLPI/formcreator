@@ -331,7 +331,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       if (isset($decodedValues['show_tree_depth'])
          && $decodedValues['show_tree_depth'] > 0
       ) {
-         $dparams_cond_crit['level'] = ['<=', $decodedValues['show_tree_depth'] + $baseLevel];
+         $dparams_cond_crit[$itemtype::getTableField('level')] = ['<=', $decodedValues['show_tree_depth'] + $baseLevel];
       }
 
       $dparams['condition'] = $dparams_cond_crit;
