@@ -42,7 +42,7 @@ class SyncIssuesCommand extends Command
       $table = PluginFormcreatorIssue::getTable();
 
       $this
-         ->setName('glpi:plugins:formcreator:syncissues')
+         ->setName('plugins:formcreator:syncissues')
          ->setDescription("Rebuild `$table` table.");
    }
 
