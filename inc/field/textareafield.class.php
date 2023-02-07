@@ -210,7 +210,6 @@ class TextareaField extends TextField
          );
          $input[$key] = $this->value; // Restore the text because we don't want image converted into A + IMG tags
          // $this->value = $input[$key];
-         $this->value = Sanitizer::unsanitize($this->value);
          foreach ($input['_tag'] as $docKey => $tag) {
             $newTag = $this->uploads['dedup'][$tag];
             $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
@@ -224,7 +223,7 @@ class TextareaField extends TextField
 
    public function deserializeValue($value) {
       $this->value = ($value !== null && $value !== '')
-         ? $value
+         ? Sanitizer::unsanitize($value)
          : '';
    }
 
