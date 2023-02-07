@@ -155,7 +155,7 @@ class TextareaField extends CommonTestCase {
                0 => '6e48eaef-761764d0-62ed2882556d61.27118334',
             ],
          ],
-         'expected' => '&#60;p&#62;&#60;img id=\"6e48eaef-761764d0-62ed2882556d61.27118334\" src=\"blob:http://localhost:8080/76a3e35c-b083-4127-af53-679d2550834f\" data-upload_id=\"0.7577303544485556\"&#62;&#60;/p&#62;',
+         'expected' => '<p><img id="6e48eaef-761764d0-62ed2882556d61.27118334" src="blob:http://localhost:8080/76a3e35c-b083-4127-af53-679d2550834f" data-upload_id="0.7577303544485556"></p>',
       ];
    }
 
@@ -168,7 +168,7 @@ class TextareaField extends CommonTestCase {
 
       $instance->parseAnswerValues($input);
       $instance->deserializeValue($input[$key]);
-      $output = $instance->getValueForTargetText('', false);
+      $output = $instance->getValueForTargetText('', true);
       $this->string($output)->isEqualTo($expected);
    }
 
