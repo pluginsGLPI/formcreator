@@ -152,6 +152,7 @@ class TextareaField extends TextField
       $fieldName    = 'formcreator_field_' . $id;
       $value = $this->value;
       $html = '';
+      $form = PluginFormcreatorForm::getByItem($this->getQuestion());
       $html .= Html::textarea([
          'name'              => $fieldName,
          'editor_id'         => "$fieldName$rand",
@@ -160,6 +161,7 @@ class TextareaField extends TextField
          'rows'              => 5,
          'display'           => false,
          'enable_richtext'   => true,
+         'enable_images'     => !$form->isPublicAccess(),
          'enable_fileupload' => false,
          'uploads'           => $this->uploads,
       ]);
