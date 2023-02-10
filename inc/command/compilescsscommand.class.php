@@ -53,7 +53,7 @@ class CompileScssCommand extends Command
    protected function configure() {
 
       $this
-         ->setName('glpi:plugins:formcreator:scss')
+         ->setName('plugins:formcreator:scss')
          ->setDescription("Compile SCSS");
    }
 

@@ -509,7 +509,7 @@ PluginFormcreatorTranslatableInterface
                $item->countTargets()
             ),
             2 => __('Preview'),
-            3 => PluginFormcreatorFormAnswer::getTypeName(1) . ' ' .__('properties', 'formcreator'),
+            3 => __('Form answer properties', 'formcreator'),
          ];
       }
       if ($item->getType() == Central::class) {

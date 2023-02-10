@@ -909,4 +909,68 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $this->boolean($output)->isTrue();
       $this->integer($instance->getID())->isEqualTo($expected->getID());
    }
+
+   public function providerParseTags() {
+      // Test a single text
+      $question = $this->getQuestion([
+         'fieldtype' => 'textarea',
+      ]);
+      $form = PluginFormcreatorForm::getByItem($question);
+      // Text as received in prepareInputForAdd (GLPI 10.0.6)
+      $text = '&#60;p&#62; &#60;/p&#62;\r\n&#60;p&#62; &#60;/p&#62;';
+
+      $fieldKey = 'formcreator_field_' . $question->getID();
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         $fieldKey => $text,
+      ]);
+
+      yield [
+         'instance' => $formAnswer,
+         'template' => '<p>##answer_' . $question->getID() . '##</p>',
+         'expected' => '&#60;p&#62;' . $text . '&#60;/p&#62;',
+      ];
+
+      // Test a text with an embeddd image
+      $question = $this->getQuestion([
+         'fieldtype' => 'textarea',
+      ]);
+      $form = PluginFormcreatorForm::getByItem($question);
+      // Text as received in prepareInputForAdd (GLPI 10.0.6)
+      $text = '&#60;p&#62;&#60;img id=\"20a8c58a-761764d0-63e0ff1245d9f4.97274571\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAACCAIAAAASFvFNAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAEUlEQVQImWP8v5QBApgYYAAAHsMBqH3ykQkAAAAASUVORK5CYII=\" data-upload_id=\"0.7092882231779103\"&#62;&#60;/p&#62;';
+
+      $fieldKey = 'formcreator_field_' . $question->getID();
+      $filename = '5e5e92ffd9bd91.44444444upload55555555.txt';
+      $tag = '3e29dffe-0237ea21-5e5e7034b1d1a1.33333333';
+      copy(dirname(__DIR__) . '/fixture/upload.txt', GLPI_TMP_DIR . '/' . $filename);
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         $fieldKey => $text,
+         "_{$fieldKey}" => [
+            $filename,
+         ],
+         "_prefix_{$fieldKey}" => [
+            '5e5e92ffd9bd91.44444444',
+         ],
+         "_tag_{$fieldKey}" => [
+            $tag,
+         ],
+      ]);
+
+      yield [
+         'instance' => $formAnswer,
+         'template' => '<p>##answer_' . $question->getID() . '##</p>',
+         'expected' => '&#60;p&#62;' . $text . '&#60;/p&#62;',
+      ];
+   }
+
+   /**
+    * @dataProvider providerParseTags
+    */
+   public function testParseTags($instance, $template, $expected) {
+      $ticket = new PluginFormcreatorTargetTicket();
+
+      $output = $instance->parseTags($template, $ticket, true);
+      $this->string($output)->isEqualTo($expected);
+   }
 }

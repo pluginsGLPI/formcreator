@@ -87,7 +87,7 @@ if (isset($_REQUEST['id'])
       unset($_SESSION['glpiname']);
    }
 } else if (isset($_GET['answer_saved'])) {
-   $message = __("The form has been successfully saved!");
+   $message = __("The form has been successfully saved!", "formcreator");
    Html::displayTitle($CFG_GLPI['root_doc']."/pics/ok.png", $message, $message);
 }
 
