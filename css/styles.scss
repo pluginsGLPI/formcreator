@@ -578,6 +578,13 @@ input[type = radio].form-check-input:checked + label.label-radio .check {
    font-size: 0.8em;
    color: #333;
    padding: 3px 0;
+
+   ul, ol {
+      list-style-type: initial;
+      margin: initial;
+      padding: initial;
+      padding-inline-start: 40px;
+   }
 }
 #plugin_formcreator_form .form-group > .help-block p {
    margin: 0;
