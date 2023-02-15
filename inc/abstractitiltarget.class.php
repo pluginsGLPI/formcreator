@@ -428,6 +428,7 @@ PluginFormcreatorTranslatableInterface
       }
       if (!is_null($urgency) && $urgency != 0) {
          $data['urgency'] = $urgency;
+         $data['priority'] = CommonITILObject::computePriority($data['urgency'], $data['impact']);;
       }
 
       return $data;
