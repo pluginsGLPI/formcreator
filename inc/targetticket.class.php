@@ -866,7 +866,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $data = $this->setSLA($data, $formanswer);
       $data = $this->setOLA($data, $formanswer);
       $data = $this->setTargetUrgency($data, $formanswer);
-      $data['priority'] = CommonITILObject::computePriority($data['urgency'], $data['impact']);
+      $data = $this->setTargetPriority($data);
       $data = $this->setTargetLocation($data, $formanswer);
       $data = $this->setTargetAssociatedItem($data, $formanswer);
       $data = $this->setTargetValidation($data, $formanswer);

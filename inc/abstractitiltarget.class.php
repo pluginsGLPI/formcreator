@@ -434,6 +434,18 @@ PluginFormcreatorTranslatableInterface
    }
 
    /**
+    * Calculate priority from the predefined urgency and impact
+    *
+    * @param array $data
+    * @return array the updated data for the ITIL object
+    */
+   protected function setTargetPriority(array $data): array {
+      $data['priority'] = CommonITILObject::computePriority($data['urgency'], $data['impact']);
+
+      return $data;
+   }
+
+   /**
     * find all actors and prepare data for the ticket being created
     */
    protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorFormAnswer $formanswer) {
