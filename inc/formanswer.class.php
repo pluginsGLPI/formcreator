@@ -740,7 +740,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       echo '<ol>';
-      $domain = PluginFormcreatorForm::getTranslationDomain($_SESSION['glpilanguage'], $form->getID());
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID(), $_SESSION['glpilanguage']);
 
       // Get fields populated with answers
       $this->loadAnswers();

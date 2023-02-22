@@ -2267,7 +2267,7 @@ PluginFormcreatorTranslatableInterface
       if ($language != $this->fields['language']) {
          $eventManagerEnabled = $TRANSLATE->isEventManagerEnabled();
          $TRANSLATE->enableEventManager();
-         $domain = PluginFormcreatorForm::getTranslationDomain($language, $formId);
+         $domain = PluginFormcreatorForm::getTranslationDomain($formId, $language);
          $TRANSLATE->getEventManager()->attach(
             Laminas\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,
             static function (Laminas\EventManager\EventInterface $event) use ($formId, $domain, $TRANSLATE) {
