@@ -39,7 +39,7 @@ implements PluginFormcreatorExportableInterface
    static public $itemtype = PluginFormcreatorForm::class;
    static public $items_id = 'plugin_formcreator_forms_id';
 
-   static $rightname = 'entity';
+   static $rightname = 'plugin_formcreator_form';
 
    /**
     * Returns the type name with consideration of plural
