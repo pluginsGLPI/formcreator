@@ -130,6 +130,7 @@ function plugin_init_formcreator() {
 
    array_push($CFG_GLPI["ticket_types"], PluginFormcreatorFormAnswer::class);
    array_push($CFG_GLPI["document_types"], PluginFormcreatorFormAnswer::class);
+   array_push($CFG_GLPI["document_types"], PluginFormcreatorForm::class);
 
    $plugin = new Plugin();
    if (!$plugin->isActivated('formcreator')) {
