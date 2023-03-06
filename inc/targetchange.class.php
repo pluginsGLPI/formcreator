@@ -675,7 +675,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
          $data[$changeField] = $formanswer->parseTags($data[$changeField], $this, $changeField == 'content');
       }
 
-      $data['_users_id_recipient']   = $_SESSION['glpiID'];
+      $data['_users_id_recipient'] = $formanswer->fields['requester_id'];
 
       $this->prepareActors($form, $formanswer);
 
