@@ -214,6 +214,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
 
       $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
       $data = $this->setTargetUrgency($data, $formanswer);
+      $data = $this->setTargetPriority($data, $formanswer);
 
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
       $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;

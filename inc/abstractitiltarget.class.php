@@ -433,6 +433,15 @@ PluginFormcreatorTranslatableInterface
       return $data;
    }
 
+   protected function setTargetPriority(array $data): array {
+      // Remove default priority so it can be computed
+      if (isset($data['urgency']) || isset($data['impact'])) {
+         unset($data['priority']);
+      }
+      return $data;
+   }
+
+
    /**
     * find all actors and prepare data for the ticket being created
     */

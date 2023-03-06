@@ -698,6 +698,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
       $data = $this->setSLA($data, $formanswer);
       $data = $this->setOLA($data, $formanswer);
       $data = $this->setTargetUrgency($data, $formanswer);
+      $data = $this->setTargetPriority($data, $formanswer);
       $data = $this->setTargetValidation($data, $formanswer);
 
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;

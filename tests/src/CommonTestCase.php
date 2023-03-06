@@ -274,6 +274,8 @@ abstract class CommonTestCase extends atoum
 
       $targetTicket = new \PluginFormcreatorTargetTicket();
       $targetTicket->add($input);
+      $this->boolean($targetTicket->isNewItem())->isFalse();
+      $targetTicket->getFromDB($targetTicket->getID());
 
       return $targetTicket;
    }
@@ -290,6 +292,8 @@ abstract class CommonTestCase extends atoum
 
       $targetChange = new \PluginFormcreatorTargetChange();
       $targetChange->add($input);
+      $this->boolean($targetChange->isNewItem())->isFalse();
+      $targetChange->getFromDB($targetChange->getID());
 
       return $targetChange;
    }
@@ -314,6 +318,8 @@ abstract class CommonTestCase extends atoum
 
       $targetProblem = new \PluginFormcreatorTargetProblem();
       $targetProblem->add($input);
+      $this->boolean($targetProblem->isNewItem())->isFalse();
+      $targetProblem->getFromDB($targetProblem->getID());
 
       return $targetProblem;
    }
