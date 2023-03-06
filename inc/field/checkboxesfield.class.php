@@ -110,7 +110,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
                   'zero_on_empty' => false,
                   'checked'       => in_array($value, $this->value)
                ]);
-               $html .= '<label for="' . $domId . '_' . $i . '" title="' . $translated_value . '">';
+               $html .= '<label for="' . $domId . '_' . $i . '" class="label-checkboxes" title="' . $translated_value . '">';
                $html .= '&nbsp;' . $translated_value;
                $html .= '</label>';
                $html .= "</div>";
