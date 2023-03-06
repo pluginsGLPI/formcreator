@@ -70,6 +70,13 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
       $this->data['##formcreator.validation_comment##'] = $this->obj->fields['comment'];
       $this->data['##formcreator.validation_link##']    = $link;
       $this->data['##formcreator.request_id##']         = $this->obj->fields['id'];
+
+      $this->getTags();
+      foreach ($this->tag_descriptions[NotificationTarget::TAG_LANGUAGE] as $tag => $values) {
+         if (!isset($this->data[$tag])) {
+            $this->data[$tag] = $values['label'];
+         }
+      }
    }
 
    public function getTags() {

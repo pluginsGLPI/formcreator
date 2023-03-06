@@ -29,40 +29,46 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use Glpi\Toolbox\Sanitizer;
 
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   http_response_code(404);
-   exit();
-}
+class PluginFormcreatorUpgradeTo2_13_5 {
+   /** @var Migration */
+   protected $migration;
 
-$formFk = PluginFormcreatorForm::getForeignKeyField();
-if (!isset($_POST[$formFk])) {
-   http_response_code(403);
-   exit();
-}
+   public function isResyncIssuesRequired() {
+      return false;
+   }
 
-$form = new PluginFormcreatorForm();
-$form->getFromDB((int) $_POST['plugin_formcreator_forms_id']);
-if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE) && ($form->isDeleted() || $form->fields['is_active'] == '0')) {
-   http_response_code(403);
-   exit();
-}
+   /**
+    * @param Migration $migration
+    */
+   public function upgrade(Migration $migration) {
+      $this->migration = $migration;
+      $this->fixOldRadiosEncoding();
+   }
 
-if (!$form->canViewForRequest()) {
-   http_response_code(403);
-   exit();
-}
+   public function fixOldRadiosEncoding() {
+      global $DB;
 
-try {
-    $visibility = PluginFormcreatorFields::updateVisibility($_POST);
-} catch (Exception $e) {
-    echo json_encode([
-        'error' => $e->getMessage(),
-    ]);
-    http_response_code(500);
-    exit();
+      $table = 'glpi_plugin_formcreator_questions';
+      $questions = $DB->request([
+         'SELECT' => ['id', 'values'],
+         'FROM'  => $table,
+         'WHERE' => ['fieldtype' => 'radios']
+      ]);
+
+      foreach ($questions as $row) {
+         $values = Sanitizer::unsanitize($row['values']);
+         $values = Sanitizer::sanitize($values);
+         $DB->update(
+            $table,
+            [
+               'values' => $values
+            ],
+            [
+               'id' => $row['id']
+            ]
+         );
+      }
+   }
 }
-echo json_encode($visibility);
-exit();

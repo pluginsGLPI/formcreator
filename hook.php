@@ -807,11 +807,18 @@ function plugin_formcreator_hook_update_profile(CommonDBTM $item) {
    }
    $dashboardRight = new DashboardRight();
    if ($item->fields['interface'] == 'helpdesk') {
-      $dashboardRight->add([
+      $dashboardRight->getFromDBByCrit([
          'dashboards_dashboards_id' => $dashboard->fields['id'],
          'itemtype' => Profile::getType(),
          'items_id' => $item->getID(),
       ]);
+      if ($dashboardRight->isNewItem()) {
+         $dashboardRight->add([
+            'dashboards_dashboards_id' => $dashboard->fields['id'],
+            'itemtype' => Profile::getType(),
+            'items_id' => $item->getID(),
+         ]);
+      }
    } else {
       $dashboardRight->delete([
          'dashboards_dashboards_id' => $dashboard->fields['id'],
