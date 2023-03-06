@@ -30,9 +30,9 @@
  */
 
 namespace tests\units;
-use GlpiPlugin\Formcreator\Tests\CommonTargetTestCase;
+use GlpiPlugin\Formcreator\Tests\AbstractItilTargetTestCase;
 
-class PluginFormcreatorTargetProblem extends CommonTargetTestCase {
+class PluginFormcreatorTargetProblem extends AbstractItilTargetTestCase {
 
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
