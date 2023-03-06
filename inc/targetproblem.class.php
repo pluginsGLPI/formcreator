@@ -194,7 +194,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
          $data[$problemFields] = $formanswer->parseTags($data[$problemFields], $this, $problemFields == 'content');
       }
 
-      $data['_users_id_recipient']   = $_SESSION['glpiID'];
+      $data['_users_id_recipient'] = $formanswer->fields['requester_id'];
 
       $this->prepareActors($form, $formanswer);
 
