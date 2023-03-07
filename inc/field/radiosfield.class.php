@@ -86,14 +86,13 @@ class RadiosField extends PluginFormcreatorAbstractField
                   'id'      => $domId . '_' . $i,
                   'value'   => $value
                ] + $checked);
-               $html .= '<label class="label-radio" title="' . $value . '" for="' . $domId . '_' . $i . '">';
+               $translated_value =  __($value, $domain);
+               $html .= '<label for="' . $domId . '_' . $i . '" class="label-radio" title="' . $translated_value . '">';
                $html .= '<span class="box"></span>';
                $html .= '<span class="check"></span>';
+               $html .= '&nbsp;' . $translated_value;
                $html .= '</label>';
                $html .= '</span>';
-               $html .= '<label for="' . $domId . '_' . $i . '">';
-               $html .= '&nbsp;' . __($value, $domain);
-               $html .= '</label>';
                $html .= '</div>';
             }
          }

@@ -101,6 +101,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
          foreach ($values as $value) {
             if ((trim($value) != '')) {
                $i++;
+               $translated_value =  __($value, $domain);
                $html .= "<div class='checkbox'>";
                $html .= Html::getCheckbox([
                   'title'         => htmlentities($value, ENT_QUOTES),
@@ -110,8 +111,8 @@ class CheckboxesField extends PluginFormcreatorAbstractField
                   'zero_on_empty' => false,
                   'checked'       => in_array($value, $this->value)
                ]);
-               $html .= '<label for="' . $domId . '_' . $i . '">';
-               $html .= '&nbsp;' . __($value, $domain);
+               $html .= '<label for="' . $domId . '_' . $i . '" class="label-checkbox" title="' . $translated_value . '">';
+               $html .= '&nbsp;' . $translated_value;
                $html .= '</label>';
                $html .= "</div>";
             }

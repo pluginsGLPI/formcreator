@@ -565,6 +565,7 @@ PluginFormcreatorTranslatableInterface
       $this->addStandardTab(self::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorFormAnswer::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorForm_Language::class, $ong, $options);
+      $this->addStandardTab(Document_Item::class, $ong, $options);
       $this->addStandardTab(Log::class, $ong, $options);
       return $ong;
    }

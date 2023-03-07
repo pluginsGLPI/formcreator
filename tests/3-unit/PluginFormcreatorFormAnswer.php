@@ -51,6 +51,7 @@ use PluginFormcreatorTargetChange;
 use PluginFormcreatorTargetProblem;
 use Problem;
 use Session;
+use PluginFormcreatorForm_Validator;
 use Ticket;
 use TicketValidation;
 use Toolbox;
@@ -972,5 +973,113 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       $output = $instance->parseTags($template, $ticket, true);
       $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerCanViewItem() {
+      $this->login('glpi', 'glpi');
+      $form = $this->getForm();
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->logout();
+
+      yield 'Not authenticated' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => false,
+      ];
+
+      $this->login('glpi', 'glpi');
+
+      yield 'User granted to edit forms' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => true,
+      ];
+
+      $this->login('normal', 'normal');
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      yield 'User is the requester' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => true,
+      ];
+
+      $this->login('tech', 'tech');
+
+      yield 'User is not the requester' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => false,
+      ];
+
+      $form->update([
+         'id' => $form->getID(),
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER,
+         '_validator_users' => [
+            User::getIdByName('tech'),
+         ],
+      ]);
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      yield 'User is the validator' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => true,
+      ];
+
+      $this->login('normal', 'normal');
+
+      yield 'User is not the validator' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => false,
+      ];
+
+      $group = $this->getGlpiCoreItem(Group::class, [
+         'name' => 'group' . $this->getUniqueString()
+      ]);
+      $user = $this->getGlpiCoreItem(User::class, [
+         'name' => 'user' . $this->getUniqueString(),
+         'password' => 'password',
+         'password2' => 'password',
+      ]);
+
+      $form->update([
+         'id' => $form->getID(),
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_GROUP,
+         '_validator_groups' => [
+            $group->getID(),
+         ],
+      ]);
+      $this->login('normal', 'normal');
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->login($user->fields['name'], 'password');
+
+      yield 'User is not a member of validator group' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => false,
+      ];
+
+      $groupUser = new Group_User();
+      $groupUser->add([
+         'groups_id' => $group->getID(),
+         'users_id' => $user->getID(),
+      ]);
+
+      yield 'User is a member of validator group' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => true,
+      ];
+   }
+
+   /**
+    * @dataProvider providerCanViewItem
+    */
+   public function testCanViewItem($formAnswer, bool $expected) {
+      /** @var \PluginFormcreatorFormAnswer $formAnswer */
+      $output = $formAnswer->canViewItem();
+      $this->boolean($output)->isEqualTo($expected);
    }
 }

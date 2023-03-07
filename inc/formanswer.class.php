@@ -120,32 +120,26 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       $approvers = $this->getApprovers();
-      if ($approvers === null) {
-         return false;
-      }
-
-      // Check if the current user is a validator user
-      $validatorUsers = array_keys($approvers[User::getType()]);
-      if (in_array($currentUser, $validatorUsers)) {
-         return true;
-      }
-
-      // Check if the current user is a member of a validator group
-      $groupList = Group_User::getUserGroups($currentUser);
-      $validatorGroups = array_keys($approvers[Group::getType()]);
-      foreach ($groupList as $group) {
-         if (in_array($group['id'], $validatorGroups)) {
-            // one of the groups of the user is a validator group
+      if ($approvers !== null) {
+         // Check if the current user is a validator user
+         $validatorUsers = array_keys($approvers[User::getType()]);
+         if (in_array($currentUser, $validatorUsers)) {
             return true;
+         }
+
+         // Check if the current user is a member of a validator group
+         $groups = Group_User::getUserGroups($currentUser);
+         $validatorGroups = array_keys($approvers[Group::getType()]);
+         foreach ($groups as $group) {
+            if (in_array($group['id'], $validatorGroups)) {
+               // one of the groups of the user is a validator group
+               return true;
+            }
          }
       }
 
-      // $groups = Group_User::getUserGroups($currentUser);
-      // if (in_array($this->fields['users_id_validator'], $groups)) {
-      //    return true;
-      // }
-
       if (version_compare(GLPI_VERSION, '10.1') >= 0) {
+         // Check if the user is a substitute of a validator
          $request = [
             'SELECT' => self::getTableField('id'),
             'FROM'  => self::getTable(),
@@ -160,52 +154,25 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
 
-      $request = [
-         'SELECT' => PluginFormcreatorForm_Validator::getTable() . '.*',
-         'FROM' => $this::getTable(),
-         'INNER JOIN' => [
-            PluginFormcreatorForm::getTable() => [
-               'FKEY' => [
-                  PluginFormcreatorForm::getTable() => PluginFormcreatorForm::getIndexName(),
-                  $this::getTable() => PluginFormcreatorForm::getForeignKeyField(),
-               ],
-            ],
-            PluginFormcreatorForm_Validator::getTable() => [
-               'FKEY' => [
-                  PluginFormcreatorForm::getTable() => PluginFormcreatorForm::getIndexName(),
-                  PluginFormcreatorForm_Validator::getTable() => PluginFormcreatorForm::getForeignKeyField()
-               ]
-            ]
-         ],
-         'WHERE' => [$this::getTable() . '.id' => $this->getID()],
-      ];
-      foreach ($DB->request($request) as $row) {
-         if ($row['itemtype'] == User::class) {
-            if ($currentUser == $row['items_id']) {
-               return true;
-            }
-         } else {
-            foreach ($groups as $group) {
-               if ($group['id'] == $row['items_id']) {
-                  return true;
-               }
-            }
-         }
-      }
-
       // Check if the current user is a requester of a ticket linked to a form answer typed
       // Matches search option 42, 43 and 44 of PluginFormcreatorIssue (requester, watcher, assigned)
       $ticket_table = Ticket::getTable();
       $ticket_user_table = Ticket_User::getTable();
       $item_ticket_table = Item_Ticket::getTable();
       $request = [
-         'SELECT' => Ticket_User::getTableField(User::getForeignKeyField()),
+         'SELECT' => [
+            Ticket_User::getTableField(User::getForeignKeyField()),
+            Ticket::getTableField('id'),
+         ],
          'FROM' => $ticket_user_table,
          'INNER JOIN' => [
             $ticket_table => [
                'FKEY' => [
                   $ticket_table => 'id',
                   $ticket_user_table => 'tickets_id',
+                  ['AND' => [
+                     Ticket_User::getTableField(User::getForeignKeyField()) => $currentUser,
+                  ]],
                ],
             ],
             $item_ticket_table => [
@@ -213,18 +180,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   $item_ticket_table => 'tickets_id',
                   $ticket_table => 'id',
                   ['AND' => [
-                     Item_Ticket::getTableField('itemtype') =>  self::getType(),
+                     Item_Ticket::getTableField('itemtype') => self::getType(),
+                     Item_Ticket::getTableField('items_id') => $this->getID(),
                   ]],
                ],
             ],
-
          ]
       ];
 
-      foreach ($DB->request($request) as $row) {
-         if ($row[User::getForeignKeyField()] == $currentUser) {
-            return true;
-         }
+      if ($DB->request($request)->count() > 0) {
+         return true;
       }
 
       return false;
