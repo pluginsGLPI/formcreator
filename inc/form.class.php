@@ -809,7 +809,7 @@ PluginFormcreatorTranslatableInterface
             'faq'      => '1',
             'contains' => $keywords
          ];
-         if (version_compare(GLPI_VERSION, '10.0.5') > 0) {
+         if (version_compare(GLPI_VERSION, '10.0.6') > 0) {
             $params['knowbaseitemcategories_id'] = KnowbaseItemCategory::SEEALL;
          } else {
             $params['knowbaseitemcategories_id'] = 0;
