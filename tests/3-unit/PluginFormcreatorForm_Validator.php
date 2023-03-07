@@ -30,6 +30,11 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Group;
+use User;
+use Group_User;
+use PluginFormcreatorForm;
+use PluginFormcreatorLinker;
 
 class PluginFormcreatorForm_Validator extends CommonTestCase {
    public function testPrepareInputForAdd() {
@@ -104,9 +109,9 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
    }
 
    public function testImport() {
-      $linker = new \PluginFormcreatorLinker();
+      $linker = new PluginFormcreatorLinker();
       $input = [
-         'itemtype' => \User::class,
+         'itemtype' => User::class,
          '_item' => 'normal',
          'uuid' => plugin_formcreator_getUuid(),
       ];
@@ -124,32 +129,32 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $output = $formValidator->getValidatorsForForm($form, UnknownItemtype::class);
       $this->array($output)->hasSize(0);
 
-      $groupA = $this->getGlpiCoreItem(\group::class, [
+      $groupA = $this->getGlpiCoreItem(Group::class, [
          'name' => 'group A' . $this->getUniqueString()
       ]);
-      $groupB = $this->getGlpiCoreItem(\group::class, [
+      $groupB = $this->getGlpiCoreItem(Group::class, [
          'name' => 'group B' . $this->getUniqueString()
       ]);
 
-      $userA = $this->getGlpiCoreItem(\User::class, [
+      $userA = $this->getGlpiCoreItem(User::class, [
          'name' => 'user A' . $this->getUniqueString(),
       ]);
-      $userB = $this->getGlpiCoreItem(\User::class, [
+      $userB = $this->getGlpiCoreItem(User::class, [
          'name' => 'user B' . $this->getUniqueString(),
       ]);
-      $userC = $this->getGlpiCoreItem(\User::class, [
+      $userC = $this->getGlpiCoreItem(User::class, [
          'name' => 'user C' . $this->getUniqueString(),
       ]);
-      $userD = $this->getGlpiCoreItem(\User::class, [
+      $userD = $this->getGlpiCoreItem(User::class, [
          'name' => 'user D' . $this->getUniqueString(),
       ]);
 
       // Add users into groups
-      $this->getGlpiCoreItem(\Group_User::class, [
+      $this->getGlpiCoreItem(Group_User::class, [
          'users_id' => $userA->getID(),
          'groups_id' => $groupA->getID(),
       ]);
-      $this->getGlpiCoreItem(\Group_User::class, [
+      $this->getGlpiCoreItem(Group_User::class, [
          'users_id' => $userB->getID(),
          'groups_id' => $groupB->getID(),
       ]);
@@ -178,7 +183,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       // Test when form has users as validators
       $form->update([
          'id' => $form->getID(),
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
+         'validation_required' => PluginFormcreatorForm::VALIDATION_USER,
          '_validator_users'    => [
             $userC->getID(),
             $userD->getID(),
@@ -195,7 +200,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       // Test when form has groups as validators
       $form->update([
          'id' => $form->getID(),
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_GROUP,
+         'validation_required' => PluginFormcreatorForm::VALIDATION_GROUP,
          '_validator_groups'    => [
             $groupA->getID(),
             $groupB->getID(),
@@ -212,7 +217,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       // Test when form has no validation
       $form->update([
          'id' => $form->getID(),
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_NONE,
+         'validation_required' => PluginFormcreatorForm::VALIDATION_NONE,
       ]);
       $output = $formValidator->getValidatorsForForm($form);
       $this->array($output)

@@ -70,6 +70,12 @@ abstract class CommonTestCase extends atoum
       return $result;
    }
 
+   protected function logout() {
+      Session::destroy();
+      session_regenerate_id();
+      Session::start();
+   }
+
    protected function disableDebug() {
       $this->debugMode = Session::DEBUG_MODE;
       if (isset($_SESSION['glpi_use_mode'])) {
