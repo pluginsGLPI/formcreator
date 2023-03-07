@@ -1727,4 +1727,89 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
 
       $this->integer((int) $output['locations_id'])->isEqualTo($expected);
    }
+
+   public function providerRequestSource() {
+      $testedClassName = $this->getTestedClassName();
+
+      $form = $this->getForm();
+      yield [
+         'instance' => $this->getTargetTicket([
+            PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+            'source_rule' => $testedClassName::REQUESTSOURCE_FORMCREATOR,
+            'source_question' => PluginFormcreatorCommon::getFormcreatorRequestTypeId(),
+         ]),
+         'expected' => PluginFormcreatorCommon::getFormcreatorRequestTypeId()
+      ];
+
+      $form = $this->getForm();
+      $user = $this->getGlpiCoreItem(User::class, [
+         'name' => 'user' . $this->getUniqueString(),
+         'password' => 'password',
+         'password2' => 'password',
+         'default_requesttypes_id' => 2, // e-mail, see table glpi_requesttypes
+      ]);
+      $this->login($user->fields['name'], 'password');
+
+      yield [
+         'instance' => $this->getTargetTicket([
+            PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+            'source_rule' => $testedClassName::REQUESTSOURCE_NONE
+         ]),
+         'expected' => 2
+      ];
+
+      $form = $this->getForm();
+      $user = $this->getGlpiCoreItem(User::class, [
+         'name' => 'user' . $this->getUniqueString(),
+         'password' => 'password',
+         'password2' => 'password',
+         'default_requesttypes_id' => 0, // unset
+      ]);
+      $this->login($user->fields['name'], 'password');
+
+      yield [
+         'instance' => $this->getTargetTicket([
+            PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+            'source_rule' => $testedClassName::REQUESTSOURCE_NONE,
+         ]),
+         'expected' => 0 // Unset (see Setup > General > Default values)
+      ];
+
+      $form = $this->getForm();
+      $ticketTemplate = $this->getGlpiCoreItem(
+         TicketTemplate::getType(), [
+            'name' => 'template with predefined request type',
+         ]
+      );
+      $this->getGlpiCoreItem(TicketTemplatePredefinedField::getType(), [
+         'tickettemplates_id' => $ticketTemplate->getID(),
+         'num'                => 9, // RequestType
+         'value'              => 1, // Helpdesk
+      ]);
+
+      yield [
+         'instance' => $this->getTargetTicket([
+            PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+            'source_rule' => $testedClassName::REQUESTSOURCE_NONE,
+            'tickettemplates_id' => $ticketTemplate->getID(),
+         ]),
+         'expected' => 1 // Helpdesk (see Setup > General > Default values)
+      ];
+   }
+
+   /**
+    * @dataProvider providerRequestSource
+    */
+   public function testRequestSource($instance, $expected) {
+      $form = PluginFormcreatorForm::getByItem($instance);
+      $formAnswer = $this->getFormAnswer([
+         PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+      ]);
+
+      $generatedTargets = $formAnswer->targetList;
+      foreach ($generatedTargets as $target) {
+         $output = $target->fields['requesttypes_id'];
+         $this->integer((int) $output)->isEqualTo($expected);
+      }
+   }
 }
