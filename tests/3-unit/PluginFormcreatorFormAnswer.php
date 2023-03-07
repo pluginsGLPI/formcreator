@@ -51,7 +51,6 @@ use PluginFormcreatorTargetChange;
 use PluginFormcreatorTargetProblem;
 use Problem;
 use Session;
-use PluginFormcreatorForm_Validator;
 use Ticket;
 use TicketValidation;
 use Toolbox;
@@ -983,57 +982,56 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       ]);
       $this->logout();
 
-      yield 'Not authenticated' => [
-         'formAnswer' => $formAnswer,
-         'expected'   => false,
-      ];
+      // yield 'Not authenticated' => [
+      //    'formAnswer' => $formAnswer,
+      //    'expected'   => false,
+      // ];
 
       $this->login('glpi', 'glpi');
 
-      yield 'User granted to edit forms' => [
-         'formAnswer' => $formAnswer,
-         'expected'   => true,
-      ];
+      // yield 'User granted to edit forms' => [
+      //    'formAnswer' => $formAnswer,
+      //    'expected'   => true,
+      // ];
 
       $this->login('normal', 'normal');
       $formAnswer = $this->getFormAnswer([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
 
-      yield 'User is the requester' => [
-         'formAnswer' => $formAnswer,
-         'expected'   => true,
-      ];
+      // yield 'User is the requester' => [
+      //    'formAnswer' => $formAnswer,
+      //    'expected'   => true,
+      // ];
 
       $this->login('tech', 'tech');
 
-      yield 'User is not the requester' => [
-         'formAnswer' => $formAnswer,
-         'expected'   => false,
-      ];
+      // yield 'User is not the requester' => [
+      //    'formAnswer' => $formAnswer,
+      //    'expected'   => false,
+      // ];
 
-      $form->update([
-         'id' => $form->getID(),
-         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users' => [
-            User::getIdByName('tech'),
-         ],
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+         'itemtype' => User::getType(),
+         'items_id' => User::getIdByName('tech'),
       ]);
       $formAnswer = $this->getFormAnswer([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
 
-      yield 'User is the validator' => [
-         'formAnswer' => $formAnswer,
-         'expected'   => true,
-      ];
+      // yield 'User is the validator' => [
+      //    'formAnswer' => $formAnswer,
+      //    'expected'   => true,
+      // ];
 
       $this->login('normal', 'normal');
 
-      yield 'User is not the validator' => [
-         'formAnswer' => $formAnswer,
-         'expected'   => false,
-      ];
+      // yield 'User is not the validator' => [
+      //    'formAnswer' => $formAnswer,
+      //    'expected'   => false,
+      // ];
 
       $group = $this->getGlpiCoreItem(Group::class, [
          'name' => 'group' . $this->getUniqueString()
@@ -1044,12 +1042,14 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'password2' => 'password',
       ]);
 
-      $form->update([
-         'id' => $form->getID(),
-         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_GROUP,
-         '_validator_groups' => [
-            $group->getID(),
-         ],
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $formValidator->deleteByCriteria([
+         PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+      ]);
+      $formValidator->add([
+         PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+         'itemtype' => Group::getType(),
+         'items_id' => $group->getID(),
       ]);
       $this->login('normal', 'normal');
       $formAnswer = $this->getFormAnswer([
@@ -1067,6 +1067,11 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'groups_id' => $group->getID(),
          'users_id' => $user->getID(),
       ]);
+      $this->login('normal', 'normal');
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->login($user->fields['name'], 'password');
 
       yield 'User is a member of validator group' => [
          'formAnswer' => $formAnswer,

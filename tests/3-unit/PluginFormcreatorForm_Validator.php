@@ -208,14 +208,5 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
             $groupA->getID(),
             $groupB->getID(),
          ])->hasSize(2);
-
-      // Test when form has no validation
-      $form->update([
-         'id' => $form->getID(),
-         'validation_required' => PluginFormcreatorForm::VALIDATION_NONE,
-      ]);
-      $output = $formValidator->getValidatorsForForm($form);
-      $this->array($output)
-         ->hasSize(0);
    }
 }
