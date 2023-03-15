@@ -443,11 +443,19 @@ PluginFormcreatorTranslatableInterface
       }
       if (!is_null($urgency) && $urgency != 0) {
          $data['urgency'] = $urgency;
-         $data['priority'] = CommonITILObject::computePriority($data['urgency'], $data['impact']);;
       }
 
       return $data;
    }
+
+   protected function setTargetPriority(array $data): array {
+      // Remove default priority so it can be computed
+      if (isset($data['urgency']) || isset($data['impact'])) {
+         unset($data['priority']);
+      }
+      return $data;
+   }
+
 
    /**
     * find all actors and prepare data for the ticket being created

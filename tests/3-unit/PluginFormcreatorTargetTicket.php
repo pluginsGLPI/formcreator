@@ -33,7 +33,7 @@ namespace tests\units;
 use CommonDBTM;
 use Computer;
 use Entity;
-use GlpiPlugin\Formcreator\Tests\CommonTargetTestCase;
+use GlpiPlugin\Formcreator\Tests\AbstractItilTargetTestCase;
 use Group_Ticket;
 use Item_Ticket;
 use ITILCategory;
@@ -60,7 +60,7 @@ use Ticket_Ticket;
 use Toolbox;
 use User;
 
-class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
+class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
 
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
