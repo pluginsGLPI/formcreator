@@ -32,6 +32,7 @@
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -185,7 +186,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
       ];
       foreach ($problemFields as $problemFields) {
          $data[$problemFields] = $this->prepareTemplate(
-            $this->fields[$problemFields] ?? '',
+            Sanitizer::unsanitize(__($this->fields[$problemFields], $domain)) ?? '',
             $formanswer,
             $problemFields == 'content' // only content supports rich text
          );
