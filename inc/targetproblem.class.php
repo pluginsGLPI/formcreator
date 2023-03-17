@@ -199,26 +199,13 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
 
       $this->prepareActors($form, $formanswer);
 
-      if (count($this->requesters['_users_id_requester']) == 0) {
-         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $formanswer->fields['requester_id'], true);
-         $requesters_id = $formanswer->fields['requester_id'];
-      } else {
-         $requesterAccounts = array_filter($this->requesters['_users_id_requester'], function($v) {
-            return ($v != 0);
-         });
-         $requesters_id = array_shift($requesterAccounts);
-         if ($requesters_id === null) {
-            // No account for requesters, then fallback on the account used to fill the answers
-            $requesters_id = $formanswer->fields['requester_id'];
-         }
-      }
-
-      $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
+      $data = $this->setTargetRequesters($data, $formanswer);
+      $data = $this->setTargetEntity($data, $formanswer, $this->firstRequester);
       $data = $this->setTargetUrgency($data, $formanswer);
       $data = $this->setTargetPriority($data, $formanswer);
-
-      $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
-      $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;
+      $data = $this->setTargetObservers($data, $formanswer);
+      $data = $this->setTargeAssigned($data, $formanswer);
+      $data = $this->setTargetSuppliers($data, $formanswer);
 
       $data = $this->prepareUploadedFiles($data, $formanswer);
 
