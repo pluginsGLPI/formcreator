@@ -204,6 +204,11 @@ class CheckboxesField extends PluginFormcreatorAbstractField
             return false;
          }
          if (!in_array($item, $this->getAvailableValues())) {
+            Session::addMessageAfterRedirect(
+               sprintf(__('Invalid value: %s', 'formcreator'), $this->getLabel()),
+               false,
+               ERROR
+            );
             return false;
          }
       }

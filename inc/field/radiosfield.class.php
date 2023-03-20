@@ -205,7 +205,17 @@ class RadiosField extends PluginFormcreatorAbstractField
          return true;
       }
       $value = trim($value);
-      return in_array($value, $this->getAvailableValues());
+      if (!in_array($value, $this->getAvailableValues())) {
+         Session::addMessageAfterRedirect(
+            sprintf(__('Invalid value: %s', 'formcreator'), $this->getLabel()),
+            false,
+            ERROR
+         );
+         return false;
+      }
+
+
+      return true;
    }
 
    public static function canRequire(): bool {
