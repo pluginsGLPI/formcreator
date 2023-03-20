@@ -44,17 +44,17 @@ class PluginFormcreatorUpgradeTo2_13_5 {
     */
    public function upgrade(Migration $migration) {
       $this->migration = $migration;
-      $this->fixOldRadiosEncoding();
+      $this->fixOldQuestionsEncoding();
    }
 
-   public function fixOldRadiosEncoding() {
+   public function fixOldQuestionsEncoding() {
       global $DB;
 
       $table = 'glpi_plugin_formcreator_questions';
       $questions = $DB->request([
          'SELECT' => ['id', 'values'],
          'FROM'  => $table,
-         'WHERE' => ['fieldtype' => 'radios']
+         'WHERE' => ['fieldtype' => ['radios', 'select']]
       ]);
 
       foreach ($questions as $row) {
