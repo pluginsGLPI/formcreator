@@ -214,7 +214,6 @@ class RadiosField extends PluginFormcreatorAbstractField
          return false;
       }
 
-
       return true;
    }
 
