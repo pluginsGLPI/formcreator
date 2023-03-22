@@ -823,7 +823,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $fieldKey = 'formcreator_field_' . $question->getID();
       $filename = '5e5e92ffd9bd91.44444444upload55555555.txt';
       $tag = '3e29dffe-0237ea21-5e5e7034b1d1a1.33333333';
-      copy(dirname(__DIR__) . '/fixture/upload.txt', GLPI_TMP_DIR . '/' . $filename);
+      $success = copy(dirname(__DIR__) . '/fixture/upload.txt', GLPI_TMP_DIR . '/' . $filename);
+      $this->boolean($success)->isTrue();
       $formAnswer = $this->getFormAnswer([
          'plugin_formcreator_forms_id' => $form->getID(),
          "_{$fieldKey}" => [
@@ -916,7 +917,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $fieldKey = 'formcreator_field_' . $question->getID();
       $filename = '5e5e92ffd9bd91.44444444upload55555555.txt';
       $tag = '3e29dffe-0237ea21-5e5e7034b1d1a1.33333333';
-      copy(dirname(__DIR__) . '/fixture/upload.txt', GLPI_TMP_DIR . '/' . $filename);
+      $success = copy(dirname(__DIR__) . '/fixture/upload.txt', GLPI_TMP_DIR . '/' . $filename);
+      $this->boolean($success)->isTrue();
       $formAnswer = $this->getFormAnswer([
          'plugin_formcreator_forms_id' => $form->getID(),
          $fieldKey => $text,
