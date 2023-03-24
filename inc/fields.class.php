@@ -140,7 +140,8 @@ class PluginFormcreatorFields
       /** @var CommonDBTM $item */
       $itemtype = get_class($item);
       $itemId = $item->getID();
-      if (!isset(self::$visibility[$itemtype][$itemId])) {
+
+      if (!isset(self::$visibility[$itemtype]) || !array_key_exists($itemId, self::$visibility[$itemtype])) {
          self::$visibility[$itemtype][$itemId] = null;
       } else if (self::$visibility[$itemtype][$itemId] !== null) {
          return self::$visibility[$itemtype][$itemId];

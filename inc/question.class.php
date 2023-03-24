@@ -191,6 +191,22 @@ PluginFormcreatorTranslatableInterface
       return true;
    }
 
+   public function getDesignLabel(): string {
+      $questionId = $this->getID();
+      $nb = (new DBUtils())->countElementsInTable(PluginFormcreatorCondition::getTable(), [
+         'itemtype' => PluginFormcreatorQuestion::getType(),
+         'items_id' => $questionId,
+      ]);
+      $sectionId = $this->fields[PluginFormcreatorSection::getForeignKeyField()];
+      $onclick = 'plugin_formcreator.showQuestionForm(' . $sectionId . ', ' . $questionId . ');';
+      $html = '<a href="javascript:' . $onclick . '" data-field="name">';
+      $html .= "<sup class='plugin_formcreator_conditions_count' title='" . __('Count of conditions', 'formcreator') ."'>$nb</sup>";
+      $html .= empty($this->fields['name']) ? '(' . $questionId . ')' : $this->fields['name'];
+      $html .= '</a>';
+
+      return $html;
+   }
+
    /**
     * Get the HTML for the question in form designer
     *
@@ -218,16 +234,8 @@ PluginFormcreatorTranslatableInterface
 
       // Question name
       $html .= $field->getHtmlIcon() . '&nbsp;';
-      $onclick = 'plugin_formcreator.showQuestionForm(' . $sectionId . ', ' . $questionId . ');';
-      $html .= '<a href="javascript:' . $onclick . '" data-field="name">';
       // Show count of conditions
-      $nb = (new DBUtils())->countElementsInTable(PluginFormcreatorCondition::getTable(), [
-         'itemtype' => PluginFormcreatorQuestion::getType(),
-         'items_id' => $this->getID(),
-      ]);
-      $html .= "<sup class='plugin_formcreator_conditions_count' title='" . __('Count of conditions', 'formcreator') ."'>$nb</sup>";
-      $html .= empty($this->fields['name']) ? '(' . $questionId . ')' : $this->fields['name'];
-      $html .= '</a>';
+      $html .= $this->getDesignLabel();
 
       // Delete the question
       $html .= "<span class='form_control pointer'>";

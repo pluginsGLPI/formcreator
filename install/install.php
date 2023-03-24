@@ -80,6 +80,7 @@ class PluginFormcreatorInstall {
       '2.13'   => '2.13.1',
       '2.13.1' => '2.13.3',
       '2.13.3' => '2.13.4',
+      '2.13.4' => '2.13.5',
    ];
 
    protected bool $resyncIssues = false;
@@ -159,7 +160,7 @@ class PluginFormcreatorInstall {
             }
             if (!$checkResult) {
                $message = sprintf(
-                  __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
+                  __('The database schema is not consistent with the previous version of Formcreator %s. To see the logs run the command %s', 'formcreator'),
                   $oldVersion,
                   'bin/console glpi:plugin:install formcreator -f'
                );
@@ -238,7 +239,7 @@ class PluginFormcreatorInstall {
       );
       if (!$checkResult) {
          $message = sprintf(
-            __('The database schema is not consistent with the installed Formcreator %s. To see the logs enable the plugin and run the command %s', 'formcreator'),
+            __('The database schema is not consistent with the current version of Formcreator %s. To see the logs enable the plugin and run the command %s', 'formcreator'),
             PLUGIN_FORMCREATOR_VERSION,
             'bin/console glpi:database:check_schema_integrity -p formcreator'
          );

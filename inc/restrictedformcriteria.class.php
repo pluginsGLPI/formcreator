@@ -199,7 +199,7 @@ abstract class PluginFormcreatorRestrictedFormCriteria
             sprintf(
                __('Failed to add or update the %1$s %2$s', 'formceator'),
                $type_name,
-               $input['name']
+               $input[$item2_input_key]
             )
          );
       }

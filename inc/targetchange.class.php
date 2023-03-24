@@ -675,12 +675,12 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
          $data[$changeField] = $formanswer->parseTags($data[$changeField], $this, $changeField == 'content');
       }
 
-      $data['_users_id_recipient']   = $_SESSION['glpiID'];
+      $data['_users_id_recipient'] = $formanswer->fields['requester_id'];
 
       $this->prepareActors($form, $formanswer);
 
       if (count($this->requesters['_users_id_requester']) == 0) {
-         $this->addActor('requester', $formanswer->fields['requester_id'], true);
+         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $formanswer->fields['requester_id'], true);
          $requesters_id = $formanswer->fields['requester_id'];
       } else {
          $requesterAccounts = array_filter($this->requesters['_users_id_requester'], function($v) {
@@ -698,6 +698,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
       $data = $this->setSLA($data, $formanswer);
       $data = $this->setOLA($data, $formanswer);
       $data = $this->setTargetUrgency($data, $formanswer);
+      $data = $this->setTargetPriority($data, $formanswer);
       $data = $this->setTargetValidation($data, $formanswer);
 
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;

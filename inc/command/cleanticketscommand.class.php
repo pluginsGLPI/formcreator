@@ -43,7 +43,7 @@ class CleanTicketsCommand extends Command
 {
    protected function configure() {
       $this
-         ->setName('glpi:plugins:formcreator:clean_tickets')
+         ->setName('plugins:formcreator:clean_tickets')
          ->setDescription("Clean Tickets having visible HTML tags in their content");
    }
 

@@ -161,7 +161,7 @@ class PluginFormcreatorTranslation
       if (!isset($translatableString['id'][$id])) {
          // Show nothing if string definitively not found
          // Should not happen
-         return '';
+         return '<td colspan="2">' . __('Iternal error : translatable string not found.', 'formcreator') . '</td>';;
       }
 
       $type = $translatableString['id'][$id] ?? 'string';
@@ -174,12 +174,12 @@ class PluginFormcreatorTranslation
       switch ($type) {
          case 'itemlink':
          case 'string':
-            $out .= '<td>' . $original . Html::hidden("id", ['value' => $id]) . '</td>';
+            $out .= '<td width="50%">' . $original . Html::hidden("id", ['value' => $id]) . '</td>';
             $out .= '<td>' . Html::input("value", ['value' => $translatedString]) . '</td>';
             break;
 
          case 'text':
-            $out .= '<td>' . Html::entity_decode_deep($original) . Html::hidden("id", ['value' => $id]) . '</td>';
+            $out .= '<td width="50%">' . Html::entity_decode_deep($original) . Html::hidden("id", ['value' => $id]) . '</td>';
             $out .= '<td>' . Html::textarea([
                'name'  => "value",
                'value' => $translatedString,
@@ -228,7 +228,9 @@ class PluginFormcreatorTranslation
       $type = $translatableStrings['id'][$input['id']];
       $original = $translatableStrings[$type][$input['id']];
 
-      $translations[$original] = Toolbox::stripslashes_deep($input['value']);
+      $input['value'] = Sanitizer::unsanitize($input['value']);
+      $input['value'] = str_replace('\r\n', '', $input['value']);
+      $translations[$original] = Sanitizer::sanitize($input['value'], false);
 
       if (!$form->setTranslations($formLanguage->fields['name'], $translations)) {
          Session::addMessageAfterRedirect(__('Failed to add the translation.', 'formcreator'), false, ERROR);

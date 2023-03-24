@@ -127,8 +127,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $groupUser = new Group_User();
       $groups = $groupUser->getUserGroups($currentUser);
-      if (in_array($this->fields['users_id_validator'], $groups)) {
-         return true;
+      foreach ($groups as $group) {
+         if ($this->fields['groups_id_validator'] == $group['id']) {
+            return true;
+         }
       }
 
       $request = [
@@ -170,13 +172,19 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $ticket_user_table = Ticket_User::getTable();
       $item_ticket_table = Item_Ticket::getTable();
       $request = [
-         'SELECT' => Ticket_User::getTableField(User::getForeignKeyField()),
+         'SELECT' => [
+            Ticket_User::getTableField(User::getForeignKeyField()),
+            Ticket::getTableField('id'),
+         ],
          'FROM' => $ticket_user_table,
          'INNER JOIN' => [
             $ticket_table => [
                'FKEY' => [
                   $ticket_table => 'id',
                   $ticket_user_table => 'tickets_id',
+                  ['AND' => [
+                     Ticket_User::getTableField(User::getForeignKeyField()) => $currentUser,
+                  ]],
                ],
             ],
             $item_ticket_table => [
@@ -184,18 +192,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   $item_ticket_table => 'tickets_id',
                   $ticket_table => 'id',
                   ['AND' => [
-                     Item_Ticket::getTableField('itemtype') =>  self::getType(),
+                     Item_Ticket::getTableField('itemtype') => self::getType(),
+                     Item_Ticket::getTableField('items_id') => $this->getID(),
                   ]],
                ],
             ],
-
          ]
       ];
 
-      foreach ($DB->request($request) as $row) {
-         if ($row[User::getForeignKeyField()] == $currentUser) {
-            return true;
-         }
+      if ($DB->request($request)->count() > 0) {
+         return true;
       }
 
       return false;
@@ -647,7 +653,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       echo '<ol>';
-      $domain = PluginFormcreatorForm::getTranslationDomain($_SESSION['glpilanguage'], $form->getID());
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID(), $_SESSION['glpilanguage']);
 
       // Get fields populated with answers
       $this->loadAnswers();

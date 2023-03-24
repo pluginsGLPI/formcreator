@@ -563,7 +563,7 @@ PluginFormcreatorTranslatableInterface
                $item->countTargets()
             ),
             2 => __('Preview'),
-            3 => PluginFormcreatorFormAnswer::getTypeName(1) . ' ' .__('properties', 'formcreator'),
+            3 => __('Form answer properties', 'formcreator'),
          ];
       }
       if ($item->getType() == Central::class) {
@@ -619,6 +619,7 @@ PluginFormcreatorTranslatableInterface
       $this->addStandardTab(self::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorFormAnswer::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorForm_Language::class, $ong, $options);
+      $this->addStandardTab(Document_Item::class, $ong, $options);
       $this->addStandardTab(Log::class, $ong, $options);
       return $ong;
    }
@@ -2248,7 +2249,7 @@ PluginFormcreatorTranslatableInterface
       if ($language != $this->fields['language']) {
          $eventManagerEnabled = $TRANSLATE->isEventManagerEnabled();
          $TRANSLATE->enableEventManager();
-         $domain = PluginFormcreatorForm::getTranslationDomain($language, $formId);
+         $domain = PluginFormcreatorForm::getTranslationDomain($formId, $language);
          $TRANSLATE->getEventManager()->attach(
             Laminas\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,
             static function (Laminas\EventManager\EventInterface $event) use ($formId, $domain, $TRANSLATE) {
@@ -2435,6 +2436,16 @@ PluginFormcreatorTranslatableInterface
       $file = $this->getTranslationFile($this->getID(), $language);
       if (is_file($file) && !is_writable($file)) {
          return false;
+      }
+
+      // CLeanup obsolete strings
+      $existing_strings = $this->getTranslatableStrings();
+      foreach (array_keys($translations) as $original) {
+         if (!in_array($original, $existing_strings['itemlink'])
+            && !in_array($original, $existing_strings['string'])
+            && !in_array($original, $existing_strings['text'])) {
+            unset($translations[$original]);
+         }
       }
 
       $output = "<?php" . PHP_EOL . "return " . var_export($translations, true) . ";";

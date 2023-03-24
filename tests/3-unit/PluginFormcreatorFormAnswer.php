@@ -50,6 +50,7 @@ use PluginFormcreatorTargetChange;
 use PluginFormcreatorTargetProblem;
 use Problem;
 use Session;
+use PluginFormcreatorForm_Validator;
 use Ticket;
 use TicketValidation;
 use Toolbox;
@@ -881,5 +882,177 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $output = $instance->getFromDbByTicket($ticket->getID());
       $this->boolean($output)->isTrue();
       $this->integer($instance->getID())->isEqualTo($expected->getID());
+   }
+
+   public function providerParseTags() {
+      // Test a single text
+      $question = $this->getQuestion([
+         'fieldtype' => 'textarea',
+      ]);
+      $form = PluginFormcreatorForm::getByItem($question);
+      // Text as received in prepareInputForAdd (GLPI 10.0.6)
+      $text = '&#60;p&#62; &#60;/p&#62;\r\n&#60;p&#62; &#60;/p&#62;';
+
+      $fieldKey = 'formcreator_field_' . $question->getID();
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         $fieldKey => $text,
+      ]);
+
+      yield [
+         'instance' => $formAnswer,
+         'template' => '<p>##answer_' . $question->getID() . '##</p>',
+         'expected' => '&#60;p&#62;' . $text . '&#60;/p&#62;',
+      ];
+
+      // Test a text with an embeddd image
+      $question = $this->getQuestion([
+         'fieldtype' => 'textarea',
+      ]);
+      $form = PluginFormcreatorForm::getByItem($question);
+      // Text as received in prepareInputForAdd (GLPI 10.0.6)
+      $text = '&#60;p&#62;&#60;img id=\"20a8c58a-761764d0-63e0ff1245d9f4.97274571\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAACCAIAAAASFvFNAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAEUlEQVQImWP8v5QBApgYYAAAHsMBqH3ykQkAAAAASUVORK5CYII=\" data-upload_id=\"0.7092882231779103\"&#62;&#60;/p&#62;';
+
+      $fieldKey = 'formcreator_field_' . $question->getID();
+      $filename = '5e5e92ffd9bd91.44444444upload55555555.txt';
+      $tag = '3e29dffe-0237ea21-5e5e7034b1d1a1.33333333';
+      copy(dirname(__DIR__) . '/fixture/upload.txt', GLPI_TMP_DIR . '/' . $filename);
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         $fieldKey => $text,
+         "_{$fieldKey}" => [
+            $filename,
+         ],
+         "_prefix_{$fieldKey}" => [
+            '5e5e92ffd9bd91.44444444',
+         ],
+         "_tag_{$fieldKey}" => [
+            $tag,
+         ],
+      ]);
+
+      yield [
+         'instance' => $formAnswer,
+         'template' => '<p>##answer_' . $question->getID() . '##</p>',
+         'expected' => '&#60;p&#62;' . $text . '&#60;/p&#62;',
+      ];
+   }
+
+   /**
+    * @dataProvider providerParseTags
+    */
+   public function testParseTags($instance, $template, $expected) {
+      $ticket = new PluginFormcreatorTargetTicket();
+
+      $output = $instance->parseTags($template, $ticket, true);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerCanViewItem() {
+      $this->login('glpi', 'glpi');
+      $form = $this->getForm();
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->logout();
+
+      yield 'Not authenticated' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => false,
+      ];
+
+      $this->login('glpi', 'glpi');
+
+      yield 'User granted to edit forms' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => true,
+      ];
+
+      $this->login('normal', 'normal');
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      yield 'User is the requester' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => true,
+      ];
+
+      $this->login('tech', 'tech');
+
+      yield 'User is not the requester' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => false,
+      ];
+
+      $form->update([
+         'id' => $form->getID(),
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER,
+         '_validator_users' => [
+            User::getIdByName('tech'),
+         ],
+      ]);
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      yield 'User is the validator' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => true,
+      ];
+
+      $this->login('normal', 'normal');
+
+      yield 'User is not the validator' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => false,
+      ];
+
+      $group = $this->getGlpiCoreItem(Group::class, [
+         'name' => 'group' . $this->getUniqueString()
+      ]);
+      $user = $this->getGlpiCoreItem(User::class, [
+         'name' => 'user' . $this->getUniqueString(),
+         'password' => 'password',
+         'password2' => 'password',
+      ]);
+
+      $form->update([
+         'id' => $form->getID(),
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_GROUP,
+         '_validator_groups' => [
+            $group->getID(),
+         ],
+      ]);
+      $this->login('normal', 'normal');
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->login($user->fields['name'], 'password');
+
+      yield 'User is not a member of validator group' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => false,
+      ];
+
+      $groupUser = new Group_User();
+      $groupUser->add([
+         'groups_id' => $group->getID(),
+         'users_id' => $user->getID(),
+      ]);
+
+      yield 'User is a member of validator group' => [
+         'formAnswer' => $formAnswer,
+         'expected'   => true,
+      ];
+   }
+
+   /**
+    * @dataProvider providerCanViewItem
+    */
+   public function testCanViewItem($formAnswer, bool $expected) {
+      /** @var \PluginFormcreatorFormAnswer $formAnswer */
+      $output = $formAnswer->canViewItem();
+      $this->boolean($output)->isEqualTo($expected);
    }
 }

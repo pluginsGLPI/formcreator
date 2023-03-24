@@ -320,6 +320,15 @@ form#plugin_formcreator_form {
             padding: initial;
             padding-left: 40px;
          }
+
+         .label-radio, .label-checkbox {
+            display: inline;
+            margin-bottom: 0.2em;
+         }
+
+         .radio, .checkbox {
+            padding-bottom: 1em;
+         }
       }
    }
 

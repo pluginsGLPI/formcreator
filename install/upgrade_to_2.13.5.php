@@ -31,32 +31,44 @@
 
 use Glpi\Toolbox\Sanitizer;
 
-include ('../../../inc/includes.php');
-Session::checkRight('entity', UPDATE);
+class PluginFormcreatorUpgradeTo2_13_5 {
+   /** @var Migration */
+   protected $migration;
 
-if (!isset($_REQUEST['id'])) {
-   Session::addMessageAfterRedirect(__('Bad request', 'formcreator'), false, ERROR);
-   http_response_code(400);
-   exit();
-}
-$questionId = (int) $_REQUEST['id'];
+   public function isResyncIssuesRequired() {
+      return false;
+   }
 
-$question = new PluginFormcreatorQuestion();
-if (!$question->getFromDB($questionId)) {
-   http_response_code(404);
-   Session::addMessageAfterRedirect(__('Question not found', 'formcreator'), false, ERROR);
-   exit;
-}
+   /**
+    * @param Migration $migration
+    */
+   public function upgrade(Migration $migration) {
+      $this->migration = $migration;
+      $this->fixOldRadiosEncoding();
+   }
 
-if (!$question->canUpdate()) {
-   http_response_code(403);
-   Session::addMessageAfterRedirect(__('You don\'t have right for this action', 'formcreator'), false, ERROR);
-   exit;
-}
+   public function fixOldRadiosEncoding() {
+      global $DB;
 
-$success = $question->update($_REQUEST);
-if (!$success) {
-   http_response_code(500);
-   exit();
+      $table = 'glpi_plugin_formcreator_questions';
+      $questions = $DB->request([
+         'SELECT' => ['id', 'values'],
+         'FROM'  => $table,
+         'WHERE' => ['fieldtype' => 'radios']
+      ]);
+
+      foreach ($questions as $row) {
+         $values = Sanitizer::unsanitize($row['values']);
+         $values = Sanitizer::sanitize($values);
+         $DB->update(
+            $table,
+            [
+               'values' => $values
+            ],
+            [
+               'id' => $row['id']
+            ]
+         );
+      }
+   }
 }
-echo json_encode(['name' => $question->getDesignLabel()], JSON_UNESCAPED_UNICODE);

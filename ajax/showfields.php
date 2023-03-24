@@ -58,6 +58,9 @@ if (!$form->canViewForRequest()) {
 try {
     $visibility = PluginFormcreatorFields::updateVisibility($_POST);
 } catch (Exception $e) {
+    echo json_encode([
+        'error' => $e->getMessage(),
+    ]);
     http_response_code(500);
     exit();
 }

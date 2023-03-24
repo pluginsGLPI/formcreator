@@ -780,7 +780,7 @@ var plugin_formcreator = new function() {
          displayAjaxMessageAfterRedirect();
       }).done(function(data) {
          var question = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorQuestion"][data-id="' + questionId + '"]');
-         question.find('[data-field="name"]').text(data['name'])
+         $(question.find('[data-field="name"]')).replaceWith(data['name']);
          that.resetTabs();
       });
 
@@ -1154,6 +1154,7 @@ var plugin_formcreator = new function() {
       var translationId = $(element.closest('[data-itemtype="PluginFormcreatorTranslation"]')).attr('data-id');
       var modal;
       modal = glpi_ajax_dialog({
+         dialogclass: 'modal-xl',
          url: '../ajax/form_language.php',
          params: {
             action: 'translation',
@@ -1162,6 +1163,12 @@ var plugin_formcreator = new function() {
          },
          title: i18n.textdomain('formcreator').__('Update a translation', 'formcreator'),
          close: function () {
+            // Remove unclosed TinyMCE toolbar
+            var tinyToolbar = document.querySelector('.tox-tinymce-aux');
+            if (tinyToolbar) {
+               tinyToolbar.parentNode.removeChild(tinyToolbar);
+            }
+            // Reload the tab
             reloadTab();
          },
          fail: function () {
