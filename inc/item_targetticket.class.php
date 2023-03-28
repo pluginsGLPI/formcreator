@@ -180,6 +180,11 @@ implements PluginFormcreatorExportableInterface
          $targetTicket->getFromDB($parameter['items_id']);
          $parameter['items_id'] = $targetTicket->fields['uuid'];
       }
+      if ($parameter['itemtype'] == PluginFormcreatorQuestion::getType()) {
+         $question = new PluginFormcreatorQuestion();
+         $question->getFromDB($parameter['items_id']);
+         $parameter['items_id'] = $question->fields['uuid'];
+      }
    }
 
    protected function convertUuids(&$parameter) {
