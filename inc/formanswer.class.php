@@ -1239,9 +1239,20 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                'plugin_formcreator_formanswers_id' => $formAnswerId,
                'plugin_formcreator_questions_id' => $questionId,
             ]);
+
+            $answer_value = $field->serializeValue($this);
+
+            //if question type file
+            //keep the old uploaded files
+            if ($field->getQuestion()->fields['fieldtype'] == 'file') {
+               $old_files = json_decode($answer->fields['answer'], true); //added by users
+               $new_files = $field->getDocumentsForTarget(); //added by approver
+               $answer_value = json_encode(array_merge($old_files, $new_files), true);
+            }
+
             $answer->update([
                'id'     => $answer->getID(),
-               'answer' => $field->serializeValue($this),
+               'answer' => $answer_value,
             ], 0);
             foreach ($field->getDocumentsForTarget() as $documentId) {
                $docItem = new Document_Item();
