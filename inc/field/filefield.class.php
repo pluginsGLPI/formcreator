@@ -73,27 +73,27 @@ class FileField extends PluginFormcreatorAbstractField
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
-      if (!$canEdit) {
-         $html = '';
-         $doc = new Document();
-         $answer = $this->uploadData;
-         if (!is_array($this->uploadData)) {
-            $answer = [$this->uploadData];
+
+      $html = '';
+      $doc = new Document();
+      $answer = $this->uploadData;
+      if (!is_array($this->uploadData)) {
+         $answer = [$this->uploadData];
+      }
+      foreach ($answer as $item) {
+         if (is_numeric($item) && $doc->getFromDB($item)) {
+            $html .= $doc->getDownloadLink($this->form_answer);
          }
-         foreach ($answer as $item) {
-            if (is_numeric($item) && $doc->getFromDB($item)) {
-               $html .= $doc->getDownloadLink($this->form_answer);
-            }
-         }
-         return $html;
       }
 
-      return Html::file([
-         'name'    => 'formcreator_field_' . $this->question->getID(),
-         'display' => false,
-         'multiple' => 'multiple',
-         'uploads' => $this->uploads,
-      ]);
+      if ($canEdit) {
+         $html .= Html::file([
+            'name'    => 'formcreator_field_' . $this->question->getID(),
+            'display' => false,
+            'multiple' => 'multiple',
+            'uploads' => $this->uploads,
+         ]);
+      }
    }
 
    public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
