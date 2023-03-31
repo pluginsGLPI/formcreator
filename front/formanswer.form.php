@@ -45,14 +45,13 @@ if (isset($_POST['update'])) {
    $formanswer->update($_POST);
    Html::back();
 
-} else if (isset($_POST['refuse_formanswer'])) {
-   $formanswer->update($_POST);
-   $formanswer->redirectToList();
-
-} else if (isset($_POST['accept_formanswer'])) {
-   $formanswer->update($_POST);
-   $formanswer->redirectToList();
-
+} else if (isset($_POST['refuse_formanswer']) || isset($_POST['accept_formanswer'])) {
+   if ($formanswer->update($_POST)) {
+      $formanswer->redirectToList();
+   }else{
+      //redirect to formanswer if update failed (ex : missing mandatory field)
+      Html::back();
+   }
 } else if (isset($_POST['save_formanswer'])) {
    if (!$formanswer->update($_POST)) {
       Html::back();
