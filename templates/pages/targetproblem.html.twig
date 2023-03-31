@@ -49,11 +49,11 @@
     { required: true, full_width: true }
     ) }}
 
-    {{ fields.textareaField('content', item.fields['content'], __('Description', 'formcreator'), { full_width: true }) }}
+    {{ fields.textareaField('content', item.fields['content'], __('Description', 'formcreator'), { enable_richtext: true, full_width: true }) }}
 
-    {{ fields.textareaField('impactcontent', item.fields['impactcontent'], __('Impacts'), { full_width: true }) }}
+    {{ fields.textareaField('impactcontent', item.fields['impactcontent'], __('Impacts'), { enable_richtext: true, full_width: true }) }}
 
-    {{ fields.textareaField('causecontent', item.fields['causecontent'], __('Cause'), { full_width: true }) }}
+    {{ fields.textareaField('causecontent', item.fields['causecontent'], __('Cause'), { enable_richtext: true, full_width: true }) }}
 
-    {{ fields.textareaField('symptomcontent', item.fields['symptomcontent'], __('Symptom'), { full_width: true }) }}
+    {{ fields.textareaField('symptomcontent', item.fields['symptomcontent'], __('Symptom'), { enable_richtext: true, full_width: true }) }}
 {% endblock %}

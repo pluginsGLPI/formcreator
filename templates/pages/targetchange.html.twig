@@ -49,15 +49,15 @@
     { required: true, full_width: true }
     ) }}
 
-    {{ fields.textareaField('content', item.fields['content'], __('Description', 'formcreator'), { full_width: true }) }}
+    {{ fields.textareaField('content', item.fields['content'], __('Description', 'formcreator'), { enable_richtext: true, full_width: true }) }}
 
-    {{ fields.textareaField('impactcontent', item.fields['impactcontent'], __('Impacts'), { full_width: true }) }}
+    {{ fields.textareaField('impactcontent', item.fields['impactcontent'], __('Impacts'), { enable_richtext: true, full_width: true }) }}
 
-    {{ fields.textareaField('controlistcontent', item.fields['controlistcontent'], __('Control list'), { full_width: true }) }}
+    {{ fields.textareaField('controlistcontent', item.fields['controlistcontent'], __('Control list'), { enable_richtext: true, full_width: true }) }}
 
-    {{ fields.textareaField('rolloutplancontent', item.fields['rolloutplancontent'], __('Deployment plan'), { full_width: true }) }}
+    {{ fields.textareaField('rolloutplancontent', item.fields['rolloutplancontent'], __('Deployment plan'), { enable_richtext: true, full_width: true }) }}
 
-    {{ fields.textareaField('backoutplancontent', item.fields['backoutplancontent'], __('Backup plan'), { full_width: true }) }}
+    {{ fields.textareaField('backoutplancontent', item.fields['backoutplancontent'], __('Backup plan'), { enable_richtext: true, full_width: true }) }}
 
-    {{ fields.textareaField('checklistcontent', item.fields['checklistcontent'], __('Checklist'), { full_width: true }) }}
+    {{ fields.textareaField('checklistcontent', item.fields['checklistcontent'], __('Checklist'), { enable_richtext: true, full_width: true }) }}
 {% endblock %}
