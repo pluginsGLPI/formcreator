@@ -286,7 +286,7 @@ class FileField extends PluginFormcreatorAbstractField
    }
 
    public function isPublicFormCompatible(): bool {
-      return true;
+      return false;
    }
 
    public function getHtmlIcon() {

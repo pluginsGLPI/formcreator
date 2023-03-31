@@ -1,3 +1,44 @@
+<a name="2.13.5"></a>
+## [2.13.5](https://github.com/pluginsGLPI/formcreator/compare/2.13.4..2.13.5) (2023-03-24)
+
+
+### Bug Fixes
+
+*  add missing domain for public forms translation (#3162) ([970f183c6](https://github.com/pluginsGLPI/formcreator/commit/970f183c6))
+*  duplicate key when updating a profile ([1bd6a2ab6](https://github.com/pluginsGLPI/formcreator/commit/1bd6a2ab6))
+*  remote glpi prefix for commands ([651444a27](https://github.com/pluginsGLPI/formcreator/commit/651444a27))
+* **abstractitiltarget:** set priority from urgency and impact (#3178) ([1269edd51](https://github.com/pluginsGLPI/formcreator/commit/1269edd51))
+* **checkboxes:** better display ([f8fe93a63](https://github.com/pluginsGLPI/formcreator/commit/f8fe93a63))
+* **checkboxes:** padding between items ([a62f879ce](https://github.com/pluginsGLPI/formcreator/commit/a62f879ce))
+* **condition:** infinite loop detection ([172d5e8eb](https://github.com/pluginsGLPI/formcreator/commit/172d5e8eb))
+* **dropdownfield:** prevent ambiguous column name ([b54523219](https://github.com/pluginsGLPI/formcreator/commit/b54523219))
+* **form:** remove obsolete translations on update ([3cc58ac7d](https://github.com/pluginsGLPI/formcreator/commit/3cc58ac7d))
+* **form:** rename form answer properties tab ([a3395179d](https://github.com/pluginsGLPI/formcreator/commit/a3395179d))
+* **form_language:** avoid persistent rich editor toolbar when closing modal ([11a8808b5](https://github.com/pluginsGLPI/formcreator/commit/11a8808b5))
+* **form_language:** display problems when translating ([93073e656](https://github.com/pluginsGLPI/formcreator/commit/93073e656))
+* **form_language:** filter out obsolete translations ([b38555c5e](https://github.com/pluginsGLPI/formcreator/commit/b38555c5e))
+* **formanswer:** access restriction ([a9451d982](https://github.com/pluginsGLPI/formcreator/commit/a9451d982))
+* **install:** distinguish error messages for sanity check ([b798bf264](https://github.com/pluginsGLPI/formcreator/commit/b798bf264))
+* **notifications:** missing lang tags ([3cad18562](https://github.com/pluginsGLPI/formcreator/commit/3cad18562))
+* **question:** missing conditions count after update ([ea185beb8](https://github.com/pluginsGLPI/formcreator/commit/ea185beb8))
+* **question:** updating a question returns sanitized label ([936ccd475](https://github.com/pluginsGLPI/formcreator/commit/936ccd475))
+* **radios:** update escaping of valies ([c940e1764](https://github.com/pluginsGLPI/formcreator/commit/c940e1764))
+* **radiosfield:** better display ([fe6c2e8d0](https://github.com/pluginsGLPI/formcreator/commit/fe6c2e8d0))
+* **restrictedformcriteria:** bad key when generating error message ([6cabca1fe](https://github.com/pluginsGLPI/formcreator/commit/6cabca1fe))
+* **targetchange,targetproblem:** harmonize implemetnation with targetticket ([1ba402de0](https://github.com/pluginsGLPI/formcreator/commit/1ba402de0))
+* **targetchange,targetproblem:** missed code refactor ([e24d2fc13](https://github.com/pluginsGLPI/formcreator/commit/e24d2fc13))
+* **targetticket:** wrong property label ([fd3d30973](https://github.com/pluginsGLPI/formcreator/commit/fd3d30973))
+* **textareafield:** target ticket shows HTML when image uploaded ([56fc8d54d](https://github.com/pluginsGLPI/formcreator/commit/56fc8d54d))
+* **translation:** avoid rn when using formatted rich (html) text ([24113a353](https://github.com/pluginsGLPI/formcreator/commit/24113a353))
+
+
+### Features
+
+*  Link documents to form ([690f58d13](https://github.com/pluginsGLPI/formcreator/commit/690f58d13))
+* **form_language:** add items count in tab ([90a579680](https://github.com/pluginsGLPI/formcreator/commit/90a579680))
+* **issue:** more anonymising options (#3160) ([075896bb6](https://github.com/pluginsGLPI/formcreator/commit/075896bb6))
+
+
 <a name="2.13.4"></a>
 ## [2.13.4](https://github.com/pluginsGLPI/formcreator/compare/2.13.3..2.13.4) (2023-01-24)
 

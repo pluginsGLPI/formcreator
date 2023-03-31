@@ -60,8 +60,10 @@ class GlpiselectField extends DropdownField
       $this->question->fields['_is_tree'] = '0';
       $this->question->fields['_is_entity_restrict'] = '0';
       if (isset($this->question->fields['itemtype']) && is_subclass_of($this->question->fields['itemtype'], CommonDBTM::class)) {
-         $item = new $this->question->fields['itemtype'];
-         $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
+         if (!in_array($this->question->fields['itemtype'], self::$noEntityRrestrict)) {
+            $item = new $this->question->fields['itemtype'];
+            $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
+         }
       }
       if (isset($this->question->fields['itemtype']) && $this->question->fields['itemtype'] == User::class) {
          $this->question->fields['_is_entity_restrict'] = '1';
