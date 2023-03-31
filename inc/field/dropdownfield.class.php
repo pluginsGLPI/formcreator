@@ -854,7 +854,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       switch ($restrictionPolicy) {
          case self::ENTITY_RESTRICT_FORM:
             $form = PluginFormcreatorForm::getByItem($this->getQuestion());
-            $formEntities = [$form->fields['entities_id']];
+            $formEntities = [$form->fields['entities_id'] => $form->fields['entities_id']];
             if ($form->fields['is_recursive']) {
                $formEntities = $formEntities + (new DBUtils())->getSonsof(Entity::getTable(), $form->fields['entities_id']);
             }
@@ -863,7 +863,7 @@ class DropdownField extends PluginFormcreatorAbstractField
 
          case self::ENTITY_RESTRICT_BOTH:
             $form = PluginFormcreatorForm::getByItem($this->getQuestion());
-            $formEntities = [$form->fields['entities_id']];
+            $formEntities = [$form->fields['entities_id'] => $form->fields['entities_id']];
             if ($form->fields['is_recursive']) {
                $formEntities = $formEntities + (new DBUtils())->getSonsof(Entity::getTable(), $form->fields['entities_id']);
             }
