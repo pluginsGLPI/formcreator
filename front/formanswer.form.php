@@ -48,7 +48,7 @@ if (isset($_POST['update'])) {
 } else if (isset($_POST['refuse_formanswer']) || isset($_POST['accept_formanswer'])) {
    if ($formanswer->update($_POST)) {
       $formanswer->redirectToList();
-   }else{
+   } else {
       //redirect to formanswer if update failed (ex : missing mandatory field)
       Html::back();
    }
