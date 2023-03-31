@@ -132,7 +132,7 @@ class FileField extends PluginFormcreatorAbstractField
       foreach ($this->uploads["_$key"] as $index => $document) {
          $document = Toolbox::stripslashes_deep($document);
          if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-            $prefix = $this->uploads['_prefix_formcreator_field_' . $this->question->getID()][$index];
+            $prefix = $this->uploads['_prefix_' . $key][$index];
             $answer_value[] = $this->saveDocument($document, $prefix);
          }
          $index++;
@@ -188,7 +188,7 @@ class FileField extends PluginFormcreatorAbstractField
       foreach ($input["_$key"] as $document) {
          $document = Toolbox::stripslashes_deep($document);
          if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-            $prefix = $input['_prefix_formcreator_field_' . $this->question->getID()][$index];
+            $prefix = $input['_prefix_' . $key][$index];
             $answer_value[] = $this->saveDocument($document, $prefix);
          }
          $index++;
