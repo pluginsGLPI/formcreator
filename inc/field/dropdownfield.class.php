@@ -352,18 +352,6 @@ class DropdownField extends PluginFormcreatorAbstractField
          }
       }
 
-      $emptyItem = new $itemtype();
-      $emptyItem->getEmpty();
-      if (isset($emptyItem->fields['serial'])) {
-         $dparams['displaywith'][] = 'serial';
-      }
-      if (isset($emptyItem->fields['otherserial'])) {
-         $dparams['displaywith'][] = 'otherserial';
-      }
-      if ($itemtype === Ticket::class && !array_search('id', $dparams['displaywith'])) {
-         $dparams['displaywith'][] = 'id';
-      }
-
       return $dparams;
    }
 
