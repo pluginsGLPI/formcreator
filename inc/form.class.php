@@ -821,8 +821,8 @@ PluginFormcreatorTranslatableInterface
                ]
             ]);
             $kbcategories = [];
-            foreach ($iterator as $kbcat) {
-               $kbcategories[] = $kbcat['knowbaseitemcategories_id'];
+            foreach ($iterator as $knowbase_category) {
+               $kbcategories[] = $knowbase_category['knowbaseitemcategories_id'];
             }
             $params['knowbaseitemcategories_id'] = $kbcategories;
          }
