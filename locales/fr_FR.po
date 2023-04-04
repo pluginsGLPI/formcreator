@@ -1055,7 +1055,11 @@ msgstr "Demander une assistance"
 msgid "My requests for assistance"
 msgstr "Mes demandes d'assistance"
 
-#: inc/common.class.php:827
+#: inc/common.class.php:829
+msgid "Consult reminders"
+msgstr "Consulter les Notes"
+
+#: inc/common.class.php:849
 msgid "Consult feeds"
 msgstr "Consulter les flux RSS"
 
