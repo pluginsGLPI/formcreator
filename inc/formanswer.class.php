@@ -1437,7 +1437,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                }
             }
          }
-         // $content = str_replace('##answer_' . $questionId . '##', Sanitizer::sanitize($value ?? ''), $content);
          $content = str_replace('##answer_' . $questionId . '##', $value ?? '', $content);
 
          if ($this->questionFields[$questionId] instanceof DropdownField) {
