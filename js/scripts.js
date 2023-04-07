@@ -1108,6 +1108,7 @@ var plugin_formcreator = new function() {
 
    this.newTranslation = function (formLanguageId) {
       glpi_ajax_dialog({
+         dialogclass: 'modal-xl',
          url: '../ajax/form_language.php',
          params: {
             action: 'newTranslation',
