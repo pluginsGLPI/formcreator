@@ -32,6 +32,7 @@
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -844,7 +845,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $data['date'] = $_SESSION['glpi_currenttime'];
 
       $data['content'] = $this->prepareTemplate(
-         $this->fields['content'] ?? '',
+         Sanitizer::unsanitize(__($this->fields['content'], $domain)) ?? '',
          $formanswer,
          $richText
       );

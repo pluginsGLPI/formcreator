@@ -1394,7 +1394,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $name = '';
          $value = '';
          if (PluginFormcreatorFields::isVisible($question, $this->questionFields)) {
-            $name  = $question->fields['name'];
+            $name  = __($question->fields['name'], $domain);
             $value = $this->questionFields[$questionId]->getValueForTargetText($domain, $richText);
          }
 
