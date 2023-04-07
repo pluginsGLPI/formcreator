@@ -53,7 +53,7 @@ class GlpiselectField extends DropdownField
 
       $this->question->fields['_tree_root'] = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
       $this->question->fields['_tree_root_selectable'] = $decodedValues['selectable_tree_root'] ?? '0';
-      $this->question->fields['_tree_max_depth'] = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
+      $this->question->fields['_tree_max_depth'] = $decodedValues['show_tree_depth'] ?? '0';
       $this->question->fields['_entity_restrict'] = $decodedValues['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
       $this->question->fields['_is_tree'] = '0';
       $this->question->fields['_is_entity_restrict'] = '0';
