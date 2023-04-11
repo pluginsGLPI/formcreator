@@ -1134,6 +1134,11 @@ var plugin_formcreator = new function() {
       }).fail(function () {
          displayAjaxMessageAfterRedirect();
       }).done(function () {
+         // Remove unclosed TinyMCE toolbar
+         var tinyToolbar = document.querySelector('.tox-tinymce-aux');
+         if (tinyToolbar) {
+            tinyToolbar.parentNode.removeChild(tinyToolbar);
+         }
          that.showTranslationEditor(form);
       });
    }
