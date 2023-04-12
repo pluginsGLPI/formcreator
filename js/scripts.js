@@ -1151,6 +1151,7 @@ var plugin_formcreator = new function() {
 
    this.newTranslation = function (formLanguageId) {
       glpi_ajax_dialog({
+         dialogclass: 'modal-xl',
          url: '../ajax/form_language.php',
          params: {
             action: 'newTranslation',
@@ -1176,6 +1177,11 @@ var plugin_formcreator = new function() {
       }).fail(function () {
          displayAjaxMessageAfterRedirect();
       }).done(function () {
+         // Remove unclosed TinyMCE toolbar
+         var tinyToolbar = document.querySelector('.tox-tinymce-aux');
+         if (tinyToolbar) {
+            tinyToolbar.parentNode.removeChild(tinyToolbar);
+         }
          that.showTranslationEditor(form);
       });
    };
