@@ -347,7 +347,8 @@ function buildKbCategoryList(tree) {
    if (tree.id != 0) {
       html += '<a href="#" data-parent-category-id="' + tree.parent +'"'
          + ' data-category-id="' + tree.id + '"'
-         + ' onclick="plugin_formcreator.updateKbitemsView(this)">'
+         + ' onclick="plugin_formcreator.updateKbitemsView(this)"'
+         + ' title="' + tree.comment + '">'
          + tree.name
          + '</a>';
    }
@@ -382,7 +383,7 @@ function buildCategoryList(tree) {
          + ' data-category-id="' + tree.id + '"'
          + ' onclick="plugin_formcreator.updateWizardFormsView(this)"'
          + ' style="background-color: ' + tree.background_color + '"'
-         + ' title="' + tree.name + '">'
+         + ' title="' + tree.comment + '">'
          + icon
          + tree.name
          + '</a>';

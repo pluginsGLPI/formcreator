@@ -160,6 +160,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
             'icon',
             'icon_color',
             'background_color',
+            'comment',
             "$categoryFk as parent",
             'level',
             new QueryExpression(
