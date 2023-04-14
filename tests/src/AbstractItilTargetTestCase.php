@@ -31,7 +31,10 @@
 
 namespace GlpiPlugin\Formcreator\Tests;
 
+use PluginFormcreatorForm;
 use PluginFormcreatorFormanswer;
+use PluginFormcreatorTarget_Actor;
+use Ticket_User;
 
 abstract class AbstractItilTargetTestCase extends CommonTargetTestCase {
    public function beforeTestMethod($method) {
@@ -119,5 +122,72 @@ abstract class AbstractItilTargetTestCase extends CommonTargetTestCase {
       $this->boolean($formanswer->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
       $generatedTarget = $formanswer->targetList[0]; // Assume the target has been generated
       $generatedTarget->fields['priority'] = $expected;
+   }
+
+   public function providerSetTargetRequesters() {
+      $question = $this->getQuestion([
+         'fieldtype' => 'email',
+      ]);
+      $form = PluginFormcreatorForm::getByItem($question);
+      $target = $this->newTestedInstance();
+      $target->add([
+         'name' => $this->getUniqueString(),
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $targetActor = new PluginFormcreatorTarget_Actor();
+      $targetActor->add([
+         'itemtype'      => $target->getType(),
+         'items_id'      => $target->getID(),
+         'actor_role'    => PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
+         'actor_type'    => PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
+         'actor_value_4' => $question->getID(),
+      ]);
+      $this->boolean($targetActor->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
+
+      $this->login('glpi', 'glpi');
+      yield 'One email requester' => [
+         'formanswerData' => [
+            PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+            'formcreator_field_' . $question->getID() => 'test@example.net',
+         ],
+         'expected' => [
+            [
+               'users_id' => 0,
+               'alternative_email' => 'test@example.net',
+            ],
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerSetTargetRequesters
+    */
+   public function testSetTargetRequesters($formanswerData, $expected) {
+      $formanswer = new PluginFormcreatorFormanswer();
+      $formanswer->add($formanswerData);
+      $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
+      $this->boolean($formanswer->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
+      $generatedTarget = $formanswer->targetList[0]; // Assume the target has been generated
+      $instance = $this->newTestedInstance();
+      $relationClass = $this->callPrivateMethod($instance, 'getItem_User');
+      $targetClass = $instance::getTargetItemtypeName();
+      $ticketUser = new $relationClass;
+      if (count($expected) === 0) {
+         $rows = $ticketUser->find([
+            $targetClass::getForeignKeyField() => $generatedTarget->getID(),
+            'type' => $relationClass::REQUESTER,
+         ]);
+         $this->array($rows)->hasSize(0);
+      } else {
+         foreach ($expected as $searched) {
+            $rows = $ticketUser->find([
+               $targetClass::getForeignKeyField() => $generatedTarget->getID(),
+               'type' => $relationClass::REQUESTER,
+               'users_id' => $searched['users_id'],
+               'alternative_email' => $searched['alternative_email'],
+            ]);
+            $this->array($rows)->hasSize(1);
+         }
+      }
    }
 }
