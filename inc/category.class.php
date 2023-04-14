@@ -132,6 +132,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          'SELECT' => [
             'id',
             'name',
+            'comment',
             "$categoryFk as parent",
             'level',
             new QueryExpression(
