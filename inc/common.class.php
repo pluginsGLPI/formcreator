@@ -823,14 +823,14 @@ JAVASCRIPT;
       $iterator = $DB->request($criteria);
       $hasReminder = $iterator->count() > 0;
 
-	  if (Reminder::canView() && $hasReminder) {
+      if (Reminder::canView() && $hasReminder) {
          $newMenu['reminders'] = [
             'default' => Plugin::getWebDir('formcreator', false) . '/front/wizardreminders.php',
             'title'   => __('Consult reminders', 'formcreator'),
             'icon'    => 'fa fa-sticky-note',
          ];
       }
-      
+
       $rssFeedTable = RSSFeed::getTable();
       $criteria = [
          'SELECT'   => "$rssFeedTable.*",
