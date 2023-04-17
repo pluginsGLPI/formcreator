@@ -121,15 +121,6 @@ class RadiosField extends PluginFormcreatorAbstractField
       $input['values'] = $this->trimValue($input['values']);
       $input['default_values'] = trim($input['default_values']);
 
-      if (!$this->isValidValue($input['default_values'])) {
-         Session::addMessageAfterRedirect(
-            __('The default value is invalid:', 'formcreator') . ' ' . $input['name'],
-            false,
-            ERROR
-         );
-         return [];
-      }
-
       return $input;
    }
 
