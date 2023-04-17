@@ -51,7 +51,6 @@ class RadiosField extends PluginFormcreatorAbstractField
       $this->question->fields['values'] =  json_decode($this->question->fields['values']);
       $this->question->fields['values'] = is_array($this->question->fields['values']) ? $this->question->fields['values'] : [];
       $this->question->fields['values'] = implode("\r\n", $this->question->fields['values']);
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
       $this->deserializeValue($this->question->fields['default_values']);
       TemplateRenderer::getInstance()->display($template, [
          'item' => $this->question,
