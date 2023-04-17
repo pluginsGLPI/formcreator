@@ -405,4 +405,33 @@ class RadiosField extends CommonTestCase {
       $output = $instance->getValueForApi();
       $this->string($output)->isEqualTo($expected);
    }
+
+   public function providerGetValueForTargetText() {
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => 'select',
+            'values'    => 'foo\r\nbar',
+         ]),
+         'value' => '',
+         'expectedValue' => '',
+      ];
+
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => 'select',
+            'values'    => 'foo\r\nbar',
+         ]),
+         'value' => 'foo',
+         'expectedValue' => 'foo',
+      ];
+
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => 'select',
+            'values'    => 'foo &#62; baz\r\nbar', // Saved sanitized in DB
+         ]),
+         'value' => 'foo &#62; baz', // Sanitized when used in a form
+         'expectedValue' => 'foo > baz',
+      ];
+   }
 }
