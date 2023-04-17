@@ -52,20 +52,23 @@ class CheckboxesField extends PluginFormcreatorAbstractField
 
       $value = [];
       $items = json_decode($this->question->fields['default_values']);
-      foreach ($items as $item) {
-         if (trim($item) === '') {
-            continue;
+      if ($items !== null) {
+         // when we edit an existing question
+         foreach ($items as $item) {
+            if (trim($item) === '') {
+               continue;
+            }
+            if (!in_array($item, $this->getAvailableValues())) {
+               continue;
+            }
+            $value[] = $item;
          }
-         if (!in_array($item, $this->getAvailableValues())) {
-            continue;
-         }
-         $value[] = $item;
+         $this->question->fields['default_values'] = implode("\r\n", $value);
+         $this->deserializeValue($this->question->fields['default_values']);
       }
-      $this->question->fields['default_values'] = implode("\r\n", $value);
       $this->question->fields['values'] =  json_decode($this->question->fields['values']);
       $this->question->fields['values'] = is_array($this->question->fields['values']) ? $this->question->fields['values'] : [];
       $this->question->fields['values'] = implode("\r\n", $this->question->fields['values']);
-      $this->deserializeValue($this->question->fields['default_values']);
 
       $parameters = $this->getParameters();
       TemplateRenderer::getInstance()->display($template, [
