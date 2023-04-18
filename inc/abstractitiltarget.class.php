@@ -45,6 +45,9 @@ PluginFormcreatorTranslatableInterface
    /** @var array $requesters requester actors of the target */
    protected $requesters;
 
+   /** @var array $requesters requester actors of the target */
+   protected $firstRequester;
+
    /** @var array $observers watcher actors of the target */
    protected $observers;
 
@@ -2543,4 +2546,97 @@ SCRIPT;
    public static function getNoMailImage() {
       return '<i class="fas fa-envelope pointer" title="' . __('Email followup') . ' ' . __('No') . '" width="20"></i>';
    }
+
+   /**
+    * Undocumented function
+    *
+    * @param array $data
+    * @param PluginFormcreatorFormAnswer $formanswer
+    * @return array
+    */
+   protected function setTargetRequesters(array $data, PluginFormcreatorFormAnswer $formanswer): array {
+      if (count($this->requesters['_users_id_requester']) == 0) {
+         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $formanswer->fields['requester_id'], true);
+         $requesters_id = $formanswer->fields['requester_id'];
+      } else {
+         $requesterAccounts = array_filter($this->requesters['_users_id_requester'], function($v) {
+            return ($v != 0);
+         });
+         $requesters_id = array_shift($requesterAccounts);
+         if ($requesters_id === null) {
+            // No account for requesters, then fallback on the account used to fill the answers
+            $requesters_id = $formanswer->fields['requester_id'];
+         }
+
+         // If only one requester, revert array of requesters into a scalar
+         // This is needed to process business rule affecting location of a ticket with the location of the user
+         if (count($this->requesters['_users_id_requester']) == 1) {
+            $this->requesters['_users_id_requester'] = array_pop($this->requesters['_users_id_requester']);
+         }
+      }
+
+      // There is always at least one requester
+      $data = $this->requesters + $data;
+      $this->firstRequester = $requesters_id;
+
+      if (count($this->requesterGroups['_groups_id_requester']) > 0) {
+         $data = $this->requesterGroups + $data;
+      }
+
+      return $data;
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @param array $data
+    * @param PluginFormcreatorFormAnswer $formanswer
+    * @return array
+    */
+   protected function setTargetObservers(array $data, PluginFormcreatorFormAnswer $formanswer): array {
+      if (count($this->observers['_users_id_observer']) > 0) {
+         $data = $this->observers + $data;
+      }
+
+      if (count($this->observerGroups['_groups_id_observer']) > 0) {
+         $data = $this->observerGroups + $data;
+      }
+
+      return $data;
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @param array $data
+    * @param PluginFormcreatorFormAnswer $formanswer
+    * @return array
+    */
+   protected function setTargeAssigned(array $data, PluginFormcreatorFormAnswer $formanswer): array {
+      if (count($this->assigned['_users_id_assign']) > 0) {
+         $data = $this->assigned + $data;
+      }
+
+      if (count($this->assignedGroups['_groups_id_assign']) > 0) {
+         $data = $this->assignedGroups + $data;
+      }
+
+      return $data;
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @param array $data
+    * @param PluginFormcreatorFormAnswer $formanswer
+    * @return array
+    */
+   protected function setTargetSuppliers(array $data, PluginFormcreatorFormAnswer $formanswer): array {
+      if (count($this->assignedSuppliers['_suppliers_id_assign']) > 0) {
+         $data = $this->assignedSuppliers + $data;
+      }
+
+      return $data;
+   }
+
 }
