@@ -29,11 +29,11 @@
  * ---------------------------------------------------------------------
  */
 namespace GlpiPlugin\Formcreator\Field\tests\units;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonAbstractFieldTestCase;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use PluginFormcreatorFormAnswer;
 use User;
-class ActorField extends CommonTestCase {
+class ActorField extends CommonAbstractFieldTestCase {
    public function testGetName() {
       $itemtype = $this->getTestedClassName();
       $output = $itemtype::getName();
@@ -474,5 +474,44 @@ class ActorField extends CommonTestCase {
       $instance->deserializeValue($input);
       $output = $instance->getValueForApi();
       $this->array($output)->isEqualTo($expected);
+   }
+
+   public function providerGetValueForTargetText() {
+      $fieldtype = 'actor';
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => $fieldtype,
+         ]),
+         'value' => '',
+         'expectedValue' => '',
+         'expectedRichValue' => '<br />'
+      ];
+
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => $fieldtype,
+         ]),
+         'value' => json_encode(['foo@bar.com']),
+         'expectedValue' => 'foo@bar.com',
+         'expectedRichValue' => '<br />foo@bar.com'
+      ];
+
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => $fieldtype,
+         ]),
+         'value' => json_encode([User::getIdByName('glpi')]),
+         'expectedValue' => 'glpi',
+         'expectedRichValue' => '<br />glpi'
+      ];
+
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => $fieldtype,
+         ]),
+         'value' => json_encode(['foo@bar.com', User::getIdByName('glpi')]),
+         'expectedValue' => 'foo@bar.com, glpi',
+         'expectedRichValue' => '<br />foo@bar.com<br />glpi',
+      ];
    }
 }
