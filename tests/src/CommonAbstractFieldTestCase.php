@@ -40,7 +40,7 @@ abstract class CommonAbstractFieldTestCase extends CommonTestCase {
     *
     * @return void
     */
-   public function testGetValueForTargetText($question, $value, $expectedValue) {
+   public function testGetValueForTargetText($question, $value, $expectedValue, $expectedRichValue = null) {
       $instance = $this->newTestedInstance($question);
       $output = $instance->parseAnswerValues([
          'formcreator_field_' . $question->getID() => $value
@@ -60,8 +60,13 @@ abstract class CommonAbstractFieldTestCase extends CommonTestCase {
       if ($expectedValue === null) {
          $this->variable($output)->isNull();
       } else {
-         $this->string($output)
-            ->isEqualTo(Sanitizer::sanitize($expectedValue, false));
+         if ($expectedRichValue === null) {
+            $this->string($output)
+               ->isEqualTo(Sanitizer::sanitize($expectedValue, false));
+         } else {
+            $this->string($output)
+               ->isEqualTo($expectedRichValue);
+         }
       }
    }
 }

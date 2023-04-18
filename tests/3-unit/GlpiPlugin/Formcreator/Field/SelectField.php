@@ -466,9 +466,10 @@ class SelectField extends CommonAbstractFieldTestCase {
    }
 
    public function providerGetValueForTargetText() {
+      $fieldtype = 'select';
       yield [
          'question' => $this->getQuestion([
-            'fieldtype' => 'select',
+            'fieldtype' => $fieldtype,
             'values'    => 'foo\r\nbar',
          ]),
          'value' => '',
@@ -477,7 +478,7 @@ class SelectField extends CommonAbstractFieldTestCase {
 
       yield [
          'question' => $this->getQuestion([
-            'fieldtype' => 'select',
+            'fieldtype' => $fieldtype,
             'values'    => 'foo\r\nbar',
          ]),
          'value' => 'foo',
@@ -486,7 +487,7 @@ class SelectField extends CommonAbstractFieldTestCase {
 
       yield [
          'question' => $this->getQuestion([
-            'fieldtype' => 'select',
+            'fieldtype' => $fieldtype,
             'values'    => 'foo &#62; baz\r\nbar', // Saved sanitized in DB
          ]),
          'value' => 'foo &#62; baz', // Sanitized when used in a form

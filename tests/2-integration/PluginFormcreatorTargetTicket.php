@@ -30,6 +30,7 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Entity;
 
 /**
  * @engine inline

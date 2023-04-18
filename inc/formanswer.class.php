@@ -1364,8 +1364,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // convert sanitization from old style GLPI ( up to 9.5 to modern style)
          if ($content != Sanitizer::unsanitize($content)) {
             $content = Sanitizer::unsanitize($content);
-            $content = Sanitizer::sanitize($content);
          }
+         $content = Sanitizer::sanitize($content);
       } else {
          $content = Sanitizer::sanitize($content);
       }

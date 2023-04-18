@@ -29,6 +29,7 @@
  * ---------------------------------------------------------------------
  */
 namespace tests\units;
+use Entity;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Entity;
 use PluginFormcreatorForm;

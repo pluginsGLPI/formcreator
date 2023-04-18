@@ -30,10 +30,10 @@
  */
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonAbstractFieldTestCase;
 use PluginFormcreatorFormAnswer;
 
-class RadiosField extends CommonTestCase {
+class RadiosField extends CommonAbstractFieldTestCase {
    public function testPrepareQuestionInputForSave() {
       $question = $this->getQuestion([
          'fieldtype'       => 'radios',
@@ -407,9 +407,10 @@ class RadiosField extends CommonTestCase {
    }
 
    public function providerGetValueForTargetText() {
+      $fieldtype = 'select';
       yield [
          'question' => $this->getQuestion([
-            'fieldtype' => 'select',
+            'fieldtype' => $fieldtype,
             'values'    => 'foo\r\nbar',
          ]),
          'value' => '',
@@ -418,7 +419,7 @@ class RadiosField extends CommonTestCase {
 
       yield [
          'question' => $this->getQuestion([
-            'fieldtype' => 'select',
+            'fieldtype' => $fieldtype,
             'values'    => 'foo\r\nbar',
          ]),
          'value' => 'foo',
@@ -427,7 +428,7 @@ class RadiosField extends CommonTestCase {
 
       yield [
          'question' => $this->getQuestion([
-            'fieldtype' => 'select',
+            'fieldtype' => $fieldtype,
             'values'    => 'foo &#62; baz\r\nbar', // Saved sanitized in DB
          ]),
          'value' => 'foo &#62; baz', // Sanitized when used in a form
