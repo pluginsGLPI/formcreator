@@ -55,18 +55,17 @@ abstract class CommonAbstractFieldTestCase extends CommonTestCase {
             ->isEqualTo($expectedValue);
       }
 
-      // Rich text output
+      // // Rich text output
       $output = $instance->getValueForTargetText('', true);
       if ($expectedValue === null) {
          $this->variable($output)->isNull();
-      } else {
-         if ($expectedRichValue === null) {
-            $this->string($output)
-               ->isEqualTo(Sanitizer::sanitize($expectedValue, false));
-         } else {
-            $this->string($output)
-               ->isEqualTo($expectedRichValue);
-         }
+         return;
       }
-   }
+
+      if ($expectedRichValue === null) {
+         $expectedRichValue = $expectedValue;
+      }
+      $this->string($output)
+         ->isEqualTo($expectedRichValue);
+}
 }

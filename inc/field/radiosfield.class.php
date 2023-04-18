@@ -175,9 +175,6 @@ class RadiosField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($domain, $richText): ?string {
-      if ($richText) {
-         return __($this->value, $domain);
-      }
       return Sanitizer::unsanitize(__($this->value, $domain));
    }
 
