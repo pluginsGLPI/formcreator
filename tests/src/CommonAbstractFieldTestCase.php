@@ -67,5 +67,5 @@ abstract class CommonAbstractFieldTestCase extends CommonTestCase {
       }
       $this->string($output)
          ->isEqualTo($expectedRichValue);
-}
+   }
 }
