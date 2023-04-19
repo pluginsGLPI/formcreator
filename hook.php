@@ -265,6 +265,9 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
 
             $groupIDs = [];
             foreach ($groups as $group) {
+               if ($group['id'] === null) {
+                  continue;
+               }
                $groupIDs[] = $group['id'];
             }
             $groupIDs = implode(',', $groupIDs);
