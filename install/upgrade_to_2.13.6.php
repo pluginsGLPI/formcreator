@@ -46,6 +46,7 @@ class PluginFormcreatorUpgradeTo2_13_6 {
    public function upgrade(Migration $migration) {
       $this->migration = $migration;
       $this->migrateToRichText();
+      $this->sanitizeConditions();
    }
 
    public function migrateToRichText() {
@@ -80,6 +81,26 @@ class PluginFormcreatorUpgradeTo2_13_6 {
             }
             $DB->update($table, $row, ['id' => $row['id']]);
          }
+      }
+   }
+
+   /**
+    * Conditions written in Formcreator < 2.13.0 are not sanitized.
+    * With versions >= 2.13.0, comparisons require sanitization
+    *
+    * @return void
+    */
+   protected function sanitizeConditions() {
+      global $DB;
+
+      $table = 'glpi_plugin_formcreator_conditions';
+      $request = $DB->request([
+         'SELECT' => ['id', 'show_value'],
+         'FROM' => $table,
+      ]);
+      foreach ($request as $row) {
+         $row['show_value'] = Sanitizer::sanitize($row['show_value'], true);
+         $DB->update($table, $row, ['id' => $row['id']]);
       }
    }
 }
