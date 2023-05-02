@@ -148,7 +148,7 @@ class CleanTicketsCommand extends Command
       }
 
       // Init progress bar
-      $output->writeln(__("Found $count tickets to clean.", "formcreator"));
+      $output->writeln(__("Found $count item(s) to clean.", "formcreator"));
       $progress_bar = new ProgressBar($output);
 
       foreach ($progress_bar->iterate($items) as $item) {
@@ -198,7 +198,7 @@ class CleanTicketsCommand extends Command
       }
 
       // Init progress bar
-      $output->writeln(__("Found $count tickets to clean.", "formcreator"));
+      $output->writeln(__("Found $count item(s) to clean.", "formcreator"));
       $progress_bar = new ProgressBar($output);
 
       foreach ($progress_bar->iterate($items) as $item) {
@@ -261,7 +261,7 @@ class CleanTicketsCommand extends Command
       }
 
       // Init progress bar
-      $output->writeln(__("Found $count tickets to clean.", "formcreator"));
+      $output->writeln(__("Found $count item(s) to clean.", "formcreator"));
       $progress_bar = new ProgressBar($output);
 
       foreach ($progress_bar->iterate($items) as $item) {
