@@ -1168,8 +1168,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $last_section = $question_line[$sectionFk];
          }
 
-         // Don't save tags, additional fields or descriptions in "full form"
-         if (in_array($question_line['fieldtype'], ['tag', 'fields', 'description'])) {
+         // Don't save tags or descriptions in "full form"
+         if (in_array($question_line['fieldtype'], ['tag', 'description'])) {
             continue;
          }
 
