@@ -245,7 +245,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          $issueSearchOptions = Search::getOptions($itemtype);
          $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[9]['joinparams']);
          $colname = $issueSearchOptions[9]['linkfield'];
-         // $condition .= "`glpi_users_${colname}_$complexJoinId`.`id` = '$currentUser'";
+         // $condition .= "`glpi_users_{$colname}_$complexJoinId`.`id` = '$currentUser'";
          $condition .= "`glpi_users_$complexJoinId`.`id` = '$currentUser'";
 
          // condition where current user is a member of a validator group of the issue
@@ -257,7 +257,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
             $groupList = implode("', '", $groupList);
             $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[16]['joinparams']);
             $colname = $issueSearchOptions[16]['linkfield'];
-            // $condition .= " OR `glpi_groups_${colname}_$complexJoinId`.`id` IN ('$groupList')";
+            // $condition .= " OR `glpi_groups_{$colname}_$complexJoinId`.`id` IN ('$groupList')";
             $condition .= " OR `glpi_groups_$complexJoinId`.`id` IN ('$groupList')";
          }
 
@@ -328,11 +328,14 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
 
          $groupIDs = [];
          foreach ($groups as $group) {
+            if ($group['id'] === null) {
+               continue;
+            }
             $groupIDs[] = $group['id'];
          }
 
          $groupIDs = implode("', '", $groupIDs);
-         $condition .= " OR `$formanswerValidationTable`.`itemtype` = '$groupType' AND `$formanswerValidationTable`.`items_id` IN ('$groupList')";
+         $condition .= " OR `$formanswerValidationTable`.`itemtype` = '$groupType' AND `$formanswerValidationTable`.`items_id` IN ('$groupIDs')";
          return "($condition)";
          break;
    }

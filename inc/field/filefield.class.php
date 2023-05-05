@@ -89,6 +89,24 @@ class FileField extends PluginFormcreatorAbstractField
          return $html;
       }
 
+      if (is_array($this->uploadData) && count($this->uploadData) > 0) {
+         $html = '';
+         $doc = new Document();
+         foreach ($this->uploadData as $item) {
+            if (is_numeric($item) && $doc->getFromDB($item)) {
+               $prefix = uniqid('', true);
+               $filename = $prefix . $doc->fields['filename'];
+               if (!copy(GLPI_DOC_DIR . '/' . $doc->fields['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
+                  continue;
+               }
+               $key = 'formcreator_field_' . $this->getQuestion()->getID();
+               $this->uploads['_' . $key][] = $filename;
+               $this->uploads['_prefix_' . $key][] = $prefix;
+               $this->uploads['_tag_' . $key][] = $doc->fields['tag'];
+            }
+         }
+      }
+
       return Html::file([
          'name'    => 'formcreator_field_' . $this->question->getID(),
          'display' => false,

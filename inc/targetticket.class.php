@@ -919,12 +919,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
            'date'                            => $_SESSION['glpi_currenttime'],
            'users_id'                        => Session::getLoginUserID(),
            'content'                         => $message,
-           '_do_not_compute_takeintoaccount' => true
-         ];
-         // GLPI 9.4+
-         $followUpInput += [
-            'items_id' => $ticketID,
-            'itemtype' => Ticket::class,
+           '_do_not_compute_takeintoaccount' => true,
+            'itemtype'                       => Ticket::class,
+            'items_id'                       => $ticketID,
          ];
          $ticketFollowup = new ITILFollowup();
          $ticketFollowup->add($followUpInput);
