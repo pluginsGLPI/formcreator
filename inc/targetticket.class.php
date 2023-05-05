@@ -783,14 +783,15 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             'FROM'   => ITILCategory::getTable(),
             'WHERE'  => ['id' => $data['itilcategories_id']]
          ]);
-         if ($row = $rows->current()) { // assign ticket template according to resulting ticket category and ticket type
+         if ($row = $rows->current()) {
+            // assign ticket template according to resulting ticket category and ticket type
             return ($data['type'] == Ticket::INCIDENT_TYPE
                     ? $row["{$targetTemplateFk}_incident"]
                     : $row["{$targetTemplateFk}_demand"]);
          }
       }
 
-      return $this->fields['tickettemplates_id'] ?? 0;
+      return $this->fields[$targetTemplateFk] ?? 0;
    }
 
    /**

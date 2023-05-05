@@ -621,7 +621,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
             'FROM'   => ITILCategory::getTable(),
             'WHERE'  => ['id' => $data['itilcategories_id']]
          ]);
-         if ($row = $rows->current()) { // assign change template according to resulting change category
+         if ($row = $rows->current()) {
+            // assign change template according to resulting change category
             return $row[$targetTemplateFk];
          }
       }
