@@ -837,7 +837,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       try {
-         $input['name'] = $DB->escape($this->parseTags($form->fields['formanswer_name']));
+         $input['name'] = $this->parseTags($form->fields['formanswer_name']);
       } catch (Exception $e) {
          // A fatal error caught during parsing of tags
          $GLPI->getErrorHandler()->handleException($e, false);
