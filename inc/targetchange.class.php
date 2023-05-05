@@ -629,12 +629,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
       return $this->fields[$targetTemplateFk] ?? 0;
    }
 
-   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer): array {
-      $data = parent::getDefaultData($formanswer);
-
-      return $data;
-   }
-
    /**
     * Save form data to the target
     *

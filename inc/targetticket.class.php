@@ -793,12 +793,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       return $this->fields['tickettemplates_id'] ?? 0;
    }
 
-   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer): array {
-      $data = parent::getDefaultData($formanswer);
-
-      return $data;
-   }
-
    /**
     * Save form data to the target
     *
