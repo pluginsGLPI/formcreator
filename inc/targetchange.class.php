@@ -621,18 +621,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
             'FROM'   => ITILCategory::getTable(),
             'WHERE'  => ['id' => $data['itilcategories_id']]
          ]);
-         if ($row = $rows->current()) { // assign change template according to resulting change category
+         if ($row = $rows->current()) {
+            // assign change template according to resulting change category
             return $row[$targetTemplateFk];
          }
       }
 
       return $this->fields[$targetTemplateFk] ?? 0;
-   }
-
-   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer): array {
-      $data = parent::getDefaultData($formanswer);
-
-      return $data;
    }
 
    /**
