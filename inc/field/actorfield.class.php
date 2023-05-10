@@ -254,7 +254,7 @@ class ActorField extends PluginFormcreatorAbstractField
       // If the field is required it can't be empty
       if ($this->isRequired() && count($this->value) === 0) {
          Session::addMessageAfterRedirect(
-            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
+            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getTtranslatedLabel()),
             false,
             ERROR
          );
@@ -264,7 +264,7 @@ class ActorField extends PluginFormcreatorAbstractField
       // If an item has been removed by sanitization, then the data is not valid
       if (count($sanitized) != count($this->value)) {
          Session::addMessageAfterRedirect(
-            sprintf(__('Invalid value: %s', 'formcreator'), $this->getLabel()),
+            sprintf(__('Invalid value: %s', 'formcreator'), $this->getTtranslatedLabel()),
             false,
             ERROR
          );
@@ -287,7 +287,7 @@ class ActorField extends PluginFormcreatorAbstractField
             $user = new User();
             if (!$user->getFromDB($item)) {
                Session::addMessageAfterRedirect(
-                  sprintf(__('User not found or invalid email address: %s', 'formcreator'), $this->getLabel()),
+                  sprintf(__('User not found or invalid email address: %s', 'formcreator'), $this->getTtranslatedLabel()),
                   false,
                   ERROR
                );

@@ -187,7 +187,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       // If the field is required it can't be empty
       if ($this->isRequired() && count($value) <= 0) {
          Session::addMessageAfterRedirect(
-            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
+            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getTtranslatedLabel()),
             false,
             ERROR
          );
@@ -223,14 +223,14 @@ class CheckboxesField extends PluginFormcreatorAbstractField
          $rangeMin = $parameters['range']->fields['range_min'];
          $rangeMax = $parameters['range']->fields['range_max'];
          if ($rangeMin > 0 && count($value) < $rangeMin) {
-            $message = sprintf(__('The following question needs at least %d answers', 'formcreator'), $rangeMin);
-            Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
+            $message = sprintf(__('The following question needs at least %d answers: %s', 'formcreator'), $rangeMin, $this->getTtranslatedLabel());
+            Session::addMessageAfterRedirect($message, false, ERROR);
             return false;
          }
 
          if ($rangeMax > 0 && count($value) > $rangeMax) {
-            $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $rangeMax);
-            Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
+            $message = sprintf(__('The following question does not accept more than %d answers: %s', 'formcreator'), $rangeMax, $this->getTtranslatedLabel());
+            Session::addMessageAfterRedirect($message, false, ERROR);
             return false;
          }
       }

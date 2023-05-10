@@ -80,35 +80,44 @@ class PluginFormcreatorForm_language extends CommonTestCase
 
    public function providerPrepareInputForAdd() {
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
-      return [
-         [
-            'input' => [
-               $formFk => 42
-            ],
-            'expected' => false,
-            'expectedMessage' => 'The name cannot be empty!',
+      yield [
+         'input' => [
+            $formFk => 42
          ],
-         [
-            'input' => [
-               'name' => 'foo',
-               'comment' => 'bar',
-            ],
-            'expected' => false,
-            'expectedMessage' => 'The language must be associated to a form!',
+         'expected' => false,
+         'expectedMessage' => 'The name cannot be empty.',
+      ];
+      yield [
+         'input' => [
+            'name' => 'fr_FR',
+            'comment' => 'bar',
          ],
-         [
-            'input' => [
-               'name' => 'foo',
-               'comment' => 'bar',
-               $formFk => 42,
-            ],
-            'expected' => [
-               'name' => 'foo',
-               'comment' => 'bar',
-               $formFk => 42,
-            ],
-            'expectedMessage' => '',
+         'expected' => false,
+         'expectedMessage' => 'The language must be associated to a form.',
+      ];
+
+      $form = $this->getForm();
+      yield [
+         'input' => [
+            'name' => 'foo',
+            'comment' => '',
+            $formFk => $form->getID(),
          ],
+         'expected' => false,
+         'expectedMessage' => 'The specified language is not available.',
+      ];
+      yield [
+         'input' => [
+            'name' => 'fr_FR',
+            'comment' => 'bar',
+            $formFk => 42,
+         ],
+         'expected' => [
+            'name' => 'fr_FR',
+            'comment' => 'bar',
+            $formFk => 42,
+         ],
+         'expectedMessage' => '',
       ];
    }
 
