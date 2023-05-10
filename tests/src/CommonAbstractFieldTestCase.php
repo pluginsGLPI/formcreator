@@ -55,7 +55,7 @@ abstract class CommonAbstractFieldTestCase extends CommonTestCase {
             ->isEqualTo($expectedValue);
       }
 
-      // // Rich text output
+      // Rich text output
       $output = $instance->getValueForTargetText('', true);
       if ($expectedValue === null) {
          $this->variable($output)->isNull();
