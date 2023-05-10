@@ -29,7 +29,11 @@
  * ---------------------------------------------------------------------
  */
 namespace tests\units;
+use Config;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorSection;
+use PluginFormcreatorQuestion;
+use PluginFormcreatorForm_Language;
 
 class PluginFormcreatorForm extends CommonTestCase {
 
@@ -49,7 +53,7 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       switch ($method) {
          case 'testCreateValidationNotification':
-            \Config::setConfigurationValues(
+            Config::setConfigurationValues(
                'core',
                ['use_notifications' => 1, 'notifications_mailing' => 1]
             );
@@ -60,7 +64,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       parent::afterTestMethod($method);
       switch ($method) {
          case 'testCreateValidationNotification':
-            \Config::setConfigurationValues(
+            Config::setConfigurationValues(
                'core',
                ['use_notifications' => 0, 'notifications_mailing' => 0]
             );
@@ -626,32 +630,61 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function providerGetByItem() {
+      $testedClassName = $this->getTestedClassName();
+      $formFk = $testedClassName::getForeignKeyField();
       $section = $this->getSection();
-      $question = $this->getQuestion();
 
-      $dataset = [
-         [
-            'item'         => $section,
-            'expectedType' => \PluginFormcreatorForm::getType(),
-            'expected'     => true,
-         ],
-         [
-            'item'         => new \PluginFormcreatorSection(),
-            'expectedType' => \PluginFormcreatorForm::getType(),
-            'expected'     => false,
-         ],
-         [
-            'item'         => $question,
-            'expectedType' => \PluginFormcreatorForm::getType(),
-            'expected'     => true,
-         ],
-         [
-            'item'         => new \PluginFormcreatorQuestion(),
-            'expectedType' => \PluginFormcreatorForm::getType(),
-            'expected'     => false,
-         ],
+      $expected_id = $section->fields['plugin_formcreator_forms_id'];
+      yield [
+         'item'         => $section,
+         'expectedType' => $testedClassName,
+         'expected'     => $expected_id,
       ];
-      return $dataset;
+
+      yield [
+         'item'         => new PluginFormcreatorSection(),
+         'expectedType' => $testedClassName,
+         'expected'     => false,
+      ];
+
+      $question = $this->getQuestion();
+      $section = PluginFormcreatorSection::getById($question->fields['plugin_formcreator_sections_id']);
+      $expected_id = $section->fields['plugin_formcreator_forms_id'];
+      yield [
+         'item'         => $question,
+         'expectedType' => $testedClassName,
+         'expected'     => $expected_id,
+      ];
+
+      yield [
+         'item'         => new PluginFormcreatorQuestion(),
+         'expectedType' => $testedClassName,
+         'expected'     => false,
+      ];
+
+      $form = $this->getForm();
+      $formAnswer = $this->getFormAnswer([
+         $formFk => $form->getID(),
+      ]);
+
+      yield [
+         'item'         => $formAnswer,
+         'expectedType' => $testedClassName,
+         'expected'     => $formAnswer->fields[$formFk],
+      ];
+
+      $form_language = new PluginFormcreatorForm_Language();
+      $form_language->add([
+         $formFk => $form->getID(),
+         'name' => 'fr_FR',
+      ]);
+      $this->boolean($form_language->isNewItem())->isFalse();
+
+      yield [
+         'item'         => $form_language,
+         'expectedType' => $testedClassName,
+         'expected'     => $form_language->fields[$formFk],
+      ];
    }
 
    /**
@@ -898,9 +931,9 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->string($new_form->getField('uuid'))->isNotEqualTo($form->getField('uuid'));
 
       // check sections
-      $all_sections = (new \PluginFormcreatorSection())->getSectionsFromForm($form->getID());
+      $all_sections = (new PluginFormcreatorSection())->getSectionsFromForm($form->getID());
       $this->integer(count($all_sections))->isEqualTo(count($section_ids));
-      $all_new_sections = (new \PluginFormcreatorSection())->getSectionsFromForm($new_form->getID());
+      $all_new_sections = (new PluginFormcreatorSection())->getSectionsFromForm($new_form->getID());
       $this->integer(count($all_sections))->isEqualTo(count($section_ids));
 
       // check that all sections uuid are new
@@ -1349,14 +1382,14 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
 
       $this->boolean($instance->isNewItem())->isFalse();
-      $section = new \PluginFormcreatorSection();
+      $section = new PluginFormcreatorSection();
       $rows = $section->find([
          'plugin_formcreator_forms_id' => $instance->getID(),
       ]);
 
       $this->array($rows)->hasSize(1);
       $row = array_shift($rows);
-      $this->string($row['name'])->isEqualTo(\PluginFormcreatorSection::getTypeName(1));
+      $this->string($row['name'])->isEqualTo(PluginFormcreatorSection::getTypeName(1));
    }
 
    /**
