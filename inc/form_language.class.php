@@ -167,7 +167,7 @@ implements PluginFormcreatorExportableInterface
 
       // Reset cache for the edited translations
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $domain = PluginFormcreatorForm::getTranslationDomain($this->fields['name'], $this->fields[$formFk]);
+      $domain = PluginFormcreatorForm::getTranslationDomain($this->fields[$formFk], $this->fields['name']);
       $TRANSLATE->clearCache($domain, $this->fields['name']);
    }
 
