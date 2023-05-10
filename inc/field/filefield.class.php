@@ -171,7 +171,7 @@ class FileField extends PluginFormcreatorAbstractField
       $key = '_formcreator_field_' . $this->question->getID();
       if (($this->isRequired() && (!isset($this->uploads[$key]) || count($this->uploads[$key]) < 1))) {
          Session::addMessageAfterRedirect(
-            sprintf(__('A required file is missing: %s', 'formcreator'), $this->getLabel()),
+            sprintf(__('A required file is missing: %s', 'formcreator'), $this->getTtranslatedLabel()),
             false,
             ERROR
          );
