@@ -2262,7 +2262,29 @@ PluginFormcreatorTranslatableInterface
    }
 
    /**
-    * Delete a target fromfor the form
+    * Duplicate a target for the form
+    *
+    * @param aray $input
+    * @return boolean
+    */
+   public function duplicateTarget($input) {
+      $itemtype = $input['itemtype'];
+      if (!in_array($itemtype, PluginFormcreatorForm::getTargetTypes())) {
+         Session::addMessageAfterRedirect(
+            __('Unsupported target type.', 'formcreator'),
+            false,
+            ERROR
+         );
+         return false;
+      }
+
+      $item = $itemtype::getById($input['items_id']);
+      $item->clone();
+      return true;
+   }
+
+   /**
+    * Delete a target for the form
     *
     * @param aray $input
     * @return boolean

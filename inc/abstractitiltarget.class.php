@@ -2639,4 +2639,16 @@ SCRIPT;
       return $data;
    }
 
+   public function getCloneRelations(): array {
+      return [
+         PluginFormcreatorTarget_Actor::class,
+         PluginFormcreatorCondition::class,
+      ];
+   }
+
+   public function prepareInputForClone($input) {
+      $input = parent::prepareInputForClone($input);
+      $input['_skip_create_actors'] = true;
+      return $input;
+   }
 }

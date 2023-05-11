@@ -1513,7 +1513,34 @@ var plugin_formcreator = new function() {
 
 // === TARGETS ===
 
-$(document).on('click', '.formcreator_delete_target', function() {
+function plugin_formcreator_addTarget(items_id) {
+   glpi_ajax_dialog({
+      dialogclass: 'modal-xl',
+      url: formcreatorRootDoc + '/ajax/target.php',
+      params: {
+         plugin_formcreator_forms_id: items_id
+      },
+   });
+}
+
+$(document).on('click', '.plugin_formcreator_duplicate_target', function() {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to duplicate this target:', 'formcreator'))) {
+      $.post({
+        url: formcreatorRootDoc + '/ajax/form_duplicate_target.php',
+        data: {
+            action: 'duplicate_target',
+            itemtype: $(this).data('itemtype'),
+            items_id: $(this).data('items-id'),
+         }
+      }).done(function () {
+         reloadTab();
+      }).fail(function () {
+         displayAjaxMessageAfterRedirect();
+      });
+   }
+});
+
+$(document).on('click', '.plugin_formcreator_delete_target', function() {
    if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this target:', 'formcreator'))) {
       $.post({
         url: formcreatorRootDoc + '/ajax/form_delete_target.php',
