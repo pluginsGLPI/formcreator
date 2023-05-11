@@ -71,7 +71,8 @@ class PluginFormcreatorFormAccessType extends CommonGLPI
          'access_rights',
          PluginFormcreatorForm::getEnumAccessType(),
          [
-            'value' => (isset($item->fields['access_rights'])) ? $item->fields['access_rights'] : '1',
+            'value' => $item->fields['access_rights'] ?? PluginFormcreatorForm::ACCESS_PRIVATE,
+            'on_change' => 'plugin_formcreator.showMassiveRestrictions(this)',
          ]
       );
       echo '</td>';
@@ -94,26 +95,32 @@ class PluginFormcreatorFormAccessType extends CommonGLPI
       echo '</tr>';
 
       // Captcha
-      if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_PUBLIC) {
-         echo '<tr>';
+      $is_visible = $item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_PUBLIC;
+      // if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_PUBLIC) {
+         echo '<tr id="plugin_formcreator_captcha" style="display: ' . ($is_visible ? 'block' : 'none') . '">';
          echo '<td>' . __('Enable captcha', 'formcreator') . '</td>';
          echo '<td>';
          Dropdown::showYesNo('is_captcha_enabled', $item->fields['is_captcha_enabled']);
          echo '</td>';
          echo '</tr>';
-      }
+      // }
 
-      if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
-         echo '<tr><th colspan="2">'.self::getTypeName(2).'</th></tr>';
-         echo '<tr>';
+      $is_visible = $item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_RESTRICTED;
+      // if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
+         echo '<tr id="plugin_formcreator_restrictions_head" style="display: ' . ($is_visible ? 'block' : 'none') . '">';
+         echo '<th colspan="2">' . self::getTypeName(2) . '</th>';
+         echo '</tr>';
+         echo '<tr id="plugin_formcreator_restrictions" style="display: ' . ($is_visible ? 'block' : 'none') . '">';
          echo '<td><label>' . __('Restricted to') . '</label></td>';
-         echo '<td class="restricted-form">' . PluginFormcreatorRestrictedFormDropdown::show('restrictions', [
+         echo '<td class="restricted-form">';
+         echo PluginFormcreatorRestrictedFormDropdown::show('restrictions', [
             'users_id'    => $item->fields['users'] ?? [],
             'groups_id'   => $item->fields['groups'] ?? [],
             'profiles_id' => $item->fields['profiles'] ?? [],
-         ]) . '</td>';
+         ]); // Does not supports display parameter to return the output instead of printing it
+         echo '</td>';
          echo '</tr>';
-      }
+      // }
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       echo '<tr>';

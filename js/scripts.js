@@ -1416,6 +1416,18 @@ var plugin_formcreator = new function() {
          return item.name != '_glpi_csrf_token';
       });
    }
+
+   this.showMassiveRestrictions = function (item) {
+      document.querySelector('#plugin_formcreator_restrictions_head').style.display = 'none';
+      document.querySelector('#plugin_formcreator_restrictions').style.display = 'none';
+      document.querySelector('#plugin_formcreator_captcha').style.display = 'none';
+      if (item.value == 2 /* PluginFormcreatorForm::ACCESS_RESTRICTED */) {
+         document.querySelector('#plugin_formcreator_restrictions').style.display = 'block';
+         document.querySelector('#plugin_formcreator_restrictions_head').style.display = 'block';
+      } else if (item.value == 0 /* PluginFormcreatorForm::ACCESS_PUBLIC */) {
+         document.querySelector('#plugin_formcreator_captcha').style.display = 'block';
+      }
+   }
 }
 
 // === TARGETS ===

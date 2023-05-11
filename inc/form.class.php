@@ -220,7 +220,7 @@ PluginFormcreatorTranslatableInterface
             '0'                  => 'equals',
             '1'                  => 'notequals'
          ],
-         'massiveaction'      => true
+         'massiveaction'      => false
       ];
 
       $tab[] = [
@@ -1195,16 +1195,16 @@ PluginFormcreatorTranslatableInterface
                return false;
             }
 
-            if (!$this->checkConditionSettings($input)) {
-               $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
-            }
+            // if (!$this->checkConditionSettings($input)) {
+            //    $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+            // }
 
-            if (!$this->checkValidators($input)) {
-               $input['validation_required'] = self::VALIDATION_NONE;
-            }
+            // if (!$this->checkValidators($input)) {
+            //    $input['validation_required'] = self::VALIDATION_NONE;
+            // }
          }
 
-         return $input;
+         // return $input;
       }
 
       // Control fields values :
@@ -1237,6 +1237,13 @@ PluginFormcreatorTranslatableInterface
          if (!$this->checkValidators($input)) {
             $input['validation_required'] = self::VALIDATION_NONE;
          }
+      }
+
+      if (isset($input['restrictions'])) {
+         $input['users']    = AbstractRightsDropdown::getPostedIds($input['restrictions'], User::class);
+         $input['groups']   = AbstractRightsDropdown::getPostedIds($input['restrictions'], Group::class);
+         $input['profiles'] = AbstractRightsDropdown::getPostedIds($input['restrictions'], Profile::class);
+         unset($input['restrictions']);
       }
 
       return $input;
@@ -1458,6 +1465,35 @@ PluginFormcreatorTranslatableInterface
             ]);
             echo '<br /><br />' . Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
             return true;
+
+         case 'AccessRights':
+            echo '<p></p>';
+            Dropdown::showFromArray(
+               'access_rights',
+               PluginFormcreatorForm::getEnumAccessType(),
+               [
+                  'value'     => PluginFormcreatorForm::ACCESS_PRIVATE,
+                  'on_change' => 'plugin_formcreator.showMassiveRestrictions(this)',
+               ]
+            );
+            echo '<p></p>';
+            echo '<div id="plugin_formcreator_restrictions_head" style="display: none">';
+            echo PluginFormcreatorFormAccessType::getTypeName(2);
+            echo '</div>';
+            echo '<div id="plugin_formcreator_restrictions" style="display: none">';
+            echo PluginFormcreatorRestrictedFormDropdown::show('restrictions', [
+               'users_id'    => [],
+               'groups_id'   => [],
+               'profiles_id' => [],
+            ]);
+            echo '</div>';
+            echo '<div id="plugin_formcreator_captcha" style="display: none">';
+            echo __('Enable captcha', 'formcreator') . '&nbsp;';
+            Dropdown::showYesNo('is_captcha_enabled');
+            echo '</div>';
+            echo '<br /><br />' . Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
+            return true;
+
       }
       return parent::showMassiveActionsSubForm($ma);
    }
@@ -1510,6 +1546,18 @@ PluginFormcreatorTranslatableInterface
             $listOfId = ['plugin_formcreator_forms_id' => array_values($ids)];
             Html::redirect(FORMCREATOR_ROOTDOC."/front/export.php?".Toolbox::append_params($listOfId));
             header("Content-disposition:attachment filename=\"test\"");
+            return;
+
+         case 'AccessRights':
+            foreach ($ids as $id) {
+               if ($item->getFromDB($id) && $item->update($ma->POST + ['id' => $id])) {
+                  Session::addMessageAfterRedirect(sprintf(__('Form updated: %s', 'formcreator'), $item->getName()));
+                  $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
+               } else {
+                  // Example of ko count
+                  $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
+               }
+            }
             return;
       }
       parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
