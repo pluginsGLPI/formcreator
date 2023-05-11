@@ -522,7 +522,17 @@ PluginFormcreatorTranslatableInterface
 
             echo '<td align="center" width="32">';
             echo '<i
-               class="far fa-trash-alt formcreator_delete_target"
+               class="far fa-clone plugin_formcreator_duplicate_target"
+               alt="*"
+               title="' . __('Duplicate', 'formcreator') . '"
+               data-itemtype="' . get_class($target) . '"
+               data-items-id="' . $targetId . '"
+               align="absmiddle"
+               style="cursor: pointer"
+            ></i>';
+            echo '&nbsp;';
+            echo '<i
+               class="far fa-trash-alt plugin_formcreator_delete_target"
                alt="*"
                title="' . __('Delete', 'formcreator') . '"
                data-itemtype="' . get_class($target) . '"
@@ -2267,7 +2277,29 @@ PluginFormcreatorTranslatableInterface
    }
 
    /**
-    * Delete a target fromfor the form
+    * Duplicate a target for the form
+    *
+    * @param aray $input
+    * @return boolean
+    */
+   public function duplicateTarget($input) {
+      $itemtype = $input['itemtype'];
+      if (!in_array($itemtype, PluginFormcreatorForm::getTargetTypes())) {
+         Session::addMessageAfterRedirect(
+            __('Unsupported target type.', 'formcreator'),
+            false,
+            ERROR
+         );
+         return false;
+      }
+
+      $item = $itemtype::getById($input['items_id']);
+      $item->clone();
+      return true;
+   }
+
+   /**
+    * Delete a target for the form
     *
     * @param aray $input
     * @return boolean

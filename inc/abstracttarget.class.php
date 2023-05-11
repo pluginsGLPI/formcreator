@@ -31,7 +31,7 @@
  */
 
 use Glpi\Application\View\TemplateRenderer;
-use Glpi\Toolbox\Sanitizer;
+use \Glpi\Features\Clonable;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -43,6 +43,7 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
    PluginFormcreatorConditionnableInterface,
    PluginFormcreatorTranslatableInterface
 {
+   use Clonable;
    use PluginFormcreatorConditionnableTrait;
    use PluginFormcreatorExportableTrait;
    use PluginFormcreatorTranslatable;
@@ -552,5 +553,10 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
       echo '</div>';
       echo '</td>';
       echo '</tr>';
+   }
+
+   public function prepareInputForClone($input) {
+      unset($input['uuid']);
+      return $input;
    }
 }
