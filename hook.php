@@ -380,7 +380,7 @@ function plugin_formcreator_MassiveActions($itemtype) {
             PluginFormcreatorForm::class . MassiveAction::CLASS_ACTION_SEPARATOR . 'Export'       => _sx('button', 'Export'),
             PluginFormcreatorForm::class . MassiveAction::CLASS_ACTION_SEPARATOR . 'AccessRights' => _sx('button', 'Access rights'),
          ];
-      }
+   }
    return [];
 }
 
