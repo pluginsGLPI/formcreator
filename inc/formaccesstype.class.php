@@ -60,52 +60,9 @@ class PluginFormcreatorFormAccessType extends CommonGLPI
       TemplateRenderer::getInstance()->display('@formcreator/pages/form_accesstype.html.twig', [
          'item' => $item,
          'params' => [
-            'target' => Toolbox::getItemTypeFormURL(__CLASS__),
             'candel' => false,
          ],
       ]);
-   }
-
-   /**
-    * Show the access type options which varies depending on the access type
-    *
-    * @param CommonDBTM $form
-    * @return void
-    */
-   public static function showAccessTypeOption(CommonDBTM $form): void {
-      switch ($form->fields['access_rights']) {
-         case PluginFormcreatorForm::ACCESS_PUBLIC:
-             PluginFormcreatorFormAccessType::showPublicAccessTypeOptions($form);
-             break;
-
-         case PluginFormcreatorForm::ACCESS_RESTRICTED:
-             PluginFormcreatorFormAccessType::showRestrictedAccessTypeOptions($form);
-             break;
-      }
-   }
-
-   public static function showPublicAccessTypeOptions(CommonDBTM $item) {
-      TemplateRenderer::getInstance()->display('@formcreator/pages/form_accesstype.public.html.twig', [
-         'item' => $item,
-         'params' => [
-            'target' => Toolbox::getItemTypeFormURL(__CLASS__),
-            'candel' => false,
-         ],
-      ]);
-
-      return true;
-   }
-
-   public static function showRestrictedAccessTypeOptions(CommonDBTM $item) {
-      TemplateRenderer::getInstance()->display('@formcreator/pages/form_accesstype.restricted.html.twig', [
-         'item' => $item,
-         'params' => [
-            'target' => Toolbox::getItemTypeFormURL(__CLASS__),
-            'candel' => false,
-         ],
-      ]);
-
-      return true;
    }
 
    /**

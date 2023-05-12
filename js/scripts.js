@@ -1499,6 +1499,16 @@ var plugin_formcreator = new function() {
          document.getElementById("validators_groups").style.display = "none";
       }
    };
+
+   this.changeFormAccessType = function (item) {
+      document.querySelector('#plugin_formcreator_restrictions').style.display = 'none';
+      document.querySelector('#plugin_formcreator_captcha').style.display = 'none';
+      if (item.value == 2 /* PluginFormcreatorForm::ACCESS_RESTRICTED */) {
+         document.querySelector('#plugin_formcreator_restrictions').style.display = 'block';
+      } else if (item.value == 0 /* PluginFormcreatorForm::ACCESS_PUBLIC */) {
+         document.querySelector('#plugin_formcreator_captcha').style.display = 'block';
+      }
+   }
 }
 
 // === TARGETS ===

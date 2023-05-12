@@ -149,6 +149,28 @@ class GlpiselectField extends DropdownField
       return [];
    }
 
+   public function buildParams($rand = null) {
+      $dparams = parent::buildParams($rand);
+      $itemtype = $this->getSubItemtype();
+
+      $emptyItem = new $itemtype();
+      $emptyItem->getEmpty();
+      if (isset($emptyItem->fields['contact'])) {
+         $dparams['displaywith'][] = 'contact';
+      }
+      if (isset($emptyItem->fields['serial'])) {
+         $dparams['displaywith'][] = 'serial';
+      }
+      if (isset($emptyItem->fields['otherserial'])) {
+         $dparams['displaywith'][] = 'otherserial';
+      }
+      if ($itemtype === Ticket::class && !array_search('id', $dparams['displaywith'])) {
+         $dparams['displaywith'][] = 'id';
+      }
+
+      return $dparams;
+   }
+
    public function equals($value): bool {
       $value = html_entity_decode($value);
       $itemtype = $this->getSubItemtype();

@@ -206,7 +206,7 @@ PluginFormcreatorTranslatableInterface
             '0'                  => 'equals',
             '1'                  => 'notequals'
          ],
-         'massiveaction'      => true
+         'massiveaction'      => false
       ];
 
       $tab[] = [
@@ -1135,17 +1135,7 @@ PluginFormcreatorTranslatableInterface
             if (!$this->checkAccessRight($input)) {
                return false;
             }
-
-            if (!$this->checkConditionSettings($input)) {
-               $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
-            }
-
-            if (!$this->checkValidators($input)) {
-               $input['validation_required'] = self::VALIDATION_NONE;
-            }
          }
-
-         return $input;
       }
 
       // Control fields values :
@@ -1194,6 +1184,13 @@ PluginFormcreatorTranslatableInterface
             );
             return [];
          }
+      }
+
+      if (isset($input['restrictions'])) {
+         $input['users']    = AbstractRightsDropdown::getPostedIds($input['restrictions'], User::class);
+         $input['groups']   = AbstractRightsDropdown::getPostedIds($input['restrictions'], Group::class);
+         $input['profiles'] = AbstractRightsDropdown::getPostedIds($input['restrictions'], Profile::class);
+         unset($input['restrictions']);
       }
 
       return $input;
@@ -1434,6 +1431,17 @@ PluginFormcreatorTranslatableInterface
             ]);
             echo '<br /><br />' . Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
             return true;
+
+         case 'AccessRights':
+            TemplateRenderer::getInstance()->display('@formcreator/components/form/form_accesstype.massive.html.twig', [
+               'item' => new self(),
+               'params' => [
+                  'candel' => false,
+               ],
+            ]);
+            echo '<br /><br />' . Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
+            return true;
+
       }
       return parent::showMassiveActionsSubForm($ma);
    }
@@ -1500,6 +1508,18 @@ PluginFormcreatorTranslatableInterface
             $listOfId = ['plugin_formcreator_forms_id' => array_values($ids)];
             Html::redirect(FORMCREATOR_ROOTDOC."/front/export.php?".Toolbox::append_params($listOfId));
             header("Content-disposition:attachment filename=\"test\"");
+            return;
+
+         case 'AccessRights':
+            foreach ($ids as $id) {
+               if ($item->getFromDB($id) && $item->update($ma->POST + ['id' => $id])) {
+                  Session::addMessageAfterRedirect(sprintf(__('Form updated: %s', 'formcreator'), $item->getName()));
+                  $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
+               } else {
+                  // Example of ko count
+                  $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
+               }
+            }
             return;
       }
       parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
@@ -2694,9 +2714,9 @@ PluginFormcreatorTranslatableInterface
     * Undocumented function
     *
     * @param array $options
-    * @return string
+    * @return string|int
     */
-   public static function dropdownAccessType(array $options = []): string {
+   public static function dropdownAccessType(array $options = []) {
       $options['value'] = $options['value'] ?? self::ACCESS_PRIVATE;
       return Dropdown::showFromArray(
          $options['name'],
