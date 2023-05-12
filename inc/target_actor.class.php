@@ -29,6 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Features\Clonable;
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 
@@ -38,6 +39,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
+   use Clonable;
    use PluginFormcreatorExportableTrait;
 
    static public $itemtype = 'itemtype';
@@ -310,5 +312,11 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
          $keepCriteria[] = ['NOT' => ['id' => $exclude]];
       }
       return $this->deleteByCriteria($keepCriteria);
+   }
+
+   public function prepareInputForClone($input) {
+      $input['actor_value_' . $input['actor_type']] = $input['actor_value'];
+      unset($input['uuid']);
+      return $input;
    }
 }
