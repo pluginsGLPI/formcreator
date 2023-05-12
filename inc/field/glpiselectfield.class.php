@@ -90,7 +90,7 @@ class GlpiselectField extends DropdownField
             return true;
       }
 
-      return false;
+      return parent::displayTabContentForItem($item, $tabnum);
    }
 
    public static function getName(): string {
