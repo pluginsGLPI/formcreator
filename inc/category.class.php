@@ -93,10 +93,16 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $form_table = PluginFormcreatorForm::getTable();
       $table_fp   = PluginFormcreatorForm_Profile::getTable();
 
+      if (version_compare(GLPI_VERSION, '10.0.6') > 0) {
+         $knowbase_category = KnowbaseItemCategory::SEEALL;
+      } else {
+         $knowbase_category = 0;
+      }
+
       $query_faqs = KnowbaseItem::getListRequest([
          'faq'      => '1',
          'contains' => '',
-         'knowbaseitemcategories_id' => 0,
+         'knowbaseitemcategories_id' => $knowbase_category,
       ]);
       // GLPI 9.5 returns an array
       $subQuery = new DBMysqlIterator($DB);
