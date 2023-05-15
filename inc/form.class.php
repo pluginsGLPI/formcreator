@@ -2085,35 +2085,32 @@ PluginFormcreatorTranslatableInterface
 
       $form = new PluginFormcreatorForm();
       $formFk = self::getForeignKeyField();
-      switch ($item::getType()) {
-         case PluginFormcreatorSection::getType():
-            if (!isset($item->fields[$formFk])) {
-               return null;
-            }
-            $form->getFromDB($item->fields[$formFk]);
-            break;
 
-         case PluginFormcreatorQuestion::getType():
-            $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-            if (!isset($item->fields[$sectionFk])) {
-               return null;
-            }
-            $iterator = $DB->request([
-               'SELECT' => self::getForeignKeyField(),
-               'FROM' => PluginFormcreatorSection::getTable(),
-               'WHERE' => [
-                  'id' => $item->fields[$sectionFk],
-               ]
-            ]);
-            if ($iterator->count() !== 1) {
-               return null;
-            }
-            $form->getFromDB($iterator->current()[$formFk]);
-            break;
-      }
-
-      if ($item instanceof PluginFormcreatorTargetInterface) {
+      if ($DB->fieldExists($item::getTable(), $formFk)) {
+         if (!isset($item->fields[$formFk])) {
+            return null;
+         }
          $form->getFromDB($item->fields[$formFk]);
+      } else {
+         switch ($item::getType()) {
+            case PluginFormcreatorQuestion::getType():
+               $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+               if (!isset($item->fields[$sectionFk])) {
+                  return null;
+               }
+               $iterator = $DB->request([
+                  'SELECT' => self::getForeignKeyField(),
+                  'FROM' => PluginFormcreatorSection::getTable(),
+                  'WHERE' => [
+                     'id' => $item->fields[$sectionFk],
+                  ]
+               ]);
+               if ($iterator->count() !== 1) {
+                  return null;
+               }
+               $form->getFromDB($iterator->current()[$formFk]);
+               break;
+         }
       }
 
       if ($form->isNewItem()) {

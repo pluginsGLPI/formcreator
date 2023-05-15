@@ -124,6 +124,12 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          $knowbase_category = 0;
       }
 
+      if (version_compare(GLPI_VERSION, '10.0.6') > 0) {
+         $knowbase_category = KnowbaseItemCategory::SEEALL;
+      } else {
+         $knowbase_category = 0;
+      }
+
       $query_faqs = KnowbaseItem::getListRequest([
          'faq'      => '1',
          'contains' => '',
