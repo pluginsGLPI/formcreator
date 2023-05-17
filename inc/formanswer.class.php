@@ -847,9 +847,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $input = $this->setValidator($input, $form);
 
-      $input['entities_id'] = isset($_SESSION['glpiactive_entity'])
-                            ? $_SESSION['glpiactive_entity']
-                            : $form->fields['entities_id'];
+      $input['entities_id'] = $_SESSION['glpiactive_entity'] ?? $form->fields['entities_id'];
 
       $input['is_recursive']                = $form->fields['is_recursive'];
       $input['plugin_formcreator_forms_id'] = $form->getID();
