@@ -801,7 +801,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
-      global $DB, $GLPI;
+      global $GLPI;
 
       // A requester submits his answers to a form
       if (!isset($input['plugin_formcreator_forms_id'])) {
