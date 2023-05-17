@@ -161,7 +161,7 @@ class PluginFormcreatorTranslation
       if (!isset($translatableString['id'][$id])) {
          // Show nothing if string definitively not found
          // Should not happen
-         return '<td colspan="2">' . __('Iternal error : translatable string not found.', 'formcreator') . '</td>';;
+         return '<td colspan="2">' . __('Internal error: translatable string not found.', 'formcreator') . '</td>';
       }
 
       $type = $translatableString['id'][$id] ?? 'string';
