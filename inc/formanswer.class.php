@@ -1288,6 +1288,18 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       PluginFormcreatorFormanswerValidation::copyValidatorsToValidation($this);
 
+      // Auto approve if the current user is a level 1 validator
+      $current_user = Session::getLoginUserID();
+      if (($this->input['users_id_validator'] ?? 0) != 0) {
+         $auto_approval = ($current_user == $this->input['users_id_validator']);
+      } else if (($this->input['groups_id_validator'] ?? 0) != 0) {
+         $auto_approval =  ($current_user !== false && in_array($this->input['groups_id_validator'], $_SESSION['glpigroups'] ?? []));
+      }
+      if ($auto_approval) {
+         PluginFormcreatorFormanswerValidation::updateValidationStatus($this, PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED);
+         Session::addMessageAfterRedirect(__('You are a validator of the form, then your approval hs been added automatically.', 'formcreator'), false, INFO);
+      }
+
       $this->sendNotification();
       $formAnswer = clone $this;
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
@@ -1902,18 +1914,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             } else {
                $usersIdValidator = (int) $validatorItem[1];
             }
-            if (Session::getLoginUserID(true) != $usersIdValidator) {
-               // The requester is not the validator. Validation needed
-               $input['status'] = self::STATUS_WAITING;
-            }
+            $input['status'] = self::STATUS_WAITING;
          }
 
          if (in_array($validatorItem[0], [Group::class])) {
             $groupIdValidator = (int) $validatorItem[1];
-            if (Session::getLoginUserID(true) !== false && !in_array($groupIdValidator, $_SESSION['glpigroups'])) {
-               // The requester is not a member of the validator group. Validation needed
-               $input['status'] = self::STATUS_WAITING;
-            }
+            $input['status'] = self::STATUS_WAITING;
          }
       }
 
