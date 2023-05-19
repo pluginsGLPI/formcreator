@@ -911,6 +911,12 @@ PluginFormcreatorTranslatableInterface
                'searchtype' => 'equals',
                'value'      => 'myself',
             ],
+            1 => [
+               'link'       => 'OR',
+               'field'      => 7,
+               'searchtype' => 'equals',
+               'value'      => 'mygroups',
+            ]
          ],
          'sort' => [
             0 => 6
