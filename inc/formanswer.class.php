@@ -857,6 +857,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $form = $this->getForm($input['plugin_formcreator_forms_id']);
       $input['validation_percent'] = $form->fields['validation_percent'];
 
+      // Set validator if only one is available
       if ($form->validationRequired()) {
          if (($validator = $this->getUniqueValidator($form)) !== null) {
             if (in_array(PluginFormcreatorSpecificValidator::class, class_implements($validator))) {
@@ -1524,7 +1525,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // Check required_validator
       if (empty($input['formcreator_validator'])) {
-         // Check if only one validator of level 1 is available
          Session::addMessageAfterRedirect(__('You must select validator!', 'formcreator'), false, ERROR);
          $this->isAnswersValid = false;
          return false;
