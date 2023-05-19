@@ -31,7 +31,6 @@
 {% import 'components/form/fields_macros.html.twig' as fields %}
 {% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
 
-{% set accesstype_options_ajax_url = get_plugin_web_dir('formcreator') ~ '/ajax/get_accesstype_options.php' %}
 {% set access_right = item.fields['access_rights'] ?? constant('PluginFormcreatorForm::ACCESS_PRIVATE') %}
 
 {{ formcreatorFields.dropdownAccessType(
@@ -80,8 +79,3 @@
         __('Restricted to', 'formcreator')
     ) }}
 </div>
-
-{# {{ fields.hiddenField(
-    'plugin_formcreator_forms_id',
-    item.fields['id']
-)}} #}
