@@ -1502,19 +1502,19 @@ var plugin_formcreator = new function() {
          document.querySelector('#plugin_formcreator_captcha').style.display = 'block';
       }
    }
+
+   this.addTarget = function(items_id) {
+      glpi_ajax_dialog({
+         dialogclass: 'modal-xl',
+         url: formcreatorRootDoc + '/ajax/target.php',
+         params: {
+            plugin_formcreator_forms_id: items_id
+         },
+      });
+   };
 }
 
 // === TARGETS ===
-
-function plugin_formcreator_addTarget(items_id) {
-   glpi_ajax_dialog({
-      dialogclass: 'modal-xl',
-      url: formcreatorRootDoc + '/ajax/target.php',
-      params: {
-         plugin_formcreator_forms_id: items_id
-      },
-   });
-}
 
 $(document).on('click', '.plugin_formcreator_duplicate_target', function() {
    if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to duplicate this target:', 'formcreator'))) {
