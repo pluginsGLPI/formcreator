@@ -182,7 +182,7 @@ PluginFormcreatorTranslatableInterface
          'field'              => 'is_recursive',
          'name'               => __('Recursive'),
          'datatype'           => 'bool',
-         'massiveaction'      => false
+         'massiveaction'      => true
       ];
 
       $tab[] = [
