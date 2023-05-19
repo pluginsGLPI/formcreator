@@ -168,12 +168,11 @@ PluginFormcreatorExportableInterface
    }
 
    public function showForForm(PluginFormcreatorForm $item, $options = []) {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       $canEdit = Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE);
 
       if ($canEdit) {
-
          TemplateRenderer::getInstance()->display('@formcreator/pages/form.validation.html.twig', [
             'item'           => $item,
             'options'        => $options,
