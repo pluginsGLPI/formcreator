@@ -42,7 +42,7 @@ if (!Plugin::isPluginActive('formcreator')) {
 if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
     http_response_code(403);
     die();
- }
+}
 
 if (!isset($_POST['itemtype'])) {
     http_response_code(400);
