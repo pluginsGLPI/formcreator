@@ -1290,6 +1290,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // Auto approve if the current user is a level 1 validator
       $current_user = Session::getLoginUserID();
+      $auto_approval = false;
       if (($this->input['users_id_validator'] ?? 0) != 0) {
          $auto_approval = ($current_user == $this->input['users_id_validator']);
       } else if (($this->input['groups_id_validator'] ?? 0) != 0) {
