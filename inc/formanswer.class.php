@@ -1294,7 +1294,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       if (($this->input['users_id_validator'] ?? 0) != 0) {
          $auto_approval = ($current_user == $this->input['users_id_validator']);
       } else if (($this->input['groups_id_validator'] ?? 0) != 0) {
-         $auto_approval =  ($current_user !== false && in_array($this->input['groups_id_validator'], $_SESSION['glpigroups'] ?? []));
+         $auto_approval = ($current_user !== false && in_array($this->input['groups_id_validator'], $_SESSION['glpigroups'] ?? []));
       }
       if ($auto_approval) {
          PluginFormcreatorFormanswerValidation::updateValidationStatus($this, PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED);
