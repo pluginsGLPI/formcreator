@@ -424,6 +424,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return null                     Nothing, just display the list
     */
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+      /** @var CommonDBTM $item  */
       if ($item instanceof PluginFormcreatorForm) {
          self::showForForm($item);
       } else {
