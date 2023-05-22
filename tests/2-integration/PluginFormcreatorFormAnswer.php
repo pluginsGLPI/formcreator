@@ -32,7 +32,7 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorForm_Validator;
 use Search;
-use TicketValidation;
+use Session;
 use User;
 
 /**
@@ -45,7 +45,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       switch ($method) {
          case 'testNotificationFormAnswerCreated':
          case 'testOtherUserValidates':
-            $this->boolean($this->login('glpi', 'glpi', true))->isTrue();
+            $this->login('glpi', 'glpi', true);
             break;
       }
    }
@@ -132,22 +132,17 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $form_validator = new PluginFormcreatorForm_Validator();
       $form_validator->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'itemtype'            => User::class,
-         'items_id'            => '2', // user is glpi
+         'itemtype'                    => User::class,
+         'items_id'                    => User::getIdByName('glpi'),
+         'level'                       => 1,
       ]);
       $this->boolean($form_validator->isNewItem())->isFalse();
 
-      $section = $this->getSection([
-         'name'                        => 'a section',
-         'plugin_formcreator_forms_id' => $form->getID()
-      ]);
-      $this->boolean($section->isNewItem())->isFalse();
-
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = $this->newTestedInstance();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'status'                      => 'waiting',
-         'formcreator_validator'       => $_SESSION['glpiID'],
+         'formcreator_validator'       => Session::getLoginUserID(),
       ]);
       $this->boolean($formAnswer->isNewItem())->isFalse();
 
@@ -155,7 +150,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $formAnswer->getFromDB($formAnswer->getID());
 
       $login = $this->getUniqueString();
-      $user = new \User();
+      $user = new User();
       $user->add([
          'name'                  => $login,
          'password'              => 'superadmin',
@@ -171,15 +166,34 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       // Login as other user
       $this->boolean($this->login($login, 'superadmin', true))->isTrue();
-      $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
+      $this->boolean($formAnswer->canValidate())->isFalse();
 
       // Login as glpi
       $this->boolean($this->login('glpi', 'glpi', true))->istrue();
-      $this->boolean($formAnswer->canValidate($form, $formAnswer))->isTrue();
+      // The form answer has been submitted by glpi, which is a level 1 validator. So it is automatically validated,
+      // and glpi can't validate it again
+      $this->boolean($formAnswer->canValidate())->isFalse();
 
       // Login as normal
       $this->boolean($this->login('normal', 'normal', true))->istrue();
-      $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
+      $this->boolean($formAnswer->canValidate())->isFalse();
+
+      $this->login($login, 'superadmin');
+      $formAnswer = $this->newTestedInstance();
+      $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'status'                      => 'waiting',
+         'formcreator_validator'       => Session::getLoginUserID(),
+      ]);
+      $this->boolean($formAnswer->isNewItem())->isFalse();
+
+      // other user cannot validate his own form answer, because he is not a validator of the form
+      $this->boolean($formAnswer->canValidate())->isFalse();
+
+      // Login as glpi
+      $this->boolean($this->login('glpi', 'glpi', true))->istrue();
+      // The form answer has been submitted by someone else than glpi, so glpi can validate it
+      $this->boolean($formAnswer->canValidate())->isTrue();
    }
 
    public function testSearchMyLastAnswersAsRequester() {
