@@ -40,6 +40,7 @@ use Group;
 use Group_User;
 use Item_Ticket;
 use PluginFormcreatorAnswer;
+use PluginFormcreatorFormanswerValidation;
 use PluginFormcreatorCondition;
 use PluginFormcreatorForm;
 use PluginFormcreatorFields;
@@ -492,14 +493,19 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function testPost_UpdateItem() {
       global $DB;
 
+      $login = $this->getUniqueString();
+      $user = $this->getUser($login, 'p@ssw0rd');
+      $validatorId = $user->getID();
+
       $question = $this->getQuestion(['fieldtype' => 'text']);
       $form = new PluginFormcreatorForm;
-      $form = \PluginFormcreatorForm::getByItem($question);
+      $form = PluginFormcreatorForm::getByItem($question);
       $formValidator = new PluginFormcreatorForm_Validator();
       $formValidator->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'itemtype'                    => User::class,
-         'items_id'                    => Session::getLoginUserID()
+         'items_id'                    => $validatorId,
+         'level'                       => 1,
       ]);
       $this->boolean($formValidator->isNewItem())->isFalse();
 
@@ -508,10 +514,11 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
        */
 
       // Setup test
+
       $instance = $this->newTestedInstance();
       $formAnswerId = $instance->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => Session::getLoginUserID(),
+         'formcreator_validator'       => User::class . '_' . Session::getLoginUserID(),
          'formcreator_field_' . $question->getID() => 'foo',
       ]);
       $this->boolean($instance->isNewItem())->isFalse();
@@ -524,14 +531,15 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $this->string($answer->fields['answer'])->isEqualTo('foo');
 
       // Check the answer is kept when accepting without edition
+      $this->boolean($this->login($login, 'p@ssw0rd'))->isTrue();
       $instance = $this->newTestedInstance();
       $instance->getFromDB($formAnswerId);
       $this->boolean($instance->isNewItem())->isFalse();
-      $testedClassName = $this->getTestedClassName();
+      // $testedClassName = $this->getTestedClassName();
       $input = [
          'plugin_formcreator_forms_id'             => $form->getID(),
          'accept_formanswer'                       => 'accept',
-         'status'                                  => $testedClassName::STATUS_ACCEPTED,
+         // 'status'                                  => $testedClassName::STATUS_ACCEPTED,
       ];
       $input = $instance->prepareInputForUpdate($input);
       $this->array($input)->size->isGreaterThan(0);
@@ -551,7 +559,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       // Reset validation status
       $DB->update(
-         'glpi_plugin_formcreator_formanswervalidations',
+         PluginFormcreatorFormanswerValidation::getTable(),
          [
             'status' => PluginFormcreatorForm_Validator::VALIDATION_STATUS_WAITING,
          ],
@@ -567,7 +575,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'id'                                      => $instance->getID(),
          'plugin_formcreator_forms_id'             => $form->getID(),
          'accept_formanswer'                       => 'accept',
-         'status'                                  => $testedClassName::STATUS_ACCEPTED,
+         // 'status'                                  => $testedClassName::STATUS_ACCEPTED,
          'formcreator_field_' . $question->getID() => 'bar',
       ];
       $input = $instance->prepareInputForUpdate($input);
