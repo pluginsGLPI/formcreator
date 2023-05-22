@@ -860,7 +860,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                      'joinparams'      => [
                         'jointype'        => 'empty',
                         'condition'       => [
-                           new \QueryExpression(
+                           new QueryExpression(
                               '1=1'
                            ),
                         ],
