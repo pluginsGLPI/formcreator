@@ -30,6 +30,9 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Entity;
+use PluginFormcreatorForm;
+use Session;
 
 class PluginFormcreatorCategory extends CommonTestCase {
    public function providerGetTypeName() {
@@ -80,7 +83,7 @@ class PluginFormcreatorCategory extends CommonTestCase {
 
       // create a sub entity which will take in the forms and cateory for this test
       // and not conflict with previous data
-      $entity      = new \Entity();
+      $entity      = new Entity();
       $rand        = mt_rand();
       $entities_id = $entity->add([
          'name'        => "test formcreator sub entity $rand",
@@ -88,7 +91,7 @@ class PluginFormcreatorCategory extends CommonTestCase {
       ]);
 
       // create some categories for forms
-      $category   = new \PluginFormcreatorCategory;
+      $category   = $this->newTestedInstance();
       $categories = [];
       for ($i = 0; $i < 5; $i++) {
          $root_cat = $category->add([
@@ -104,7 +107,7 @@ class PluginFormcreatorCategory extends CommonTestCase {
       }
 
       // create some forms
-      $form = new \PluginFormcreatorForm;
+      $form = new PluginFormcreatorForm;
       for ($i = 0; $i < 10; $i++) {
          $form->add([
             'name'                             => "testgetCategoryTree form $i",
@@ -116,10 +119,11 @@ class PluginFormcreatorCategory extends CommonTestCase {
       }
 
       // Set active entity
-      \Session::changeActiveEntities($entities_id, true);
+      Session::changeActiveEntities($entities_id, true);
 
       //test method
-      $tree = \PluginFormcreatorCategory::getCategoryTree();
+      $testedClassName = $this->getTestedClassName();
+      $tree = $testedClassName::getCategoryTree();
       $this->array($tree)
          ->isNotEmpty()
          ->child['subcategories'](function($child) {
@@ -132,6 +136,6 @@ class PluginFormcreatorCategory extends CommonTestCase {
       }
 
       // return to root entity
-      \Session::changeActiveEntities(0, true);
+      Session::changeActiveEntities(0, true);
    }
 }
