@@ -117,6 +117,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       $cat_table  = PluginFormcreatorCategory::getTable();
       $form_table = PluginFormcreatorForm::getTable();
+      $knowbaseitems_knowbaseitemcategories_table = KnowbaseItem_KnowbaseItemCategory::getTable();
 
       if (version_compare(GLPI_VERSION, '10.0.6') > 0) {
          $knowbase_category = KnowbaseItemCategory::SEEALL;
@@ -148,10 +149,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $count1 = new QuerySubQuery($count_forms_criteria);
       $count2 = new QuerySubQuery([
          'COUNT' => 'count',
-         'FROM' => 'glpi_knowbaseitems_knowbaseitemcategories',
+         'FROM' => $knowbaseitems_knowbaseitemcategories_table,
          'WHERE' => [
             'knowbaseitems_id' => new QuerySubQuery($query_faqs),
-            [(new QueryExpression("`glpi_knowbaseitems_knowbaseitemcategories`.`knowbaseitemcategories_id` = `$cat_table`.`knowbaseitemcategories_id`"))],
+            [(new QueryExpression("`$knowbaseitems_knowbaseitemcategories_table`.`knowbaseitemcategories_id` = `$cat_table`.`knowbaseitemcategories_id`"))],
          ]
       ]);
       $request = [
