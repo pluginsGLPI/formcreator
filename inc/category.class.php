@@ -91,7 +91,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       $cat_table  = PluginFormcreatorCategory::getTable();
       $form_table = PluginFormcreatorForm::getTable();
-      $table_fp   = PluginFormcreatorForm_Profile::getTable();
 
       if (version_compare(GLPI_VERSION, '10.0.6') > 0) {
          $knowbase_category = KnowbaseItemCategory::SEEALL;
@@ -104,9 +103,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          'contains' => '',
          'knowbaseitemcategories_id' => $knowbase_category,
       ]);
-      // GLPI 9.5 returns an array
-      $subQuery = new DBMysqlIterator($DB);
-      $subQuery->buildQuery($query_faqs);
+      $query_faqs['SELECT'] = [$query_faqs['FROM'] . '.' . 'id'];
 
       $dbUtils = new DbUtils();
       $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($form_table, "", "", true, false);
@@ -120,18 +117,15 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       // Get base query, add count and category condition
       $count_forms_criteria = PluginFormcreatorForm::getFormListQuery();
       $count_forms_criteria['COUNT'] = 'count';
-      $count_forms_criteria['WHERE']["$form_table.$categoryFk"] = new QueryExpression("$cat_table.id");
+      $count_forms_criteria['WHERE']["`$form_table`.`$categoryFk`"] = new QueryExpression("`$cat_table`.`id`");
 
       $count1 = new QuerySubQuery($count_forms_criteria);
       $count2 = new QuerySubQuery([
          'COUNT' => 'count',
          'FROM' => 'glpi_knowbaseitems_knowbaseitemcategories',
          'WHERE' => [
-            'knowbaseitems_id' => new QuerySubQuery([
-               'SELECT' => 'faqs.id',
-               'FROM' => (new QuerySubQuery($query_faqs, 'faqs'))
-            ]),
-            [(new QueryExpression("knowbaseitemcategories_id = $cat_table.knowbaseitemcategories_id"))],
+            'knowbaseitems_id' => new QuerySubQuery($query_faqs),
+            [(new QueryExpression("`glpi_knowbaseitems_knowbaseitemcategories`.`knowbaseitemcategories_id` = `$cat_table`.`knowbaseitemcategories_id`"))],
          ]
       ]);
       $request = [
