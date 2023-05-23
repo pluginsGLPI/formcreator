@@ -40,15 +40,15 @@ use PluginFormcreatorForm_Validator;
 class PluginFormcreatorSection extends CommonTestCase {
    public function setup() {
       // instanciate classes
-      $form           = new \PluginFormcreatorForm;
+      $form           = new PluginFormcreatorForm;
       $form_section   = new \PluginFormcreatorSection;
-      $form_question  = new \PluginFormcreatorQuestion;
+      $form_question  = new PluginFormcreatorQuestion;
 
       // create objects
       $forms_id = $form->add([
          'name'                => "test clone form",
          'is_active'           => true,
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER
       ]);
 
       $sections_id = $form_section->add([
