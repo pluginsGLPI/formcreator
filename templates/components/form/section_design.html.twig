@@ -32,7 +32,7 @@
 
 <li class="plugin_formcreator_section" data-itemtype="PluginFormcreatorSection" data-id="{{ item.fields['id'] }}">
     {% set conditionsCount = call('PluginFormcreatorCondition::countForItem', [item]) %}
-    <a href="#" onclick="plugin_formcreator.showSectionForm({{ item.fields['plugin_formcreator_forms_id'] }}, {{ item.fields['id'] }})">
+    <a href="#" onclick="plugin_formcreator.showSectionForm({{ item.fields['plugin_formcreator_forms_id'] }}, {{ item.fields['id'] }})" data-field="name">
         {# TODO : Show count of conditions #}
         <sup class="plugin_formcreator_conditions_count" title="{{ __('Count of conditions', 'formcreator') }}">{{ conditionsCount }}</sup>
         {% if item.fields['name'] is empty %}
@@ -40,7 +40,7 @@
         {% else %}
             {% set name = call('Glpi\\Toolbox\\Sanitizer::unsanitize', [item.fields['name']]) %}
         {% endif %}
-        <span data-field="name">{{ name }}</span>
+        <span>{{ name }}</span>
     </a>
 
     {# Delete a section #}
