@@ -142,8 +142,10 @@ PluginFormcreatorTranslatableInterface
          }
       }
 
-      if (!$this->checkConditionSettings($input)) {
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+      if (!$this->skipChecks) {
+         if (!$this->checkConditionSettings($input)) {
+            $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+         }
       }
 
       return $input;
@@ -411,7 +413,7 @@ PluginFormcreatorTranslatableInterface
       unset($export[$formFk]);
 
       $subItems = [
-         '_questions'   => PluginFormcreatorQuestion::class,
+         '_questions'  => PluginFormcreatorQuestion::class,
          '_conditions' => PluginFormcreatorCondition::class,
       ];
       $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
