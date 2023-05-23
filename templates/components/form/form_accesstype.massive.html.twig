@@ -28,14 +28,12 @@
  # ---------------------------------------------------------------------
  #}
 
-{% import 'components/form/fields_macros.html.twig' as fields %}
-
-{{ fields.dropdownYesNo(
-    'is_captcha_enabled',
-    item.fields['is_captcha_enabled'],
-    __('Enable captcha', 'formcreator'),
-    {
-        label_class: 'col-xxl-4',
-        input_class: 'col-xxl-8',
-    }
-) }}
+<div class="col-12 col-xxl-12 flex-column" data-itemtype="PluginFormcreatorCondition">
+    <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
+        <div class="row flex-row align-items-start flex-grow-1">
+            <div class="row flex-row">
+                {% include '@formcreator/components/form/form_accesstype.html.twig' %}
+            </div>
+        </div>
+    </div>
+</div>

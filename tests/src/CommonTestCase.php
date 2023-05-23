@@ -8,6 +8,7 @@ use Auth;
 use atoum;
 use Ticket;
 use User;
+use PluginFormcreatorSection;
 
 abstract class CommonTestCase extends atoum
 {
@@ -217,7 +218,7 @@ abstract class CommonTestCase extends atoum
       if (!isset($input['name'])) {
          $input['name'] = $this->getUniqueString();
       }
-      $section = new \PluginFormcreatorSection();
+      $section = new PluginFormcreatorSection();
       $section->add($input);
       $this->boolean($section->isNewItem())->isFalse();
       return $section;
@@ -227,7 +228,7 @@ abstract class CommonTestCase extends atoum
       if (!isset($input['name'])) {
          $input['name'] = 'question';
       }
-      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       if (!isset($input[$sectionFk])) {
          $sectionId = $this->getSection($sectionInput, $formInput)->getID();
          $input[$sectionFk] = $sectionId;

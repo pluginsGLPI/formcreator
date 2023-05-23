@@ -172,7 +172,7 @@ class FileField extends PluginFormcreatorAbstractField
       $key = '_formcreator_field_' . $this->question->getID();
       if (($this->isRequired() && (!isset($this->uploads[$key]) || count($this->uploads[$key]) < 1))) {
          Session::addMessageAfterRedirect(
-            sprintf(__('A required file is missing: %s', 'formcreator'), $this->getLabel()),
+            sprintf(__('A required file is missing: %s', 'formcreator'), $this->getTtranslatedLabel()),
             false,
             ERROR
          );
@@ -224,15 +224,14 @@ class FileField extends PluginFormcreatorAbstractField
          return;
       }
 
-      $doc                             = new Document();
-      $file_data                       = [];
-      $file_data["name"]               = Toolbox::addslashes_deep($form->getField('name') . ' - ' . $this->question->fields['name']);
-      $file_data["entities_id"]        = isset($_SESSION['glpiactive_entity'])
-         ? $_SESSION['glpiactive_entity']
-         : $form->getField('entities_id');
-      $file_data["is_recursive"]       = $form->getField('is_recursive');
-      $file_data['_filename']          = [$file];
-      $file_data['_prefix_filename']   = [$prefix];
+      $file_data = [
+         'name'             => Toolbox::addslashes_deep($form->fields['name'] . ' - ' . $this->question->fields['name']),
+         'entities_id'      => $_SESSION['glpiactive_entity'] ?? $form->getField('entities_id'),
+         'is_recursive'     => $form->getField('is_recursive'),
+         '_filename'        => [$file],
+         '_prefix_filename' => [$prefix],
+      ];
+      $doc = new Document();
       if ($docID = $doc->add($file_data)) {
          return $docID;
       }

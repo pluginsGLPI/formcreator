@@ -375,4 +375,9 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       }
       return $this->deleteByCriteria($keepCriteria);
    }
+
+   public function prepareInputForClone($input) {
+      unset($input['uuid']);
+      return $input;
+   }
 }

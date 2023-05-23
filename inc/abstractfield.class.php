@@ -374,4 +374,15 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
 
       return $strings;
    }
+
+   /**
+    * Translates the label of the field into the current language
+    *
+    * @return string
+    */
+   protected function getTtranslatedLabel(): string {
+      $form = PluginFormcreatorForm::getByItem($this->question);
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
+      return __($this->getLabel(), $domain);
+   }
 }

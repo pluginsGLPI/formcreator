@@ -122,7 +122,7 @@ class FloatField extends PluginFormcreatorAbstractField
    public function isValid(): bool {
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
-            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
+            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getTtranslatedLabel()),
             false,
             ERROR
          );
@@ -139,7 +139,7 @@ class FloatField extends PluginFormcreatorAbstractField
 
       if (!empty($value) && !is_numeric($value)) {
          Session::addMessageAfterRedirect(
-            sprintf(__('This is not a number: %s', 'formcreator'), $this->getLabel()),
+            sprintf(__('This is not a number: %s', 'formcreator'), $this->getTtranslatedLabel()),
             false,
             ERROR
          );

@@ -29,53 +29,26 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
+
 include ('../../../inc/includes.php');
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
-
 // Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+if (!Plugin::isPluginActive('formcreator')) {
+   http_response_code(404);
+   die();
 }
 
-// Get target form
-$form_id = $_POST[PluginFormcreatorForm::getForeignKeyField()] ?? null;
-if (is_null($form_id)) {
-   Html::displayNotFoundError();
+if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
+    http_response_code(403);
+    die();
 }
 
-// No update if `access_rights` is not modified, keeping the save behavior as
-// the previous form_profile.form.php file
-if (!isset($_POST['access_rights'])) {
-   Html::back();
-   die;
+if (!isset($_POST['itemtype'])) {
+    http_response_code(400);
+    die();
 }
 
-// Try to load form
-$form = PluginFormcreatorForm::getById($form_id);
-if (!$form) {
-   Html::displayNotFoundError();
-}
-
-// Prepare input
-$input = [
-   'id'                 => (int) $form_id,
-   'is_captcha_enabled' => $_POST['is_captcha_enabled'] ?? false,
-   'access_rights'      => (int) $_POST['access_rights'],
-   'users'              => [],
-   'groups'             => [],
-   'profiles'           => [],
-   'entities'           => [],
-];
-
-$restrictions = $_POST['restrictions'] ?? null;
-if (!is_null($restrictions)) {
-   $input['users']    = AbstractRightsDropdown::getPostedIds($restrictions, User::class);
-   $input['groups']   = AbstractRightsDropdown::getPostedIds($restrictions, Group::class);
-   $input['profiles'] = AbstractRightsDropdown::getPostedIds($restrictions, Profile::class);
-}
-
-// Update form
-$form->update($input);
-
-Html::back();
+TemplateRenderer::getInstance()->display('@formcreator/components/form/form_validator.validator_type.html.twig', [
+    'type' => $_POST['itemtype'],
+]);

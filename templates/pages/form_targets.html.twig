@@ -18,7 +18,15 @@
 
             <td align="center" width="32">
                 <i
-                    class="far fa-trash-alt formcreator_delete_target"
+                    class="far fa-clone plugin_formcreator_duplicate_target"
+                    alt="*"
+                    title="{{ __('Duplicate', 'formcreator') }}"
+                    data-itemtype="{{ target.getType() }}"
+                    data-items-id="{{ targetId }}"
+                    align="absmiddle"
+                    style="cursor: pointer"></i>
+                <i
+                    class="far fa-trash-alt plugin_formcreator_delete_target"
                     alt="*"
                     title="{{ __('Delete', 'formcreator') }}"
                     data-itemtype="{{ target.getType() }}"

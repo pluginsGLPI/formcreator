@@ -402,18 +402,6 @@ class DropdownField extends PluginFormcreatorAbstractField
          }
       }
 
-      $emptyItem = new $itemtype();
-      $emptyItem->getEmpty();
-      if (isset($emptyItem->fields['serial'])) {
-         $dparams['displaywith'][] = 'serial';
-      }
-      if (isset($emptyItem->fields['otherserial'])) {
-         $dparams['displaywith'][] = 'otherserial';
-      }
-      if ($itemtype === Ticket::class && !array_search('id', $dparams['displaywith'])) {
-         $dparams['displaywith'][] = 'id';
-      }
-
       return $dparams;
    }
 
@@ -603,7 +591,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $dropdown = new $itemtype();
       if ($this->isRequired() && $dropdown->isNewId($this->value)) {
          Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getTtranslatedLabel(),
             false,
             ERROR
          );
@@ -625,7 +613,7 @@ class DropdownField extends PluginFormcreatorAbstractField
 
       if (!$isValid) {
          Session::addMessageAfterRedirect(
-            __('Invalid value for ', 'formcreator') . ' ' . $this->getLabel(),
+            __('Invalid value for ', 'formcreator') . ' ' . $this->getTtranslatedLabel(),
             false,
             ERROR
          );

@@ -424,6 +424,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return null                     Nothing, just display the list
     */
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+      /** @var CommonDBTM $item  */
       if ($item instanceof PluginFormcreatorForm) {
          self::showForForm($item);
       } else {
@@ -706,7 +707,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       echo '<ol>';
-      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID(), $_SESSION['glpilanguage']);
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
 
       // Get fields populated with answers
       $this->loadAnswers();
@@ -846,7 +847,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
-      global $DB, $GLPI;
+      global $GLPI;
 
       // A requester submits his answers to a form
       if (!isset($input['plugin_formcreator_forms_id'])) {
@@ -856,6 +857,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $form = $this->getForm($input['plugin_formcreator_forms_id']);
       $input['validation_percent'] = $form->fields['validation_percent'];
 
+      // Set validator if only one is available
       if ($form->validationRequired()) {
          if (($validator = $this->getUniqueValidator($form)) !== null) {
             if (in_array(PluginFormcreatorSpecificValidator::class, class_implements($validator))) {
@@ -900,9 +902,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $input = $this->setValidator($input, $form);
 
-      $input['entities_id'] = isset($_SESSION['glpiactive_entity'])
-                            ? $_SESSION['glpiactive_entity']
-                            : $form->fields['entities_id'];
+      $input['entities_id'] = $_SESSION['glpiactive_entity'] ?? $form->fields['entities_id'];
 
       $input['is_recursive']                = $form->fields['is_recursive'];
       $input['plugin_formcreator_forms_id'] = $form->getID();
@@ -1288,6 +1288,19 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       PluginFormcreatorFormanswerValidation::copyValidatorsToValidation($this);
 
+      // Auto approve if the current user is a level 1 validator
+      $current_user = Session::getLoginUserID();
+      $auto_approval = false;
+      if (($this->input['users_id_validator'] ?? 0) != 0) {
+         $auto_approval = ($current_user == $this->input['users_id_validator']);
+      } else if (($this->input['groups_id_validator'] ?? 0) != 0) {
+         $auto_approval = ($current_user !== false && in_array($this->input['groups_id_validator'], $_SESSION['glpigroups'] ?? []));
+      }
+      if ($auto_approval) {
+         PluginFormcreatorFormanswerValidation::updateValidationStatus($this, PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED);
+         Session::addMessageAfterRedirect(__('You are a validator of the form, then your approval hs been added automatically.', 'formcreator'), false, INFO);
+      }
+
       $this->sendNotification();
       $formAnswer = clone $this;
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
@@ -1525,7 +1538,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // Check required_validator
       if (empty($input['formcreator_validator'])) {
-         // Check if only one validator of level 1 is available
          Session::addMessageAfterRedirect(__('You must select validator!', 'formcreator'), false, ERROR);
          $this->isAnswersValid = false;
          return false;
@@ -1903,18 +1915,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             } else {
                $usersIdValidator = (int) $validatorItem[1];
             }
-            if (Session::getLoginUserID(true) != $usersIdValidator) {
-               // The requester is not the validator. Validation needed
-               $input['status'] = self::STATUS_WAITING;
-            }
+            $input['status'] = self::STATUS_WAITING;
          }
 
          if (in_array($validatorItem[0], [Group::class])) {
             $groupIdValidator = (int) $validatorItem[1];
-            if (Session::getLoginUserID(true) !== false && !in_array($groupIdValidator, $_SESSION['glpigroups'])) {
-               // The requester is not a member of the validator group. Validation needed
-               $input['status'] = self::STATUS_WAITING;
-            }
+            $input['status'] = self::STATUS_WAITING;
          }
       }
 

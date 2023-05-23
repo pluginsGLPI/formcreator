@@ -32,22 +32,17 @@
 include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
-if (!Plugin::isPluginActive('formcreator')) {
-   http_response_code(404);
-   die();
-}
-$form_fk = PluginFormcreatorForm::getForeignKeyField();
-if (!isset($_POST['access_rights']) || !isset($_POST['extraparams'][$form_fk])) {
-    http_response_code(400);
+if (!(new Plugin())->isActivated('formcreator')) {
+    http_response_code(404);
     die();
 }
 
-$form = PluginFormcreatorForm::getById($_POST['extraparams'][$form_fk]);
-if (!($form instanceof PluginFormcreatorForm)) {
-    http_response_code(400);
+if (!isset($_REQUEST['itemtype']) || !isset($_REQUEST['items_id']) || !isset($_REQUEST['action'])) {
+    http_response_code(500);
     die();
 }
 
-/** @var PluginFormcreatorForm $form */
-$form->fields['access_rights'] = $_POST['access_rights'];
-PluginFormcreatorFormAccessType::showAccessTypeOption($form);
+Session::checkRight('entity', UPDATE);
+if (!(new PluginFormcreatorForm())->duplicateTarget($_REQUEST)) {
+    http_response_code(500);
+}

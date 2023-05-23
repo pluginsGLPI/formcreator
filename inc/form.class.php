@@ -168,7 +168,7 @@ PluginFormcreatorTranslatableInterface
          'field'              => 'is_recursive',
          'name'               => __('Recursive'),
          'datatype'           => 'bool',
-         'massiveaction'      => false
+         'massiveaction'      => true
       ];
 
       $tab[] = [
@@ -206,7 +206,7 @@ PluginFormcreatorTranslatableInterface
             '0'                  => 'equals',
             '1'                  => 'notequals'
          ],
-         'massiveaction'      => true
+         'massiveaction'      => false
       ];
 
       $tab[] = [
@@ -774,7 +774,11 @@ PluginFormcreatorTranslatableInterface
             'faq'      => '1',
             'contains' => $keywords
          ];
-         $params['knowbaseitemcategories_id'] = 0;
+         if (version_compare(GLPI_VERSION, '10.0.6') > 0) {
+            $params['knowbaseitemcategories_id'] = KnowbaseItemCategory::SEEALL;
+         } else {
+            $params['knowbaseitemcategories_id'] = 0;
+         }
          if (count($selectedCategories) > 0) {
             $iterator = $DB->request($table_cat, [
                'WHERE' => [
@@ -782,8 +786,8 @@ PluginFormcreatorTranslatableInterface
                ]
             ]);
             $kbcategories = [];
-            foreach ($iterator as $kbcat) {
-               $kbcategories[] = $kbcat['knowbaseitemcategories_id'];
+            foreach ($iterator as $knowbase_category) {
+               $kbcategories[] = $knowbase_category['knowbaseitemcategories_id'];
             }
             $params['knowbaseitemcategories_id'] = $kbcategories;
          }
@@ -907,6 +911,12 @@ PluginFormcreatorTranslatableInterface
                'searchtype' => 'equals',
                'value'      => 'myself',
             ],
+            1 => [
+               'link'       => 'OR',
+               'field'      => 7,
+               'searchtype' => 'equals',
+               'value'      => 'mygroups',
+            ]
          ],
          'sort' => [
             0 => 6
@@ -1135,17 +1145,7 @@ PluginFormcreatorTranslatableInterface
             if (!$this->checkAccessRight($input)) {
                return false;
             }
-
-            if (!$this->checkConditionSettings($input)) {
-               $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
-            }
-
-            if (!$this->checkValidators($input)) {
-               $input['validation_required'] = self::VALIDATION_NONE;
-            }
          }
-
-         return $input;
       }
 
       // Control fields values :
@@ -1194,6 +1194,13 @@ PluginFormcreatorTranslatableInterface
             );
             return [];
          }
+      }
+
+      if (isset($input['restrictions'])) {
+         $input['users']    = AbstractRightsDropdown::getPostedIds($input['restrictions'], User::class);
+         $input['groups']   = AbstractRightsDropdown::getPostedIds($input['restrictions'], Group::class);
+         $input['profiles'] = AbstractRightsDropdown::getPostedIds($input['restrictions'], Profile::class);
+         unset($input['restrictions']);
       }
 
       return $input;
@@ -1434,6 +1441,17 @@ PluginFormcreatorTranslatableInterface
             ]);
             echo '<br /><br />' . Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
             return true;
+
+         case 'AccessRights':
+            TemplateRenderer::getInstance()->display('@formcreator/components/form/form_accesstype.massive.html.twig', [
+               'item' => new self(),
+               'params' => [
+                  'candel' => false,
+               ],
+            ]);
+            echo '<br /><br />' . Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
+            return true;
+
       }
       return parent::showMassiveActionsSubForm($ma);
    }
@@ -1500,6 +1518,18 @@ PluginFormcreatorTranslatableInterface
             $listOfId = ['plugin_formcreator_forms_id' => array_values($ids)];
             Html::redirect(FORMCREATOR_ROOTDOC."/front/export.php?".Toolbox::append_params($listOfId));
             header("Content-disposition:attachment filename=\"test\"");
+            return;
+
+         case 'AccessRights':
+            foreach ($ids as $id) {
+               if ($item->getFromDB($id) && $item->update($ma->POST + ['id' => $id])) {
+                  Session::addMessageAfterRedirect(sprintf(__('Form updated: %s', 'formcreator'), $item->getName()));
+                  $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
+               } else {
+                  // Example of ko count
+                  $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
+               }
+            }
             return;
       }
       parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
@@ -2061,35 +2091,32 @@ PluginFormcreatorTranslatableInterface
 
       $form = new PluginFormcreatorForm();
       $formFk = self::getForeignKeyField();
-      switch ($item::getType()) {
-         case PluginFormcreatorSection::getType():
-            if (!isset($item->fields[$formFk])) {
-               return null;
-            }
-            $form->getFromDB($item->fields[$formFk]);
-            break;
 
-         case PluginFormcreatorQuestion::getType():
-            $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-            if (!isset($item->fields[$sectionFk])) {
-               return null;
-            }
-            $iterator = $DB->request([
-               'SELECT' => self::getForeignKeyField(),
-               'FROM' => PluginFormcreatorSection::getTable(),
-               'WHERE' => [
-                  'id' => $item->fields[$sectionFk],
-               ]
-            ]);
-            if ($iterator->count() !== 1) {
-               return null;
-            }
-            $form->getFromDB($iterator->current()[$formFk]);
-            break;
-      }
-
-      if ($item instanceof PluginFormcreatorTargetInterface) {
+      if ($DB->fieldExists($item::getTable(), $formFk)) {
+         if (!isset($item->fields[$formFk])) {
+            return null;
+         }
          $form->getFromDB($item->fields[$formFk]);
+      } else {
+         switch ($item::getType()) {
+            case PluginFormcreatorQuestion::getType():
+               $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+               if (!isset($item->fields[$sectionFk])) {
+                  return null;
+               }
+               $iterator = $DB->request([
+                  'SELECT' => self::getForeignKeyField(),
+                  'FROM' => PluginFormcreatorSection::getTable(),
+                  'WHERE' => [
+                     'id' => $item->fields[$sectionFk],
+                  ]
+               ]);
+               if ($iterator->count() !== 1) {
+                  return null;
+               }
+               $form->getFromDB($iterator->current()[$formFk]);
+               break;
+         }
       }
 
       if ($form->isNewItem()) {
@@ -2238,7 +2265,29 @@ PluginFormcreatorTranslatableInterface
    }
 
    /**
-    * Delete a target fromfor the form
+    * Duplicate a target for the form
+    *
+    * @param aray $input
+    * @return boolean
+    */
+   public function duplicateTarget($input) {
+      $itemtype = $input['itemtype'];
+      if (!in_array($itemtype, PluginFormcreatorForm::getTargetTypes())) {
+         Session::addMessageAfterRedirect(
+            __('Unsupported target type.', 'formcreator'),
+            false,
+            ERROR
+         );
+         return false;
+      }
+
+      $item = $itemtype::getById($input['items_id']);
+      $item->clone();
+      return true;
+   }
+
+   /**
+    * Delete a target for the form
     *
     * @param aray $input
     * @return boolean
@@ -2694,9 +2743,9 @@ PluginFormcreatorTranslatableInterface
     * Undocumented function
     *
     * @param array $options
-    * @return string
+    * @return string|int
     */
-   public static function dropdownAccessType(array $options = []): string {
+   public static function dropdownAccessType(array $options = []) {
       $options['value'] = $options['value'] ?? self::ACCESS_PRIVATE;
       return Dropdown::showFromArray(
          $options['name'],

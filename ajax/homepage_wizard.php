@@ -35,14 +35,15 @@ if (!isset($_SESSION['glpiactiveprofile']['id'])) {
    exit;
 }
 
+if (!isset($_REQUEST['wizard'])) {
+   http_response_code(400);
+   die();
+}
+
 if ($_REQUEST['wizard'] == 'categories') {
    plugin_formcreator_showWizardCategories();
 } else if ($_REQUEST['wizard'] == 'forms') {
-   if (isset($_REQUEST['categoriesId'])) {
-      $categoriesId = (int) $_REQUEST['categoriesId'];
-   } else {
-      $categoriesId = 0;
-   }
+   $categoriesId = (int) ($_REQUEST['categoriesId'] ?? 0);
    $keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : '';
    $helpdeskHome = isset($_REQUEST['helpdeskHome']) ? $_REQUEST['helpdeskHome'] != '0' : false;
    plugin_formcreator_showWizardForms($categoriesId, $keywords, $helpdeskHome);

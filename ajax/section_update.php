@@ -50,4 +50,4 @@ if (!$section->update($_REQUEST)) {
     Session::addMessageAfterRedirect(__('Could not update the section', 'formcreator'), false, ERROR);
     exit;
 }
-echo json_encode(['id' => $section->getID(), 'name' => $section->fields['name']], JSON_UNESCAPED_UNICODE);
+echo json_encode(['id' => $section->getID(), 'name' => $section->getDesignLabel()], JSON_UNESCAPED_UNICODE);

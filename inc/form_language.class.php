@@ -111,10 +111,12 @@ implements PluginFormcreatorExportableInterface
    }
 
    public function prepareInputForAdd($input) {
+      global $CFG_GLPI;
+
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       if (!isset($input['name'])) {
          Session::addMessageAfterRedirect(
-            __('The name cannot be empty!', 'formcreator'),
+            __('The name cannot be empty.', 'formcreator'),
             false,
             ERROR
          );
@@ -122,7 +124,15 @@ implements PluginFormcreatorExportableInterface
       }
       if (!isset($input[$formFk])) {
          Session::addMessageAfterRedirect(
-            __('The language must be associated to a form!', 'formcreator'),
+            __('The language must be associated to a form.', 'formcreator'),
+            false,
+            ERROR
+         );
+         return [];
+      }
+      if (!isset($CFG_GLPI['languages'][$input['name']])) {
+         Session::addMessageAfterRedirect(
+            __('The specified language is not available.', 'formcreator'),
             false,
             ERROR
          );
@@ -157,7 +167,7 @@ implements PluginFormcreatorExportableInterface
 
       // Reset cache for the edited translations
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $domain = PluginFormcreatorForm::getTranslationDomain($this->fields['name'], $this->fields[$formFk]);
+      $domain = PluginFormcreatorForm::getTranslationDomain($this->fields[$formFk], $this->fields['name']);
       $TRANSLATE->clearCache($domain, $this->fields['name']);
    }
 

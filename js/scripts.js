@@ -905,7 +905,7 @@ var plugin_formcreator = new function() {
             }
          }
 
-         $('[name="submit_formcreator"]').toggle(submitButtonToShow == true);
+         $('#plugin_formcreator_form.plugin_formcreator_form button[name="add"]').toggle(submitButtonToShow == true);
       });
    };
 
@@ -1086,7 +1086,7 @@ var plugin_formcreator = new function() {
          displayAjaxMessageAfterRedirect();
       }).done(function (data) {
          var section = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"]');
-         section.find('> a [data-field="name"]').text(data['name']);
+         section.find('[data-field="name"]').replaceWith(data['name']);
          that.resetTabs();
       }).complete(function () {
          var myModal = form.closest('div.modal');
@@ -1397,20 +1397,10 @@ var plugin_formcreator = new function() {
       });
    };
 
-   this.addTarget = function(items_id) {
-      glpi_ajax_dialog({
-         dialogclass: 'modal-xl',
-         url: formcreatorRootDoc + '/ajax/target.php',
-         params: {
-            plugin_formcreator_forms_id: items_id
-         },
-      });
-   };
-
-   this.submitUserForm = function () {
+   this.submitUserForm = function (event) {
       var form     = document.querySelector('form[role="form"][data-itemtype]');
       var data     = new FormData(form);
-      data.append('submit_formcreator', '');
+      data.append('add', '');
       $.post({
          url: formcreatorRootDoc + '/ajax/formanswer.php',
          processData: false,
@@ -1447,11 +1437,14 @@ var plugin_formcreator = new function() {
             initMessagesAfterRedirectToasts();
          }
       });
+      event.preventDefault();
+      blockFormSubmit($(form), event);
+      return false;
    };
 
    this.submitUserFormByKeyPress = function (event) {
       var keyPressed = event.keyCode || event.which;
-      if (keyPressed === 13 && $('[name="submit_formcreator"]').is(':hidden')) {
+      if (keyPressed === 13 && $('#plugin_formcreator_form.plugin_formcreator_form button[name="add"]').is(':hidden')) {
          event.preventDefault();
          return false;
       }
@@ -1499,11 +1492,48 @@ var plugin_formcreator = new function() {
          document.getElementById("validators_groups").style.display = "none";
       }
    };
+
+   this.changeFormAccessType = function (item) {
+      document.querySelector('#plugin_formcreator_restrictions').style.display = 'none';
+      document.querySelector('#plugin_formcreator_captcha').style.display = 'none';
+      if (item.value == 2 /* PluginFormcreatorForm::ACCESS_RESTRICTED */) {
+         document.querySelector('#plugin_formcreator_restrictions').style.display = 'block';
+      } else if (item.value == 0 /* PluginFormcreatorForm::ACCESS_PUBLIC */) {
+         document.querySelector('#plugin_formcreator_captcha').style.display = 'block';
+      }
+   }
+
+   this.addTarget = function(items_id) {
+      glpi_ajax_dialog({
+         dialogclass: 'modal-xl',
+         url: formcreatorRootDoc + '/ajax/target.php',
+         params: {
+            plugin_formcreator_forms_id: items_id
+         },
+      });
+   };
 }
 
 // === TARGETS ===
 
-$(document).on('click', '.formcreator_delete_target', function() {
+$(document).on('click', '.plugin_formcreator_duplicate_target', function() {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to duplicate this target:', 'formcreator'))) {
+      $.post({
+        url: formcreatorRootDoc + '/ajax/form_duplicate_target.php',
+        data: {
+            action: 'duplicate_target',
+            itemtype: $(this).data('itemtype'),
+            items_id: $(this).data('items-id'),
+         }
+      }).done(function () {
+         reloadTab();
+      }).fail(function () {
+         displayAjaxMessageAfterRedirect();
+      });
+   }
+});
+
+$(document).on('click', '.plugin_formcreator_delete_target', function() {
    if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this target:', 'formcreator'))) {
       $.post({
         url: formcreatorRootDoc + '/ajax/form_delete_target.php',
