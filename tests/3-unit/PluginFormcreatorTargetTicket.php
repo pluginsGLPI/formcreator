@@ -49,6 +49,7 @@ use PluginFormcreatorItem_TargetTicket;
 use PluginFormcreatorSection;
 use Profile;
 use Profile_User;
+use RequestType;
 use Session;
 use Supplier_Ticket;
 use TaskCategory;
@@ -75,6 +76,19 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
          case 'testSetTargetAssociatedItem':
          case 'testSetRequestSource':
             $this->boolean($this->login('glpi', 'glpi'))->isTrue();
+            break;
+      }
+   }
+
+   public function afterTestMethod($method) {
+      parent::beforeTestMethod($method);
+      switch ($method) {
+         case 'testRequestSource':
+            $requestType = new RequestType();
+            $requestType->update([
+               'id' => 1, // Helpdesk
+               'is_helpdesk_default' => 1,
+            ]);
             break;
       }
    }
@@ -2038,7 +2052,7 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
       $testedClassName = $this->getTestedClassName();
 
       $form = $this->getForm();
-      yield [
+      yield 'request source is Formcreator' =>[
          'instance' => $this->getTargetTicket([
             PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
             'source_rule' => $testedClassName::REQUESTSOURCE_FORMCREATOR,
@@ -2047,21 +2061,22 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
          'expected' => PluginFormcreatorCommon::getFormcreatorRequestTypeId()
       ];
 
+      $email_request_source = 2; // e-mail, see table glpi_requesttypes
       $form = $this->getForm();
       $user = $this->getGlpiCoreItem(User::class, [
          'name' => 'user' . $this->getUniqueString(),
          'password' => 'password',
          'password2' => 'password',
-         'default_requesttypes_id' => 2, // e-mail, see table glpi_requesttypes
+         'default_requesttypes_id' => $email_request_source,
       ]);
       $this->login($user->fields['name'], 'password');
 
-      yield [
+      yield 'request source is none; then set by user\'s preference' => [
          'instance' => $this->getTargetTicket([
             PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
             'source_rule' => $testedClassName::REQUESTSOURCE_NONE
          ]),
-         'expected' => 2
+         'expected' => $email_request_source,
       ];
 
       $form = $this->getForm();
@@ -2072,13 +2087,18 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
          'default_requesttypes_id' => 0, // unset
       ]);
       $this->login($user->fields['name'], 'password');
+      $requestType = new RequestType();
+      $requestType->update([
+         'id' => 3, // Phone
+         'is_helpdesk_default' => 1,
+      ]);
 
-      yield [
+      yield 'request source is none; then set by GLPI default' => [
          'instance' => $this->getTargetTicket([
             PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
             'source_rule' => $testedClassName::REQUESTSOURCE_NONE,
          ]),
-         'expected' => 0 // Unset (see Setup > General > Default values)
+         'expected' => 3 // Unset (see Setup > General > Default values)
       ];
 
       $form = $this->getForm();
@@ -2090,16 +2110,16 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
       $this->getGlpiCoreItem(TicketTemplatePredefinedField::getType(), [
          'tickettemplates_id' => $ticketTemplate->getID(),
          'num'                => 9, // RequestType
-         'value'              => 1, // Helpdesk
+         'value'              => 4, // Direct
       ]);
 
-      yield [
+      yield 'request source is none; then set by target\'s template' => [
          'instance' => $this->getTargetTicket([
             PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
             'source_rule' => $testedClassName::REQUESTSOURCE_NONE,
             'tickettemplates_id' => $ticketTemplate->getID(),
          ]),
-         'expected' => 1 // Helpdesk (see Setup > General > Default values)
+         'expected' => 4 // Helpdesk (see Setup > General > Default values)
       ];
    }
 
