@@ -1063,7 +1063,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
                      trigger_error(sprintf("Formanswer ID %s not found", $id), E_USER_WARNING);
                      break;
                   }
-                  $content = $formAnswer->parseTags($formAnswer->getFullForm());
+                  try {
+                     $content = $formAnswer->parseTags($formAnswer->getFullForm());
+                  } catch (Exception $e) {
+                     $content = ''; // Exception when computing the tooltip
+                  }
                   break;
             }
             $link = self::getFormURLWithID($data['id']);
