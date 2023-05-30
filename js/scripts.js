@@ -1446,7 +1446,7 @@ function plugin_formcreator_addTarget(items_id) {
 }
 
 $(document).on('click', '.plugin_formcreator_duplicate_target', function() {
-   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to duplicate this target:', 'formcreator'))) {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to duplicate this target?', 'formcreator'))) {
       $.post({
         url: formcreatorRootDoc + '/ajax/form_duplicate_target.php',
         data: {
@@ -1463,7 +1463,7 @@ $(document).on('click', '.plugin_formcreator_duplicate_target', function() {
 });
 
 $(document).on('click', '.plugin_formcreator_delete_target', function() {
-   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this target:', 'formcreator'))) {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this target?', 'formcreator'))) {
       $.post({
         url: formcreatorRootDoc + '/ajax/form_delete_target.php',
         data: {
