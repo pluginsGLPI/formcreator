@@ -1214,6 +1214,7 @@ PluginFormcreatorTranslatableInterface
             Phone::class              => Phone::getTypeName($plural),
             Line::class               => Line::getTypeName($plural),
             PassiveDCEquipment::class => PassiveDCEquipment::getTypeName($plural),
+            PDU::class                => PDU::getTypeName($plural),
          ],
          __("Assistance") => [
             Ticket::class             => Ticket::getTypeName($plural),
