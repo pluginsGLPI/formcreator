@@ -143,6 +143,7 @@ class PluginFormcreatorInstall {
          }
       }
 
+      $this->migration = $migration;
       $oldVersion = Config::getConfigurationValue('formcreator', 'previous_version');
       // Force fix of signed columns to reduce upgrade errors frequency
       // This assumes that all modified columns exist in the database
@@ -185,7 +186,6 @@ class PluginFormcreatorInstall {
          }
       }
 
-      $this->migration = $migration;
       if (isset($args['force-upgrade']) && $args['force-upgrade'] === true) {
          // Might return false
          $fromSchemaVersion = array_search(PLUGIN_FORMCREATOR_SCHEMA_VERSION, $this->upgradeSteps);
@@ -1024,5 +1024,7 @@ class PluginFormcreatorInstall {
          }
          $this->migration->changeField($table, 'id', 'id', 'int ' . DBConnection::getDefaultPrimaryKeySignOption() . ' not null auto_increment');
       }
+
+      $this->migration->executeMigration();
    }
 }

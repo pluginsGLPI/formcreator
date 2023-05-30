@@ -83,26 +83,50 @@ class PluginFormcreatorSection extends CommonTestCase {
    public function testDuplicate() {
       global $DB;
 
-      // instanciate classes
-      $form      = new PluginFormcreatorForm;
-      $section   = $this->newTestedInstance();
-      $question  = new PluginFormcreatorQuestion;
-
       // create objects
-      $forms_id = $form->add(['name'                => "test clone form",
-                                   'is_active'           => true,
-                                   'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER]);
-      $sections_id = $section->add(['name'                        => "test clone section",
-                                         'plugin_formcreator_forms_id' => $forms_id]);
-      $question->add(['name'                           => "test clone question 1",
-                                             'fieldtype'                      => 'text',
-                                             'plugin_formcreator_sections_id' => $sections_id]);
-      $question->add(['name'                           => "test clone question 2",
-                                             'fieldtype'                      => 'textarea',
-                                             'plugin_formcreator_sections_id' => $sections_id]);
+      $form = $this->getForm([
+         'name'                => "test clone form",
+         'is_active'           => true,
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER
+      ]);
+      $other_section = $this->getSection([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $other_question = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $other_section->getID(),
+      ]);
+      $section = $this->getSection([
+         'name'                        => "test clone section",
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $condition = new PluginFormcreatorCondition();
+      $condition->add([
+         'itemtype'                        => $section::getType(),
+         'items_id'                        => $section->getID(),
+         'show_logic'                      => PluginFormcreatorCondition::SHOW_LOGIC_AND,
+         'show_condition'                  => PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+         'show_value'                      => 'foo',
+         'plugin_formcreator_questions_id' => $other_question->getID(),
+      ]);
+      $this->boolean($condition->isNewItem())->isFalse();
 
-      //get section
-      $section->getFromDB($sections_id);
+      $DB->update($section::getTable(), [
+         'show_rule' => PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+      ], [
+         'id' => $section->getID(),
+      ]);
+      $section->getFromDB($section->getID()); // Refresh instance
+
+      $this->getQuestion([
+         'name'                           => "test clone question 1",
+         'fieldtype'                      => 'text',
+         'plugin_formcreator_sections_id' => $section->getID(),
+      ]);
+      $this->getQuestion([
+         'name'                           => "test clone question 2",
+         'fieldtype'                      => 'textarea',
+         'plugin_formcreator_sections_id' => $section->getID(),
+      ]);
 
       //get max order of sections
       $max = PluginFormcreatorCommon::getMax(
@@ -151,6 +175,39 @@ class PluginFormcreatorSection extends CommonTestCase {
          $new_uuids[] = $question['uuid'];
       }
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
+
+      // Check conditions
+      $all_conditions = $DB->request([
+         'SELECT' => ['uuid'],
+         'FROM'   => PluginFormcreatorCondition::getTable(),
+         'WHERE'  => [
+            'itemtype' => $section::getType(),
+            'items_id' => $section->getID(),
+         ],
+      ]);
+
+      $all_new_conditions = $DB->request([
+         'SELECT' => ['uuid'],
+         'FROM'   => PluginFormcreatorCondition::getTable(),
+         'WHERE'  => [
+            'itemtype' => $new_section::getType(),
+            'items_id' => $new_section->getID(),
+         ],
+      ]);
+      $this->integer(count($all_new_questions))->isEqualTo(count($all_questions));
+
+      // check that all conditions uuid are new
+      $uuids = $new_uuids = [];
+      foreach ($all_conditions as $condition) {
+         $uuids[] = $condition['uuid'];
+      }
+      foreach ($all_new_conditions as $condition) {
+         $new_uuids[] = $condition['uuid'];
+      }
+      $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
+
+      // Check that new section has same show rule as original
+      $this->integer($section->fields['show_rule'])->isEqualTo($new_section->fields['show_rule']);
    }
 
    public function testExport() {
