@@ -32,6 +32,8 @@
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
+
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -782,20 +784,15 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             'FROM'   => ITILCategory::getTable(),
             'WHERE'  => ['id' => $data['itilcategories_id']]
          ]);
-         if ($row = $rows->current()) { // assign ticket template according to resulting ticket category and ticket type
+         if ($row = $rows->current()) {
+            // assign ticket template according to resulting ticket category and ticket type
             return ($data['type'] == Ticket::INCIDENT_TYPE
                     ? $row["{$targetTemplateFk}_incident"]
                     : $row["{$targetTemplateFk}_demand"]);
          }
       }
 
-      return $this->fields['tickettemplates_id'] ?? 0;
-   }
-
-   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer): array {
-      $data = parent::getDefaultData($formanswer);
-
-      return $data;
+      return $this->fields[$targetTemplateFk] ?? 0;
    }
 
    /**
@@ -824,7 +821,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $data['date'] = $_SESSION['glpi_currenttime'];
 
       $data['content'] = $this->prepareTemplate(
-         $this->fields['content'] ?? '',
+         Sanitizer::unsanitize(__($this->fields['content'], $domain)) ?? '',
          $formanswer,
          $richText
       );
@@ -933,12 +930,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
            'date'                            => $_SESSION['glpi_currenttime'],
            'users_id'                        => Session::getLoginUserID(),
            'content'                         => $message,
-           '_do_not_compute_takeintoaccount' => true
-         ];
-         // GLPI 9.4+
-         $followUpInput += [
-            'items_id' => $ticketID,
-            'itemtype' => Ticket::class,
+           '_do_not_compute_takeintoaccount' => true,
+            'itemtype'                       => Ticket::class,
+            'items_id'                       => $ticketID,
          ];
          $ticketFollowup = new ITILFollowup();
          $ticketFollowup->add($followUpInput);
@@ -1031,11 +1025,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
    }
 
    protected function setTargetSource(array $data, PluginFormcreatorFormAnswer $formanswer): array {
+      // do nothing with self::REQUESTSOURCE_NONE
       switch ($this->fields['source_rule']) {
-         case self::REQUESTSOURCE_NONE:
-            $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
-            break;
-
          case self::REQUESTSOURCE_FORMCREATOR:
             $data['requesttypes_id'] = $this->fields['source_question'];
             break;

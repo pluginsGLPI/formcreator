@@ -142,8 +142,10 @@ PluginFormcreatorTranslatableInterface
          }
       }
 
-      if (!$this->checkConditionSettings($input)) {
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+      if (!$this->skipChecks) {
+         if (!$this->checkConditionSettings($input)) {
+            $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+         }
       }
 
       return $input;
@@ -411,7 +413,7 @@ PluginFormcreatorTranslatableInterface
       unset($export[$formFk]);
 
       $subItems = [
-         '_questions'   => PluginFormcreatorQuestion::class,
+         '_questions'  => PluginFormcreatorQuestion::class,
          '_conditions' => PluginFormcreatorCondition::class,
       ];
       $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
@@ -540,5 +542,23 @@ PluginFormcreatorTranslatableInterface
       $strings = $this->deduplicateTranslatable($strings);
 
       return $strings;
+   }
+
+   public function getDesignLabel(): string {
+      $sectionId = $this->getID();
+      $nb = (new DBUtils())->countElementsInTable(PluginFormcreatorCondition::getTable(), [
+         'itemtype' => self::getType(),
+         'items_id' => $sectionId,
+      ]);
+      $formId = $this->fields[PluginFormcreatorForm::getForeignKeyField()];
+      $onclick = 'plugin_formcreator.showSectionForm(' . $formId . ', ' . $sectionId . ');';
+      $html = '<a href="#" onclick=' . $onclick . '" data-field="name">';
+      $html .= "<sup class='plugin_formcreator_conditions_count' title='" . __('Count of conditions', 'formcreator') ."'>$nb</sup>";
+      $html .= '<span>';
+      $html .= empty($this->fields['name']) ? '(' . $sectionId . ')' : $this->fields['name'];
+      $html .= '</span>';
+      $html .= '</a>';
+
+      return $html;
    }
 }

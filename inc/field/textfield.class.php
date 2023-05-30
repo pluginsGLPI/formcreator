@@ -63,7 +63,7 @@ class TextField extends PluginFormcreatorAbstractField
 
    public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
-         return $this->value;
+         return Sanitizer::sanitize($this->value, false);
       }
 
       $html         = '';
@@ -108,7 +108,11 @@ class TextField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($domain, $richText): ?string {
-      return Sanitizer::unsanitize($this->value);
+      if ($richText) {
+         return Sanitizer::sanitize($this->value, false);
+      }
+
+      return $this->value;
    }
 
    public function moveUploads() {
@@ -122,7 +126,7 @@ class TextField extends PluginFormcreatorAbstractField
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getTtranslatedLabel(),
             false,
             ERROR
          );

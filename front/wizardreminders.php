@@ -28,37 +28,33 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-include ('../../../inc/includes.php');
 
-if (!isset($_SESSION['glpiactiveprofile']['id'])) {
-   // Session is not valid then exit
-   exit;
+global $CFG_GLPI;
+include ("../../../inc/includes.php");
+
+// Check if plugin is activated...
+if (!(new Plugin())->isActivated('formcreator')) {
+   Html::displayNotFoundError();
 }
 
-if (!isset($_REQUEST['wizard'])) {
-   http_response_code(400);
-   die();
+if (! plugin_formcreator_replaceHelpdesk()) {
+   Html::redirect($CFG_GLPI['root_doc']."/front/helpdesk.public.php");
 }
 
-if ($_REQUEST['wizard'] == 'categories') {
-   plugin_formcreator_showWizardCategories();
-} else if ($_REQUEST['wizard'] == 'forms') {
-   $categoriesId = (int) ($_REQUEST['categoriesId'] ?? 0);
-   $keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : '';
-   $helpdeskHome = isset($_REQUEST['helpdeskHome']) ? $_REQUEST['helpdeskHome'] != '0' : false;
-   plugin_formcreator_showWizardForms($categoriesId, $keywords, $helpdeskHome);
-} else if ($_REQUEST['wizard'] == 'toggle_menu') {
-   $_SESSION['plugin_formcreator_toggle_menu'] = isset($_SESSION['plugin_formcreator_toggle_menu'])
-                                                   ? !$_SESSION['plugin_formcreator_toggle_menu']
-                                                   : true;
+if (!Reminder::canView()) {
+   Html::displayRightError();
 }
 
-function plugin_formcreator_showWizardCategories() {
-   $tree = PluginFormcreatorCategory::getCategoryTree();
-   echo json_encode($tree, JSON_UNESCAPED_SLASHES);
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpHeader(__('Service catalog', 'formcreator'));
+} else {
+   Html::header(__('Service catalog', 'formcreator'));
 }
 
-function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
-   $formList = PluginFormcreatorForm::getFormList($rootCategory, $keywords, $helpdeskHome);
-   echo json_encode($formList, JSON_UNESCAPED_SLASHES);
+Reminder::showListForCentral(false);
+
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpFooter();
+} else {
+   Html::footer();
 }

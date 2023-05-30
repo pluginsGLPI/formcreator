@@ -32,6 +32,7 @@
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Toolbox\Sanitizer;
 use GlpiPlugin\Formcreator\Field\DropdownField;
+use Glpi\Application\ErrorHandler;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -653,7 +654,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       echo '<ol>';
-      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID(), $_SESSION['glpilanguage']);
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
 
       // Get fields populated with answers
       $this->loadAnswers();
@@ -800,7 +801,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
-      global $DB;
+      global $GLPI;
 
       // A requester submits his answers to a form
       if (!isset($input['plugin_formcreator_forms_id'])) {
@@ -815,8 +816,15 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
 
-      if (!$this->validateFormAnswer($input)) {
-         // Validation of answers failed
+      try {
+         if (!$this->validateFormAnswer($input)) {
+            // Validation of answers failed
+            return false;
+         }
+      } catch (Exception $e) {
+         // A fatal error caught during validation of answers
+         $GLPI->getErrorHandler()->handleException($e, false);
+         Session::addMessageAfterRedirect(__('An internal error occured when verifying your answers. Please report it to your administrator.', 'formcreator'), false, ERROR);
          return false;
       }
       if (!$this->validateCaptcha($input)) {
@@ -828,13 +836,18 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
-      $input['name'] = $DB->escape($this->parseTags($form->fields['formanswer_name']));
+      try {
+         $input['name'] = $this->parseTags($form->fields['formanswer_name']);
+      } catch (Exception $e) {
+         // A fatal error caught during parsing of tags
+         $GLPI->getErrorHandler()->handleException($e, false);
+         Session::addMessageAfterRedirect(__('An internal error occured when verifying your answers. Please report it to your administrator.', 'formcreator'), false, ERROR);
+         return false;
+      }
 
       $input = $this->setValidator($input, $form);
 
-      $input['entities_id'] = isset($_SESSION['glpiactive_entity'])
-                            ? $_SESSION['glpiactive_entity']
-                            : $form->fields['entities_id'];
+      $input['entities_id'] = $_SESSION['glpiactive_entity'] ?? $form->fields['entities_id'];
 
       $input['is_recursive']                = $form->fields['is_recursive'];
       $input['plugin_formcreator_forms_id'] = $form->getID();
@@ -1153,7 +1166,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $last_section = $question_line[$sectionFk];
          }
 
-         // Don't save tags in "full form"
+         // Don't save tags, additional fields or descriptions in "full form"
          if (in_array($question_line['fieldtype'], ['tag', 'fields', 'description'])) {
             continue;
          }
@@ -1325,7 +1338,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $name = '';
          $value = '';
          if (PluginFormcreatorFields::isVisible($question, $this->questionFields)) {
-            $name  = $question->fields['name'];
+            $name  = __($question->fields['name'], $domain);
             $value = $this->questionFields[$questionId]->getValueForTargetText($domain, $richText);
          }
 
@@ -1340,7 +1353,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                }
             }
          }
-         // $content = str_replace('##answer_' . $questionId . '##', Sanitizer::sanitize($value ?? ''), $content);
          $content = str_replace('##answer_' . $questionId . '##', $value ?? '', $content);
 
          if ($this->questionFields[$questionId] instanceof DropdownField) {

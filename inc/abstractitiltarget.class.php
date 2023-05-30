@@ -2326,6 +2326,11 @@ SCRIPT;
       }
 
       $data = array_merge($data, $predefined_fields);
+
+      if (($data['requesttypes_id'] ?? 0) == 0) {
+         unset($data['requesttypes_id']);
+      }
+
       return $data;
    }
 
@@ -2492,5 +2497,18 @@ SCRIPT;
 
    public static function getNoMailImage() {
       return '<i class="fas fa-envelope pointer" title="' . __('Email followup') . ' ' . __('No') . '" width="20"></i>';
+   }
+
+   public function getCloneRelations(): array {
+      return [
+         PluginFormcreatorTarget_Actor::class,
+         PluginFormcreatorCondition::class,
+      ];
+   }
+
+   public function prepareInputForClone($input) {
+      $input = parent::prepareInputForClone($input);
+      $input['_skip_create_actors'] = true;
+      return $input;
    }
 }

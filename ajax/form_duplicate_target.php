@@ -30,24 +30,19 @@
  */
 
 include ('../../../inc/includes.php');
-Session::checkRight('entity', UPDATE);
 
-if (!isset($_REQUEST['id'])) {
-    http_response_code(400);
-    Session::addMessageAfterRedirect(__('Bad request', 'formcreator'), false, ERROR);
-    exit;
+// Check if plugin is activated...
+if (!(new Plugin())->isActivated('formcreator')) {
+    http_response_code(404);
+    die();
 }
 
-$section = new PluginFormcreatorSection();
-if (!$section->canUpdate()) {
-    http_response_code(403);
-    Session::addMessageAfterRedirect(__('You don\'t have right for this action', 'formcreator'), false, ERROR);
-    exit;
-}
-
-if (!$section->update($_REQUEST)) {
+if (!isset($_REQUEST['itemtype']) || !isset($_REQUEST['items_id']) || !isset($_REQUEST['action'])) {
     http_response_code(500);
-    Session::addMessageAfterRedirect(__('Could not update the section', 'formcreator'), false, ERROR);
-    exit;
+    die();
 }
-echo json_encode(['id' => $section->getID(), 'name' => $section->getDesignLabel()], JSON_UNESCAPED_UNICODE);
+
+Session::checkRight('entity', UPDATE);
+if (!PluginFormcreatorCommon::getForm()->duplicateTarget($_REQUEST)) {
+    http_response_code(500);
+}

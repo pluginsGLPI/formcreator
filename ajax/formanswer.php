@@ -37,7 +37,7 @@ if (!Plugin::isPluginActive('formcreator')) {
    die();
 }
 
-if (!isset($_POST['submit_formcreator']) || !isset($_POST['plugin_formcreator_forms_id'])) {
+if (!isset($_POST['add']) || !isset($_POST['plugin_formcreator_forms_id'])) {
    http_response_code(500);
    die();
 }

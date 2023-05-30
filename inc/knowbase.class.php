@@ -129,6 +129,7 @@ class PluginFormcreatorKnowbase {
          'SELECT' => [
             KnowbaseItemCategory::getTableField('id'),
             KnowbaseItemCategory::getTableField('name'),
+            KnowbaseItemCategory::getTableField('comment'),
             KnowbaseItemCategory::getTableField($cat_fk),
             $items_subquery,
          ],
@@ -206,7 +207,11 @@ class PluginFormcreatorKnowbase {
          'faq'      => '1',
          'contains' => $keywords
       ];
-      $params['knowbaseitemcategories_id'] = 0;
+      if (version_compare(GLPI_VERSION, '10.0.6') > 0) {
+         $params['knowbaseitemcategories_id'] = KnowbaseItemCategory::SEEALL;
+      } else {
+         $params['knowbaseitemcategories_id'] = 0;
+      }
       if (count($selectedCategories) > 0) {
          $params['knowbaseitemcategories_id'] = $selectedCategories;
       }

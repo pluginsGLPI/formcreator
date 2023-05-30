@@ -85,7 +85,7 @@ class EmailField extends TextField
 
       if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
          Session::addMessageAfterRedirect(
-            sprintf(__('This is not a valid e-mail: %s', 'formcreator'), $this->getLabel()),
+            sprintf(__('This is not a valid e-mail: %s', 'formcreator'), $this->getTtranslatedLabel()),
             false,
             ERROR
          );

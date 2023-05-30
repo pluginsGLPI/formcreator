@@ -39,6 +39,7 @@ use Html;
 use Toolbox;
 use Session;
 use DBUtils;
+use Document;
 use Dropdown;
 use CommonITILActor;
 use CommonITILObject;
@@ -62,10 +63,11 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
 class DropdownField extends PluginFormcreatorAbstractField
 {
-
    const ENTITY_RESTRICT_USER = 1;
    const ENTITY_RESTRICT_FORM = 2;
    const ENTITY_RESTRICT_BOTH = 3;
+
+   protected static $noEntityRrestrict = [Entity::class, Document::class];
 
    public function getEnumEntityRestriction() {
       return [
@@ -94,10 +96,14 @@ class DropdownField extends PluginFormcreatorAbstractField
       $this->question->fields['_entity_restrict'] = $decodedValues['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
       $this->question->fields['_is_tree'] = '0';
       $this->question->fields['_is_entity_restrict'] = '0';
+      if (isset($this->question->fields['itemtype']) && is_subclass_of($this->question->fields['itemtype'], CommonDBTM::class)) {
+         if (!in_array($this->question->fields['itemtype'], self::$noEntityRrestrict)) {
+            $item = new $this->question->fields['itemtype'];
+            $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
+         }
+      }
       if (isset($this->question->fields['itemtype']) && is_subclass_of($this->question->fields['itemtype'], CommonTreeDropdown::class)) {
          $this->question->fields['_is_tree'] = '1';
-         $item = new $this->question->fields['itemtype'];
-         $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
       }
       $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
       $this->deserializeValue($this->question->fields['default_values']);
@@ -136,6 +142,10 @@ class DropdownField extends PluginFormcreatorAbstractField
          JSON_OBJECT_AS_ARRAY
       );
 
+      if (in_array($itemtype, self::$noEntityRrestrict)) {
+         unset($dparams['entity']);
+      }
+
       switch ($itemtype) {
          case SLA::class:
          case OLA::class:
@@ -143,11 +153,6 @@ class DropdownField extends PluginFormcreatorAbstractField
             if (isset($decodedValues['show_service_level_types'])) {
                $dparams_cond_crit['type'] = $decodedValues['show_service_level_types'];
             }
-            break;
-
-         case Entity::class:
-         case Document::class:
-            unset($dparams['entity']);
             break;
 
          case User::class:
@@ -347,18 +352,6 @@ class DropdownField extends PluginFormcreatorAbstractField
          }
       }
 
-      $emptyItem = new $itemtype();
-      $emptyItem->getEmpty();
-      if (isset($emptyItem->fields['serial'])) {
-         $dparams['displaywith'][] = 'serial';
-      }
-      if (isset($emptyItem->fields['otherserial'])) {
-         $dparams['displaywith'][] = 'otherserial';
-      }
-      if ($itemtype === Ticket::class && !array_search('id', $dparams['displaywith'])) {
-         $dparams['displaywith'][] = 'id';
-      }
-
       return $dparams;
    }
 
@@ -445,7 +438,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $dropdown = new $itemtype();
       if ($this->isRequired() && $dropdown->isNewId($this->value)) {
          Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getTtranslatedLabel(),
             false,
             ERROR
          );
@@ -467,7 +460,7 @@ class DropdownField extends PluginFormcreatorAbstractField
 
       if (!$isValid) {
          Session::addMessageAfterRedirect(
-            __('Invalid value for ', 'formcreator') . ' ' . $this->getLabel(),
+            __('Invalid value for ', 'formcreator') . ' ' . $this->getTtranslatedLabel(),
             false,
             ERROR
          );
@@ -854,7 +847,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       switch ($restrictionPolicy) {
          case self::ENTITY_RESTRICT_FORM:
             $form = PluginFormcreatorForm::getByItem($this->getQuestion());
-            $formEntities = [$form->fields['entities_id']];
+            $formEntities = [$form->fields['entities_id'] => $form->fields['entities_id']];
             if ($form->fields['is_recursive']) {
                $formEntities = $formEntities + (new DBUtils())->getSonsof(Entity::getTable(), $form->fields['entities_id']);
             }
@@ -863,7 +856,7 @@ class DropdownField extends PluginFormcreatorAbstractField
 
          case self::ENTITY_RESTRICT_BOTH:
             $form = PluginFormcreatorForm::getByItem($this->getQuestion());
-            $formEntities = [$form->fields['entities_id']];
+            $formEntities = [$form->fields['entities_id'] => $form->fields['entities_id']];
             if ($form->fields['is_recursive']) {
                $formEntities = $formEntities + (new DBUtils())->getSonsof(Entity::getTable(), $form->fields['entities_id']);
             }

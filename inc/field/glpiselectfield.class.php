@@ -53,13 +53,15 @@ class GlpiselectField extends DropdownField
 
       $this->question->fields['_tree_root'] = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
       $this->question->fields['_tree_root_selectable'] = $decodedValues['selectable_tree_root'] ?? '0';
-      $this->question->fields['_tree_max_depth'] = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
+      $this->question->fields['_tree_max_depth'] = $decodedValues['show_tree_depth'] ?? '0';
       $this->question->fields['_entity_restrict'] = $decodedValues['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
       $this->question->fields['_is_tree'] = '0';
       $this->question->fields['_is_entity_restrict'] = '0';
       if (isset($this->question->fields['itemtype']) && is_subclass_of($this->question->fields['itemtype'], CommonDBTM::class)) {
-         $item = new $this->question->fields['itemtype'];
-         $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
+         if (!in_array($this->question->fields['itemtype'], self::$noEntityRrestrict)) {
+            $item = new $this->question->fields['itemtype'];
+            $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
+         }
       }
       if (isset($this->question->fields['itemtype']) && $this->question->fields['itemtype'] == User::class) {
          $this->question->fields['_is_entity_restrict'] = '1';
@@ -130,6 +132,28 @@ class GlpiselectField extends DropdownField
 
    public function getAvailableValues(): array {
       return [];
+   }
+
+   public function buildParams($rand = null) {
+      $dparams = parent::buildParams($rand);
+      $itemtype = $this->getSubItemtype();
+
+      $emptyItem = new $itemtype();
+      $emptyItem->getEmpty();
+      if (isset($emptyItem->fields['contact'])) {
+         $dparams['displaywith'][] = 'contact';
+      }
+      if (isset($emptyItem->fields['serial'])) {
+         $dparams['displaywith'][] = 'serial';
+      }
+      if (isset($emptyItem->fields['otherserial'])) {
+         $dparams['displaywith'][] = 'otherserial';
+      }
+      if ($itemtype === Ticket::class && !array_search('id', $dparams['displaywith'])) {
+         $dparams['displaywith'][] = 'id';
+      }
+
+      return $dparams;
    }
 
    public function equals($value): bool {

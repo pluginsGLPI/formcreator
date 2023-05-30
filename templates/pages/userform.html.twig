@@ -45,7 +45,7 @@
 
 <div class="asset">
     {% set formName = 'plugin_formcreator_form' %}
-	<form name="{{ formName }}" method="post" role="form" enctype="multipart/form-data" class="plugin_formcreator_form" action="javascript:plugin_formcreator.submitUserForm()" onkeypress="return plugin_formcreator.submitUserFormByKeyPress(event);" id="plugin_formcreator_form" data-itemtype="PluginFormcreatorForm" data-id="{{ item.fields['id'] }}" data-submit-once="true">
+	<form name="{{ formName }}" method="post" role="form" enctype="multipart/form-data" class="plugin_formcreator_form" onsubmit="return plugin_formcreator.submitUserForm(event)" onkeypress="return plugin_formcreator.submitUserFormByKeyPress(event);" id="plugin_formcreator_form" data-itemtype="PluginFormcreatorForm" data-id="{{ item.fields['id'] }}" data-submit-once="true">
 		<h1 class='form-title'>
 		        {{ call('Glpi\\Toolbox\\Sanitizer::unsanitize', [__(item.fields['name'], options.domain)]) }}
 			<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>
@@ -137,7 +137,7 @@
         <div class="center">
           {{ call('Html::submit', [
               __('Send'),
-              {'name': 'submit_formcreator'}
+              {'name': 'add'}
           ])|raw }}
         </div>
         {{ fields.hiddenField('plugin_formcreator_forms_id', item.fields['id']) }}

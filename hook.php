@@ -197,7 +197,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          $issueSearchOptions = Search::getOptions($itemtype);
          $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[9]['joinparams']);
          $colname = $issueSearchOptions[9]['linkfield'];
-         $condition .= "`glpi_users_${colname}_$complexJoinId`.`id` = '$currentUser'";
+         $condition .= "`glpi_users_{$colname}_$complexJoinId`.`id` = '$currentUser'";
 
          // condition where current user is a member of a validator group of the issue
          $groupList = [];
@@ -209,7 +209,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
             // Search option ID 16 is either from Formcreator, either from AdvForms
             $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[16]['joinparams']);
             $colname = $issueSearchOptions[16]['linkfield'];
-            $condition .= " OR `glpi_groups_${colname}_$complexJoinId`.`id` IN ('$groupList')";
+            $condition .= " OR `glpi_groups_{$colname}_$complexJoinId`.`id` IN ('$groupList')";
          }
 
          // condition where current user is a validator of a issue of type ticket
@@ -265,6 +265,9 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
 
             $groupIDs = [];
             foreach ($groups as $group) {
+               if ($group['id'] === null) {
+                  continue;
+               }
                $groupIDs[] = $group['id'];
             }
             $groupIDs = implode(',', $groupIDs);
@@ -372,9 +375,10 @@ function plugin_formcreator_MassiveActions($itemtype) {
    switch ($itemtype) {
       case PluginFormcreatorForm::class:
          return [
-            'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate' => _x('button', 'Duplicate'),
-            'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert' => __('Transfer'),
-            'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Export' => _sx('button', 'Export'),
+            PluginFormcreatorForm::class . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate'    => _x('button', 'Duplicate'),
+            PluginFormcreatorForm::class . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert'    => __('Transfer'),
+            PluginFormcreatorForm::class . MassiveAction::CLASS_ACTION_SEPARATOR . 'Export'       => _sx('button', 'Export'),
+            PluginFormcreatorForm::class . MassiveAction::CLASS_ACTION_SEPARATOR . 'AccessRights' => _sx('button', 'Access rights'),
          ];
    }
    return [];

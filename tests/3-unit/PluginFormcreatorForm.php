@@ -29,7 +29,18 @@
  * ---------------------------------------------------------------------
  */
 namespace tests\units;
+use Config;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Group;
+use PluginFormcreatorFormAnswer;
+use PluginFormcreatorSection;
+use PluginFormcreatorQuestion;
+use PluginFormcreatorForm_Language;
+use PluginFormcreatorForm_Profile;
+use PluginFormcreatorForm_Validator;
+use Central;
+use User;
+use UserEmail;
 
 class PluginFormcreatorForm extends CommonTestCase {
 
@@ -49,7 +60,7 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       switch ($method) {
          case 'testCreateValidationNotification':
-            \Config::setConfigurationValues(
+            Config::setConfigurationValues(
                'core',
                ['use_notifications' => 1, 'notifications_mailing' => 1]
             );
@@ -60,7 +71,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       parent::afterTestMethod($method);
       switch ($method) {
          case 'testCreateValidationNotification':
-            \Config::setConfigurationValues(
+            Config::setConfigurationValues(
                'core',
                ['use_notifications' => 0, 'notifications_mailing' => 0]
             );
@@ -98,78 +109,84 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function testGetEnumAccessType() {
+      $testedClassName = $this->getTestedClassName();
       $output = \PluginFormcreatorForm::getEnumAccessType();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorForm::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
-         \PluginFormcreatorForm::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
-         \PluginFormcreatorForm::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
+         $testedClassName::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
+         $testedClassName::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
+         $testedClassName::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
       ]);
    }
 
    public function testCanCreate() {
+      $testedClassName = $this->getTestedClassName();
       $this->login('glpi', 'glpi');
-      $output = \PluginFormcreatorForm::canCreate();
+      $output = $testedClassName::canCreate();
       $this->boolean((bool) $output)->isTrue();
 
       $this->login('normal', 'normal');
-      $output = \PluginFormcreatorForm::canCreate();
+      $output = $testedClassName::canCreate();
       $this->boolean((bool) $output)->isFalse();
 
       $this->login('post-only', 'postonly');
-      $output = \PluginFormcreatorForm::canCreate();
+      $output = $testedClassName::canCreate();
       $this->boolean((bool) $output)->isFalse();
    }
 
    public function testCanView() {
+      $testedClassName = $this->getTestedClassName();
       $this->login('glpi', 'glpi');
-      $output = \PluginFormcreatorForm::canView();
+      $output = $testedClassName::canView();
       $this->boolean((bool) $output)->isTrue();
 
       $this->login('normal', 'normal');
-      $output = \PluginFormcreatorForm::canView();
+      $output = $testedClassName::canView();
       $this->boolean((bool) $output)->isTrue();
 
       $this->login('post-only', 'postonly');
-      $output = \PluginFormcreatorForm::canView();
+      $output = $testedClassName::canView();
       $this->boolean((bool) $output)->isTrue();
    }
 
    public function testCanDelete() {
+      $testedClassName = $this->getTestedClassName();
       $this->login('glpi', 'glpi');
-      $output = \PluginFormcreatorForm::canDelete();
+      $output = $testedClassName::canDelete();
       $this->boolean((bool) $output)->isTrue();
 
       $this->login('normal', 'normal');
-      $output = \PluginFormcreatorForm::canDelete();
+      $output = $testedClassName::canDelete();
       $this->boolean((bool) $output)->isFalse();
 
       $this->login('post-only', 'postonly');
-      $output = \PluginFormcreatorForm::canCreate();
+      $output = $testedClassName::canCreate();
       $this->boolean((bool) $output)->isFalse();
    }
 
    public function testCanPurge() {
+      $testedClassName = $this->getTestedClassName();
       $this->login('glpi', 'glpi');
-      $output = \PluginFormcreatorForm::canPurge();
+      $output = $testedClassName::canPurge();
       $this->boolean((bool) $output)->isTrue();
 
       $this->login('normal', 'normal');
-      $output = \PluginFormcreatorForm::canPurge();
+      $output = $testedClassName::canPurge();
       $this->boolean((bool) $output)->isFalse();
       $this->login('post-only', 'postonly');
-      $output = \PluginFormcreatorForm::canCreate();
+      $output = $testedClassName::canCreate();
       $this->boolean((bool) $output)->isFalse();
    }
 
    public function testCanPurgeItem() {
+      $testedClassName = $this->getTestedClassName();
       $form = $this->getForm();
       $output = $form->canPurgeItem();
       $this->boolean((boolean) $output)->isTrue();
 
       $this->disableDebug();
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswer->add([
-         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+         $testedClassName::getForeignKeyField() => $form->getID(),
       ]);
       $this->restoreDebug();
 
@@ -301,7 +318,7 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function testGetTabNameForItem() {
       $form = $this->getForm();
-      $item = new \Central();
+      $item = new Central();
       $output = $form->getTabNameForItem($item);
       $this->string($output)->isEqualTo('Forms');
 
@@ -320,7 +337,7 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function testPost_purgeItem() {
       $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER,
          'users_id' => 2, // glpi
       ]);
       $section = $this->getSection([
@@ -332,13 +349,13 @@ class PluginFormcreatorForm extends CommonTestCase {
       $targetTicket = $this->getTargetTicket([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
-      $validator = new \PluginFormcreatorForm_Validator();
+      $validator = new PluginFormcreatorForm_Validator();
       $validator->getFromDBByCrit([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'itemtype' => \User::class,
+         'itemtype' => User::class,
       ]);
 
-      $formProfile = new \PluginFormcreatorForm_Profile();
+      $formProfile = new PluginFormcreatorForm_Profile();
       $formProfile->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'profiles_id' => 6 // technician
@@ -367,14 +384,14 @@ class PluginFormcreatorForm extends CommonTestCase {
    public function testUpdateValidators() {
       $form = $this->getForm();
 
-      $formValidator = new \PluginFormcreatorForm_Validator();
+      $formValidator = new PluginFormcreatorForm_Validator();
       $rows = $formValidator->find([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
       $this->array($rows)->hasSize(0);
 
       $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER,
          '_validator_users' => ['2'], // glpi account
       ]);
 
@@ -388,7 +405,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->integer((int) $formValidator->fields['plugin_formcreator_forms_id'])->isEqualTo($form->getID());
 
       $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_GROUP,
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_GROUP,
          '_validator_groups' => ['1'], // a group ID (not created in this test)
       ]);
       $rows = $formValidator->find([
@@ -397,7 +414,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->array($rows)->hasSize(1);
       $formValidator->getFromResultSet(array_pop($rows));
       $this->integer((int) $formValidator->fields['items_id'])->isEqualTo(1);
-      $this->string( $formValidator->fields['itemtype'])->isEqualTo(\Group::class);
+      $this->string( $formValidator->fields['itemtype'])->isEqualTo(Group::class);
       $this->integer((int) $formValidator->fields['plugin_formcreator_forms_id'])->isEqualTo($form->getID());
    }
 
@@ -411,9 +428,9 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function providerCreateValidationNotification() {
       // give email address to users
-      $validator = new \User();
+      $validator = new User();
       $validator->getFromDBbyName('tech');
-      $useremail = new \UserEmail();
+      $useremail = new UserEmail();
       $useremail->deleteByCriteria([
          'users_id' => $validator->getID(),
       ]);
@@ -424,9 +441,9 @@ class PluginFormcreatorForm extends CommonTestCase {
          ]
       ]);
 
-      $requester = new \User();
+      $requester = new User();
       $requester->getFromDBbyName('normal');
-      $useremail = new \UserEmail();
+      $useremail = new UserEmail();
       $useremail->deleteByCriteria([
          'users_id' => $requester->getID(),
       ]);
@@ -453,7 +470,7 @@ class PluginFormcreatorForm extends CommonTestCase {
    /**
     * @dataProvider providerCreateValidationNotification
     */
-   public function testCreateValidationNotification(\User $requester, \User $validator, $expectedNotificationCount) {
+   public function testCreateValidationNotification(User $requester, User $validator, $expectedNotificationCount) {
       global $DB, $CFG_GLPI;
 
       // Enable notifications in GLPI
@@ -626,32 +643,61 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function providerGetByItem() {
+      $testedClassName = $this->getTestedClassName();
+      $formFk = $testedClassName::getForeignKeyField();
       $section = $this->getSection();
-      $question = $this->getQuestion();
 
-      $dataset = [
-         [
-            'item'         => $section,
-            'expectedType' => \PluginFormcreatorForm::getType(),
-            'expected'     => true,
-         ],
-         [
-            'item'         => new \PluginFormcreatorSection(),
-            'expectedType' => \PluginFormcreatorForm::getType(),
-            'expected'     => false,
-         ],
-         [
-            'item'         => $question,
-            'expectedType' => \PluginFormcreatorForm::getType(),
-            'expected'     => true,
-         ],
-         [
-            'item'         => new \PluginFormcreatorQuestion(),
-            'expectedType' => \PluginFormcreatorForm::getType(),
-            'expected'     => false,
-         ],
+      $expected_id = $section->fields['plugin_formcreator_forms_id'];
+      yield [
+         'item'         => $section,
+         'expectedType' => $testedClassName,
+         'expected'     => $expected_id,
       ];
-      return $dataset;
+
+      yield [
+         'item'         => new PluginFormcreatorSection(),
+         'expectedType' => $testedClassName,
+         'expected'     => false,
+      ];
+
+      $question = $this->getQuestion();
+      $section = PluginFormcreatorSection::getById($question->fields['plugin_formcreator_sections_id']);
+      $expected_id = $section->fields['plugin_formcreator_forms_id'];
+      yield [
+         'item'         => $question,
+         'expectedType' => $testedClassName,
+         'expected'     => $expected_id,
+      ];
+
+      yield [
+         'item'         => new PluginFormcreatorQuestion(),
+         'expectedType' => $testedClassName,
+         'expected'     => false,
+      ];
+
+      $form = $this->getForm();
+      $formAnswer = $this->getFormAnswer([
+         $formFk => $form->getID(),
+      ]);
+
+      yield [
+         'item'         => $formAnswer,
+         'expectedType' => $testedClassName,
+         'expected'     => $formAnswer->fields[$formFk],
+      ];
+
+      $form_language = new PluginFormcreatorForm_Language();
+      $form_language->add([
+         $formFk => $form->getID(),
+         'name' => 'fr_FR',
+      ]);
+      $this->boolean($form_language->isNewItem())->isFalse();
+
+      yield [
+         'item'         => $form_language,
+         'expectedType' => $testedClassName,
+         'expected'     => $form_language->fields[$formFk],
+      ];
    }
 
    /**
@@ -898,9 +944,9 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->string($new_form->getField('uuid'))->isNotEqualTo($form->getField('uuid'));
 
       // check sections
-      $all_sections = (new \PluginFormcreatorSection())->getSectionsFromForm($form->getID());
+      $all_sections = (new PluginFormcreatorSection())->getSectionsFromForm($form->getID());
       $this->integer(count($all_sections))->isEqualTo(count($section_ids));
-      $all_new_sections = (new \PluginFormcreatorSection())->getSectionsFromForm($new_form->getID());
+      $all_new_sections = (new PluginFormcreatorSection())->getSectionsFromForm($new_form->getID());
       $this->integer(count($all_sections))->isEqualTo(count($section_ids));
 
       // check that all sections uuid are new
@@ -1349,14 +1395,14 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
 
       $this->boolean($instance->isNewItem())->isFalse();
-      $section = new \PluginFormcreatorSection();
+      $section = new PluginFormcreatorSection();
       $rows = $section->find([
          'plugin_formcreator_forms_id' => $instance->getID(),
       ]);
 
       $this->array($rows)->hasSize(1);
       $row = array_shift($rows);
-      $this->string($row['name'])->isEqualTo(\PluginFormcreatorSection::getTypeName(1));
+      $this->string($row['name'])->isEqualTo(PluginFormcreatorSection::getTypeName(1));
    }
 
    /**

@@ -311,4 +311,6 @@ interface PluginFormcreatorFieldInterface
     * @return void
     */
    public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void;
+
+   public function getRawValue();
 }

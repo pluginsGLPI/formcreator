@@ -88,6 +88,24 @@ class FileField extends PluginFormcreatorAbstractField
          return $html;
       }
 
+      if (is_array($this->uploadData) && count($this->uploadData) > 0) {
+         $html = '';
+         $doc = new Document();
+         foreach ($this->uploadData as $item) {
+            if (is_numeric($item) && $doc->getFromDB($item)) {
+               $prefix = uniqid('', true);
+               $filename = $prefix . $doc->fields['filename'];
+               if (!copy(GLPI_DOC_DIR . '/' . $doc->fields['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
+                  continue;
+               }
+               $key = 'formcreator_field_' . $this->getQuestion()->getID();
+               $this->uploads['_' . $key][] = $filename;
+               $this->uploads['_prefix_' . $key][] = $prefix;
+               $this->uploads['_tag_' . $key][] = $doc->fields['tag'];
+            }
+         }
+      }
+
       return Html::file([
          'name'    => 'formcreator_field_' . $this->question->getID(),
          'display' => false,
@@ -132,7 +150,7 @@ class FileField extends PluginFormcreatorAbstractField
       foreach ($this->uploads["_$key"] as $index => $document) {
          $document = Toolbox::stripslashes_deep($document);
          if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-            $prefix = $this->uploads['_prefix_formcreator_field_' . $this->question->getID()][$index];
+            $prefix = $this->uploads['_prefix_' . $key][$index];
             $answer_value[] = $this->saveDocument($document, $prefix);
          }
          $index++;
@@ -153,7 +171,7 @@ class FileField extends PluginFormcreatorAbstractField
       $key = '_formcreator_field_' . $this->question->getID();
       if (($this->isRequired() && (!isset($this->uploads[$key]) || count($this->uploads[$key]) < 1))) {
          Session::addMessageAfterRedirect(
-            sprintf(__('A required file is missing: %s', 'formcreator'), $this->getLabel()),
+            sprintf(__('A required file is missing: %s', 'formcreator'), $this->getTtranslatedLabel()),
             false,
             ERROR
          );
@@ -188,7 +206,7 @@ class FileField extends PluginFormcreatorAbstractField
       foreach ($input["_$key"] as $document) {
          $document = Toolbox::stripslashes_deep($document);
          if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-            $prefix = $input['_prefix_formcreator_field_' . $this->question->getID()][$index];
+            $prefix = $input['_prefix_' . $key][$index];
             $answer_value[] = $this->saveDocument($document, $prefix);
          }
          $index++;
@@ -220,15 +238,14 @@ class FileField extends PluginFormcreatorAbstractField
          return;
       }
 
-      $doc                             = new Document();
-      $file_data                       = [];
-      $file_data["name"]               = Toolbox::addslashes_deep($form->getField('name') . ' - ' . $this->question->fields['name']);
-      $file_data["entities_id"]        = isset($_SESSION['glpiactive_entity'])
-         ? $_SESSION['glpiactive_entity']
-         : $form->getField('entities_id');
-      $file_data["is_recursive"]       = $form->getField('is_recursive');
-      $file_data['_filename']          = [$file];
-      $file_data['_prefix_filename']   = [$prefix];
+      $file_data = [
+         'name'             => Toolbox::addslashes_deep($form->fields['name'] . ' - ' . $this->question->fields['name']),
+         'entities_id'      => $_SESSION['glpiactive_entity'] ?? $form->getField('entities_id'),
+         'is_recursive'     => $form->getField('is_recursive'),
+         '_filename'        => [$file],
+         '_prefix_filename' => [$prefix],
+      ];
+      $doc = new Document();
       if ($docID = $doc->add($file_data)) {
          return $docID;
       }

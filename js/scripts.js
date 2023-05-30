@@ -343,7 +343,8 @@ function buildKbCategoryList(tree) {
    if (tree.id != 0) {
       html += '<a href="#" data-parent-category-id="' + tree.parent +'"'
          + ' data-category-id="' + tree.id + '"'
-         + ' onclick="plugin_formcreator.updateKbitemsView(this)">'
+         + ' onclick="plugin_formcreator.updateKbitemsView(this)"'
+         + ' title="' + tree.comment + '">'
          + tree.name
          + '</a>';
    }
@@ -364,7 +365,7 @@ function buildCategoryList(tree) {
       html = '<a href="#" data-parent-category-id="' + tree.parent +'"'
          + ' data-category-id="' + tree.id + '"'
          + ' onclick="plugin_formcreator.updateWizardFormsView(this)"'
-         + 'title="' + tree.name + '">'
+         + ' title="' + tree.comment + '">'
          + tree.name
          + '</a>';
    }
@@ -864,7 +865,7 @@ var plugin_formcreator = new function() {
             }
          }
 
-         $('[name="submit_formcreator"]').toggle(submitButtonToShow == true);
+         $('#plugin_formcreator_form.plugin_formcreator_form button[name="add"]').toggle(submitButtonToShow == true);
       });
    };
 
@@ -1042,7 +1043,7 @@ var plugin_formcreator = new function() {
          displayAjaxMessageAfterRedirect();
       }).done(function (data) {
          var section = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"]');
-         section.find('> a [data-field="name"]').text(data['name']);
+         section.find('[data-field="name"]').replaceWith(data['name']);
          that.resetTabs();
       }).complete(function () {
          var myModal = form.closest('div.modal');
@@ -1108,6 +1109,7 @@ var plugin_formcreator = new function() {
 
    this.newTranslation = function (formLanguageId) {
       glpi_ajax_dialog({
+         dialogclass: 'modal-xl',
          url: '../ajax/form_language.php',
          params: {
             action: 'newTranslation',
@@ -1133,6 +1135,11 @@ var plugin_formcreator = new function() {
       }).fail(function () {
          displayAjaxMessageAfterRedirect();
       }).done(function () {
+         // Remove unclosed TinyMCE toolbar
+         var tinyToolbar = document.querySelector('.tox-tinymce-aux');
+         if (tinyToolbar) {
+            tinyToolbar.parentNode.removeChild(tinyToolbar);
+         }
          that.showTranslationEditor(form);
       });
    }
@@ -1346,10 +1353,10 @@ var plugin_formcreator = new function() {
       });
    };
 
-   this.submitUserForm = function () {
+   this.submitUserForm = function (event) {
       var form     = document.querySelector('form[role="form"][data-itemtype]');
       var data     = new FormData(form);
-      data.append('submit_formcreator', '');
+      data.append('add', '');
       $.post({
          url: formcreatorRootDoc + '/ajax/formanswer.php',
          processData: false,
@@ -1386,11 +1393,14 @@ var plugin_formcreator = new function() {
             initMessagesAfterRedirectToasts();
          }
       });
+      event.preventDefault();
+      blockFormSubmit($(form), event);
+      return false;
    };
 
    this.submitUserFormByKeyPress = function (event) {
       var keyPressed = event.keyCode || event.which;
-      if (keyPressed === 13 && $('[name="submit_formcreator"]').is(':hidden')) {
+      if (keyPressed === 13 && $('#plugin_formcreator_form.plugin_formcreator_form button[name="add"]').is(':hidden')) {
          event.preventDefault();
          return false;
       }
@@ -1409,6 +1419,18 @@ var plugin_formcreator = new function() {
          return item.name != '_glpi_csrf_token';
       });
    }
+
+   this.showMassiveRestrictions = function (item) {
+      document.querySelector('#plugin_formcreator_restrictions_head').style.display = 'none';
+      document.querySelector('#plugin_formcreator_restrictions').style.display = 'none';
+      document.querySelector('#plugin_formcreator_captcha').style.display = 'none';
+      if (item.value == 2 /* PluginFormcreatorForm::ACCESS_RESTRICTED */) {
+         document.querySelector('#plugin_formcreator_restrictions').style.display = 'block';
+         document.querySelector('#plugin_formcreator_restrictions_head').style.display = 'block';
+      } else if (item.value == 0 /* PluginFormcreatorForm::ACCESS_PUBLIC */) {
+         document.querySelector('#plugin_formcreator_captcha').style.display = 'block';
+      }
+   }
 }
 
 // === TARGETS ===
@@ -1423,8 +1445,25 @@ function plugin_formcreator_addTarget(items_id) {
    });
 }
 
-$(document).on('click', '.formcreator_delete_target', function() {
-   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this target:', 'formcreator'))) {
+$(document).on('click', '.plugin_formcreator_duplicate_target', function() {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to duplicate this target?', 'formcreator'))) {
+      $.post({
+        url: formcreatorRootDoc + '/ajax/form_duplicate_target.php',
+        data: {
+            action: 'duplicate_target',
+            itemtype: $(this).data('itemtype'),
+            items_id: $(this).data('items-id'),
+         }
+      }).done(function () {
+         reloadTab();
+      }).fail(function () {
+         displayAjaxMessageAfterRedirect();
+      });
+   }
+});
+
+$(document).on('click', '.plugin_formcreator_delete_target', function() {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this target?', 'formcreator'))) {
       $.post({
         url: formcreatorRootDoc + '/ajax/form_delete_target.php',
         data: {

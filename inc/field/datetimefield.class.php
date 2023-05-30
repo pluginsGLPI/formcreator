@@ -115,7 +115,7 @@ class DatetimeField extends PluginFormcreatorAbstractField
       // If the field is required it can't be empty
       if ($this->isRequired() && (strtotime($this->value) == '')) {
          Session::addMessageAfterRedirect(
-            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
+            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getTtranslatedLabel()),
             false,
             ERROR
          );
