@@ -153,14 +153,8 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       // set ID for linked objects
       $linked = $linker->getObject($input['plugin_formcreator_questions_id'], PluginFormcreatorQuestion::class);
       if ($linked === false) {
-         $linked = new PluginFormcreatorQuestion();
-         $linked->getFromDBByCrit([
-            $idKey => $input['plugin_formcreator_questions_id']
-         ]);
-         if ($linked->isNewItem()) {
-            $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
-            return false;
-         }
+         $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+         return false;
       }
       /** @var CommonDBTM $linked */
       $input['plugin_formcreator_questions_id'] = $linked->getID();
