@@ -921,7 +921,6 @@ class PluginFormcreatorForm extends CommonTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
 
-
       $targetTicket_ids = [];
       $targetChange_ids = [];
 
