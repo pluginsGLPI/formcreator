@@ -39,6 +39,7 @@ use Dropdown;
 use Entity;
 use CommonTreeDropdown;
 use CommonDBTM;
+use Ticket;
 use User;
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
