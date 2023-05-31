@@ -149,7 +149,7 @@ class GlpiselectField extends DropdownField
       if (isset($emptyItem->fields['otherserial'])) {
          $dparams['displaywith'][] = 'otherserial';
       }
-      if ($itemtype === Ticket::class && !array_search('id', $dparams['displaywith'])) {
+      if ($itemtype === \Ticket::class && !array_search('id', $dparams['displaywith'])) {
          $dparams['displaywith'][] = 'id';
       }
 
