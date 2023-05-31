@@ -5,7 +5,6 @@
 # 
 # Translators:
 # Thierry Bugier <tbugier@teclib.com>, 2022
-# 조성현 (jaymz9634) <jaymz9634@gmail.com>, 2022
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 09:32+0200\n"
 "PO-Revision-Date: 2021-08-30 07:22+0000\n"
-"Last-Translator: 조성현 (jaymz9634) <jaymz9634@gmail.com>, 2022\n"
+"Last-Translator: Thierry Bugier <tbugier@teclib.com>, 2022\n"
 "Language-Team: English (United States) (https://app.transifex.com/teclib/teams/28042/en_US/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -341,7 +340,7 @@ msgstr ""
 #: inc/field/urgencyfield.class.php:121
 msgctxt "urgency"
 msgid "Medium"
-msgstr "매체"
+msgstr ""
 
 #: inc/field/urgencyfield.class.php:122
 msgctxt "urgency"
@@ -377,7 +376,7 @@ msgstr[1] ""
 
 #: inc/field/timefield.class.php:129
 msgid "Time"
-msgstr "시간"
+msgstr ""
 
 #: inc/field/emailfield.class.php:88
 #, php-format
@@ -810,7 +809,7 @@ msgstr "Form #"
 #: inc/notificationtargetformanswer.class.php:97
 msgctxt "tag"
 msgid "Validator"
-msgstr "검증자"
+msgstr ""
 
 #: inc/notificationtargetformanswer.class.php:100
 msgid "Refused comment"
@@ -1492,7 +1491,7 @@ msgstr "Form Transfered: %s"
 
 #: inc/form.class.php:1557
 msgid "Back"
-msgstr "뒤로"
+msgstr ""
 
 #: inc/form.class.php:1568
 #, php-format
@@ -2475,7 +2474,7 @@ msgstr ""
 
 #: entrée standard:64
 msgid "Condition to show the section"
-msgstr "섹션 표시를 위한 조건"
+msgstr ""
 
 #: entrée standard:40
 msgid "Condition to generate the target"
