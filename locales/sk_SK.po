@@ -13,9 +13,12 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 <<<<<<< HEAD
+<<<<<<< HEAD
 "POT-Creation-Date: 2022-11-04 11:04+0100\n"
 "PO-Revision-Date: 2022-06-15 12:10+0000\n"
 =======
+=======
+>>>>>>> origin/support/2.13.0
 "POT-Creation-Date: 2023-05-30 09:32+0200\n"
 "PO-Revision-Date: 2021-08-30 07:22+0000\n"
 >>>>>>> da644384 (docs(locales): update)
@@ -119,17 +122,23 @@ msgid "Could not update the section"
 msgstr "Sekciu sa nepodarilo aktualizovať"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: front/knowbaseitem.php:42 front/knowbaseitem.php:47 front/wizard.php:45
 #: front/wizard.php:50 front/wizardfeeds.php:49 front/wizardfeeds.php:51
 #: front/issue.php:44 front/issue.php:50 front/formanswer.php:44
 #: front/reservation.php:46 front/reservation.php:48
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: front/knowbaseitem.php:42 front/knowbaseitem.php:47
 #: front/wizardreminders.php:49 front/wizardreminders.php:51
 #: front/wizard.php:45 front/wizard.php:50 front/wizardfeeds.php:49
 #: front/wizardfeeds.php:51 front/issue.php:44 front/issue.php:50
 #: front/formanswer.php:44 front/reservation.php:46 front/reservation.php:48
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #: front/knowbaseitem.form.php:48 front/knowbaseitem.form.php:50
 #: front/reservationitem.php:42 front/reservationitem.php:44
 #: front/formanswer.form.php:74 front/reservation.form.php:46
@@ -154,10 +163,14 @@ msgstr "Zlá požiadavka pri odstraňovaní účastníka"
 #: front/targetticket.form.php:95 front/targetchange.form.php:81
 #: front/formanswer.php:47 front/targetproblem.form.php:81
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: front/formanswer.form.php:78 front/form.php:43 inc/common.class.php:692
 =======
 #: front/formanswer.form.php:77 front/form.php:44 inc/common.class.php:692
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: front/formanswer.form.php:77 front/form.php:44 inc/common.class.php:692
+>>>>>>> origin/support/2.13.0
 #: inc/common.class.php:699
 msgid "Form Creator"
 msgstr "Tvorba formulárov"
@@ -173,12 +186,17 @@ msgid "Form list"
 msgstr "Zoznam formulárov"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: front/formdisplay.php:90 inc/formanswer.class.php:951
 #: inc/formanswer.class.php:1182 inc/formanswer.class.php:1232
 =======
 #: front/formdisplay.php:90 inc/formanswer.class.php:1009
 #: inc/formanswer.class.php:1242 inc/formanswer.class.php:1292
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: front/formdisplay.php:90 inc/formanswer.class.php:1009
+#: inc/formanswer.class.php:1242 inc/formanswer.class.php:1292
+>>>>>>> origin/support/2.13.0
 msgid "The form has been successfully saved!"
 msgstr "Formulár bol úspešne uložený!"
 
@@ -194,11 +212,15 @@ msgid "%1$s adds the reservation %2$s for item %3$s"
 msgstr "%1$s pridá rezerváciu %2$s pre položku %3$s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/knowbase.class.php:60 inc/entityconfig.class.php:449
 #: inc/form.class.php:613
 =======
 #: inc/knowbase.class.php:60 inc/form.class.php:658
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/knowbase.class.php:60 inc/form.class.php:658
+>>>>>>> origin/support/2.13.0
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] ""
@@ -207,10 +229,14 @@ msgstr[2] ""
 msgstr[3] ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/knowbase.class.php:62 inc/form.class.php:616 entrée standard:39
 =======
 #: inc/knowbase.class.php:62 inc/form.class.php:661 entrée standard:39
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/knowbase.class.php:62 inc/form.class.php:661 entrée standard:39
+>>>>>>> origin/support/2.13.0
 msgid "See all"
 msgstr "Vidieť všetko"
 
@@ -223,10 +249,14 @@ msgid "Textarea"
 msgstr "Textové pole"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/textareafield.class.php:247 inc/field/dropdownfield.class.php:440
 =======
 #: inc/field/textareafield.class.php:248 inc/field/dropdownfield.class.php:441
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/textareafield.class.php:248 inc/field/dropdownfield.class.php:441
+>>>>>>> origin/support/2.13.0
 #: inc/field/ldapselectfield.class.php:114 inc/field/textfield.class.php:125
 #: inc/field/urgencyfield.class.php:165 inc/field/tagfield.class.php:164
 #: inc/field/timefield.class.php:113 inc/field/fieldsfield.class.php:488
@@ -235,10 +265,14 @@ msgid "A required field is empty:"
 msgstr "Povinné pole je prázdne:"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/textareafield.class.php:265 inc/field/textfield.class.php:178
 =======
 #: inc/field/textareafield.class.php:266 inc/field/textfield.class.php:178
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/textareafield.class.php:266 inc/field/textfield.class.php:178
+>>>>>>> origin/support/2.13.0
 #: inc/field/integerfield.class.php:112 inc/field/floatfield.class.php:193
 #: inc/conditionnabletrait.class.php:70
 msgid "The regular expression is invalid"
@@ -376,10 +410,14 @@ msgstr[2] ""
 msgstr[3] ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/urgencyfield.class.php:85 inc/abstractitiltarget.class.php:1008
 =======
 #: inc/field/urgencyfield.class.php:85 inc/abstractitiltarget.class.php:1023
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/urgencyfield.class.php:85 inc/abstractitiltarget.class.php:1023
+>>>>>>> origin/support/2.13.0
 msgid "Urgency"
 msgstr "Naliehavosť"
 
@@ -484,6 +522,7 @@ msgid "No attached document"
 msgstr "Nebol priložený dokument"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/filefield.class.php:114 inc/field/filefield.class.php:251
 #: inc/field/filefield.class.php:258
 msgid "Attached document"
@@ -498,15 +537,27 @@ msgstr "Priložený dokument"
 
 #: inc/field/filefield.class.php:174
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/filefield.class.php:132 inc/field/filefield.class.php:268
+#: inc/field/filefield.class.php:275
+msgid "Attached document"
+msgstr "Priložený dokument"
+
+#: inc/field/filefield.class.php:174
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "A required file is missing: %s"
 msgstr "Chýba požadovaný súbor: %s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/filefield.class.php:173
 =======
 #: inc/field/filefield.class.php:191
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/filefield.class.php:191
+>>>>>>> origin/support/2.13.0
 msgid "File"
 msgstr "Súbor"
 
@@ -523,10 +574,14 @@ msgid "Block"
 msgstr "Blok"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/fieldsfield.class.php:171 inc/targetticket.class.php:344
 =======
 #: inc/field/fieldsfield.class.php:171 inc/targetticket.class.php:341
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/fieldsfield.class.php:171 inc/targetticket.class.php:341
+>>>>>>> origin/support/2.13.0
 msgid "Field"
 msgstr "Pole"
 
@@ -576,10 +631,14 @@ msgid "Range max"
 msgstr "Rozsah max"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1197
 =======
 #: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1089
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1089
+>>>>>>> origin/support/2.13.0
 msgid "Request type"
 msgstr "Typ požiadavky"
 
@@ -646,6 +705,7 @@ msgid "Displayed unless"
 msgstr "Zobrazené pokiaľ"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/condition.class.php:179 inc/target_actor.class.php:215
 #: inc/form_language.class.php:540 inc/form_validator.class.php:379
 #: inc/targetproblem.class.php:539 inc/questionrange.class.php:196
@@ -656,6 +716,8 @@ msgstr "Zobrazené pokiaľ"
 #: inc/questiondependency.class.php:196 inc/item_targetticket.class.php:154
 #: inc/targetticket.class.php:1507
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/condition.class.php:179 inc/target_actor.class.php:233
 #: inc/form_language.class.php:565 inc/form_validator.class.php:379
 #: inc/targetproblem.class.php:541 inc/questionrange.class.php:196
@@ -664,11 +726,15 @@ msgstr "Zobrazené pokiaľ"
 #: inc/question.class.php:836 inc/questionparameter/range.class.php:202
 #: inc/questionregex.class.php:185 inc/questiondependency.class.php:196
 #: inc/item_targetticket.class.php:154 inc/targetticket.class.php:1399
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
 msgstr "Nepodarilo sa pridať alebo aktualizovať %1$s %2$s"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/condition.class.php:201 inc/target_actor.class.php:236
 #: inc/form_language.class.php:556 inc/form_validator.class.php:403
@@ -680,6 +746,8 @@ msgstr "Nepodarilo sa pridať alebo aktualizovať %1$s %2$s"
 #: inc/questiondependency.class.php:211 inc/item_targetticket.class.php:64
 #: inc/targetticket.class.php:1546
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/condition.class.php:201 inc/target_actor.class.php:254
 #: inc/form_language.class.php:581 inc/form_validator.class.php:403
 #: inc/targetproblem.class.php:376 inc/questionrange.class.php:131
@@ -688,7 +756,10 @@ msgstr "Nepodarilo sa pridať alebo aktualizovať %1$s %2$s"
 #: inc/question.class.php:885 inc/questionparameter/range.class.php:137
 #: inc/questionregex.class.php:120 inc/questiondependency.class.php:211
 #: inc/item_targetticket.class.php:64 inc/targetticket.class.php:1438
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Cannot export an empty object: %s"
 msgstr "Nie je možné exportovať prázdny objekt: %s"
@@ -718,6 +789,7 @@ msgid "Update issue data from tickets and form answers"
 msgstr "Aktualizujte issue z tiketov a reakcií formulárov"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/issue.class.php:393
 msgid "Satisfaction survey expired"
 msgstr "Platnosť prieskumu spokojnosti vypršala"
@@ -732,10 +804,19 @@ msgstr "Platnosť prieskumu spokojnosti vypršala"
 #: inc/issue.class.php:515 inc/form_language.class.php:229
 #: inc/form.class.php:156 inc/form.class.php:2221 entrée standard:52
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/issue.class.php:379
+msgid "Satisfaction survey expired"
+msgstr "Platnosť prieskumu spokojnosti vypršala"
+
+#: inc/issue.class.php:515 inc/form_language.class.php:229
+#: inc/form.class.php:156 inc/form.class.php:2221 entrée standard:52
+>>>>>>> origin/support/2.13.0
 #: standard:49 standard:57 standard:38 standard:39 standard:46
 msgid "Name"
 msgstr "Meno"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/issue.class.php:534 inc/formanswer.class.php:200
 #: inc/formanswer.class.php:273 inc/targetproblem.class.php:622
@@ -759,6 +840,18 @@ msgstr "ID"
 #: inc/issue.class.php:536 inc/form.class.php:503 inc/form.class.php:2230
 #: entrée standard:111 standard:65
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/issue.class.php:527 inc/formanswer.class.php:241
+#: inc/formanswer.class.php:314 inc/targetproblem.class.php:624
+#: inc/form.class.php:147 inc/targetchange.class.php:335
+#: inc/section.class.php:95 inc/question.class.php:156
+#: inc/targetticket.class.php:180 entrée standard:45
+msgid "ID"
+msgstr "ID"
+
+#: inc/issue.class.php:536 inc/form.class.php:503 inc/form.class.php:2230
+#: entrée standard:111 standard:65
+>>>>>>> origin/support/2.13.0
 msgid "Type"
 msgid_plural "Types"
 msgstr[0] ""
@@ -779,10 +872,14 @@ msgid "Last update"
 msgstr "Posledná aktualizácia"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/issue.class.php:586 inc/abstracttarget.class.php:517
 =======
 #: inc/issue.class.php:579 inc/abstracttarget.class.php:518
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/issue.class.php:579 inc/abstracttarget.class.php:518
+>>>>>>> origin/support/2.13.0
 msgid "Entity"
 msgid_plural "Entities"
 msgstr[0] ""
@@ -791,15 +888,21 @@ msgstr[2] ""
 msgstr[3] ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/issue.class.php:596 inc/notificationtargetformanswer.class.php:79
 #: inc/target_actor.class.php:83 inc/formanswer.class.php:219
 #: inc/formanswer.class.php:666 inc/abstractitiltarget.class.php:1774 entrée
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/issue.class.php:589 inc/notificationtargetformanswer.class.php:76
 #: inc/notificationtargetformanswer.class.php:96
 #: inc/target_actor.class.php:101 inc/formanswer.class.php:260
 #: inc/formanswer.class.php:712 inc/abstractitiltarget.class.php:1753 entrée
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #: standard:48
 msgid "Requester"
 msgid_plural "Requesters"
@@ -812,6 +915,7 @@ msgstr[3] ""
 msgid "Form approver"
 msgstr "Schvaľovateľ požiadavky"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/issue.class.php:638 inc/formanswer.class.php:595
 #: inc/formanswer.class.php:602 inc/formanswer.class.php:681
@@ -899,6 +1003,30 @@ msgstr "Skupina IT technikov"
 msgid "Form approver group"
 msgstr "Skupina schvaľovateľov požiadavky"
 
+=======
+#: inc/issue.class.php:631 inc/formanswer.class.php:638
+#: inc/formanswer.class.php:645 inc/formanswer.class.php:727
+#: inc/form_language.class.php:243
+msgid "Comment"
+msgstr "Poznámka"
+
+#: inc/issue.class.php:643
+msgid "Ticket approver"
+msgstr "Schvaľovateľ tiketov"
+
+#: inc/issue.class.php:716
+msgid "Technician"
+msgstr "IT technik"
+
+#: inc/issue.class.php:747
+msgid "Technician group"
+msgstr "Skupina IT technikov"
+
+#: inc/issue.class.php:783 inc/formanswer.class.php:290
+msgid "Form approver group"
+msgstr "Skupina schvaľovateľov požiadavky"
+
+>>>>>>> origin/support/2.13.0
 #: inc/issue.class.php:805
 msgid "Ticket approver group"
 msgstr ""
@@ -916,11 +1044,15 @@ msgid "Ticket technician"
 msgstr ""
 
 #: inc/issue.class.php:1083
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "%1$s %2$s"
 msgstr "%1$s %2$s"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/issue.class.php:1269 inc/filter/itilcategoryfilter.class.php:56
 #: hook.php:658
@@ -978,6 +1110,35 @@ msgstr "Vyriešené"
 
 #: inc/issue.class.php:1377 hook.php:697
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/issue.class.php:1341 inc/filter/itilcategoryfilter.class.php:56
+#: hook.php:691
+msgid "All"
+msgstr "Všetci"
+
+#: inc/issue.class.php:1347 hook.php:692
+msgid "New"
+msgstr "Nový"
+
+#: inc/issue.class.php:1353 hook.php:693
+msgid "Assigned"
+msgstr "Pridelený"
+
+#: inc/issue.class.php:1359 inc/formanswer.class.php:78
+#: inc/form_validator.class.php:69 hook.php:694
+msgid "Waiting"
+msgstr "Čakanie"
+
+#: inc/issue.class.php:1365 hook.php:695
+msgid "To validate"
+msgstr "Na overenie"
+
+#: inc/issue.class.php:1371 hook.php:696
+msgid "Solved"
+msgstr "Vyriešené"
+
+#: inc/issue.class.php:1377 hook.php:697
+>>>>>>> origin/support/2.13.0
 msgid "Closed"
 msgstr "Uzavretý"
 
@@ -1024,6 +1185,7 @@ msgid "The form as been saved"
 msgstr "Formulár bol uložený."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/notificationtargetformanswer.class.php:44
 msgid "A form need to be validate"
 msgstr "Formulár je potrebné overiť"
@@ -1052,6 +1214,21 @@ msgstr "Formulár je akceptovaný"
 
 #: inc/notificationtargetformanswer.class.php:47 install/install.php:436
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/notificationtargetformanswer.class.php:44 install/install.php:418
+msgid "A form need to be validate"
+msgstr "Formulár je potrebné overiť"
+
+#: inc/notificationtargetformanswer.class.php:45 install/install.php:424
+msgid "The form is refused"
+msgstr "Formulár je odmietnutý"
+
+#: inc/notificationtargetformanswer.class.php:46 install/install.php:430
+msgid "The form is accepted"
+msgstr "Formulár je akceptovaný"
+
+#: inc/notificationtargetformanswer.class.php:47 install/install.php:436
+>>>>>>> origin/support/2.13.0
 msgid "The form is deleted"
 msgstr "Formulár je vymazaný"
 
@@ -1107,6 +1284,7 @@ msgid "Validator"
 msgstr "Overovateľ"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/notificationtargetformanswer.class.php:81 inc/formanswer.class.php:240
 #: entrée standard:49
 msgid "Creation date"
@@ -1132,6 +1310,13 @@ msgstr "Odmietnutý komentár"
 
 #: inc/notificationtargetformanswer.class.php:102
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/notificationtargetformanswer.class.php:100
+msgid "Refused comment"
+msgstr "Odmietnutý komentár"
+
+#: inc/notificationtargetformanswer.class.php:102
+>>>>>>> origin/support/2.13.0
 msgid "Request #"
 msgstr "Požiadavka #"
 
@@ -1139,6 +1324,7 @@ msgstr "Požiadavka #"
 msgid "Author"
 msgstr "Autor"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/notificationtargetformanswer.class.php:98
 #: inc/abstractitiltarget.class.php:1344
@@ -1162,6 +1348,18 @@ msgstr "Autor formulára"
 
 #: inc/target_actor.class.php:71 inc/abstractitiltarget.class.php:2093
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/notificationtargetformanswer.class.php:115
+#: inc/abstractitiltarget.class.php:1318
+msgid "Approver"
+msgstr "Schvaľovateľ"
+
+#: inc/target_actor.class.php:70 inc/abstractitiltarget.class.php:2090
+msgid "Form author"
+msgstr "Autor formulára"
+
+#: inc/target_actor.class.php:71 inc/abstractitiltarget.class.php:2093
+>>>>>>> origin/support/2.13.0
 msgid "Form validator"
 msgstr "Overovateľ formulára"
 
@@ -1170,10 +1368,14 @@ msgid "Specific person"
 msgstr "Konkrétna osoba"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/target_actor.class.php:69 inc/abstractitiltarget.class.php:2111
 =======
 #: inc/target_actor.class.php:73 inc/abstractitiltarget.class.php:2103
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/target_actor.class.php:73 inc/abstractitiltarget.class.php:2103
+>>>>>>> origin/support/2.13.0
 msgid "Person from the question"
 msgstr "Osoby z otázky"
 
@@ -1182,10 +1384,14 @@ msgid "Specific group"
 msgstr "Špecifická skupina"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/target_actor.class.php:71 inc/abstractitiltarget.class.php:2122
 =======
 #: inc/target_actor.class.php:75 inc/abstractitiltarget.class.php:2114
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/target_actor.class.php:75 inc/abstractitiltarget.class.php:2114
+>>>>>>> origin/support/2.13.0
 msgid "Group from the question"
 msgstr "Skupina z otázky"
 
@@ -1201,6 +1407,7 @@ msgstr "Technická skupina z objektu"
 msgid "Specific supplier"
 msgstr "Konkrétny dodávateľ"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/target_actor.class.php:75 inc/abstractitiltarget.class.php:2151
 msgid "Supplier from the question"
@@ -1222,6 +1429,17 @@ msgstr "Účastník z otázky"
 
 #: inc/target_actor.class.php:81 inc/abstractitiltarget.class.php:2147
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/target_actor.class.php:79 inc/abstractitiltarget.class.php:2143
+msgid "Supplier from the question"
+msgstr "Dodávateľ z otázky"
+
+#: inc/target_actor.class.php:80 inc/abstractitiltarget.class.php:2132
+msgid "Actors from the question"
+msgstr "Účastník z otázky"
+
+#: inc/target_actor.class.php:81 inc/abstractitiltarget.class.php:2147
+>>>>>>> origin/support/2.13.0
 msgid "Form author's supervisor"
 msgstr "Form author's supervisor"
 
@@ -1230,10 +1448,14 @@ msgid "Observer"
 msgstr "Pozorovateľ"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/target_actor.class.php:85 inc/abstractitiltarget.class.php:1788
 =======
 #: inc/target_actor.class.php:103 inc/abstractitiltarget.class.php:1767
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/target_actor.class.php:103 inc/abstractitiltarget.class.php:1767
+>>>>>>> origin/support/2.13.0
 msgid "Assigned to"
 msgstr "Priradený k"
 
@@ -1266,6 +1488,7 @@ msgid "Failed to find a supplier: %1$s"
 msgstr "Nepodarilo sa nájsť dodávateľa: %1$s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/formanswer.class.php:78 inc/form_validator.class.php:71
 msgid "Refused"
 msgstr "Odmietnuté"
@@ -1286,6 +1509,17 @@ msgstr "Akceptované"
 
 #: inc/formanswer.class.php:226
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/formanswer.class.php:79 inc/form_validator.class.php:71
+msgid "Refused"
+msgstr "Odmietnuté"
+
+#: inc/formanswer.class.php:80 inc/form_validator.class.php:70
+msgid "Accepted"
+msgstr "Akceptované"
+
+#: inc/formanswer.class.php:226
+>>>>>>> origin/support/2.13.0
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] ""
@@ -1293,6 +1527,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/formanswer.class.php:580
 msgid "Print this form"
@@ -1392,10 +1627,64 @@ msgstr "Nie ste overovateľom týchto odpovedí"
 =======
 #: inc/formanswer.class.php:1015
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/formanswer.class.php:623
+msgid "Print this form"
+msgstr "Tlačiť tento formulár"
+
+#: inc/formanswer.class.php:648
+msgid "Form accepted by validator."
+msgstr "Formulár akceptovaný overovateľom"
+
+#: inc/formanswer.class.php:650
+msgid "Form successfully saved."
+msgstr "Formulár úspešne uložený."
+
+#: inc/formanswer.class.php:720 inc/formaccesstype.class.php:126
+msgid "Save"
+msgstr "Uložiť"
+
+#: inc/formanswer.class.php:732
+msgid "Required if refused"
+msgstr "Vyžaduje sa v prípade odmietnutia"
+
+#: inc/formanswer.class.php:738
+msgid "Refuse"
+msgstr "Odmietnuť"
+
+#: inc/formanswer.class.php:746
+msgid "Edit answers"
+msgstr "Upraviť odpovede"
+
+#: inc/formanswer.class.php:752
+msgid "Cancel edition"
+msgstr "Zrušiť editáciu"
+
+#: inc/formanswer.class.php:759
+msgid "Accept"
+msgstr "Akceptovať"
+
+#: inc/formanswer.class.php:782
+msgid "Refused comment is required!"
+msgstr "Vyžaduje sa odmietnutý komentár!"
+
+#: inc/formanswer.class.php:827 inc/formanswer.class.php:844
+msgid ""
+"An internal error occured when verifying your answers. Please report it to "
+"your administrator."
+msgstr ""
+
+#: inc/formanswer.class.php:876
+msgid "You are not the validator of these answers"
+msgstr "Nie ste overovateľom týchto reakcií"
+
+#: inc/formanswer.class.php:1015
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Item sucessfully added: %1$s (%2$s: %3$s)"
 msgstr "Položka úspešne pridaná: %1$s (%2$s: %3$s)"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/formanswer.class.php:1039 inc/formanswer.class.php:1041
 msgid "Form data"
@@ -1435,6 +1724,25 @@ msgstr ""
 =======
 #: inc/formanswer.class.php:1458
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/formanswer.class.php:1098 inc/formanswer.class.php:1100
+msgid "Form data"
+msgstr "Údaje formulára"
+
+#: inc/formanswer.class.php:1227 inc/formanswer.class.php:1279
+msgid "Cannot generate targets!"
+msgstr "Nie je možné generovať ciele!"
+
+#: inc/formanswer.class.php:1428
+msgid "No turing test set"
+msgstr "No turing test set"
+
+#: inc/formanswer.class.php:1434
+msgid "You failed the Turing test"
+msgstr "You failed the Turing test"
+
+#: inc/formanswer.class.php:1458
+>>>>>>> origin/support/2.13.0
 msgid "You must select validator!"
 msgstr "Musíte vybrať overenie!"
 
@@ -1451,6 +1759,7 @@ msgid "Seek assistance"
 msgstr "Vyhľadajte pomoc"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/common.class.php:788 inc/common.class.php:792
 msgid "My requests for assistance"
 msgstr "Moja požiadavka o pomoc"
@@ -1461,12 +1770,21 @@ msgstr "Moja požiadavka o pomoc"
 msgid "My requests for assistance"
 msgstr "Moja požiadavka o pomoc"
 
+=======
+#: inc/common.class.php:789 inc/common.class.php:793
+msgid "My requests for assistance"
+msgstr "Moja požiadavka o pomoc"
+
+>>>>>>> origin/support/2.13.0
 #: inc/common.class.php:829
 msgid "Consult reminders"
 msgstr ""
 
 #: inc/common.class.php:849
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 msgid "Consult feeds"
 msgstr "Consult feeds"
 
@@ -1511,6 +1829,7 @@ msgstr[2] ""
 msgstr[3] ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form_language.class.php:111 inc/form.class.php:1044
 #: inc/form.class.php:1169 inc/abstracttarget.class.php:161
 #: inc/abstractitiltarget.class.php:1595
@@ -1519,6 +1838,8 @@ msgstr "Názov nemôže byť prázdny"
 
 =======
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/form_language.class.php:119
 msgid "The name cannot be empty."
 msgstr ""
@@ -1536,10 +1857,14 @@ msgid "Add a translation"
 msgstr "Pridať preklad"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form_language.class.php:283 js/scripts.js:1175
 =======
 #: inc/form_language.class.php:299 js/scripts.js:1171
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form_language.class.php:299 js/scripts.js:1171
+>>>>>>> origin/support/2.13.0
 msgid "Update a translation"
 msgstr "Aktualizovať preklad"
 
@@ -1560,12 +1885,17 @@ msgid "Do you want to delete the selected items?"
 msgstr "Chcete vymazať vybrané položky?"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form_language.class.php:337 inc/form_language.class.php:376
 #: inc/abstractitiltarget.class.php:1680 entrée standard:23
 =======
 #: inc/form_language.class.php:353 inc/form_language.class.php:401
 #: inc/form.class.php:537 inc/abstractitiltarget.class.php:1658
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form_language.class.php:353 inc/form_language.class.php:401
+#: inc/form.class.php:537 inc/abstractitiltarget.class.php:1658
+>>>>>>> origin/support/2.13.0
 msgid "Delete"
 msgstr "Vymazať"
 
@@ -1582,6 +1912,7 @@ msgstr "Pridať nový jazyk"
 msgid "Language"
 msgstr "Jazyk"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form_validator.class.php:68 inc/targetticket.class.php:97
 #: inc/abstractitiltarget.class.php:183
@@ -1603,10 +1934,18 @@ msgid "None"
 msgstr "Žiadny"
 
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form_validator.class.php:68 inc/targetticket.class.php:99
+#: inc/abstractitiltarget.class.php:178
+msgid "None"
+msgstr "Žiadny"
+
+>>>>>>> origin/support/2.13.0
 #: inc/form_validator.class.php:114
 msgid "Need validaton?"
 msgstr "Je potrebné overenie?"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form_validator.class.php:118 inc/abstractitiltarget.class.php:2092
 msgid "No"
@@ -1621,20 +1960,33 @@ msgstr "Nie"
 msgid "No"
 msgstr "Nie"
 
+=======
+#: inc/form_validator.class.php:118 inc/abstractitiltarget.class.php:2499
+msgid "No"
+msgstr "Nie"
+
+>>>>>>> origin/support/2.13.0
 #: inc/form_validator.class.php:295 inc/targetproblem.class.php:147
 #: inc/entityconfig.class.php:435 inc/targetchange.class.php:484
 #: inc/targetticket.class.php:318 inc/targetticket.class.php:353
 #: inc/abstractitiltarget.class.php:2073
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Save"
 msgstr "Uložiť"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form_validator.class.php:709 inc/abstractitiltarget.class.php:1324
 =======
 #: inc/form_validator.class.php:709 inc/abstractitiltarget.class.php:1298
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form_validator.class.php:709 inc/abstractitiltarget.class.php:1298
+>>>>>>> origin/support/2.13.0
 msgid "Validation"
 msgstr "Overenie"
 
@@ -1650,6 +2002,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/targetproblem.class.php:108 inc/targetproblem.class.php:577
 #: inc/targetchange.class.php:104 inc/targetchange.class.php:440
@@ -1669,6 +2022,16 @@ msgstr "Vlastnosti"
 #: inc/targetproblem.class.php:523 inc/targetchange.class.php:286
 #: inc/targetticket.class.php:1381
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/targetproblem.class.php:109 inc/targetproblem.class.php:579
+#: inc/targetchange.class.php:105 inc/targetchange.class.php:441
+#: inc/targetticket.class.php:135 inc/targetticket.class.php:238
+msgid "Properties"
+msgstr "Vlastnosti"
+
+#: inc/targetproblem.class.php:523 inc/targetchange.class.php:286
+#: inc/targetticket.class.php:1381
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid ""
 "Failed to add or update the %1$s %2$s: a question is missing and is used in "
@@ -1677,6 +2040,7 @@ msgstr ""
 "Nepodarilo sa pridať alebo aktualizovať %1$s %2$s: chýba otázka a používa sa"
 " v parametri cieľa"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/targetproblem.class.php:578 inc/targetchange.class.php:105
 #: inc/targetticket.class.php:134 inc/abstractitiltarget.class.php:1184
@@ -1861,6 +2225,78 @@ msgstr "Zlúčené s formulármi"
 msgid "Distinct menu entry"
 msgstr "Odlišný vstup do menu"
 
+=======
+#: inc/targetproblem.class.php:580 inc/targetchange.class.php:106
+#: inc/targetticket.class.php:136 inc/abstractitiltarget.class.php:1200
+msgid "Actors"
+msgstr "Účastníci"
+
+#: inc/targetproblem.class.php:633 entrée standard:48
+msgid "Problem title"
+msgstr "Názov problému"
+
+#: inc/targetproblem.class.php:643 inc/targetchange.class.php:354
+#: inc/targetticket.class.php:199
+msgid "Content"
+msgstr "Obsah"
+
+#: inc/targetproblem.class.php:653 inc/targetchange.class.php:364
+msgid "Impact"
+msgstr "Dopad"
+
+#: inc/targetproblem.class.php:663 entrée standard:56
+msgid "Cause"
+msgstr "Príčina"
+
+#: inc/targetproblem.class.php:673 entrée standard:58
+msgid "Symptom"
+msgstr "Symptóm"
+
+#: inc/entityconfig.class.php:92 inc/entityconfig.class.php:101
+#: inc/entityconfig.class.php:109 inc/entityconfig.class.php:117
+#: inc/entityconfig.class.php:125 inc/entityconfig.class.php:133
+#: inc/entityconfig.class.php:141 inc/entityconfig.class.php:149
+#: inc/entityconfig.class.php:157
+msgid "Inheritance of the parent entity"
+msgstr "Dedičnosť nadradenej entity"
+
+#: inc/entityconfig.class.php:93
+msgid "GLPi's helpdesk"
+msgstr "GLPI service desk"
+
+#: inc/entityconfig.class.php:94
+msgid "Service catalog simplified"
+msgstr "Zjednodušený katalóg služieb"
+
+#: inc/entityconfig.class.php:95
+msgid "Service catalog extended"
+msgstr "Rozšírený katalóg služieb"
+
+#: inc/entityconfig.class.php:102
+msgid "All available forms"
+msgstr "Všetky dostupné formuláre"
+
+#: inc/entityconfig.class.php:103
+msgid "Only default forms"
+msgstr "Iba predvolené formuláre"
+
+#: inc/entityconfig.class.php:110
+msgid "Popularity sort"
+msgstr "Zoradiť podľa obľúbenosti"
+
+#: inc/entityconfig.class.php:111
+msgid "Alphabetic sort"
+msgstr "Zoradiť podľa abecedy"
+
+#: inc/entityconfig.class.php:118
+msgid "Merged with Forms"
+msgstr "Zlúčené s formulármi"
+
+#: inc/entityconfig.class.php:119
+msgid "Distinct menu entry"
+msgstr "Odlišný vstup do menu"
+
+>>>>>>> origin/support/2.13.0
 #: inc/entityconfig.class.php:126 inc/entityconfig.class.php:134
 #: inc/entityconfig.class.php:142 inc/entityconfig.class.php:150
 #: inc/form.class.php:285 entrée standard:100
@@ -1893,11 +2329,15 @@ msgid "Helpdesk"
 msgstr "Service Desk"
 
 #: inc/entityconfig.class.php:269 inc/entityconfig.class.php:449 entrée
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #: standard:44
 msgid "Helpdesk mode"
 msgstr "Režim Service Desku"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/entityconfig.class.php:304
 msgid "Default Form list mode"
@@ -1979,6 +2419,45 @@ msgstr "Tile design"
 
 #: inc/entityconfig.class.php:421 inc/entityconfig.class.php:499
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/entityconfig.class.php:280 inc/entityconfig.class.php:519
+msgid "Default Form list mode"
+msgstr "Predvolený režim zoznamu formulárov"
+
+#: inc/entityconfig.class.php:298 inc/entityconfig.class.php:459
+msgid "Sort order"
+msgstr "Zoradiť poradie"
+
+#: inc/entityconfig.class.php:314 inc/entityconfig.class.php:469
+msgid "Knowledge base"
+msgstr "Databáza znalostí"
+
+#: inc/entityconfig.class.php:329
+msgid "Search"
+msgstr "Vyhľadávanie"
+
+#: inc/entityconfig.class.php:345 inc/entityconfig.class.php:529
+msgid "Counters dashboard"
+msgstr "Counters dashboard"
+
+#: inc/entityconfig.class.php:361
+msgid "Header message"
+msgstr "Hlavička správy"
+
+#: inc/entityconfig.class.php:377 inc/entityconfig.class.php:539
+msgid "Search issue"
+msgstr "Problém s vyhľadávaním"
+
+#: inc/entityconfig.class.php:393 inc/entityconfig.class.php:509
+msgid "Service catalog home page"
+msgstr ""
+
+#: inc/entityconfig.class.php:409 inc/entityconfig.class.php:549
+msgid "Tile design"
+msgstr "Tile design"
+
+#: inc/entityconfig.class.php:421 inc/entityconfig.class.php:499
+>>>>>>> origin/support/2.13.0
 #: inc/form.class.php:239 entrée standard:84
 msgid "Header"
 msgid_plural "Headers"
@@ -1987,6 +2466,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/entityconfig.class.php:535
 msgid "Display search field"
@@ -2000,6 +2480,13 @@ msgstr "Zobraziť pole vyhľadávania"
 
 #: inc/entityconfig.class.php:489
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/entityconfig.class.php:479
+msgid "Display search field"
+msgstr "Zobraziť pole vyhľadávania"
+
+#: inc/entityconfig.class.php:489
+>>>>>>> origin/support/2.13.0
 msgid "Display header"
 msgstr "Zobraziť hlavičku"
 
@@ -2036,10 +2523,14 @@ msgid "Answers waiting for validation"
 msgstr "Odpovede čakajúce na overenie"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:124 inc/form.class.php:1602 inc/form.class.php:1628
 =======
 #: inc/form.class.php:124 inc/form.class.php:1695 inc/form.class.php:1721
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:124 inc/form.class.php:1695 inc/form.class.php:1721
+>>>>>>> origin/support/2.13.0
 msgid "Import forms"
 msgstr "Importovať formuláre"
 
@@ -2081,10 +2572,14 @@ msgid "All languages"
 msgstr "Všetky jazyky"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:511 entrée standard:3
 =======
 #: inc/form.class.php:502 inc/form.class.php:572
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:502 inc/form.class.php:572
+>>>>>>> origin/support/2.13.0
 msgid "Target"
 msgid_plural "Targets"
 msgstr[0] ""
@@ -2132,11 +2627,15 @@ msgid "What are you looking for?"
 msgstr "Čo hľadáte?"
 
 #: inc/form.class.php:909
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "My %1$d last forms (requester)"
 msgstr " %1$d  posledne zadaných požiadaviek"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:888
 msgid "No form posted yet"
@@ -2158,10 +2657,22 @@ msgstr "Všetky moje požiadavky (žiadateľ)"
 
 #: inc/form.class.php:977
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:936
+msgid "No form posted yet"
+msgstr "Zatiaľ nebol odoslaný žiadny formulár"
+
+#: inc/form.class.php:964
+msgid "All my forms (requester)"
+msgstr "Všetky moje požiadavky (žiadateľ)"
+
+#: inc/form.class.php:977
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "My %1$d last forms (validator)"
 msgstr "Moje posledné formuláre : %1$d (overovateľ)"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:956
 msgid "No form waiting for validation"
@@ -2181,27 +2692,45 @@ msgstr "Žiadny formulár nečaká na overenie"
 msgid "All my forms (validator)"
 msgstr "Všetky moje požiadavky (schvaľovateľ)"
 
+=======
+#: inc/form.class.php:1007
+msgid "No form waiting for validation"
+msgstr "Žiadny formulár nečaká na overenie"
+
+#: inc/form.class.php:1035
+msgid "All my forms (validator)"
+msgstr "Všetky moje požiadavky (schvaľovateľ)"
+
+>>>>>>> origin/support/2.13.0
 #: inc/form.class.php:1095 inc/form.class.php:1229
 #: inc/abstracttarget.class.php:162 inc/abstractitiltarget.class.php:1573
 msgid "The name cannot be empty!"
 msgstr "Názov nemôže byť prázdny"
 
 #: inc/form.class.php:1240
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 msgid "Cannot use empty name for form answers. Keeping the previous value."
 msgstr ""
 "Pre odpovede vo formulári nemožno použiť prázdny názov. Ponechanie "
 "predchádzajúcej hodnoty."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1275
 =======
 #: inc/form.class.php:1342
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1342
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "The question %s is not compatible with public forms"
 msgstr "Otázka %s nie je kompatibilná s verejnými formulármi"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1355
 msgid "Errored duplicate"
@@ -2219,28 +2748,44 @@ msgstr "Chybný duplikát"
 
 #: inc/form.class.php:1480 inc/form.class.php:1508
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1422
+msgid "Errored duplicate"
+msgstr "Chybný duplikát"
+
+#: inc/form.class.php:1480 inc/form.class.php:1508
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Post"
 msgstr "Príspevok"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1436
 =======
 #: inc/form.class.php:1527
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1527
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Duplikovaný formulár: %s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1452
 =======
 #: inc/form.class.php:1538
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1538
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Formulár bol prenesený: %s"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1476
 msgid "Back"
@@ -2275,10 +2820,31 @@ msgstr "Súbory JSON môžete povoliť práve teraz."
 
 #: inc/form.class.php:1672
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1557
+msgid "Back"
+msgstr "Späť"
+
+#: inc/form.class.php:1568
+#, php-format
+msgid "Form updated: %s"
+msgstr ""
+
+#: inc/form.class.php:1668
+msgid "Upload of JSON files not allowed."
+msgstr "Nahrávanie súborov JSON nie je povolené."
+
+#: inc/form.class.php:1671
+msgid "You may allow JSON files right now."
+msgstr "Súbory JSON môžete povoliť práve teraz."
+
+#: inc/form.class.php:1672
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Create"
 msgstr "Vytvoriť"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1582 inc/form.class.php:1593
 msgid "Please contact your GLPI administrator."
@@ -2292,10 +2858,18 @@ msgstr "Kontaktujte svojho správcu GLPI."
 
 #: inc/form.class.php:1676 inc/form.class.php:1687
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1675 inc/form.class.php:1686
+msgid "Please contact your GLPI administrator."
+msgstr "Kontaktujte svojho správcu GLPI."
+
+#: inc/form.class.php:1676 inc/form.class.php:1687
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Back"
 msgstr "Späť"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1586
 msgid "Upload of JSON files not enabled."
@@ -2317,19 +2891,35 @@ msgstr "Súbory JSON môžete povoliť hneď teraz."
 
 #: inc/form.class.php:1683
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1679
+msgid "Upload of JSON files not enabled."
+msgstr "Nahrávanie súborov JSON nie je povolené."
+
+#: inc/form.class.php:1682 inc/form.class.php:1685
+msgid "You may enable JSON files right now."
+msgstr "Súbory JSON môžete povoliť hneď teraz."
+
+#: inc/form.class.php:1683
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Enable"
 msgstr "Povoliť"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1637
 =======
 #: inc/form.class.php:1730
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1730
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Send"
 msgstr "Poslať"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1656
 msgid "Forms import impossible, the file is empty"
@@ -2359,6 +2949,21 @@ msgstr "Import formulárov nie je možný, súbor bol vygenerovaný s inou verzi
 
 #: inc/form.class.php:1770
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1749
+msgid "Forms import impossible, the file is empty"
+msgstr "Import formulárov nie je možný, súbor je prázdny"
+
+#: inc/form.class.php:1753 inc/form.class.php:1757
+msgid "Forms import impossible, the file seems corrupt"
+msgstr "Import formulárov nie je možný, súbor sa zdá byť poškodený"
+
+#: inc/form.class.php:1763
+msgid "Forms import impossible, the file was generated with another version"
+msgstr "Import formulárov nie je možný, súbor bol vygenerovaný s inou verziou"
+
+#: inc/form.class.php:1770
+>>>>>>> origin/support/2.13.0
 msgid ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10. Giving up."
@@ -2367,50 +2972,71 @@ msgstr ""
 "staršou ako 2.10."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1703
 =======
 #: inc/form.class.php:1796
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1796
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Failed to import %s"
 msgstr "Nepodarilo sa importovať %s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1708
 =======
 #: inc/form.class.php:1801
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1801
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Formuláre boli úspešne importované z %s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1771
 =======
 #: inc/form.class.php:1864
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1864
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "The form %1$s already exists and is in an unmodifiable entity."
 msgstr "Formulár %1$s už existuje a je v nemeniteľnej entite."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1779
 =======
 #: inc/form.class.php:1872
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1872
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "You don't have right to update the entity %1$s."
 msgstr "Nemáte právo aktualizovať entitu %1$s."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1789
 =======
 #: inc/form.class.php:1882
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1882
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "The entity %1$s is required for the form %2$s."
 msgstr "Pre formulár %2$s sa vyžaduje entita %1$s."
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1871
 msgid "Failed to create JSON document type"
@@ -2440,17 +3066,37 @@ msgstr "Nepodarilo sa aktualizovať typ dokumentu JSON"
 
 #: inc/form.class.php:1998
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1964
+msgid "Failed to create JSON document type"
+msgstr "Nepodarilo sa vytvoriť typ dokumentu JSON"
+
+#: inc/form.class.php:1971
+msgid "JSON document type not found"
+msgstr "Typ dokumentu JSON sa nenašiel"
+
+#: inc/form.class.php:1978
+msgid "Failed to update JSON document type"
+msgstr "Nepodarilo sa aktualizovať typ dokumentu JSON"
+
+#: inc/form.class.php:1998
+>>>>>>> origin/support/2.13.0
 msgid "Forms without category"
 msgstr "Formulár bez kategórie"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1926
 =======
 #: inc/form.class.php:2019
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:2019
+>>>>>>> origin/support/2.13.0
 msgid "No form available"
 msgstr "Nie je k dispozícii žiadny formulár"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:2127 entrée standard:39
 msgid "Add a target"
@@ -2478,6 +3124,18 @@ msgstr "Nepodporovaný typ cieľa."
 
 #: inc/form.class.php:2346
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:2249 inc/targetticket.class.php:393
+#: inc/abstractitiltarget.class.php:1777 inc/abstractitiltarget.class.php:2073
+msgid "Add"
+msgstr "Pridať"
+
+#: inc/form.class.php:2267 inc/form.class.php:2290 inc/form.class.php:2312
+msgid "Unsupported target type."
+msgstr "Nepodporovaný typ cieľa."
+
+#: inc/form.class.php:2346
+>>>>>>> origin/support/2.13.0
 msgid "plugin_formcreator_load_check"
 msgstr "plugin_formcreator_load_check"
 
@@ -2544,9 +3202,12 @@ msgid "Failed to find %1$s %2$s"
 msgstr "%1$s %2$s sa nepodarilo nájsť"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/question.class.php:70 inc/abstractitiltarget.class.php:1095
 #: inc/abstractitiltarget.class.php:1293 entrée standard:41
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/question.class.php:70 inc/abstractitiltarget.class.php:1111 entrée
 #: standard:41
 >>>>>>> da644384 (docs(locales): update)
@@ -2582,6 +3243,7 @@ msgstr "Tento typ otázky vyžaduje parametre"
 msgid "A parameter is missing for this question type"
 msgstr "Pre tento typ otázky chýba parameter"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/question.class.php:1172
 msgid "Service levels"
@@ -2669,6 +3331,50 @@ msgstr "Administrácia"
 
 #: inc/question.class.php:1254 inc/question.class.php:1257
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/question.class.php:1190
+msgid "Service levels"
+msgstr "Úrovne služieb"
+
+#: inc/question.class.php:1191 inc/abstractitiltarget.class.php:834
+msgid "SLA"
+msgstr "SLA"
+
+#: inc/question.class.php:1192 inc/abstractitiltarget.class.php:907
+msgid "OLA"
+msgstr "OLA"
+
+#: inc/question.class.php:1211 inc/question.class.php:1254
+#: inc/question.class.php:1257
+msgid "Assets"
+msgstr "Aktíva"
+
+#: inc/question.class.php:1225 hook.php:705 hook.php:722
+msgid "Assistance"
+msgstr "Pomoc"
+
+#: inc/question.class.php:1231
+msgid "Management"
+msgstr "Manažment"
+
+#: inc/question.class.php:1242
+msgid "Tools"
+msgstr "Nástroje"
+
+#: inc/question.class.php:1243
+msgid "Notes"
+msgstr "Poznámky"
+
+#: inc/question.class.php:1244
+msgid "RSS feed"
+msgstr "RSS zdroj"
+
+#: inc/question.class.php:1246
+msgid "Administration"
+msgstr "Administrácia"
+
+#: inc/question.class.php:1254 inc/question.class.php:1257
+>>>>>>> origin/support/2.13.0
 msgid "Plugin"
 msgid_plural "Plugins"
 msgstr[0] ""
@@ -2841,11 +3547,14 @@ msgid "Specific asset"
 msgstr "Konkrétne aktívum"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/targetticket.class.php:99 inc/targetticket.class.php:115
 #: inc/abstractitiltarget.class.php:204 inc/abstractitiltarget.class.php:212
 #: inc/abstractitiltarget.class.php:220 inc/abstractitiltarget.class.php:228
 #: inc/abstractitiltarget.class.php:237 inc/abstractitiltarget.class.php:246
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/targetticket.class.php:101 inc/targetticket.class.php:117
 #: inc/abstractitiltarget.class.php:198 inc/abstractitiltarget.class.php:206
 #: inc/abstractitiltarget.class.php:214 inc/abstractitiltarget.class.php:222
@@ -2855,9 +3564,12 @@ msgid "Equals to the answer to the question"
 msgstr "Rovná sa odpovedi na otázku"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/targetticket.class.php:100 inc/abstractitiltarget.class.php:229
 #: inc/abstractitiltarget.class.php:238 inc/abstractitiltarget.class.php:247
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/targetticket.class.php:102 inc/abstractitiltarget.class.php:223
 #: inc/abstractitiltarget.class.php:232
 >>>>>>> da644384 (docs(locales): update)
@@ -2887,6 +3599,7 @@ msgid "Ticket title"
 msgstr "Názov tiketu"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/targetticket.class.php:305
 msgid "Add validation message as first ticket followup"
 msgstr "Pridajte overovaciu správu ako prvú kontrolu tiketu"
@@ -2907,17 +3620,33 @@ msgstr "Pridaj pole"
 
 #: inc/targetticket.class.php:364
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/targetticket.class.php:302
+msgid "Add validation message as first ticket followup"
+msgstr "Pridajte overovaciu správu ako prvú kontrolu tiketu"
+
+#: inc/targetticket.class.php:336
+msgid "Add a field"
+msgstr "Pridaj pole"
+
+#: inc/targetticket.class.php:364
+>>>>>>> origin/support/2.13.0
 msgid "Managed fields"
 msgstr "Manažovateľné polia"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/targetticket.class.php:374
 =======
 #: inc/targetticket.class.php:371
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/targetticket.class.php:371
+>>>>>>> origin/support/2.13.0
 msgid "No managed field"
 msgstr "Nemanažovateľné polia"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/targetticket.class.php:394
 msgid "Link to an other ticket"
@@ -2955,10 +3684,30 @@ msgstr "Tiket z odpovede na otázku"
 
 #: inc/targetticket.class.php:483
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/targetticket.class.php:391
+msgid "Link to an other ticket"
+msgstr "Odkaz na iný tiket"
+
+#: inc/targetticket.class.php:400
+msgid "An other destination of this form"
+msgstr "Iný cieľ formulára"
+
+#: inc/targetticket.class.php:401
+msgid "An existing ticket"
+msgstr "Existujúci tiket"
+
+#: inc/targetticket.class.php:402
+msgid "A ticket from an answer to a question"
+msgstr "Tiket z odpovede na otázku"
+
+#: inc/targetticket.class.php:483
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Delete permanently"
 msgstr "Natrvalo odstrániť"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/targetticket.class.php:741
 msgid "Invalid link type"
@@ -3028,6 +3777,41 @@ msgstr "Pridružené prvky"
 
 #: inc/targetticket.class.php:1140
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/targetticket.class.php:724
+msgid "Invalid link type"
+msgstr "Neplatný typ odkazu"
+
+#: inc/targetticket.class.php:744
+msgid "Invalid linked item type"
+msgstr "Neplatné prepojenie Typ položky"
+
+#: inc/targetticket.class.php:757
+msgid "Linked item does not exists"
+msgstr "Prepojená položka neexistuje"
+
+#: inc/targetticket.class.php:770
+msgid "Failed to link the item"
+msgstr "Chyba prepojenia položky"
+
+#: inc/targetticket.class.php:920 install/install.php:431
+msgid "Your form has been accepted by the validator"
+msgstr "Váš formulár bol akceptovaný overovateľom"
+
+#: inc/targetticket.class.php:1076
+msgid "Request source"
+msgstr "Zdroj požiadavky"
+
+#: inc/targetticket.class.php:1101
+msgid "Type "
+msgstr "Typ"
+
+#: inc/targetticket.class.php:1129
+msgid "Associated elements"
+msgstr "Pridružené prvky"
+
+#: inc/targetticket.class.php:1140
+>>>>>>> origin/support/2.13.0
 msgid "Item "
 msgstr "Položka"
 
@@ -3148,14 +3932,20 @@ msgid "Group from question answer"
 msgstr "Skupina z odpovede na otázku"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:807
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/abstractitiltarget.class.php:769 entrée standard:108
 msgid "Time to resolve"
 msgstr "Čas na vyriešenie"
 
 #: inc/abstractitiltarget.class.php:822
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 msgid "Minute"
 msgid_plural "Minutes"
 msgstr[0] ""
@@ -3164,10 +3954,14 @@ msgstr[2] ""
 msgstr[3] ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:808
 =======
 #: inc/abstractitiltarget.class.php:823
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/abstractitiltarget.class.php:823
+>>>>>>> origin/support/2.13.0
 msgid "Hour"
 msgid_plural "Hours"
 msgstr[0] ""
@@ -3176,10 +3970,14 @@ msgstr[2] ""
 msgstr[3] ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:809
 =======
 #: inc/abstractitiltarget.class.php:824
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/abstractitiltarget.class.php:824
+>>>>>>> origin/support/2.13.0
 msgid "Day"
 msgid_plural "Days"
 msgstr[0] ""
@@ -3188,10 +3986,14 @@ msgstr[2] ""
 msgstr[3] ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:810
 =======
 #: inc/abstractitiltarget.class.php:825
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/abstractitiltarget.class.php:825
+>>>>>>> origin/support/2.13.0
 msgid "Month"
 msgid_plural "Months"
 msgstr[0] ""
@@ -3199,6 +4001,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:842
 msgid "SLA (TTO/TTR)"
@@ -3284,6 +4087,45 @@ msgstr "Popis nemôže byť prázdny!"
 
 #: inc/abstractitiltarget.class.php:1760
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/abstractitiltarget.class.php:857
+msgid "SLA (TTO/TTR)"
+msgstr "SLA (TTO/TTR)"
+
+#: inc/abstractitiltarget.class.php:858 inc/abstractitiltarget.class.php:931
+msgid "Question (TTO/TTR)"
+msgstr "Otázka (TTO/TTR)"
+
+#: inc/abstractitiltarget.class.php:930
+msgid "OLA (TTO/TTR)"
+msgstr "OLA (TTO/TTR)"
+
+#: inc/abstractitiltarget.class.php:1034
+msgid "Urgency "
+msgstr "Naliehavosť"
+
+#: inc/abstractitiltarget.class.php:1064
+msgid "Ticket tags"
+msgstr "Štítky tiketov"
+
+#: inc/abstractitiltarget.class.php:1112
+msgid "Tags"
+msgstr "Štitky"
+
+#: inc/abstractitiltarget.class.php:1231
+msgid "Location"
+msgstr "Umiestnenie"
+
+#: inc/abstractitiltarget.class.php:1243
+msgid "Location "
+msgstr "Poloha"
+
+#: inc/abstractitiltarget.class.php:1583
+msgid "The description cannot be empty!"
+msgstr "Popis nemôže byť prázdny!"
+
+#: inc/abstractitiltarget.class.php:1760
+>>>>>>> origin/support/2.13.0
 msgid "Watcher"
 msgid_plural "Watchers"
 msgstr[0] ""
@@ -3291,6 +4133,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:1800
 msgid "Cancel"
@@ -3352,6 +4195,33 @@ msgstr "Skupina z objektu"
 msgid "Tech group from the object"
 msgstr "Technická skupina z objektu"
 
+=======
+#: inc/abstractitiltarget.class.php:1779
+msgid "Cancel"
+msgstr "Zrušiť"
+
+#: inc/abstractitiltarget.class.php:2067 inc/abstractitiltarget.class.php:2495
+#: inc/abstractitiltarget.class.php:2499
+msgid "Email followup"
+msgstr "Sledovanie emailu"
+
+#: inc/abstractitiltarget.class.php:2098 inc/abstractitiltarget.class.php:2483
+msgid "User"
+msgstr "Používateľ"
+
+#: inc/abstractitiltarget.class.php:2109 inc/abstractitiltarget.class.php:2487
+msgid "Group"
+msgstr "Skupina"
+
+#: inc/abstractitiltarget.class.php:2120
+msgid "Group from the object"
+msgstr "Skupina z objektu"
+
+#: inc/abstractitiltarget.class.php:2126
+msgid "Tech group from the object"
+msgstr "Technická skupina z objektu"
+
+>>>>>>> origin/support/2.13.0
 #: inc/abstractitiltarget.class.php:2138 inc/abstractitiltarget.class.php:2491
 msgid "Supplier"
 msgstr "Dodávateľ"
@@ -3361,16 +4231,23 @@ msgid "Yes"
 msgstr "Áno"
 
 #: install/install.php:134
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Upgrade tables to innoDB; run %s"
 msgstr "Aktualizujte tabuľky na innoDB; beží %s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:163
 =======
 #: install/install.php:171
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:171
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid ""
 "The database schema is not consistent with the previous version of "
@@ -3378,19 +4255,27 @@ msgid ""
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:172
 =======
 #: install/install.php:180
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:180
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "To ignore the inconsistencies and upgrade anyway run %s"
 msgstr "Ak chcete ignorovať nezrovnalosti a upgradovať aj tak, spustite %s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:190
 =======
 #: install/install.php:197
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:197
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Upgrade from version older than 2.5.0 is no longer supported. Please upgrade"
 " to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to"
@@ -3400,6 +4285,7 @@ msgstr ""
 "na GLPI 9.5.7, upgradujte Tvorbu formulárov na verziu 2.12.5 a potom znova "
 "aktualizujte na GLPI 10 alebo novší a Tvorbu formulárov 2.13 alebo novší."
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: install/install.php:216
 #, php-format
@@ -3447,6 +4333,28 @@ msgstr "Vaša požiadavka bola uložená."
 
 #: install/install.php:414
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:249
+#, php-format
+msgid ""
+"The database schema is not consistent with the current version of "
+"Formcreator %s. To see the logs enable the plugin and run the command %s"
+msgstr ""
+
+#: install/install.php:260
+msgid "The tables of the plugin passed the schema integrity check."
+msgstr "Plugin prešiel kontrolou integrity."
+
+#: install/install.php:412
+msgid "A form has been created"
+msgstr "Formulár bol vytvorený"
+
+#: install/install.php:413
+msgid "Your request has been saved"
+msgstr "Vaša požiadavka bola uložená."
+
+#: install/install.php:414
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
@@ -3456,6 +4364,7 @@ msgstr ""
 "##formcreator.request_id## a postúpená service desku. \\nSvoje odpovede si "
 "môžete pozrieť na nasledujúcom odkaze:\\n##formcreator.validation_link##"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: install/install.php:433
 msgid "A form need validation"
@@ -3467,18 +4376,24 @@ msgstr ""
 
 #: install/install.php:435
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: install/install.php:419
 msgid "A form from GLPI need to be validate"
 msgstr "Formulár z GLPI je potrebné overiť"
 
 #: install/install.php:420
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Hi,\\nA form from GLPI need to be validated and you have been choosen as the"
 " validator.\\nYou can access it by clicking onto this "
 "link:\\n##formcreator.validation_link##"
 msgstr ""
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: install/install.php:440
 msgid "Your form has been refused by the validator"
@@ -3492,6 +4407,13 @@ msgstr "Váš formulár bol odmietnutý overovateľom"
 
 #: install/install.php:426
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:425
+msgid "Your form has been refused by the validator"
+msgstr "Váš formulár bol odmietnutý overovateľom"
+
+#: install/install.php:426
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason "
@@ -3504,10 +4426,14 @@ msgstr ""
 " "
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:447
 =======
 #: install/install.php:432
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:432
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
@@ -3515,6 +4441,7 @@ msgstr ""
 "Dobrý deň,\\nOznamujeme Vám, že overovateľ Váš formulár prijal.\\nVaša "
 "žiadosť bude čoskoro posúdená."
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: install/install.php:452
 msgid "Your form has been deleted by an administrator"
@@ -3528,6 +4455,13 @@ msgstr "Váš formulár bol odstránený administrátorom"
 
 #: install/install.php:438
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:437
+msgid "Your form has been deleted by an administrator"
+msgstr "Váš formulár bol odstránený administrátorom"
+
+#: install/install.php:438
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
@@ -3535,6 +4469,7 @@ msgstr ""
 "Dobrý deň,\\nOznamujeme Vám, že Vašu žiadosť nemôžeme posúdiť a "
 "administrátor ju vymazal."
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: install/install.php:679
 msgid "Formcreator - Sync service catalog issues"
@@ -3556,37 +4491,61 @@ msgstr "Nepodarilo sa skontrolovať logickosť tabuliek!"
 
 #: install/install.php:866
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:664
+msgid "Formcreator - Sync service catalog issues"
+msgstr "Tvorba formulárov - Problémy so synchronizáciou katalógu služieb"
+
+#: install/install.php:852
+msgid "Failed to check the sanity of the tables!"
+msgstr "Nepodarilo sa skontrolovať logickosť tabuliek!"
+
+#: install/install.php:866
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Table schema differs for table \"%s\"."
 msgstr "Schéma tabuľky je odlišná pre tabuľku \"%s\"."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:909
 =======
 #: install/install.php:869
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:869
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Table \"%s\" is missing."
 msgstr "Tabuľka „%s“ chýba."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:912
 =======
 #: install/install.php:872
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:872
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Unknown table \"%s\" has been found in database."
 msgstr "V databáze bola nájdená neznáma tabuľka \"%s\"."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: hook.php:332
 =======
 #: hook.php:378
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: hook.php:378
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Duplicate"
 msgstr "Duplicitné"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: hook.php:333
 msgid "Transfer"
@@ -3600,10 +4559,18 @@ msgstr "Prenos"
 
 #: hook.php:380
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: hook.php:379
+msgid "Transfer"
+msgstr "Prenos"
+
+#: hook.php:380
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Export"
 msgstr "Export"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: hook.php:648
 msgid "Cancel my ticket"
@@ -3630,10 +4597,27 @@ msgstr "Starý"
 
 #: hook.php:706
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: hook.php:381
+msgctxt "button"
+msgid "Access rights"
+msgstr ""
+
+#: hook.php:681
+msgid "Cancel my ticket"
+msgstr "Zrušiť tiket"
+
+#: hook.php:699
+msgid "Old"
+msgstr "Starý"
+
+#: hook.php:706
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Number of %s"
 msgstr "Počet %s"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: hook.php:690
 msgid "Issues summary"
@@ -3647,6 +4631,13 @@ msgstr "Súhrn issues"
 
 #: hook.php:768
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: hook.php:723
+msgid "Issues summary"
+msgstr "Súhrn issues"
+
+#: hook.php:768
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Formcreator's mini dashboard not usable as default. This Setting has been "
 "ignored."
@@ -3666,6 +4657,7 @@ msgstr "Nenašiel sa formulár"
 msgid "No FAQ item found."
 msgstr "Nenašla sa žiadna položka v FAQ"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: js/scripts.js:706
 msgid "Are you sure you want to delete this question?"
@@ -3719,6 +4711,32 @@ msgstr "Poslať"
 msgid "An internal error occurred. Please report it to administrator."
 msgstr "Vyskytla sa interná chyba. Nahláste to prosím správcovi."
 
+=======
+#: js/scripts.js:688
+msgid "Are you sure you want to delete this question?"
+msgstr "Naozaj chcete odstrániť túto otázku?"
+
+#: js/scripts.js:877
+msgid "Are you sure you want to delete this section?"
+msgstr "Naozaj chcete odstrániť túto sekciu?"
+
+#: js/scripts.js:1118
+msgid "Add translations"
+msgstr "Pridajte preklady"
+
+#: js/scripts.js:1257 js/scripts.js:1281
+msgid "An error occured while querying forms"
+msgstr "Pri dopytovaní formulárov sa vyskytla chyba"
+
+#: js/scripts.js:1372 entrée standard:139
+msgid "Send"
+msgstr "Poslať"
+
+#: js/scripts.js:1381
+msgid "An internal error occurred. Please report it to administrator."
+msgstr "Vyskytla sa interná chyba. Nahláste to prosím správcovi."
+
+>>>>>>> origin/support/2.13.0
 #: js/scripts.js:1449
 msgid "Are you sure you want to duplicate this target?"
 msgstr ""
@@ -3726,7 +4744,10 @@ msgstr ""
 #: js/scripts.js:1466
 msgid "Are you sure you want to delete this target?"
 msgstr ""
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 
 #: entrée standard:43 standard:50 standard:44 standard:49 standard:78
 msgid "Required"
@@ -3814,12 +4835,15 @@ msgid "Condition to show the submit button"
 msgstr "Podmienka zobrazenia tlačidla Odoslať"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: entrée standard:5
 msgid "Actions"
 msgstr "Akcie"
 
 =======
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #: entrée standard:33
 msgid "No form answer yet"
 msgstr ""

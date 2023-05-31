@@ -13,16 +13,22 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 <<<<<<< HEAD
+<<<<<<< HEAD
 "POT-Creation-Date: 2022-11-04 11:04+0100\n"
 "PO-Revision-Date: 2022-06-15 12:10+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2022\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/teclib/teams/28042/tr_TR/)\n"
 =======
+=======
+>>>>>>> origin/support/2.13.0
 "POT-Creation-Date: 2023-05-30 09:32+0200\n"
 "PO-Revision-Date: 2021-08-30 07:22+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2023\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/teclib/teams/28042/tr_TR/)\n"
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -147,10 +153,14 @@ msgstr "Bir ilgili silinirken hatalı bir istek yapıldı."
 #: front/targetticket.form.php:95 front/targetchange.form.php:81
 #: front/formanswer.php:47 front/targetproblem.form.php:81
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: front/formanswer.form.php:78 front/form.php:43 inc/common.class.php:692
 =======
 #: front/formanswer.form.php:77 front/form.php:44 inc/common.class.php:692
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: front/formanswer.form.php:77 front/form.php:44 inc/common.class.php:692
+>>>>>>> origin/support/2.13.0
 #: inc/common.class.php:699
 msgid "Form Creator"
 msgstr "Form Oluşturucu"
@@ -166,12 +176,17 @@ msgid "Form list"
 msgstr "Form listesi"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: front/formdisplay.php:90 inc/formanswer.class.php:951
 #: inc/formanswer.class.php:1182 inc/formanswer.class.php:1232
 =======
 #: front/formdisplay.php:90 inc/formanswer.class.php:1009
 #: inc/formanswer.class.php:1242 inc/formanswer.class.php:1292
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: front/formdisplay.php:90 inc/formanswer.class.php:1009
+#: inc/formanswer.class.php:1242 inc/formanswer.class.php:1292
+>>>>>>> origin/support/2.13.0
 msgid "The form has been successfully saved!"
 msgstr "Form kaydedildi!"
 
@@ -187,21 +202,29 @@ msgid "%1$s adds the reservation %2$s for item %3$s"
 msgstr "%1$s, %3$s ögesinin %2$s ayırtmasını ekledi"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/knowbase.class.php:60 inc/entityconfig.class.php:449
 #: inc/form.class.php:613
 =======
 #: inc/knowbase.class.php:60 inc/form.class.php:658
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/knowbase.class.php:60 inc/form.class.php:658
+>>>>>>> origin/support/2.13.0
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Kategori"
 msgstr[1] "Kategoriler"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/knowbase.class.php:62 inc/form.class.php:616 entrée standard:39
 =======
 #: inc/knowbase.class.php:62 inc/form.class.php:661 entrée standard:39
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/knowbase.class.php:62 inc/form.class.php:661 entrée standard:39
+>>>>>>> origin/support/2.13.0
 msgid "See all"
 msgstr "Tümünü görüntüle"
 
@@ -214,10 +237,14 @@ msgid "Textarea"
 msgstr "Metin alanı"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/textareafield.class.php:247 inc/field/dropdownfield.class.php:440
 =======
 #: inc/field/textareafield.class.php:248 inc/field/dropdownfield.class.php:441
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/textareafield.class.php:248 inc/field/dropdownfield.class.php:441
+>>>>>>> origin/support/2.13.0
 #: inc/field/ldapselectfield.class.php:114 inc/field/textfield.class.php:125
 #: inc/field/urgencyfield.class.php:165 inc/field/tagfield.class.php:164
 #: inc/field/timefield.class.php:113 inc/field/fieldsfield.class.php:488
@@ -232,6 +259,7 @@ msgid "The regular expression is invalid"
 msgstr "Kurallı ifade geçersiz"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/dropdownfield.class.php:73 inc/filter/entityfilter.class.php:48
 msgid "User and form"
 msgstr "Kullanıcı ve form"
@@ -244,11 +272,19 @@ msgstr "Kullanıcı ve form"
 
 #: inc/field/dropdownfield.class.php:432 entrée standard:38
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/dropdownfield.class.php:76 inc/filter/entityfilter.class.php:48
+msgid "User and form"
+msgstr "Kullanıcı ve form"
+
+#: inc/field/dropdownfield.class.php:432 entrée standard:38
+>>>>>>> origin/support/2.13.0
 msgid "Dropdown"
 msgid_plural "Dropdowns"
 msgstr[0] "Açılan kutu"
 msgstr[1] "Açılan kutular"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/field/dropdownfield.class.php:462
 msgid "Invalid value for "
@@ -262,19 +298,31 @@ msgstr "Şunun değeri geçersiz"
 
 #: inc/field/dropdownfield.class.php:475
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/dropdownfield.class.php:463
+msgid "Invalid value for "
+msgstr "Şunun değeri geçersiz"
+
+#: inc/field/dropdownfield.class.php:475
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "The itemtype field is required: %s"
 msgstr "Öge türü alanı gerekli: %s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/dropdownfield.class.php:490
 =======
 #: inc/field/dropdownfield.class.php:491
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/dropdownfield.class.php:491
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Invalid dropdown type: %s"
 msgstr "Açılan kutu türü geçersiz: %s"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/field/dropdownfield.class.php:821 entrée standard:143 standard:126
 msgid "Entity restriction"
@@ -288,6 +336,13 @@ msgstr "Birim kısıtlaması"
 
 #: inc/field/dropdownfield.class.php:831
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/dropdownfield.class.php:822 entrée standard:162 standard:134
+msgid "Entity restriction"
+msgstr "Birim kısıtlaması"
+
+#: inc/field/dropdownfield.class.php:831
+>>>>>>> origin/support/2.13.0
 msgid ""
 "To respect the GLPI entity system, \"Form\" should be selected. Others "
 "settings will break the entity restrictions"
@@ -345,22 +400,31 @@ msgid "Radios"
 msgstr "Radyo düğmeleri"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/radiosfield.class.php:115 inc/field/glpiselectfield.class.php:93
 #: inc/field/fieldsfield.class.php:512 inc/field/checkboxesfield.class.php:229
 =======
 #: inc/field/radiosfield.class.php:113 inc/field/glpiselectfield.class.php:97
 #: inc/field/fieldsfield.class.php:512 inc/field/checkboxesfield.class.php:244
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/radiosfield.class.php:113 inc/field/glpiselectfield.class.php:97
+#: inc/field/fieldsfield.class.php:512 inc/field/checkboxesfield.class.php:244
+>>>>>>> origin/support/2.13.0
 msgid "The field value is required:"
 msgstr "Alan değeri zorunludur:"
 
 #: inc/field/radiosfield.class.php:191 inc/field/selectfield.class.php:103
 #: inc/field/datetimefield.class.php:118 inc/field/actorfield.class.php:257
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/checkboxesfield.class.php:175 inc/field/floatfield.class.php:124
 =======
 #: inc/field/checkboxesfield.class.php:190 inc/field/floatfield.class.php:124
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/checkboxesfield.class.php:190 inc/field/floatfield.class.php:124
+>>>>>>> origin/support/2.13.0
 #: inc/field/datefield.class.php:115
 #, php-format
 msgid "A required field is empty: %s"
@@ -396,10 +460,14 @@ msgstr[0] "IP adresi"
 msgstr[1] "IP adresleri"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/urgencyfield.class.php:85 inc/abstractitiltarget.class.php:1008
 =======
 #: inc/field/urgencyfield.class.php:85 inc/abstractitiltarget.class.php:1023
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/urgencyfield.class.php:85 inc/abstractitiltarget.class.php:1023
+>>>>>>> origin/support/2.13.0
 msgid "Urgency"
 msgstr "Önem düzeyi"
 
@@ -439,10 +507,14 @@ msgstr[0] "Etiket"
 msgstr[1] "Etiketler"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/glpiselectfield.class.php:78 entrée standard:38
 =======
 #: inc/field/glpiselectfield.class.php:82 entrée standard:38
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/glpiselectfield.class.php:82 entrée standard:38
+>>>>>>> origin/support/2.13.0
 msgid "GLPI object"
 msgid_plural "GLPI objects"
 msgstr[0] "GLPI nesnesi"
@@ -524,10 +596,14 @@ msgid "Block"
 msgstr "Engelle"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/field/fieldsfield.class.php:171 inc/targetticket.class.php:344
 =======
 #: inc/field/fieldsfield.class.php:171 inc/targetticket.class.php:341
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/fieldsfield.class.php:171 inc/targetticket.class.php:341
+>>>>>>> origin/support/2.13.0
 msgid "Field"
 msgstr "Alan"
 
@@ -552,6 +628,7 @@ msgstr "Bazı adres alanlarında geçersiz bağlantılar var"
 msgid "Additionnal fields"
 msgstr "Ek alanlar"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/field/checkboxesfield.class.php:117
 msgid "Checkboxes"
@@ -599,6 +676,31 @@ msgstr "Aralık bitişi"
 
 #: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1089
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/field/checkboxesfield.class.php:132
+msgid "Checkboxes"
+msgstr "İşaret kutuları"
+
+#: inc/field/checkboxesfield.class.php:226
+#, php-format
+msgid "The following question needs at least %d answers: %s"
+msgstr ""
+
+#: inc/field/checkboxesfield.class.php:232
+#, php-format
+msgid "The following question does not accept more than %d answers: %s"
+msgstr ""
+
+#: inc/field/checkboxesfield.class.php:304
+msgid "Range min"
+msgstr "Aralık başlangıcı"
+
+#: inc/field/checkboxesfield.class.php:305
+msgid "Range max"
+msgstr "Aralık bitişi"
+
+#: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1089
+>>>>>>> origin/support/2.13.0
 msgid "Request type"
 msgstr "İstek türü"
 
@@ -661,6 +763,7 @@ msgid "Displayed unless"
 msgstr "Şu olmadan görüntülensin"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/condition.class.php:179 inc/target_actor.class.php:215
 #: inc/form_language.class.php:540 inc/form_validator.class.php:379
 #: inc/targetproblem.class.php:539 inc/questionrange.class.php:196
@@ -671,6 +774,8 @@ msgstr "Şu olmadan görüntülensin"
 #: inc/questiondependency.class.php:196 inc/item_targetticket.class.php:154
 #: inc/targetticket.class.php:1507
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/condition.class.php:179 inc/target_actor.class.php:233
 #: inc/form_language.class.php:565 inc/form_validator.class.php:379
 #: inc/targetproblem.class.php:541 inc/questionrange.class.php:196
@@ -679,11 +784,15 @@ msgstr "Şu olmadan görüntülensin"
 #: inc/question.class.php:836 inc/questionparameter/range.class.php:202
 #: inc/questionregex.class.php:185 inc/questiondependency.class.php:196
 #: inc/item_targetticket.class.php:154 inc/targetticket.class.php:1399
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
 msgstr "%1$s%2$s eklenemedi ya da güncellenemedi"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/condition.class.php:201 inc/target_actor.class.php:236
 #: inc/form_language.class.php:556 inc/form_validator.class.php:403
@@ -695,6 +804,8 @@ msgstr "%1$s%2$s eklenemedi ya da güncellenemedi"
 #: inc/questiondependency.class.php:211 inc/item_targetticket.class.php:64
 #: inc/targetticket.class.php:1546
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/condition.class.php:201 inc/target_actor.class.php:254
 #: inc/form_language.class.php:581 inc/form_validator.class.php:403
 #: inc/targetproblem.class.php:376 inc/questionrange.class.php:131
@@ -703,7 +814,10 @@ msgstr "%1$s%2$s eklenemedi ya da güncellenemedi"
 #: inc/question.class.php:885 inc/questionparameter/range.class.php:137
 #: inc/questionregex.class.php:120 inc/questiondependency.class.php:211
 #: inc/item_targetticket.class.php:64 inc/targetticket.class.php:1438
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Cannot export an empty object: %s"
 msgstr "Boş bir nesne dışa aktarılamaz: %s"
@@ -735,16 +849,22 @@ msgid "Satisfaction survey expired"
 msgstr "Memnuniyet anketinin süresi geçmiş"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/issue.class.php:522 inc/form_language.class.php:213
 #: inc/form.class.php:156 inc/form.class.php:2130 entrée standard:52
 =======
 #: inc/issue.class.php:515 inc/form_language.class.php:229
 #: inc/form.class.php:156 inc/form.class.php:2221 entrée standard:52
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/issue.class.php:515 inc/form_language.class.php:229
+#: inc/form.class.php:156 inc/form.class.php:2221 entrée standard:52
+>>>>>>> origin/support/2.13.0
 #: standard:49 standard:57 standard:38 standard:39 standard:46
 msgid "Name"
 msgstr "Ad"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/issue.class.php:534 inc/formanswer.class.php:200
 #: inc/formanswer.class.php:273 inc/targetproblem.class.php:622
@@ -754,15 +874,23 @@ msgstr "Ad"
 #: inc/formanswer.class.php:314 inc/targetproblem.class.php:624
 #: inc/form.class.php:147 inc/targetchange.class.php:335
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/issue.class.php:527 inc/formanswer.class.php:241
+#: inc/formanswer.class.php:314 inc/targetproblem.class.php:624
+#: inc/form.class.php:147 inc/targetchange.class.php:335
+>>>>>>> origin/support/2.13.0
 #: inc/section.class.php:95 inc/question.class.php:156
 #: inc/targetticket.class.php:180 entrée standard:45
 msgid "ID"
 msgstr "Kod"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/issue.class.php:543 inc/form.class.php:2139 entrée standard:65
 #: standard:4
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/issue.class.php:536 inc/form.class.php:503 inc/form.class.php:2230
 #: entrée standard:111 standard:65
 >>>>>>> da644384 (docs(locales): update)
@@ -771,6 +899,7 @@ msgid_plural "Types"
 msgstr[0] "Tür"
 msgstr[1] "Türler"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/issue.class.php:556 inc/formanswer.class.php:260
 msgid "Status"
@@ -800,21 +929,42 @@ msgstr "Son güncelleme"
 
 #: inc/issue.class.php:579 inc/abstracttarget.class.php:518
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/issue.class.php:549 inc/formanswer.class.php:301
+msgid "Status"
+msgstr "Durum"
+
+#: inc/issue.class.php:561
+msgid "Opening date"
+msgstr "Açılma tarihi"
+
+#: inc/issue.class.php:570
+msgid "Last update"
+msgstr "Son güncelleme"
+
+#: inc/issue.class.php:579 inc/abstracttarget.class.php:518
+>>>>>>> origin/support/2.13.0
 msgid "Entity"
 msgid_plural "Entities"
 msgstr[0] "Birim"
 msgstr[1] "Birimler"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/issue.class.php:596 inc/notificationtargetformanswer.class.php:79
 #: inc/target_actor.class.php:83 inc/formanswer.class.php:219
 #: inc/formanswer.class.php:666 inc/abstractitiltarget.class.php:1774 entrée
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/issue.class.php:589 inc/notificationtargetformanswer.class.php:76
 #: inc/notificationtargetformanswer.class.php:96
 #: inc/target_actor.class.php:101 inc/formanswer.class.php:260
 #: inc/formanswer.class.php:712 inc/abstractitiltarget.class.php:1753 entrée
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #: standard:48
 msgid "Requester"
 msgid_plural "Requesters"
@@ -822,13 +972,18 @@ msgstr[0] "İstekte bulunan"
 msgstr[1] "İstekte bulunanlar"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/issue.class.php:614 inc/formanswer.class.php:229
 =======
 #: inc/issue.class.php:607 inc/formanswer.class.php:270
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/issue.class.php:607 inc/formanswer.class.php:270
+>>>>>>> origin/support/2.13.0
 msgid "Form approver"
 msgstr "Formu onaylayan"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/issue.class.php:638 inc/formanswer.class.php:595
 #: inc/formanswer.class.php:602 inc/formanswer.class.php:681
@@ -920,6 +1075,34 @@ msgstr "Form onaylayıcı grubu"
 msgid "Ticket approver group"
 msgstr "Destek kaydını onaylayan grubu"
 
+=======
+#: inc/issue.class.php:631 inc/formanswer.class.php:638
+#: inc/formanswer.class.php:645 inc/formanswer.class.php:727
+#: inc/form_language.class.php:243
+msgid "Comment"
+msgstr "Açıklama"
+
+#: inc/issue.class.php:643
+msgid "Ticket approver"
+msgstr "Destek kaydını onaylayan"
+
+#: inc/issue.class.php:716
+msgid "Technician"
+msgstr "Teknisyen"
+
+#: inc/issue.class.php:747
+msgid "Technician group"
+msgstr "Teknisyen grubu"
+
+#: inc/issue.class.php:783 inc/formanswer.class.php:290
+msgid "Form approver group"
+msgstr "Form onaylayıcı grubu"
+
+#: inc/issue.class.php:805
+msgid "Ticket approver group"
+msgstr "Destek kaydını onaylayan grubu"
+
+>>>>>>> origin/support/2.13.0
 #: inc/issue.class.php:845
 msgid "Ticket requester"
 msgstr "Destek kaydı isteğinde bulunan"
@@ -933,11 +1116,15 @@ msgid "Ticket technician"
 msgstr "Destek kaydı teknisyeni"
 
 #: inc/issue.class.php:1083
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "%1$s %2$s"
 msgstr "%1$s %2$s"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/issue.class.php:1269 inc/filter/itilcategoryfilter.class.php:56
 #: hook.php:658
@@ -995,6 +1182,35 @@ msgstr "Çözümlenmiş"
 
 #: inc/issue.class.php:1377 hook.php:697
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/issue.class.php:1341 inc/filter/itilcategoryfilter.class.php:56
+#: hook.php:691
+msgid "All"
+msgstr "Tümü"
+
+#: inc/issue.class.php:1347 hook.php:692
+msgid "New"
+msgstr "Ekle"
+
+#: inc/issue.class.php:1353 hook.php:693
+msgid "Assigned"
+msgstr "Atanmış"
+
+#: inc/issue.class.php:1359 inc/formanswer.class.php:78
+#: inc/form_validator.class.php:69 hook.php:694
+msgid "Waiting"
+msgstr "Bekliyor"
+
+#: inc/issue.class.php:1365 hook.php:695
+msgid "To validate"
+msgstr "Değerlendirilecek"
+
+#: inc/issue.class.php:1371 hook.php:696
+msgid "Solved"
+msgstr "Çözümlenmiş"
+
+#: inc/issue.class.php:1377 hook.php:697
+>>>>>>> origin/support/2.13.0
 msgid "Closed"
 msgstr "Kapalı"
 
@@ -1037,6 +1253,7 @@ msgid "The form as been saved"
 msgstr "Form kaydedildi"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/notificationtargetformanswer.class.php:44
 msgid "A form need to be validate"
 msgstr "Değerlendirilmesi gereken bir form var"
@@ -1065,6 +1282,21 @@ msgstr "Form onaylandı"
 
 #: inc/notificationtargetformanswer.class.php:47 install/install.php:436
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/notificationtargetformanswer.class.php:44 install/install.php:418
+msgid "A form need to be validate"
+msgstr "Değerlendirilmesi gereken bir form var"
+
+#: inc/notificationtargetformanswer.class.php:45 install/install.php:424
+msgid "The form is refused"
+msgstr "Form reddedildi"
+
+#: inc/notificationtargetformanswer.class.php:46 install/install.php:430
+msgid "The form is accepted"
+msgstr "Form onaylandı"
+
+#: inc/notificationtargetformanswer.class.php:47 install/install.php:436
+>>>>>>> origin/support/2.13.0
 msgid "The form is deleted"
 msgstr "Form silindi"
 
@@ -1085,11 +1317,16 @@ msgstr[0] "Değerlendiren"
 msgstr[1] "Değerlendirenler"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/notificationtargetformanswer.class.php:81 inc/formanswer.class.php:240
 =======
 #: inc/notificationtargetformanswer.class.php:78
 #: inc/notificationtargetformanswer.class.php:98 inc/formanswer.class.php:281
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/notificationtargetformanswer.class.php:78
+#: inc/notificationtargetformanswer.class.php:98 inc/formanswer.class.php:281
+>>>>>>> origin/support/2.13.0
 #: entrée standard:49
 msgid "Creation date"
 msgstr "Oluşturulma tarihi"
@@ -1133,6 +1370,7 @@ msgstr "İstek no"
 msgid "Author"
 msgstr "Sorumlu"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/notificationtargetformanswer.class.php:98
 #: inc/abstractitiltarget.class.php:1344
@@ -1260,11 +1498,76 @@ msgstr "Atanan"
 
 #: inc/target_actor.class.php:109
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/notificationtargetformanswer.class.php:115
+#: inc/abstractitiltarget.class.php:1318
+msgid "Approver"
+msgstr "Onaylayan"
+
+#: inc/target_actor.class.php:70 inc/abstractitiltarget.class.php:2090
+msgid "Form author"
+msgstr "Form sorumlusu"
+
+#: inc/target_actor.class.php:71 inc/abstractitiltarget.class.php:2093
+msgid "Form validator"
+msgstr "Formu değerlendiren"
+
+#: inc/target_actor.class.php:72
+msgid "Specific person"
+msgstr "Belirli kişi"
+
+#: inc/target_actor.class.php:73 inc/abstractitiltarget.class.php:2103
+msgid "Person from the question"
+msgstr "Sorudan kişi"
+
+#: inc/target_actor.class.php:74
+msgid "Specific group"
+msgstr "Belirli grup"
+
+#: inc/target_actor.class.php:75 inc/abstractitiltarget.class.php:2114
+msgid "Group from the question"
+msgstr "Sorudan grup"
+
+#: inc/target_actor.class.php:76
+msgid "Group from an object"
+msgstr "Bir nesneden grup"
+
+#: inc/target_actor.class.php:77
+msgid "Tech group from an object"
+msgstr "Bir nesneden teknik grup"
+
+#: inc/target_actor.class.php:78
+msgid "Specific supplier"
+msgstr "Belirli sağlayıcı"
+
+#: inc/target_actor.class.php:79 inc/abstractitiltarget.class.php:2143
+msgid "Supplier from the question"
+msgstr "Sorudan sağlayıcı"
+
+#: inc/target_actor.class.php:80 inc/abstractitiltarget.class.php:2132
+msgid "Actors from the question"
+msgstr "Sorudan ilgililer"
+
+#: inc/target_actor.class.php:81 inc/abstractitiltarget.class.php:2147
+msgid "Form author's supervisor"
+msgstr "Formu hazırlayanın yöneticisi"
+
+#: inc/target_actor.class.php:102
+msgid "Observer"
+msgstr "Gözlemci"
+
+#: inc/target_actor.class.php:103 inc/abstractitiltarget.class.php:1767
+msgid "Assigned to"
+msgstr "Atanan"
+
+#: inc/target_actor.class.php:109
+>>>>>>> origin/support/2.13.0
 msgid "Target actor"
 msgid_plural "Target actors"
 msgstr[0] "Hedef ilgili"
 msgstr[1] "Hedef ilgililer"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/target_actor.class.php:97 inc/target_actor.class.php:113
 #: inc/target_actor.class.php:122
@@ -1280,24 +1583,40 @@ msgstr "Bir ilgili eklenirken hatalı bir istek yapıldı."
 
 #: inc/target_actor.class.php:197
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/target_actor.class.php:115 inc/target_actor.class.php:131
+#: inc/target_actor.class.php:140
+msgid "Bad request while adding an actor."
+msgstr "Bir ilgili eklenirken hatalı bir istek yapıldı."
+
+#: inc/target_actor.class.php:197
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Failed to find a user: %1$s"
 msgstr "Bir kullanıcı bulunamadı: %1$s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/target_actor.class.php:188
 =======
 #: inc/target_actor.class.php:206
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/target_actor.class.php:206
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Failed to find a group: %1$s"
 msgstr "Bir grup bulunamadı: %1$s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/target_actor.class.php:197
 =======
 #: inc/target_actor.class.php:215
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/target_actor.class.php:215
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Failed to find a supplier: %1$s"
 msgstr "Bir sağlayıcı bulunamadı: %1$s"
@@ -1311,15 +1630,20 @@ msgid "Accepted"
 msgstr "Onaylanmış"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/formanswer.class.php:185
 =======
 #: inc/formanswer.class.php:226
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/formanswer.class.php:226
+>>>>>>> origin/support/2.13.0
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Form yanıtı"
 msgstr[1] "Form yanıtları"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/formanswer.class.php:580
 msgid "Print this form"
@@ -1419,10 +1743,64 @@ msgstr "Bu yanıtların değerlendireni değilsiniz"
 
 #: inc/formanswer.class.php:1015
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/formanswer.class.php:623
+msgid "Print this form"
+msgstr "Bu formu yazdır"
+
+#: inc/formanswer.class.php:648
+msgid "Form accepted by validator."
+msgstr "Form değerlendirici tarafından onaylandı"
+
+#: inc/formanswer.class.php:650
+msgid "Form successfully saved."
+msgstr "Form kaydedildi"
+
+#: inc/formanswer.class.php:720 inc/formaccesstype.class.php:126
+msgid "Save"
+msgstr "Kaydet"
+
+#: inc/formanswer.class.php:732
+msgid "Required if refused"
+msgstr "Reddedildi ise zorunlu"
+
+#: inc/formanswer.class.php:738
+msgid "Refuse"
+msgstr "Reddet"
+
+#: inc/formanswer.class.php:746
+msgid "Edit answers"
+msgstr "Yanıtları düzenle"
+
+#: inc/formanswer.class.php:752
+msgid "Cancel edition"
+msgstr "Düzenlemeyi iptal et"
+
+#: inc/formanswer.class.php:759
+msgid "Accept"
+msgstr "Onayla"
+
+#: inc/formanswer.class.php:782
+msgid "Refused comment is required!"
+msgstr "Red açıklaması zorunludur!"
+
+#: inc/formanswer.class.php:827 inc/formanswer.class.php:844
+msgid ""
+"An internal error occured when verifying your answers. Please report it to "
+"your administrator."
+msgstr ""
+
+#: inc/formanswer.class.php:876
+msgid "You are not the validator of these answers"
+msgstr "Bu yanıtların değerlendireni değilsiniz"
+
+#: inc/formanswer.class.php:1015
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Item sucessfully added: %1$s (%2$s: %3$s)"
 msgstr "Öge eklendi: %1$s (%2$s: %3$s)"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/formanswer.class.php:1039 inc/formanswer.class.php:1041
 msgid "Form data"
@@ -1460,6 +1838,25 @@ msgstr "Turing sınamasını geçemediniz"
 
 #: inc/formanswer.class.php:1458
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/formanswer.class.php:1098 inc/formanswer.class.php:1100
+msgid "Form data"
+msgstr "Form verileri"
+
+#: inc/formanswer.class.php:1227 inc/formanswer.class.php:1279
+msgid "Cannot generate targets!"
+msgstr "Hedefler oluşturulamadı!"
+
+#: inc/formanswer.class.php:1428
+msgid "No turing test set"
+msgstr "Herhangi bir Turing sınaması ayarlanmamış"
+
+#: inc/formanswer.class.php:1434
+msgid "You failed the Turing test"
+msgstr "Turing sınamasını geçemediniz"
+
+#: inc/formanswer.class.php:1458
+>>>>>>> origin/support/2.13.0
 msgid "You must select validator!"
 msgstr "Bir değerlendiren seçmelisiniz!"
 
@@ -1487,7 +1884,10 @@ msgid "Consult reminders"
 msgstr ""
 
 #: inc/common.class.php:849
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 msgid "Consult feeds"
 msgstr "Akışlara bak"
 
@@ -1520,15 +1920,20 @@ msgstr[0] "Form dili"
 msgstr[1] "Form dilleri"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form_language.class.php:72
 =======
 #: inc/form_language.class.php:78 inc/form_language.class.php:364
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form_language.class.php:78 inc/form_language.class.php:364
+>>>>>>> origin/support/2.13.0
 msgid "Translation"
 msgid_plural "Translations"
 msgstr[0] "Çeviri"
 msgstr[1] "Çeviriler"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form_language.class.php:111 inc/form.class.php:1044
 #: inc/form.class.php:1169 inc/abstracttarget.class.php:161
@@ -1538,6 +1943,8 @@ msgstr "Ad boş olamaz!"
 
 =======
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/form_language.class.php:119
 msgid "The name cannot be empty."
 msgstr ""
@@ -1555,10 +1962,14 @@ msgid "Add a translation"
 msgstr "Bir çeviri ekle"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form_language.class.php:283 js/scripts.js:1175
 =======
 #: inc/form_language.class.php:299 js/scripts.js:1171
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form_language.class.php:299 js/scripts.js:1171
+>>>>>>> origin/support/2.13.0
 msgid "Update a translation"
 msgstr "Bir çeviriyi güncelle"
 
@@ -1579,12 +1990,17 @@ msgid "Do you want to delete the selected items?"
 msgstr "Seçilmiş ögeleri silmek ister misiniz?"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form_language.class.php:337 inc/form_language.class.php:376
 #: inc/abstractitiltarget.class.php:1680 entrée standard:23
 =======
 #: inc/form_language.class.php:353 inc/form_language.class.php:401
 #: inc/form.class.php:537 inc/abstractitiltarget.class.php:1658
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form_language.class.php:353 inc/form_language.class.php:401
+#: inc/form.class.php:537 inc/abstractitiltarget.class.php:1658
+>>>>>>> origin/support/2.13.0
 msgid "Delete"
 msgstr "Sil"
 
@@ -1602,9 +2018,12 @@ msgid "Language"
 msgstr "Dil"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form_validator.class.php:68 inc/targetticket.class.php:97
 #: inc/abstractitiltarget.class.php:183
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/form_validator.class.php:68 inc/targetticket.class.php:99
 #: inc/abstractitiltarget.class.php:178
 >>>>>>> da644384 (docs(locales): update)
@@ -1615,6 +2034,7 @@ msgstr "Yok"
 msgid "Need validaton?"
 msgstr "Değerlendirme gerekli"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form_validator.class.php:118 inc/abstractitiltarget.class.php:2092
 msgid "No"
@@ -1629,20 +2049,33 @@ msgstr "Hayır"
 msgid "No"
 msgstr "Hayır"
 
+=======
+#: inc/form_validator.class.php:118 inc/abstractitiltarget.class.php:2499
+msgid "No"
+msgstr "Hayır"
+
+>>>>>>> origin/support/2.13.0
 #: inc/form_validator.class.php:295 inc/targetproblem.class.php:147
 #: inc/entityconfig.class.php:435 inc/targetchange.class.php:484
 #: inc/targetticket.class.php:318 inc/targetticket.class.php:353
 #: inc/abstractitiltarget.class.php:2073
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Save"
 msgstr "Kaydet"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form_validator.class.php:709 inc/abstractitiltarget.class.php:1324
 =======
 #: inc/form_validator.class.php:709 inc/abstractitiltarget.class.php:1298
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form_validator.class.php:709 inc/abstractitiltarget.class.php:1298
+>>>>>>> origin/support/2.13.0
 msgid "Validation"
 msgstr "Değerlendirme"
 
@@ -1663,12 +2096,17 @@ msgid "Properties"
 msgstr "Özellikler"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/targetproblem.class.php:521 inc/targetchange.class.php:285
 #: inc/targetticket.class.php:1489
 =======
 #: inc/targetproblem.class.php:523 inc/targetchange.class.php:286
 #: inc/targetticket.class.php:1381
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/targetproblem.class.php:523 inc/targetchange.class.php:286
+#: inc/targetticket.class.php:1381
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid ""
 "Failed to add or update the %1$s %2$s: a question is missing and is used in "
@@ -1678,12 +2116,17 @@ msgstr ""
 "parametre tarafından kullanılıyor"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/targetproblem.class.php:578 inc/targetchange.class.php:105
 #: inc/targetticket.class.php:134 inc/abstractitiltarget.class.php:1184
 =======
 #: inc/targetproblem.class.php:580 inc/targetchange.class.php:106
 #: inc/targetticket.class.php:136 inc/abstractitiltarget.class.php:1200
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/targetproblem.class.php:580 inc/targetchange.class.php:106
+#: inc/targetticket.class.php:136 inc/abstractitiltarget.class.php:1200
+>>>>>>> origin/support/2.13.0
 msgid "Actors"
 msgstr "İlgililer"
 
@@ -1789,7 +2232,10 @@ msgstr "Yardım isteyin"
 #: inc/entityconfig.class.php:165
 msgid "User's assistance requests"
 msgstr "Kullanıcının yardım istekleri"
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 
 #: inc/entityconfig.class.php:188
 msgid "Folded"
@@ -1902,10 +2348,14 @@ msgid "Answers waiting for validation"
 msgstr "Değerlendirilmeyi bekleyen yanıtlar"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:124 inc/form.class.php:1602 inc/form.class.php:1628
 =======
 #: inc/form.class.php:124 inc/form.class.php:1695 inc/form.class.php:1721
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:124 inc/form.class.php:1695 inc/form.class.php:1721
+>>>>>>> origin/support/2.13.0
 msgid "Import forms"
 msgstr "Formları içe aktar"
 
@@ -1947,10 +2397,14 @@ msgid "All languages"
 msgstr "Tüm diller"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:511 entrée standard:3
 =======
 #: inc/form.class.php:502 inc/form.class.php:572
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:502 inc/form.class.php:572
+>>>>>>> origin/support/2.13.0
 msgid "Target"
 msgid_plural "Targets"
 msgstr[0] "Hedef"
@@ -1996,11 +2450,15 @@ msgid "What are you looking for?"
 msgstr "Ne arıyorsunuz?"
 
 #: inc/form.class.php:909
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "My %1$d last forms (requester)"
 msgstr "Son %1$d formum (istekte bulunan)"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:888
 msgid "No form posted yet"
@@ -2022,10 +2480,22 @@ msgstr "Tüm formlarım (istekte bulunan)"
 
 #: inc/form.class.php:977
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:936
+msgid "No form posted yet"
+msgstr "Henüz bir form gönderilmemiş"
+
+#: inc/form.class.php:964
+msgid "All my forms (requester)"
+msgstr "Tüm formlarım (istekte bulunan)"
+
+#: inc/form.class.php:977
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "My %1$d last forms (validator)"
 msgstr "Son %1$d formum (değerlendiren)"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:956
 msgid "No form waiting for validation"
@@ -2060,10 +2530,31 @@ msgstr "Form yanıtlarının adı boş olamaz. Önceki değer korunuyor."
 
 #: inc/form.class.php:1342
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1007
+msgid "No form waiting for validation"
+msgstr "Değerlendirilmeyi bekleyen bir form yok"
+
+#: inc/form.class.php:1035
+msgid "All my forms (validator)"
+msgstr "Tüm formlarım (değerlendiren)"
+
+#: inc/form.class.php:1095 inc/form.class.php:1229
+#: inc/abstracttarget.class.php:162 inc/abstractitiltarget.class.php:1573
+msgid "The name cannot be empty!"
+msgstr "Ad boş olamaz!"
+
+#: inc/form.class.php:1240
+msgid "Cannot use empty name for form answers. Keeping the previous value."
+msgstr "Form yanıtlarının adı boş olamaz. Önceki değer korunuyor."
+
+#: inc/form.class.php:1342
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "The question %s is not compatible with public forms"
 msgstr "%s sorusu herkese açık formlar ile uyumlu değil"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1355
 msgid "Errored duplicate"
@@ -2081,28 +2572,44 @@ msgstr "Hatalı kopya"
 
 #: inc/form.class.php:1480 inc/form.class.php:1508
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1422
+msgid "Errored duplicate"
+msgstr "Hatalı kopya"
+
+#: inc/form.class.php:1480 inc/form.class.php:1508
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Post"
 msgstr "İleti"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1436
 =======
 #: inc/form.class.php:1527
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1527
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Form kopyalandı: %s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1452
 =======
 #: inc/form.class.php:1538
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1538
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Form aktarıldı: %s"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1476
 msgid "Back"
@@ -2137,10 +2644,31 @@ msgstr "JSON dosyalarına şimdi izin verebilirsiniz."
 
 #: inc/form.class.php:1672
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1557
+msgid "Back"
+msgstr "Geri"
+
+#: inc/form.class.php:1568
+#, php-format
+msgid "Form updated: %s"
+msgstr ""
+
+#: inc/form.class.php:1668
+msgid "Upload of JSON files not allowed."
+msgstr "JSON dosyalarının yüklenmesine izin verilmiyor."
+
+#: inc/form.class.php:1671
+msgid "You may allow JSON files right now."
+msgstr "JSON dosyalarına şimdi izin verebilirsiniz."
+
+#: inc/form.class.php:1672
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Create"
 msgstr "Ekle"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1582 inc/form.class.php:1593
 msgid "Please contact your GLPI administrator."
@@ -2154,10 +2682,18 @@ msgstr "Lütfen GLPI yöneticiniz ile görüşün."
 
 #: inc/form.class.php:1676 inc/form.class.php:1687
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1675 inc/form.class.php:1686
+msgid "Please contact your GLPI administrator."
+msgstr "Lütfen GLPI yöneticiniz ile görüşün."
+
+#: inc/form.class.php:1676 inc/form.class.php:1687
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Back"
 msgstr "Geri"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1586
 msgid "Upload of JSON files not enabled."
@@ -2179,19 +2715,35 @@ msgstr "JSON dosyaları yükleme seçeneğini şimdi etkinleştirebilirsiniz."
 
 #: inc/form.class.php:1683
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1679
+msgid "Upload of JSON files not enabled."
+msgstr "JSON dosyası yükleme seçeneği etkinleştirilmemiş."
+
+#: inc/form.class.php:1682 inc/form.class.php:1685
+msgid "You may enable JSON files right now."
+msgstr "JSON dosyaları yükleme seçeneğini şimdi etkinleştirebilirsiniz."
+
+#: inc/form.class.php:1683
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Enable"
 msgstr "Etkinleştir"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1637
 =======
 #: inc/form.class.php:1730
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1730
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Send"
 msgstr "Gönder"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1656
 msgid "Forms import impossible, the file is empty"
@@ -2221,6 +2773,21 @@ msgstr "Form içe aktarılamadı, dosya başka bir sürümde oluşturulmuş"
 
 #: inc/form.class.php:1770
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1749
+msgid "Forms import impossible, the file is empty"
+msgstr "Form içe aktarılamadı, dosya boş"
+
+#: inc/form.class.php:1753 inc/form.class.php:1757
+msgid "Forms import impossible, the file seems corrupt"
+msgstr "Form içe aktarılamadı, dosya bozulmuş gibi görünüyor"
+
+#: inc/form.class.php:1763
+msgid "Forms import impossible, the file was generated with another version"
+msgstr "Form içe aktarılamadı, dosya başka bir sürümde oluşturulmuş"
+
+#: inc/form.class.php:1770
+>>>>>>> origin/support/2.13.0
 msgid ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10. Giving up."
@@ -2229,50 +2796,71 @@ msgstr ""
 "bir sürüm tarafından oluşturulmuş. İşlemden vaz geçiliyor."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1703
 =======
 #: inc/form.class.php:1796
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1796
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Failed to import %s"
 msgstr "%s içe aktarılamadı"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1708
 =======
 #: inc/form.class.php:1801
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1801
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Form %s üzerinden içe aktarıldı"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1771
 =======
 #: inc/form.class.php:1864
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1864
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "The form %1$s already exists and is in an unmodifiable entity."
 msgstr "%1$s formu zaten var ve değiştirilemez bir birim."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1779
 =======
 #: inc/form.class.php:1872
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1872
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "You don't have right to update the entity %1$s."
 msgstr "%1$s birimini güncelleme yetkiniz yok."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/form.class.php:1789
 =======
 #: inc/form.class.php:1882
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1882
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "The entity %1$s is required for the form %2$s."
 msgstr "%2$s formu için %1$s birimi gereklidir"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/form.class.php:1871
 msgid "Failed to create JSON document type"
@@ -2340,6 +2928,38 @@ msgstr "Hedef türü desteklenmiyor."
 
 #: inc/form.class.php:2346
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/form.class.php:1964
+msgid "Failed to create JSON document type"
+msgstr "JSON belge türü oluşturulamadı"
+
+#: inc/form.class.php:1971
+msgid "JSON document type not found"
+msgstr "JSON belge türü bulunamadı"
+
+#: inc/form.class.php:1978
+msgid "Failed to update JSON document type"
+msgstr "JSON belge türü güncellenemedi"
+
+#: inc/form.class.php:1998
+msgid "Forms without category"
+msgstr "Kategorisi bulunmayan formlar"
+
+#: inc/form.class.php:2019
+msgid "No form available"
+msgstr "Kullanılabilecek bir form yok"
+
+#: inc/form.class.php:2249 inc/targetticket.class.php:393
+#: inc/abstractitiltarget.class.php:1777 inc/abstractitiltarget.class.php:2073
+msgid "Add"
+msgstr "Ekle"
+
+#: inc/form.class.php:2267 inc/form.class.php:2290 inc/form.class.php:2312
+msgid "Unsupported target type."
+msgstr "Hedef türü desteklenmiyor."
+
+#: inc/form.class.php:2346
+>>>>>>> origin/support/2.13.0
 msgid "plugin_formcreator_load_check"
 msgstr "plugin_formcreator_load_check"
 
@@ -2400,9 +3020,12 @@ msgid "Failed to find %1$s %2$s"
 msgstr "%1$s %2$s bulunamadı"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/question.class.php:70 inc/abstractitiltarget.class.php:1095
 #: inc/abstractitiltarget.class.php:1293 entrée standard:41
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/question.class.php:70 inc/abstractitiltarget.class.php:1111 entrée
 #: standard:41
 >>>>>>> da644384 (docs(locales): update)
@@ -2436,6 +3059,7 @@ msgstr "Bu soru türü için parametrelerin belirtilmesi gerekli"
 msgid "A parameter is missing for this question type"
 msgstr "Bu soru türü için bir parametre eksik"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/question.class.php:1172
 msgid "Service levels"
@@ -2523,6 +3147,50 @@ msgstr "İdari"
 
 #: inc/question.class.php:1254 inc/question.class.php:1257
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/question.class.php:1190
+msgid "Service levels"
+msgstr "Hizmet düzeyleri"
+
+#: inc/question.class.php:1191 inc/abstractitiltarget.class.php:834
+msgid "SLA"
+msgstr "HDA"
+
+#: inc/question.class.php:1192 inc/abstractitiltarget.class.php:907
+msgid "OLA"
+msgstr "ODA"
+
+#: inc/question.class.php:1211 inc/question.class.php:1254
+#: inc/question.class.php:1257
+msgid "Assets"
+msgstr "Varlıklar"
+
+#: inc/question.class.php:1225 hook.php:705 hook.php:722
+msgid "Assistance"
+msgstr "Destek"
+
+#: inc/question.class.php:1231
+msgid "Management"
+msgstr "Yönetim"
+
+#: inc/question.class.php:1242
+msgid "Tools"
+msgstr "Araçlar"
+
+#: inc/question.class.php:1243
+msgid "Notes"
+msgstr "Notlar"
+
+#: inc/question.class.php:1244
+msgid "RSS feed"
+msgstr "RSS akışı"
+
+#: inc/question.class.php:1246
+msgid "Administration"
+msgstr "İdari"
+
+#: inc/question.class.php:1254 inc/question.class.php:1257
+>>>>>>> origin/support/2.13.0
 msgid "Plugin"
 msgid_plural "Plugins"
 msgstr[0] "Uygulama eki"
@@ -2683,6 +3351,7 @@ msgid "Specific asset"
 msgstr "Belirli varlık"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/targetticket.class.php:99 inc/targetticket.class.php:115
 #: inc/abstractitiltarget.class.php:204 inc/abstractitiltarget.class.php:212
 #: inc/abstractitiltarget.class.php:220 inc/abstractitiltarget.class.php:228
@@ -2693,6 +3362,8 @@ msgstr "Sorunun yanıtına eşit olan"
 #: inc/targetticket.class.php:100 inc/abstractitiltarget.class.php:229
 #: inc/abstractitiltarget.class.php:238 inc/abstractitiltarget.class.php:247
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/targetticket.class.php:101 inc/targetticket.class.php:117
 #: inc/abstractitiltarget.class.php:198 inc/abstractitiltarget.class.php:206
 #: inc/abstractitiltarget.class.php:214 inc/abstractitiltarget.class.php:222
@@ -2727,6 +3398,7 @@ msgstr "Belirli tür"
 msgid "Ticket title"
 msgstr "Destek kaydı başlığı"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/targetticket.class.php:305
 msgid "Add validation message as first ticket followup"
@@ -2796,10 +3468,46 @@ msgstr "Bir sorunun bir yanıtından bir destek kaydı"
 
 #: inc/targetticket.class.php:483
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/targetticket.class.php:302
+msgid "Add validation message as first ticket followup"
+msgstr "İlk destek kaydı izlemesine değerlendirme iletisi eklensin"
+
+#: inc/targetticket.class.php:336
+msgid "Add a field"
+msgstr "Alan ekle"
+
+#: inc/targetticket.class.php:364
+msgid "Managed fields"
+msgstr "Yönetilen alanlar"
+
+#: inc/targetticket.class.php:371
+msgid "No managed field"
+msgstr "Herhangi bir yönetilen alan yok"
+
+#: inc/targetticket.class.php:391
+msgid "Link to an other ticket"
+msgstr "Başka bir destek kaydıyla bağlantı"
+
+#: inc/targetticket.class.php:400
+msgid "An other destination of this form"
+msgstr "Bu form için farklı bir hedef"
+
+#: inc/targetticket.class.php:401
+msgid "An existing ticket"
+msgstr "Var olan bir destek kaydı"
+
+#: inc/targetticket.class.php:402
+msgid "A ticket from an answer to a question"
+msgstr "Bir sorunun bir yanıtından bir destek kaydı"
+
+#: inc/targetticket.class.php:483
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Delete permanently"
 msgstr "Kalıcı olarak sil"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/targetticket.class.php:741
 msgid "Invalid link type"
@@ -2869,6 +3577,41 @@ msgstr "İlgili bileşenler"
 
 #: inc/targetticket.class.php:1140
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/targetticket.class.php:724
+msgid "Invalid link type"
+msgstr "Bağlantı türü geçersiz"
+
+#: inc/targetticket.class.php:744
+msgid "Invalid linked item type"
+msgstr "Bağlantılı öge türü geçersiz"
+
+#: inc/targetticket.class.php:757
+msgid "Linked item does not exists"
+msgstr "Bağlantılı öge bulunamadı"
+
+#: inc/targetticket.class.php:770
+msgid "Failed to link the item"
+msgstr "Öge bağlantısı kurulamadı"
+
+#: inc/targetticket.class.php:920 install/install.php:431
+msgid "Your form has been accepted by the validator"
+msgstr "Formunuz değerlendiren tarafından onaylandı"
+
+#: inc/targetticket.class.php:1076
+msgid "Request source"
+msgstr "İstek kaynağı"
+
+#: inc/targetticket.class.php:1101
+msgid "Type "
+msgstr "Tür"
+
+#: inc/targetticket.class.php:1129
+msgid "Associated elements"
+msgstr "İlgili bileşenler"
+
+#: inc/targetticket.class.php:1140
+>>>>>>> origin/support/2.13.0
 msgid "Item "
 msgstr "Öge"
 
@@ -2989,49 +3732,68 @@ msgid "Group from question answer"
 msgstr "Soru yanıtından grup"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:807
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: inc/abstractitiltarget.class.php:769 entrée standard:108
 msgid "Time to resolve"
 msgstr "Çözümlenme zamanı"
 
 #: inc/abstractitiltarget.class.php:822
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 msgid "Minute"
 msgid_plural "Minutes"
 msgstr[0] "Dakika"
 msgstr[1] "Dakika"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:808
 =======
 #: inc/abstractitiltarget.class.php:823
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/abstractitiltarget.class.php:823
+>>>>>>> origin/support/2.13.0
 msgid "Hour"
 msgid_plural "Hours"
 msgstr[0] "Saat"
 msgstr[1] "Saat"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:809
 =======
 #: inc/abstractitiltarget.class.php:824
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/abstractitiltarget.class.php:824
+>>>>>>> origin/support/2.13.0
 msgid "Day"
 msgid_plural "Days"
 msgstr[0] "Gün"
 msgstr[1] "Gün"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:810
 =======
 #: inc/abstractitiltarget.class.php:825
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/abstractitiltarget.class.php:825
+>>>>>>> origin/support/2.13.0
 msgid "Month"
 msgid_plural "Months"
 msgstr[0] "Ay"
 msgstr[1] "Ay"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:842
 msgid "SLA (TTO/TTR)"
@@ -3117,11 +3879,51 @@ msgstr "Açıklama boş olamaz!"
 
 #: inc/abstractitiltarget.class.php:1760
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/abstractitiltarget.class.php:857
+msgid "SLA (TTO/TTR)"
+msgstr "HDA (EAZ/ÇÖZ)"
+
+#: inc/abstractitiltarget.class.php:858 inc/abstractitiltarget.class.php:931
+msgid "Question (TTO/TTR)"
+msgstr "Soru (EAZ/ÇÖZ)"
+
+#: inc/abstractitiltarget.class.php:930
+msgid "OLA (TTO/TTR)"
+msgstr "ODA (EAZ/ÇÖZ)"
+
+#: inc/abstractitiltarget.class.php:1034
+msgid "Urgency "
+msgstr "Önem düzeyi"
+
+#: inc/abstractitiltarget.class.php:1064
+msgid "Ticket tags"
+msgstr "Destek kaydı etiketleri"
+
+#: inc/abstractitiltarget.class.php:1112
+msgid "Tags"
+msgstr "Etiketler"
+
+#: inc/abstractitiltarget.class.php:1231
+msgid "Location"
+msgstr "Konum"
+
+#: inc/abstractitiltarget.class.php:1243
+msgid "Location "
+msgstr "Konum"
+
+#: inc/abstractitiltarget.class.php:1583
+msgid "The description cannot be empty!"
+msgstr "Açıklama boş olamaz!"
+
+#: inc/abstractitiltarget.class.php:1760
+>>>>>>> origin/support/2.13.0
 msgid "Watcher"
 msgid_plural "Watchers"
 msgstr[0] "İzleyen"
 msgstr[1] "İzleyenler"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:1800
 msgid "Cancel"
@@ -3193,15 +3995,55 @@ msgstr "Evet"
 
 #: install/install.php:134
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: inc/abstractitiltarget.class.php:1779
+msgid "Cancel"
+msgstr "İptal"
+
+#: inc/abstractitiltarget.class.php:2067 inc/abstractitiltarget.class.php:2495
+#: inc/abstractitiltarget.class.php:2499
+msgid "Email followup"
+msgstr "E-posta izlemesi"
+
+#: inc/abstractitiltarget.class.php:2098 inc/abstractitiltarget.class.php:2483
+msgid "User"
+msgstr "Kullanıcı"
+
+#: inc/abstractitiltarget.class.php:2109 inc/abstractitiltarget.class.php:2487
+msgid "Group"
+msgstr "Grup"
+
+#: inc/abstractitiltarget.class.php:2120
+msgid "Group from the object"
+msgstr "Nesneden grup"
+
+#: inc/abstractitiltarget.class.php:2126
+msgid "Tech group from the object"
+msgstr "Nesneden teknik grup"
+
+#: inc/abstractitiltarget.class.php:2138 inc/abstractitiltarget.class.php:2491
+msgid "Supplier"
+msgstr "Sağlayıcı"
+
+#: inc/abstractitiltarget.class.php:2495
+msgid "Yes"
+msgstr "Evet"
+
+#: install/install.php:134
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Upgrade tables to innoDB; run %s"
 msgstr "Tabloları innoDB biçimine dönüştürün. Şunu çalıştırın %s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:163
 =======
 #: install/install.php:171
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:171
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid ""
 "The database schema is not consistent with the previous version of "
@@ -3211,20 +4053,28 @@ msgstr ""
 "Günlük kayıtlarını görüntülemek için şu komutu yürütün %s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:172
 =======
 #: install/install.php:180
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:180
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "To ignore the inconsistencies and upgrade anyway run %s"
 msgstr ""
 "Uyumsuzluğu yok saymak ve her durumda güncellemek için şunu çalıştırın %s"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:190
 =======
 #: install/install.php:197
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:197
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Upgrade from version older than 2.5.0 is no longer supported. Please upgrade"
 " to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to"
@@ -3236,6 +4086,7 @@ msgstr ""
 "sürüme ve Formcreator uygulama ekini 2.13 ya da üzerindeki bir sürüme "
 "yükseltin."
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: install/install.php:216
 #, php-format
@@ -3289,6 +4140,31 @@ msgstr "İsteğiniz kaydedildi"
 
 #: install/install.php:414
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:249
+#, php-format
+msgid ""
+"The database schema is not consistent with the current version of "
+"Formcreator %s. To see the logs enable the plugin and run the command %s"
+msgstr ""
+"Veritabanı şeması güncel Formcreator %s sürümü ile uyumlu değil. Günlük "
+"kayıtlarını görüntülemek için uygulama ekini etkinleştirin ve şu komutu "
+"yürütün %s"
+
+#: install/install.php:260
+msgid "The tables of the plugin passed the schema integrity check."
+msgstr "Uygulama ekinin tabloları şema bütünlüğü denetimini geçti."
+
+#: install/install.php:412
+msgid "A form has been created"
+msgstr "Bir form eklendi"
+
+#: install/install.php:413
+msgid "Your request has been saved"
+msgstr "İsteğiniz kaydedildi"
+
+#: install/install.php:414
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
@@ -3298,6 +4174,7 @@ msgstr ""
 "kaydedilerek destek ekibimize iletildi.\\nİsteğinize verilen yanıtları şu "
 "bağlantıdan görebilirsiniz:\\n##formcreator.validation_link##"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: install/install.php:433
 msgid "A form need validation"
@@ -3309,12 +4186,17 @@ msgstr "Değerlendirilmesi gereken bir GLPI formu var"
 
 #: install/install.php:435
 =======
+=======
+>>>>>>> origin/support/2.13.0
 #: install/install.php:419
 msgid "A form from GLPI need to be validate"
 msgstr "Değerlendirilmesi gereken bir GLPI formu var"
 
 #: install/install.php:420
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Hi,\\nA form from GLPI need to be validated and you have been choosen as the"
 " validator.\\nYou can access it by clicking onto this "
@@ -3325,19 +4207,27 @@ msgstr ""
 "erişebilirsiniz:\\n##formcreator.validation_link##"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:440
 =======
 #: install/install.php:425
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:425
+>>>>>>> origin/support/2.13.0
 msgid "Your form has been refused by the validator"
 msgstr ""
 "Formunuzdaki bilgiler hatalı olduğundan değerlendiren tarafından reddedildi"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:441
 =======
 #: install/install.php:426
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:426
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason "
@@ -3350,10 +4240,14 @@ msgstr ""
 "kullanabilirsiniz:\\n##formcreator.validation_link##"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:447
 =======
 #: install/install.php:432
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:432
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
@@ -3361,6 +4255,7 @@ msgstr ""
 "Merhaba,\\nFormunuz değerlendiren tarafından kabul edildi.\\nİsteğiniz kısa "
 "süre içinde değerlendirilecek."
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: install/install.php:452
 msgid "Your form has been deleted by an administrator"
@@ -3374,12 +4269,20 @@ msgstr "Formunuz bir yönetici tarafından silindi"
 
 #: install/install.php:438
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:437
+msgid "Your form has been deleted by an administrator"
+msgstr "Formunuz bir yönetici tarafından silindi"
+
+#: install/install.php:438
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
 msgstr ""
 "Merhaba,\\nİsteğiniz dikkate alınmadı ve bir yönetici tarafından silindi."
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: install/install.php:679
 msgid "Formcreator - Sync service catalog issues"
@@ -3401,37 +4304,61 @@ msgstr "Tabloların sağlıklı olup olmadığı denetlenemedi!"
 
 #: install/install.php:866
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:664
+msgid "Formcreator - Sync service catalog issues"
+msgstr "Formcreator - Eşitleme hizmeti katalog sorunları"
+
+#: install/install.php:852
+msgid "Failed to check the sanity of the tables!"
+msgstr "Tabloların sağlıklı olup olmadığı denetlenemedi!"
+
+#: install/install.php:866
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Table schema differs for table \"%s\"."
 msgstr "\"%s\" tablosunun tablo şeması farklı."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:909
 =======
 #: install/install.php:869
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:869
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Table \"%s\" is missing."
 msgstr "\"%s\" tablosu eksik."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: install/install.php:912
 =======
 #: install/install.php:872
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: install/install.php:872
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Unknown table \"%s\" has been found in database."
 msgstr "Veritabanında ne olduğu bilinmeyen \"%s\" tablosu bulundu."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: hook.php:332
 =======
 #: hook.php:378
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: hook.php:378
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Duplicate"
 msgstr "Kopyala"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: hook.php:333
 msgid "Transfer"
@@ -3445,10 +4372,18 @@ msgstr "Aktar"
 
 #: hook.php:380
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: hook.php:379
+msgid "Transfer"
+msgstr "Aktar"
+
+#: hook.php:380
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Export"
 msgstr "Dışa aktar"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: hook.php:648
 msgid "Cancel my ticket"
@@ -3475,10 +4410,27 @@ msgstr "Eski"
 
 #: hook.php:706
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: hook.php:381
+msgctxt "button"
+msgid "Access rights"
+msgstr ""
+
+#: hook.php:681
+msgid "Cancel my ticket"
+msgstr "Destek kaydımı iptal et"
+
+#: hook.php:699
+msgid "Old"
+msgstr "Eski"
+
+#: hook.php:706
+>>>>>>> origin/support/2.13.0
 #, php-format
 msgid "Number of %s"
 msgstr "%s sayısı"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: hook.php:690
 msgid "Issues summary"
@@ -3492,6 +4444,13 @@ msgstr "Sorun özeti"
 
 #: hook.php:768
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: hook.php:723
+msgid "Issues summary"
+msgstr "Sorun özeti"
+
+#: hook.php:768
+>>>>>>> origin/support/2.13.0
 msgid ""
 "Formcreator's mini dashboard not usable as default. This Setting has been "
 "ignored."
@@ -3511,6 +4470,7 @@ msgstr "Herhangi bir form bulunamadı."
 msgid "No FAQ item found."
 msgstr "Herhangi bir SSS ögesi bulunamadı."
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: js/scripts.js:706
 msgid "Are you sure you want to delete this question?"
@@ -3564,6 +4524,32 @@ msgstr "Gönder"
 msgid "An internal error occurred. Please report it to administrator."
 msgstr "Bir sorun çıktı. Lütfen bu durumu BT yöneticinize bildirin."
 
+=======
+#: js/scripts.js:688
+msgid "Are you sure you want to delete this question?"
+msgstr "Bu soruyu silmek istediğinize emin misiniz?"
+
+#: js/scripts.js:877
+msgid "Are you sure you want to delete this section?"
+msgstr "Bu bölümü silmek istediğinize emin misiniz?"
+
+#: js/scripts.js:1118
+msgid "Add translations"
+msgstr "Çeviriler ekle"
+
+#: js/scripts.js:1257 js/scripts.js:1281
+msgid "An error occured while querying forms"
+msgstr "Formlar alınırken bir sorun çıktı"
+
+#: js/scripts.js:1372 entrée standard:139
+msgid "Send"
+msgstr "Gönder"
+
+#: js/scripts.js:1381
+msgid "An internal error occurred. Please report it to administrator."
+msgstr "Bir sorun çıktı. Lütfen bu durumu BT yöneticinize bildirin."
+
+>>>>>>> origin/support/2.13.0
 #: js/scripts.js:1449
 msgid "Are you sure you want to duplicate this target?"
 msgstr ""
@@ -3571,7 +4557,10 @@ msgstr ""
 #: js/scripts.js:1466
 msgid "Are you sure you want to delete this target?"
 msgstr ""
+<<<<<<< HEAD
 >>>>>>> da644384 (docs(locales): update)
+=======
+>>>>>>> origin/support/2.13.0
 
 #: entrée standard:43 standard:50 standard:44 standard:49 standard:78
 msgid "Required"
@@ -3579,10 +4568,14 @@ msgstr "Zorunlu"
 
 #: entrée standard:57 standard:61 standard:60 standard:59 standard:43
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: standard:69 standard:52 standard:37
 =======
 #: standard:69 standard:52 standard:76
 >>>>>>> da644384 (docs(locales): update)
+=======
+#: standard:69 standard:52 standard:76
+>>>>>>> origin/support/2.13.0
 msgid "Default values"
 msgstr "Varsayılan değerler"
 

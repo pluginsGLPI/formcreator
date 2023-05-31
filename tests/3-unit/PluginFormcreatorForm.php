@@ -486,7 +486,7 @@ class PluginFormcreatorForm extends CommonTestCase {
     * @dataProvider providerCreateValidationNotification
     */
    public function testCreateValidationNotification(User $requester, User $validator, $expectedNotificationCount) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       $form = $this->getForm();
       $formValidator = new PluginFormcreatorForm_Validator();

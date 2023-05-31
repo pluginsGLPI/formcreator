@@ -34,13 +34,12 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use Html;
 use Session;
-use PluginFormcreatorFormAnswer;
-use PluginFormcreatorQuestionFilter;
 use Dropdown;
 use Entity;
 use CommonTreeDropdown;
 use CommonDBTM;
 use CommonGLPI;
+use Ticket;
 use User;
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;

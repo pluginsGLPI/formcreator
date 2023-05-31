@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: glpi 100a\n"
+"Project-Id-Version: glpi 100b\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-30 14:13+0200\n"
-"PO-Revision-Date: 2023-05-30 14:13+0200\n"
+"POT-Creation-Date: 2023-05-31 16:21+0200\n"
+"PO-Revision-Date: 2023-05-31 16:21+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -175,16 +175,14 @@ msgid "Textarea"
 msgstr "Textarea"
 
 #: inc/field/textareafield.class.php:249 inc/field/dropdownfield.class.php:594
-#: inc/field/ldapselectfield.class.php:115 inc/field/textfield.class.php:126
-#: inc/field/urgencyfield.class.php:166 inc/field/tagfield.class.php:166
-#: inc/field/timefield.class.php:114 inc/field/fieldsfield.class.php:489
-#: inc/field/requesttypefield.class.php:161
+#: inc/field/ldapselectfield.class.php:115 inc/field/urgencyfield.class.php:166
+#: inc/field/tagfield.class.php:166 inc/field/timefield.class.php:114
+#: inc/field/fieldsfield.class.php:489 inc/field/requesttypefield.class.php:161
 msgid "A required field is empty:"
 msgstr "A required field is empty:"
 
-#: inc/field/textareafield.class.php:267 inc/field/textfield.class.php:179
-#: inc/field/integerfield.class.php:112 inc/field/floatfield.class.php:194
-#: inc/conditionnabletrait.class.php:70
+#: inc/field/textareafield.class.php:267 inc/field/integerfield.class.php:112
+#: inc/field/floatfield.class.php:194 inc/conditionnabletrait.class.php:70
 msgid "The regular expression is invalid"
 msgstr "The regular expression is invalid"
 
@@ -245,45 +243,12 @@ msgstr "LDAP directory not defined!"
 msgid "LDAP directory not found!"
 msgstr "LDAP directory not found!"
 
-#: inc/field/textfield.class.php:147 inc/field/integerfield.class.php:71
-#: inc/field/floatfield.class.php:156
-#, php-format
-msgid "Specific format does not match: %s"
-msgstr "Specific format does not match: %s"
-
-#: inc/field/textfield.class.php:156
-#, php-format
-msgid "The text is too short (minimum %d characters): %s"
-msgstr "The text is too short (minimum %d characters): %s"
-
-#: inc/field/textfield.class.php:161
-#, php-format
-msgid "The text is too long (maximum %d characters): %s"
-msgstr "The text is too long (maximum %d characters): %s"
-
-#: inc/field/textfield.class.php:169
-msgid "Text"
-msgstr "Text"
-
-#: inc/field/textfield.class.php:218 inc/field/floatfield.class.php:235
-#: inc/questionregex.class.php:62 entrée standard:42
-msgid "Regular expression"
-msgstr "Regular expression"
-
-#: inc/field/textfield.class.php:223 inc/field/floatfield.class.php:240
-msgid "Range"
-msgstr "Range"
-
-#: inc/field/textfield.class.php:229 inc/field/floatfield.class.php:246
-msgid "Additional validation"
-msgstr "Additional validation"
-
 #: inc/field/radiosfield.class.php:108
 msgid "Radios"
 msgstr "Radios"
 
-#: inc/field/radiosfield.class.php:114 inc/field/glpiselectfield.class.php:112
-#: inc/field/fieldsfield.class.php:513 inc/field/checkboxesfield.class.php:245
+#: inc/field/radiosfield.class.php:114 inc/field/fieldsfield.class.php:513
+#: inc/field/checkboxesfield.class.php:245
 msgid "The field value is required:"
 msgstr "The field value is required:"
 
@@ -299,6 +264,11 @@ msgstr "A required field is empty: %s"
 #, php-format
 msgid "This is not an integer: %s"
 msgstr "This is not an integer: %s"
+
+#: inc/field/integerfield.class.php:71 inc/field/floatfield.class.php:156
+#, php-format
+msgid "Specific format does not match: %s"
+msgstr "Specific format does not match: %s"
 
 #: inc/field/integerfield.class.php:85 inc/field/floatfield.class.php:167
 #, php-format
@@ -362,12 +332,6 @@ msgid "Tag"
 msgid_plural "Tags"
 msgstr[0] "Tag"
 msgstr[1] "Tags"
-
-#: inc/field/glpiselectfield.class.php:97 entrée standard:38
-msgid "GLPI object"
-msgid_plural "GLPI objects"
-msgstr[0] "GLPI object"
-msgstr[1] "GLPI objects"
 
 #: inc/field/hostnamefield.class.php:116
 msgid "Hostname"
@@ -504,6 +468,19 @@ msgstr "This is not a number: %s"
 msgid "Decimal number"
 msgstr "Decimal number"
 
+#: inc/field/floatfield.class.php:235 inc/questionregex.class.php:62 entrée
+#: standard:42
+msgid "Regular expression"
+msgstr "Regular expression"
+
+#: inc/field/floatfield.class.php:240
+msgid "Range"
+msgstr "Range"
+
+#: inc/field/floatfield.class.php:246
+msgid "Additional validation"
+msgstr "Additional validation"
+
 #: inc/field/datefield.class.php:137
 msgid "Date"
 msgstr "Date"
@@ -559,7 +536,7 @@ msgstr "Displayed unless"
 #: inc/form.class.php:1908 inc/targetchange.class.php:304
 #: inc/questionfilter.class.php:222 inc/section.class.php:381
 #: inc/restrictedformcriteria.class.php:200 inc/question.class.php:867
-#: inc/questionparameter/range.class.php:202 inc/questionregex.class.php:188
+#: inc/questionparameter/range.class.php:198 inc/questionregex.class.php:188
 #: inc/questiondependency.class.php:196 inc/item_targetticket.class.php:154
 #: inc/targetticket.class.php:1461
 #, php-format
@@ -572,7 +549,7 @@ msgstr "Failed to add or update the %1$s %2$s"
 #: inc/form.class.php:1569 inc/targetchange.class.php:149
 #: inc/questionfilter.class.php:154 inc/section.class.php:406
 #: inc/restrictedformcriteria.class.php:226 inc/question.class.php:894
-#: inc/questionparameter/range.class.php:137 inc/questionregex.class.php:120
+#: inc/questionparameter/range.class.php:133 inc/questionregex.class.php:120
 #: inc/questiondependency.class.php:211 inc/item_targetticket.class.php:64
 #: inc/targetticket.class.php:1500
 #, php-format
@@ -752,38 +729,38 @@ msgstr "Ticket observer"
 msgid "Ticket technician"
 msgstr "Ticket technician"
 
-#: inc/issue.class.php:1465
+#: inc/issue.class.php:1469
 #, php-format
 msgid "%1$s %2$s"
 msgstr "%1$s %2$s"
 
-#: inc/issue.class.php:1723 inc/filter/itilcategoryfilter.class.php:56
+#: inc/issue.class.php:1727 inc/filter/itilcategoryfilter.class.php:56
 #: hook.php:766
 msgid "All"
 msgstr "All"
 
-#: inc/issue.class.php:1729 hook.php:767
+#: inc/issue.class.php:1733 hook.php:767
 msgid "New"
 msgstr "New"
 
-#: inc/issue.class.php:1735 hook.php:768
+#: inc/issue.class.php:1739 hook.php:768
 msgid "Assigned"
 msgstr "Assigned"
 
-#: inc/issue.class.php:1741 inc/formanswer.class.php:78
+#: inc/issue.class.php:1745 inc/formanswer.class.php:78
 #: inc/form_validator.class.php:70 hook.php:769
 msgid "Waiting"
 msgstr "Waiting"
 
-#: inc/issue.class.php:1747 hook.php:770
+#: inc/issue.class.php:1751 hook.php:770
 msgid "To validate"
 msgstr "To validate"
 
-#: inc/issue.class.php:1753 hook.php:771
+#: inc/issue.class.php:1757 hook.php:771
 msgid "Solved"
 msgstr "Solved"
 
-#: inc/issue.class.php:1759 hook.php:772
+#: inc/issue.class.php:1763 hook.php:772
 msgid "Closed"
 msgstr "Closed"
 
@@ -1076,15 +1053,15 @@ msgstr ""
 msgid "Cannot generate targets!"
 msgstr "Cannot generate targets!"
 
-#: inc/formanswer.class.php:1512
+#: inc/formanswer.class.php:1511
 msgid "No captcha set."
 msgstr "No captcha set."
 
-#: inc/formanswer.class.php:1518
+#: inc/formanswer.class.php:1517
 msgid "You failed the captcha test."
 msgstr "You failed the captcha test."
 
-#: inc/formanswer.class.php:1541
+#: inc/formanswer.class.php:1540
 msgid "You must select validator!"
 msgstr "You must select validator!"
 
@@ -2590,6 +2567,12 @@ msgstr "Show ticket categories"
 #: entrée standard:146 standard:118
 msgid "Selectable root"
 msgstr "Selectable root"
+
+#: entrée standard:38
+msgid "GLPI object"
+msgid_plural "GLPI objects"
+msgstr[0] "GLPI object"
+msgstr[1] "GLPI objects"
 
 #: entrée standard:63
 msgid "Direct access on homepage"
