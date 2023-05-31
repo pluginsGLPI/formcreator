@@ -50,9 +50,7 @@ if (Session::getCurrentInterface() == "helpdesk") {
    Html::header(__('Service catalog', 'formcreator'));
 }
 
-if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
-   PluginFormcreatorCommon::showMiniDashboard();
-}
+PluginFormcreatorCommon::showMiniDashboard();
 
 $form = PluginFormcreatorCommon::getForm();
 $form->showServiceCatalog();
