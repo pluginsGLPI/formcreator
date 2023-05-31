@@ -570,7 +570,7 @@ PluginFormcreatorTranslatableInterface
          return [
             1 => self::createTabEntry(
                _n('Target', 'Targets', $nb, 'formcreator'),
-               $item->countTargets()
+               $nb
             ),
             2 => __('Preview'),
             3 => __('Form answer properties', 'formcreator'),
