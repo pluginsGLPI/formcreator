@@ -100,14 +100,18 @@ function plugin_formcreator_check_prerequisites() {
       $prerequisitesSuccess = false;
    }
 
-   if (!is_readable(__DIR__ . '/vendor/autoload.php') || !is_file(__DIR__ . '/vendor/autoload.php')) {
-      echo "Run composer install --no-dev in the plugin directory<br>";
-      $prerequisitesSuccess = false;
-   }
+   $plugin = new Plugin();
+   $plugin->getFromDBbyDir('formcreator');
+   if ($plugin->fields['state'] == Plugin::NOTACTIVATED) {
+      if (!is_readable(__DIR__ . '/vendor/autoload.php') || !is_file(__DIR__ . '/vendor/autoload.php')) {
+         echo "Run composer install --no-dev in the plugin directory<br>";
+         $prerequisitesSuccess = false;
+      }
 
-   if (!is_readable(__DIR__ . '/lib/.yarn-integrity') || !is_file(__DIR__ . '/lib/.yarn-integrity')) {
-      echo "Run yarn install --prod in the plugin directory<br>";
-      $prerequisitesSuccess = false;
+      if (!is_readable(__DIR__ . '/lib/.yarn-integrity') || !is_file(__DIR__ . '/lib/.yarn-integrity')) {
+         echo "Run yarn install --prod in the plugin directory<br>";
+         $prerequisitesSuccess = false;
+      }
    }
 
    return $prerequisitesSuccess;
