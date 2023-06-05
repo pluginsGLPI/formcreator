@@ -813,7 +813,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $richText = true;
       $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
       $data['name'] = $this->prepareTemplate(
-         __($this->fields['target_name'], $domain),
+         Sanitizer::unsanitize(__($this->fields['target_name'], $domain)),
          $formanswer,
          false
       );

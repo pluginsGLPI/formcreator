@@ -38,6 +38,7 @@ use Session;
 use Toolbox;
 use PluginFormcreatorFormAnswer;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
 
 class RadiosField extends PluginFormcreatorAbstractField
 {
@@ -174,7 +175,7 @@ class RadiosField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($domain, $richText): ?string {
-      return __($this->value, $domain);
+      return Sanitizer::unsanitize(__($this->value, $domain));
    }
 
    public function moveUploads() {
