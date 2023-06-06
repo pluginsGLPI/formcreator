@@ -261,7 +261,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean true if the field must be rendered
     */
-    public function isRenderedInTarget(): bool;
+   public function isRenderedInTarget(): bool;
 
    /**
     * Gets HTML code for the icon of a field
