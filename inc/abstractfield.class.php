@@ -385,4 +385,8 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
       return __($this->getLabel(), $domain);
    }
+
+   public function isRenderedInTarget(): bool {
+      return true;
+   }
 }

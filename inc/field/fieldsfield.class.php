@@ -638,6 +638,10 @@ class FieldsField extends PluginFormcreatorAbstractField
       return true;
    }
 
+   public function isRenderedInTarget(): bool {
+      return false;
+   }
+
    public function getHtmlIcon() {
       return '<i class="fa-fw fas fa-tasks" aria-hidden="true"></i>';
    }
@@ -649,9 +653,4 @@ class FieldsField extends PluginFormcreatorAbstractField
    public function isEditableField(): bool {
       return true;
    }
-
-   public function isAnonymousFormCompatible(): bool {
-      return true;
-   }
-
 }

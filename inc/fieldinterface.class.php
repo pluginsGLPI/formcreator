@@ -257,6 +257,13 @@ interface PluginFormcreatorFieldInterface
    public function isPublicFormCompatible(): bool;
 
    /**
+    * Is the field rendered in a target ?
+    *
+    * @return boolean true if the field must be rendered
+    */
+    public function isRenderedInTarget(): bool;
+
+   /**
     * Gets HTML code for the icon of a field
     */
    public function getHtmlIcon();

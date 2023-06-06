@@ -158,6 +158,10 @@ class DescriptionField extends PluginFormcreatorAbstractField
       return true;
    }
 
+   public function isRenderedInTarget(): bool {
+      return false;
+   }
+
    public function getHtmlIcon() {
       return '<i class="fas fa-align-left" aria-hidden="true"></i>';
    }

@@ -1172,7 +1172,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // retrieve answers
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $fields = $this->getQuestionFields($this->fields[$formFk]);
+      $this->getQuestionFields($this->fields[$formFk]);
 
       $this->deserializeAnswers();
 
@@ -1235,11 +1235,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
 
          // Don't save tags, additional fields or descriptions in "full form"
-         if (in_array($question_line['fieldtype'], ['tag', 'fields', 'description'])) {
+         if ($this->fields[$question_line['id']]->isRenderedInTarget() === false) {
             continue;
          }
 
-         if (!PluginFormcreatorFields::isVisible($fields[$question_line['id']]->getQuestion(), $this->questionFields)) {
+         if (!PluginFormcreatorFields::isVisible($this->fields[$question_line['id']]->getQuestion(), $this->questionFields)) {
             continue;
          }
 
