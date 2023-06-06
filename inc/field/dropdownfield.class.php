@@ -713,16 +713,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $TRANSLATE->setLocale("en_GB");
 
       // Load target item from DB
-      // $itemtype = $question->getField('values');
       $itemtype = $this->question->fields['itemtype'];
-
-      // Itemtype is stored in plaintext for GlpiselectField and in
-      // json for DropdownField
-      $json = json_decode($itemtype);
-
-      if ($json) {
-         $itemtype = $json->itemtype;
-      }
 
       // Safe check
       if (empty($itemtype) || !class_exists($itemtype)) {
