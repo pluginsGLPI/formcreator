@@ -57,6 +57,7 @@ use Search;
 use SLA;
 use SLM;
 use OLA;
+use QueryExpression;
 use QuerySubQuery;
 use QueryUnion;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
@@ -227,9 +228,11 @@ class DropdownField extends PluginFormcreatorAbstractField
             $currentUser = Session::getLoginUserID();
             if (!Session::haveRight(Ticket::$rightname, Ticket::READMY) && !Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
                // No right to view any ticket, then force the dropdown to be empty
-               $dparams_cond_crit['OR'] = new \QueryExpression('0=1');
+               $dparams_cond_crit['OR'] = new QueryExpression('0=1');
                break;
             }
+            $tickets_filter = ['users_id_recipient' => $currentUser];
+
             if (Session::haveRight(Ticket::$rightname, Ticket::READMY)) {
                $requestersObserversQuery = new QuerySubQuery([
                   'SELECT' => 'tickets_id',
@@ -239,34 +242,23 @@ class DropdownField extends PluginFormcreatorAbstractField
                      'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
                   ],
                ]);
-               $dparams_cond_crit['OR'] = [
+               $tickets_filter[] = [
                   'id' => $requestersObserversQuery,
-                  'users_id_recipient' => $currentUser,
                ];
             }
-            if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
-               $sub_query = [
+
+            if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP) && count($_SESSION['glpigroups']) > '0') {
+               $requestersObserversGroupsQuery = new QuerySubQuery([
                   'SELECT' => 'tickets_id',
                   'FROM' => Group_Ticket::getTable(),
                   'WHERE' => [
-                     'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
+                     'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER],
+                     'groups_id' => $_SESSION['glpigroups'],
                   ],
-               ];
-               if (count($_SESSION['glpigroups']) > '0') {
-                  $sub_query['WHERE']['groups_id'] = $_SESSION['glpigroups'];
-               }
-               $requestersObserversGroupsQuery = new QuerySubQuery($sub_query);
-               if (!isset($dparams_cond_crit['OR']['id'])) {
-                  $dparams_cond_crit['OR'] = [
-                     'id' => $requestersObserversGroupsQuery,
-                  ];
-               } else {
-                  $dparams_cond_crit['OR']['id'] = new QueryUnion([
-                     $dparams_cond_crit['OR']['id'],
-                     $requestersObserversGroupsQuery,
-                  ]);
-               }
+               ]);
+               $tickets_filter[] = ['id' => $requestersObserversGroupsQuery];
             }
+            $dparams_cond_crit['OR'] = $tickets_filter;
             break;
 
          default:
