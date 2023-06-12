@@ -787,31 +787,10 @@ var plugin_formcreator = new function() {
       });
    };
 
-   this.editQuestion = function (button) {
-      var data = null;
-      var forms = $('form[data-itemtype="PluginFormcreatorQuestion"]');
-      if (button.getAttribute('type') === 'submit') {
-         // Submitting the modal; then let's save the inputs of all tabs
-         for (const form of Object.values(forms)) {
-            var formData = $(form).serializeArray();
-            if (data === null) {
-               data = formData;
-            } else {
-               data = data.concat(formData);
-            }
-         }
-      } else {
-         // Save only the inputs of the current tab
-         for (const form of Object.values(forms)) {
-            if (!form.checkVisibility()) {
-               continue;
-            }
-            data = $(form).serializeArray();
-            break;
-         }
-      }
-      // Get questin ID in the 1st available form of the modal
-      var questionId = forms[0].querySelector('[name="id"]').value;
+   this.editQuestion = function (form) {
+      data = $(form).serializeArray();
+      // Get question ID in the 1st available form of the modal
+      var questionId = form.closest('.tab-content').querySelectorAll('form')[0].querySelector('[name="id"]').value;
       var that = this;
       tinyMCE.triggerSave();
       $.post({
