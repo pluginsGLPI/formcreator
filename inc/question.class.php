@@ -380,7 +380,10 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
 
-      $input['itemtype'] = $this->fields['itemtype'] ?? ($input['itemtype'] ?? '');
+      $temp_itemtype = $this->fields['itemtype'] ?? ($input['itemtype'] ?? '');
+      if ($temp_itemtype instanceof CommonDBTM) {
+         $input['itemtype'] = $temp_itemtype;
+      }
       $input = $this->field->prepareQuestionInputForSave($input);
       if ($input === false || !is_array($input)) {
          // Invalid data
