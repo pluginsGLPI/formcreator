@@ -75,7 +75,7 @@ class DateField extends DatetimeField
     * @param string $value
     * @return false|DateTime
     */
-    protected function getDateFromValue(string $value) {
+   protected function getDateFromValue(string $value) {
       if (empty($value)) {
          $value = '0000-00-00';
       }
