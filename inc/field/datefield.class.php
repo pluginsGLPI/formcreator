@@ -163,9 +163,15 @@ class DateField extends PluginFormcreatorAbstractField
       } else {
          $answer = $this->value;
       }
+      if (empty($value)) {
+         $value = '0000-00-00';
+      }
       $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
       $answerDatetime->setTime(0, 0, 0, 0);
       $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
+      if ($compareDatetime === false) {
+         return true;
+      }
       $compareDatetime->setTime(0, 0, 0, 0);
       return $answerDatetime > $compareDatetime;
    }
