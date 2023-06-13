@@ -29,10 +29,10 @@
  * ---------------------------------------------------------------------
  */
 namespace GlpiPlugin\Formcreator\Field\tests\units;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonAbstractFieldTestCase;
 use PluginFormcreatorFormAnswer;
 
-class CheckboxesField extends CommonTestCase {
+class CheckboxesField extends CommonAbstractFieldTestCase {
    public function testGetName() {
       $itemtype = $this->getTestedClassName();
       $output = $itemtype::getName();
@@ -295,61 +295,53 @@ class CheckboxesField extends CommonTestCase {
    }
 
    public function providerGetValueForTargetText() {
-      return [
-         [
-            'question' => $this->getQuestion([
-               'values' => "[]"
-            ]),
-            'value' => json_encode(['a']),
-            'expected' => ''
-         ],
-         [
-            'question' => $this->getQuestion([
-               'values' => json_encode(['a', 'b', 'c'])
-            ]),
-            'value' => json_encode(['a']),
-            'expected' => 'a'
-         ],
-         [
-            'question' => $this->getQuestion([
-               'values' => json_encode(['a', 'b', 'c'])
-            ]),
-            'value' => json_encode(['a', 'c']),
-            'expected' => 'a<br />c'
-         ],
+      $fieldtype = 'checkboxes';
+
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => $fieldtype,
+            'values' => "[]"
+         ]),
+         'value' => 'a',
+         'expectedValue' => '',
+      ];
+
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => $fieldtype,
+            'values' => 'a\r\nb\r\nc'
+         ]),
+         'value' => json_encode(['a']),
+         'expectedValue' => 'a',
+      ];
+
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => $fieldtype,
+            'values' => 'a\r\nb\r\nc'
+         ]),
+         'value' => json_encode(['a', 'c']),
+         'expectedValue' => 'a, c',
+         'expectedRichValue' => 'a<br />c'
       ];
    }
 
-   /**
-    * @dataprovider providerGetValueForTargetText
-    */
-   public function testGetValueForTargetText($question, $value, $expected) {
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($value);
-
-      $output = $instance->getValueForTargetText('', true);
-      $this->string($output)->isEqualTo($expected);
-   }
-
    public function providerGetValueForDesign() {
+      $fieldtype = 'checkboxes';
+
       return [
          [
             'question' => $this->getQuestion([
-               'values' => ""
-            ]),
-            'value' => "",
-            'expected' => ''
-         ],
-         [
-            'question' => $this->getQuestion([
-               'values' => json_encode(['a', 'b', 'c'])
+               'fieldtype' => $fieldtype,
+               'values' => 'a\r\nb\r\nc'
             ]),
             'value' => json_encode(['a']),
             'expected' => 'a'
          ],
          [
             'question' => $this->getQuestion([
-               'values' => json_encode(['a', 'b', 'c'])
+               'fieldtype' => $fieldtype,
+               'values' => 'a\r\nb\r\nc'
             ]),
             'value' => json_encode(['a', 'c']),
             'expected' => "a\r\nc"

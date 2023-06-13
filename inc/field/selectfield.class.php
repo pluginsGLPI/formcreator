@@ -37,6 +37,7 @@ use Html;
 use Session;
 use Toolbox;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
 
 class SelectField extends RadiosField
 {
@@ -72,7 +73,8 @@ class SelectField extends RadiosField
       if (!empty($this->question->fields['values'])) {
          foreach ($values as $value) {
             if ((trim($value) != '')) {
-               $translatedValues[$value] = __($value, $domain);
+               $unsanitized = Sanitizer::unsanitize(__($value, $domain));
+               $translatedValues[$unsanitized] = $unsanitized;
             }
          }
 

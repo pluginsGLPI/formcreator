@@ -30,10 +30,10 @@
  */
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonAbstractFieldTestCase;
 use PluginFormcreatorFormAnswer;
 
-class SelectField extends CommonTestCase {
+class SelectField extends CommonAbstractFieldTestCase {
 
    public function providerGetAvailableValue() {
       $dataset = [
@@ -463,5 +463,35 @@ class SelectField extends CommonTestCase {
       $instance->deserializeValue($input);
       $output = $instance->getValueForApi();
       $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerGetValueForTargetText() {
+      $fieldtype = 'select';
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => $fieldtype,
+            'values'    => 'foo\r\nbar',
+         ]),
+         'value' => '',
+         'expectedValue' => '',
+      ];
+
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => $fieldtype,
+            'values'    => 'foo\r\nbar',
+         ]),
+         'value' => 'foo',
+         'expectedValue' => 'foo',
+      ];
+
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => $fieldtype,
+            'values'    => 'foo &#62; baz\r\nbar', // Saved sanitized in DB
+         ]),
+         'value' => 'foo &#62; baz', // Sanitized when used in a form
+         'expectedValue' => 'foo > baz',
+      ];
    }
 }
