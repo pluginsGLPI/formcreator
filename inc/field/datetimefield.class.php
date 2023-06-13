@@ -131,7 +131,7 @@ class DatetimeField extends PluginFormcreatorAbstractField
          return true;
       }
 
-      $check = DateTime::createFromFormat(self::DATE_FORMAT, $value);
+      $check = $this->getDateFromValue($value);
       return $check !== false;
    }
 
@@ -143,14 +143,25 @@ class DatetimeField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function equals($value): bool {
-      if ($this->value === '') {
-         $answer = '0000-00-00 00:00:00';
-      } else {
-         $answer = $this->value;
+   /**
+    * Convert a string value into DateTime object
+    *
+    * @param string $value
+    * @return false|DateTime
+    */
+   protected function getDateFromValue(string $value) {
+      if (empty($value)) {
+         $value = '0000-00-00 00:00:00';
       }
-      $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
-      $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
+      return DateTime::createFromFormat(self::DATE_FORMAT, $value);
+   }
+
+   public function equals($value): bool {
+      $answerDatetime = $this->getDateFromValue($this->value ?? '');
+      $compareDatetime = $this->getDateFromValue($value);
+      if ($compareDatetime === false) {
+         return false;
+      }
       return $answerDatetime == $compareDatetime;
    }
 
@@ -159,16 +170,8 @@ class DatetimeField extends PluginFormcreatorAbstractField
    }
 
    public function greaterThan($value): bool {
-      if (empty($this->value)) {
-         $answer = '0000-00-00 00:00:00';
-      } else {
-         $answer = $this->value;
-      }
-      if (empty($value)) {
-         $value = '0000-00-00';
-      }
-      $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
-      $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
+      $answerDatetime = $this->getDateFromValue($this->value ?? '');
+      $compareDatetime = $this->getDateFromValue($value);
       if ($compareDatetime === false) {
          return true;
       }
@@ -193,7 +196,7 @@ class DatetimeField extends PluginFormcreatorAbstractField
       }
 
       if ($input[$key] != ''
-         && DateTime::createFromFormat(self::DATE_FORMAT, $input[$key]) === false
+         && $this->getDateFromValue($input[$key]) === false
       ) {
          return false;
       }
