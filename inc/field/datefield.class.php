@@ -34,10 +34,6 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use Html;
 use DateTime;
-use Session;
-use PluginFormcreatorFormAnswer;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
-use Glpi\Application\View\TemplateRenderer;
 
 class DateField extends DatetimeField
 {
