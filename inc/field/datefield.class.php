@@ -42,6 +42,7 @@ use Glpi\Application\View\TemplateRenderer;
 class DateField extends DatetimeField
 {
    const DATE_FORMAT = 'Y-m-d';
+   const DATE_ZERO   = '0000-00-00';
 
    public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
@@ -77,7 +78,7 @@ class DateField extends DatetimeField
     */
    protected function getDateFromValue(string $value) {
       if (empty($value)) {
-         $value = '0000-00-00';
+         $value = self::DATE_ZERO;
       }
       $datetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
       if ($datetime !== false) {

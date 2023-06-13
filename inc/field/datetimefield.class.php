@@ -46,6 +46,7 @@ class DatetimeField extends PluginFormcreatorAbstractField
    protected $fields = null;
 
    const DATE_FORMAT = 'Y-m-d H:i:s';
+   const DATE_ZERO   = '0000-00-00 00:00:00';
 
    public function isPrerequisites(): bool {
       return true;
@@ -151,7 +152,7 @@ class DatetimeField extends PluginFormcreatorAbstractField
     */
    protected function getDateFromValue(string $value) {
       if (empty($value)) {
-         $value = '0000-00-00 00:00:00';
+         $value = self::DATE_ZERO;
       }
       return DateTime::createFromFormat(self::DATE_FORMAT, $value);
    }
