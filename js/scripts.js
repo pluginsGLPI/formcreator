@@ -788,11 +788,11 @@ var plugin_formcreator = new function() {
    };
 
    this.editQuestion = function (form) {
-      data = $(form).serializeArray();
       // Get question ID in the 1st available form of the modal
       var questionId = form.closest('.tab-content').querySelectorAll('form')[0].querySelector('[name="id"]').value;
       var that = this;
       tinyMCE.triggerSave();
+      data = $(form).serializeArray();
       $.post({
          url: formcreatorRootDoc + '/ajax/question_update.php',
          data: data,
