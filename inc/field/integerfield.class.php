@@ -56,45 +56,15 @@ class IntegerField extends FloatField
       }
 
       if (!empty($value) && !ctype_digit((string) $value)) {
-         Session::addMessageAfterRedirect(sprintf(__('This is not an integer: %s', 'formcreator'), $this->getTtranslatedLabel()), false, ERROR);
+         Session::addMessageAfterRedirect(
+            sprintf(__('This is not an integer: %s', 'formcreator'), $this->getTtranslatedLabel()),
+            false,
+            ERROR
+         );
          return false;
       }
 
-      $parameters = $this->getParameters();
-
-      // Check the field matches the format regex
-      if (!$parameters['regex']->isNewItem()) {
-         $regex = $parameters['regex']->fields['regex'];
-         if ($regex !== null && strlen($regex) > 0) {
-            if (!preg_match($regex, $value)) {
-               Session::addMessageAfterRedirect(
-                  sprintf(__('Specific format does not match: %s', 'formcreator'), $this->getTtranslatedLabel()),
-                  false,
-                  ERROR
-               );
-               return false;
-            }
-         }
-      }
-
-      // Check the field is in the range
-      if (!$parameters['range']->isNewItem()) {
-         $rangeMin = $parameters['range']->fields['range_min'];
-         $rangeMax = $parameters['range']->fields['range_max'];
-         if ($rangeMin > 0 && $value < $rangeMin) {
-            $message = sprintf(__('The following number must be greater than %d: %s', 'formcreator'), $rangeMin, $this->getTtranslatedLabel());
-            Session::addMessageAfterRedirect($message, false, ERROR);
-            return false;
-         }
-
-         if ($rangeMax > 0 && $value > $rangeMax) {
-            $message = sprintf(__('The following number must be lower than %d: %s', 'formcreator'), $rangeMax, $this->getTtranslatedLabel());
-            Session::addMessageAfterRedirect($message, false, ERROR);
-            return false;
-         }
-      }
-
-      return true;
+      return parent::isValidValue($value);
    }
 
    public static function getName(): string {

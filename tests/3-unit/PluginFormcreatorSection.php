@@ -32,6 +32,7 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorCommon;
 use PluginFormcreatorCondition;
+use PluginFormcreatorConditionnableInterface;
 use PluginFormcreatorForm;
 use PluginFormcreatorLinker;
 use PluginFormcreatorQuestion;

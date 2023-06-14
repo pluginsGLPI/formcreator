@@ -865,10 +865,6 @@ class DropdownField extends PluginFormcreatorAbstractField
       // $questionID = $question->fields['id'];
       $questionID = $this->getQuestion()->getID();
 
-      // We need english locale to search searchOptions by name
-      $oldLocale = $TRANSLATE->getLocale();
-      $TRANSLATE->setLocale("en_GB");
-
       // Load target item from DB
       $itemtype = $this->question->fields['itemtype'];
 
@@ -876,6 +872,10 @@ class DropdownField extends PluginFormcreatorAbstractField
       if (empty($itemtype) || !class_exists($itemtype)) {
          return $content;
       }
+
+      // We need english locale to search searchOptions by name
+      $oldLocale = $TRANSLATE->getLocale();
+      $TRANSLATE->setLocale("en_GB");
 
       $item = new $itemtype;
       $item->getFromDB($answer);
@@ -891,6 +891,11 @@ class DropdownField extends PluginFormcreatorAbstractField
          // Convert Property_Name to Property Name
          $property = str_replace("_", " ", $property);
          $searchOption = $item->getSearchOptionByField("name", $property);
+         if (count($searchOption) == 0) {
+            trigger_error("No search option found for $property", E_USER_WARNING);
+            $TRANSLATE->setLocale($oldLocale);
+            return $content;
+         }
 
          // Execute search
          $data = Search::prepareDatasForSearch(get_class($item), [
