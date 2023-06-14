@@ -152,7 +152,11 @@ class FloatField extends PluginFormcreatorAbstractField
          $regex = $parameters['regex']->fields['regex'];
          if ($regex !== null && strlen($regex) > 0) {
             if (!preg_match($regex, $value)) {
-               Session::addMessageAfterRedirect(sprintf(__('Specific format does not match: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
+               Session::addMessageAfterRedirect(
+                  sprintf(__('Specific format does not match: %s', 'formcreator'), $this->question->fields['name']),
+                  false,
+                  ERROR
+               );
                return false;
             }
          }
