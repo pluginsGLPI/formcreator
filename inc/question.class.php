@@ -1308,4 +1308,43 @@ PluginFormcreatorTranslatableInterface
 
       return $parameters;
    }
+
+   /*
+    * Get all tags availabie for targets of the form
+    *
+    * @param string $search Search string to filter tags
+    * @return array
+    */
+   public function getTags(string $search = ''): array {
+      if (!$this->loadField($this->fields['fieldtype'])) {
+         return [];
+      }
+
+      $tags = [];
+      $text = 'question_' . $this->getID();
+      if ($search == '' || strpos(strtolower($text), strtolower($search)) !== false || strpos(strtolower($this->fields['name']), strtolower($search)) !== false) {
+         $tags[] = [
+            'id'     => 'question_' . $this->getID(),
+            'name'   => 'question_' . $this->getID(),
+            'text'   => 'question_' . $this->getID(),
+            'q_name' => $this->fields['name'], // Do not use form translation here
+         ];
+      }
+
+      $text = 'answer_' . $this->getID();
+      if ($search == '' || strpos(strtolower($text), strtolower($search)) !== false || strpos(strtolower($this->fields['name']), strtolower($search)) !== false) {
+         $tags[] = [
+            'id'     => 'answer_' . $this->getID(),
+            'name'   => 'answer_' . $this->getID(),
+            'text'   => 'answer_' . $this->getID(),
+            'q_name' => $this->fields['name'], // Do not use form translation here
+         ];
+      }
+
+      if ($this->fields['fieldtype'] == 'dropdown' || $this->fields['fieldtype'] == 'glpiselect') {
+         $tags = array_merge($tags, $this->field->getTags($search));
+      }
+
+      return $tags;
+   }
 }

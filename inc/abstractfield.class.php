@@ -389,4 +389,8 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
    public function isRenderedInTarget(): bool {
       return true;
    }
+
+   public function getTags(string $search = ''): array {
+      return [];
+   }
 }

@@ -330,4 +330,12 @@ interface PluginFormcreatorFieldInterface
    public function displayTabContentForItem(CommonGLPI $item, string $tabnum): bool;
 
    public function getRawValue();
+
+   /*
+    * Get all tags availabie for targets of the form
+    *
+    * @param string $search Search string to filter tags
+    * @return array
+    */
+   public function getTags(string $search = ''): array;
 }

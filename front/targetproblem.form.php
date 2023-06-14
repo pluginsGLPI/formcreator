@@ -84,6 +84,7 @@ if (isset($_POST['update'])) {
       'PluginFormcreatorForm'
    );
 
+   Html::requireJs('plugin_formcreator_tags');
    $targetProblem->getFromDB((int) $_REQUEST['id']);
    $form = PluginFormcreatorForm::getByItem($targetProblem);
    $_SESSION['glpilisttitle'][$targetProblem::getType()] = sprintf(

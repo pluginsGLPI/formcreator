@@ -27,7 +27,6 @@
  # @link      http://plugins.glpi-project.org/#/plugin/formcreator
  # ---------------------------------------------------------------------
  #}
-{% import 'components/form/fields_macros.html.twig' as fields %}
 
 {% macro dropdownQuestionType(name, value, label = '', options = {}) %}
    {% import 'components/form/fields_macros.html.twig' as fields %}
@@ -402,4 +401,83 @@
       }|merge(options)])|raw }}
    {% endset %}
    {{ fields.field(name, field, label, options) }}
+{% endmacro %}
+
+{% macro targetTextareaField(name, value, label = '', options = {}) %}
+   {% import 'components/form/fields_macros.html.twig' as fields %}
+
+   {% set options = {
+      'rand': random(),
+      'enable_richtext': false,
+      'enable_images': true,
+      'enable_fileupload': false,
+      'entities_id': session('glpiactive_entity'),
+      'uploads': []
+   }|merge(options) %}
+
+   {% if options.fields_template.isMandatoryField(name) %}
+      {% set options = {'required': true}|merge(options) %}
+   {% endif %}
+   {% set id = options.id|length > 0 ? options.id : (name ~ '_' ~ options.rand) %}
+
+   {% set field %}
+      {# 100% width is here to prevent width issues with tinymce #}
+      <textarea class="form-control {{ options.input_addclass }}" id="{{ id }}" name="{{ name }}" rows="3"
+                style="width: 100%;"
+                {{ options.disabled ? 'disabled' : '' }}
+                {{ options.readonly ? 'readonly' : '' }}
+                {{ options.required ? 'required' : '' }}>{{ options.enable_richtext ? value|safe_html|escape : value|verbatim_value }}</textarea>
+   {% endset %}
+
+   {% if options.enable_richtext %}
+      {% do call('Html::initEditorSystem', [
+         id,
+         options.rand,
+         true,
+         options.disabled|default(false),
+         options.enable_images
+      ]) %}
+   {% endif %}
+
+   {% set add_html = '' %}
+   {% if not options.readonly and options.enable_fileupload %}
+      {% set add_html %}
+         {% do call('Html::file', [{
+             'editor_id': id,
+             'multiple': true,
+             'uploads': options.uploads,
+             'required': options.fields_template.isMandatoryField('_documents_id')
+         }]) %}
+      {% endset %}
+   {% elseif not options.readonly and not options.enable_fileupload and options.enable_richtext and options.enable_images %}
+      {% set add_html %}
+         {% do call('Html::file', [{
+             'editor_id': id,
+             'name': name,
+             'only_uploaded_files': true,
+             'uploads': options.uploads,
+             'required': options.fields_template.isMandatoryField('_documents_id')
+         }]) %}
+      {% endset %}
+   {% endif %}
+
+   {% if add_html != '' %}
+      {% if options.add_field_html is defined %}
+         {% set add_html = add_html ~ options.add_field_html %}
+      {% endif %}
+      {% set options = options|merge({'add_field_html': add_html}) %}
+   {% endif %}
+
+   {{ fields.field(name, field, label, options) }}
+   <script>
+      $(
+         function() {
+            const tag_mention = new GLPI.RichText.FormcreatorTag(
+               tinymce.get('{{ id }}'),
+               {{ options.plugin_formcreator_forms_id }},
+            );
+            tag_mention.register();
+         }
+      )
+   </script>
 {% endmacro %}
