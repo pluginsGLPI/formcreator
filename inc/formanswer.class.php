@@ -1404,9 +1404,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                continue;
             }
             // Count the errors in session
-            $errors_count = $_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]
-                           ? count($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR])
-                           : 0;
+            $errors_count = 0;
+            if (isset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR])) {
+               $errors_count = count($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
+            }
             if (PluginFormcreatorFields::isVisible($field->getQuestion(), $this->questionFields) && !$this->questionFields[$id]->isValid()) {
                $new_errors_count = $_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]
                                    ? count($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR])
