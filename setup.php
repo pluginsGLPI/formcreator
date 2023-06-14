@@ -332,6 +332,9 @@ function plugin_formcreator_hook(): void {
       PluginFormcreatorCommon::class, 'hookPostShowTab',
    ];
 
+   // declare specific JavaScript
+   $PLUGIN_HOOKS['javascript']['plugin_formcreator_tags'][] = Plugin::getWebDir('formcreator', false) . '/js/tag.js';
+
    // Load JS and CSS files if we are on a page which need them
    if (isset($_SERVER['REQUEST_URI'])) {
       if (strpos($_SERVER['REQUEST_URI'], 'formcreator') !== false

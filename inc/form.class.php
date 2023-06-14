@@ -2766,4 +2766,22 @@ PluginFormcreatorTranslatableInterface
 
       return $form_url;
    }
+
+   /*
+    * Get all tags availabie for targets of the form
+    *
+    * @param string $search Search string to filter tags
+    * @return array
+    */
+   public function getTags(string $search = ''): array {
+      $tags = [];
+
+      $questions = PluginFormcreatorQuestion::getQuestionsFromForm($this->getID());
+
+      foreach ($questions as $question) {
+         $tags = array_merge($tags, $question->getTags($search));
+      }
+
+      return $tags;
+   }
 }

@@ -98,7 +98,7 @@ if (isset($_POST['update'])) {
       'PluginFormcreatorForm'
    );
 
-
+   Html::requireJs('plugin_formcreator_tags');
    $targetTicket->getFromDB((int) $_REQUEST['id']);
    $form = PluginFormcreatorForm::getByItem($targetTicket);
    $_SESSION['glpilisttitle'][$targetTicket::getType()] = sprintf(

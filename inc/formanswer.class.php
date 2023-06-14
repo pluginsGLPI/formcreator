@@ -1491,9 +1491,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $errors_count = count($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR] ?? []);
             if (PluginFormcreatorFields::isVisible($field->getQuestion(), $this->questionFields) && !$this->questionFields[$id]->isValid()) {
                $new_errors_count = count($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR] ?? []);
-
                if ($new_errors_count <= $errors_count) {
-                  // If there are new errors, we add a message to the user
+                  // If there are no new errors, we add a message to the user
                   $field_name = __($field->getQuestion()->fields['name'], $domain);
                   Session::addMessageAfterRedirect(
                      sprintf(__('Answer is invalid in %1$s', 'formcreator'), $field_name),
