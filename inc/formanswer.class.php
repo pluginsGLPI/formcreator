@@ -1506,7 +1506,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   );
                }
 
-              $this->isAnswersValid = false;
+               $this->isAnswersValid = false;
             }
          }
       }
