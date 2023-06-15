@@ -61,10 +61,8 @@ use SLM;
 use OLA;
 use QueryExpression;
 use QuerySubQuery;
-use QueryUnion;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
-use QueryExpression;
 use State;
 
 class DropdownField extends PluginFormcreatorAbstractField
