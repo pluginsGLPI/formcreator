@@ -157,7 +157,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'required'                       => '0',
                'default_values'                 => 'empty@example.com',
                'desription'                     => "",
-               'row'                            => '1',
+               'row'                            => '0',
                'col'                            => '0',
                'width'                          => '4',
                'height'                         => '1',
@@ -168,10 +168,10 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'fieldtype'                      => 'email',
                'name'                           => "email field",
                'values'                         => "",
-               'required'                       => '1',
+               'required'                       => '0',
                'default_values'                 => 'empty@example.com',
                'desription'                     => "",
-               'row'                            => '1',
+               'row'                            => '0',
                'col'                            => '0',
                'width'                          => '4',
                'height'                         => '1',
@@ -364,14 +364,9 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          $this->sessionHasMessage($expectedError, ERROR);
          $this->array($output)->hasSize(0);
       } else {
-         $this->array($output)->hasKeys(array_keys($expected));
-         /*
-         // Disabled for now
-         $this->array($output)->containsValues($expected);
-         */
-         $this->array($output)->hasKey('uuid');
-         // The method added a UUID key
-         $this->array($output)->size->isEqualTo(count($expected) + 1);
+         // The UUID is the same as the one we provided
+         $expected['uuid'] = $output['uuid'];
+         $this->array($output)->isEqualTo($expected);
       }
    }
 
