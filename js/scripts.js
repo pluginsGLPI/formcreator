@@ -792,7 +792,7 @@ var plugin_formcreator = new function() {
       var questionId = form.closest('.tab-content').querySelectorAll('form')[0].querySelector('[name="id"]').value;
       var that = this;
       tinyMCE.triggerSave();
-      data = $(form).serializeArray();
+      var data = $(form).serializeArray();
       $.post({
          url: formcreatorRootDoc + '/ajax/question_update.php',
          data: data,
