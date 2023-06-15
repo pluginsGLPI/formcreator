@@ -1235,11 +1235,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
 
          // Don't save tags, additional fields or descriptions in "full form"
-         if ($this->fields[$question_line['id']]->isRenderedInTarget() === false) {
+         if ($this->questionFields[$question_line['id']]->isRenderedInTarget() === false) {
             continue;
          }
 
-         if (!PluginFormcreatorFields::isVisible($this->fields[$question_line['id']]->getQuestion(), $this->questionFields)) {
+         if (!PluginFormcreatorFields::isVisible($this->questionFields[$question_line['id']]->getQuestion(), $this->questionFields)) {
             continue;
          }
 
