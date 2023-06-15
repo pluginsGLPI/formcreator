@@ -571,7 +571,7 @@ class PluginFormcreatorSection extends CommonTestCase {
 
       $testedClassName = $this->getTestedClassName();
       $output = $testedClassName::getSectionsFromForm($form->getID());
-      $this->array($output)->hasSize(0);
+      $this->array(iterator_to_array($output))->hasSize(0);
 
       $sections = [];
       $section = $this->getSection([
@@ -587,9 +587,9 @@ class PluginFormcreatorSection extends CommonTestCase {
       $sections[] = $section;
 
       $output = $testedClassName::getSectionsFromForm($form->getID());
-      $this->array($output)->hasSize(2);
+      $this->array(iterator_to_array($output))->hasSize(2);
 
-      $output = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
+      $output = $testedClassName::getSectionsFromForm($form->getID());
       $found = 0;
       foreach ($output as $section) {
          foreach ($sections as $search) {
