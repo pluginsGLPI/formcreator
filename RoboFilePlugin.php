@@ -130,7 +130,16 @@ class RoboFilePlugin extends \Robo\Tasks
     * @return void
     */
    public function localesMo() {
-      $this->_exec('./tools/release --compile-mo');
+      $po_files = preg_grep('/\.po$/', scandir('./locales'));
+      foreach ($po_files as $po_file) {
+         $mo_file = preg_replace('/\.po$/', '.mo', $po_file);
+         echo("Processing {$po_file}\n");
+         passthru("cd ./locales && msgfmt -f -o {$mo_file} {$po_file}", $exit_code);
+         if ($exit_code > 0) {
+            exit($exit_code);
+         }
+      }
+
       return $this;
    }
 
