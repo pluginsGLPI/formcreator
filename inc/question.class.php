@@ -279,8 +279,6 @@ PluginFormcreatorTranslatableInterface
          return '';
       }
 
-      $html = '';
-
       $field = $this->getSubField();
       if (!$field->isPrerequisites()) {
          return '';
@@ -292,7 +290,7 @@ PluginFormcreatorTranslatableInterface
       $x = $this->fields['col'];
       $width = $this->fields['width'];
       $hiddenAttribute = $isVisible ? '' : 'hidden=""';
-      $html .= '<div'
+      $html = '<div'
          . ' gs-x="' . $x . '"'
          . ' gs-w="' . $width . '"'
          . ' data-itemtype="' . self::class . '"'
