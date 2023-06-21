@@ -106,7 +106,7 @@ class GlpiselectField extends DropdownField
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (!isset($input['itemtype']) || empty($input['itemtype'])) {
+      if (isset($input['itemtype']) && empty($input['itemtype'])) {
          Session::addMessageAfterRedirect(
             __('The field value is required:', 'formcreator') . ' ' . $input['name'],
             false,
@@ -115,8 +115,7 @@ class GlpiselectField extends DropdownField
          return [];
       }
 
-      $itemtype = $input['itemtype'];
-      $input['itemtype'] = $itemtype;
+      $itemtype = $input['itemtype'] ?? $this->getSubItemtype();
       $input['values'] = [];
       // Params for entity restrictables itemtypes
       $input['values']['entity_restrict'] = $input['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
