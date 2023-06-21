@@ -71,7 +71,7 @@ class PluginFormcreatorUpgradeTo2_13_6 {
 
       foreach ($tables as $table => $fields) {
          $request = [
-            'SELECT' => ['id'] + $fields,
+            'SELECT' => array_merge(['id'], $fields),
             'FROM'   => $table
          ];
          foreach ($DB->request($request) as $row) {
