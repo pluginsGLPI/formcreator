@@ -98,7 +98,7 @@ class PluginFormcreatorUpgradeTo2_13_7 {
       $dashboard = new Dashboard();
       $found = $dashboard->getFromDB("plugin_formcreator_issue_counters");
 
-      if(!$found) {
+      if (!$found) {
          // Unable to fetch dashboard
          return;
       };
