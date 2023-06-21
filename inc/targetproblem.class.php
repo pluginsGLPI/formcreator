@@ -222,7 +222,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
 
       $data = $this->prepareUploadedFiles($data, $formanswer);
 
-      $this->appendFieldsData($formanswer, $data);
+      $data = $this->appendFieldsData($data, $formanswer);
 
       // Cleanup actors array
       $data = $this->cleanActors($data);
