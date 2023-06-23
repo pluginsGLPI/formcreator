@@ -36,6 +36,8 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
+Session::checkLoginUser();
+
 if (!PluginFormcreatorFormAnswer::canView()) {
    Html::displayRightError();
 }
