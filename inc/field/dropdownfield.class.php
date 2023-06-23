@@ -304,14 +304,15 @@ class DropdownField extends PluginFormcreatorAbstractField
       // Set specific root if defined (CommonTreeDropdown)
       $baseLevel = 0;
       if (isset($decodedValues['show_tree_root'])
-         && (int) $decodedValues['show_tree_root'] > 0
+         && ((int) $decodedValues['show_tree_root'] > 0
+           || $itemtype == Entity::class && (int) $decodedValues['show_tree_root'] > -1)
       ) {
          $sons = (new DBUtils)->getSonsOf(
             $itemtype::getTable(),
             $decodedValues['show_tree_root']
          );
          $decodedValues['selectable_tree_root'] = $decodedValues['selectable_tree_root'] ?? '1';
-         if (!isset($decodedValues['selectable_tree_root']) || $decodedValues['selectable_tree_root'] == '0') {
+         if ($decodedValues['selectable_tree_root'] == '0') {
             unset($sons[$decodedValues['show_tree_root']]);
          }
 
