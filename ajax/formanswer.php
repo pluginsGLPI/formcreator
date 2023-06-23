@@ -55,7 +55,7 @@ if (!isset($_SESSION['glpiname'])) {
 
 // Save form
 $backup_debug = $_SESSION['glpi_use_mode'];
-$_SESSION['glpi_use_mode'] = \Session::NORMAL_MODE;
+$_SESSION['glpi_use_mode'] = Session::NORMAL_MODE;
 $formAnswer = PluginFormcreatorCommon::getFormAnswer();
 if ($formAnswer->add($_POST) === false) {
    http_response_code(400);
