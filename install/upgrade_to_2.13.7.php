@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Dashboard\Dashboard;
+use Glpi\Dashboard\Item;
 use Glpi\Toolbox\Sanitizer;
 
 class PluginFormcreatorUpgradeTo2_13_7 {
@@ -45,6 +47,7 @@ class PluginFormcreatorUpgradeTo2_13_7 {
    public function upgrade(Migration $migration) {
       $this->migration = $migration;
       $this->fixEncodingInQuestions();
+      $this->resizeWidgets();
    }
 
    /**
@@ -81,6 +84,40 @@ class PluginFormcreatorUpgradeTo2_13_7 {
             ['values' => $values],
             ['id' => $row['id']]
          );
+      }
+   }
+
+   /**
+    * Resize widgets of the `plugin_formcreator_issue_counters` dashboard to match
+    * the mini_tickets core dashboard style
+    *
+    * @return void
+    */
+   public function resizeWidgets() {
+      // Get container
+      $dashboard = new Dashboard();
+      $found = $dashboard->getFromDB("plugin_formcreator_issue_counters");
+
+      if (!$found) {
+         // Unable to fetch dashboard
+         return;
+      };
+
+      $di = new Item();
+      $cards = $di->find(['dashboards_dashboards_id' => $dashboard->fields['id']]);
+      $x = 0;
+
+      foreach ($cards as $card) {
+         $di = new Item();
+         $di->update([
+            'id'     => $card['id'],
+            'width'  => 4,
+            'height' => 2,
+            'x'      => $x,
+            'y'      => 0,
+         ]);
+
+         $x +=4;
       }
    }
 }

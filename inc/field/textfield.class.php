@@ -109,7 +109,7 @@ class TextField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($domain, $richText): ?string {
-      return Sanitizer::encodeHtmlSpecialChars($this->value);
+      return Sanitizer::encodeHtmlSpecialChars($this->value ?? '');
    }
 
    public function moveUploads() {

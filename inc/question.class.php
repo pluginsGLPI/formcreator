@@ -55,7 +55,7 @@ PluginFormcreatorTranslatableInterface
    public $taborientation  = 'horizontal';
 
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
-   private ?PluginFormcreatorFieldInterface $field = null;
+   public ?PluginFormcreatorFieldInterface $field = null;
 
    private $skipChecks = false;
 

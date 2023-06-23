@@ -509,13 +509,25 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $hide_technician = false;
       $hide_technician_group = false;
       if (!Session::isCron()) {
-         $user = new User();
-         if (empty($user->getAnonymizedName(Session::getActiveEntity()))) {
-            $hide_technician = true;
-         }
-         $group = new Group();
-         if (empty($group->getAnonymizedName(Session::getActiveEntity()))) {
-            $hide_technician_group = true;
+         $anonymisation = Entity::getUsedConfig(
+            'anonymize_support_agents',
+            Session::getActiveEntity()
+         );
+         switch ($anonymisation) {
+            case Entity::ANONYMIZE_USE_GENERIC:
+            case Entity::ANONYMIZE_USE_NICKNAME:
+               $hide_technician       = true;
+               $hide_technician_group = true;
+               break;
+
+            case Entity::ANONYMIZE_USE_GENERIC_USER:
+            case Entity::ANONYMIZE_USE_NICKNAME_USER:
+               $hide_technician       = true;
+               break;
+
+            case Entity::ANONYMIZE_USE_GENERIC_GROUP:
+               $hide_technician_group = true;
+               break;
          }
       }
 

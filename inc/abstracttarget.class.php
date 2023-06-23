@@ -221,7 +221,7 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
     * @param PluginFormcreatorFormanswer $formanswer the source formanswer
     * @return array
     */
-   protected function appendFieldsData(array$input, PluginFormcreatorFormanswer $formanswer): array {
+   protected function appendFieldsData(array $input, PluginFormcreatorFormanswer $formanswer): array {
       global $DB;
 
       //get all PluginFormcreatorAnswer

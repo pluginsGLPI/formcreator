@@ -70,4 +70,20 @@
             input_class: 'col-xxl-8',
       }) }}
    {% endif %}
+
+   {{ fields.nullField({
+      label_class: 'col-xxl-4',
+      input_class: 'col-xxl-8',
+   }) }}
+
+   {{ fields.dropdownYesNo(
+      'required',
+      item.field.getField().fields['mandatory'],
+      __('Required', 'formcreator'), {
+         label_class: 'col-xxl-4',
+         input_class: 'col-xxl-8',
+         disabled: true,
+      }
+   ) }}
+
 {% endblock %}
