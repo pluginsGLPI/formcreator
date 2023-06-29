@@ -1515,7 +1515,7 @@ msgstr "Brak formularzy oczekujących na zatwierdzenie"
 
 #: inc/form.class.php:1035
 msgid "All my forms (validator)"
-msgstr "Moje wszystkie formilarze (zatwierdzający)"
+msgstr "Moje wszystkie formularze (zatwierdzający)"
 
 #: inc/form.class.php:1095 inc/form.class.php:1229
 #: inc/abstracttarget.class.php:162 inc/abstractitiltarget.class.php:1573
