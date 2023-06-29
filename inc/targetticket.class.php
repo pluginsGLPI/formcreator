@@ -833,7 +833,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $richText = true;
       $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
       $data['name'] = $this->prepareTemplate(
-         __($this->fields['target_name'], $domain),
+         Sanitizer::unsanitize(__($this->fields['target_name'], $domain)),
          $formanswer,
          false
       );
@@ -877,7 +877,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 
       $data = $this->prepareUploadedFiles($data, $formanswer);
 
-      $this->appendFieldsData($formanswer, $data);
+      $data = $this->appendFieldsData($data, $formanswer);
 
       // Cleanup actors array
       $data = $this->cleanActors($data);

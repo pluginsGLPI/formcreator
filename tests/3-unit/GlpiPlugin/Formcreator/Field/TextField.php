@@ -397,6 +397,12 @@ class TextField extends CommonTestCase {
             'expected' => true,
             'expectedValue' => 'foo\\bar',
          ],
+         [
+            'question' => $this->getQuestion(),
+            'value' => '"><img src=x onerror="alert(1337)" x=x>',
+            'expected' => true,
+            'expectedValue' => '"&#62;&#60;img src=x onerror="alert(1337)" x=x&#62;',
+         ],
       ];
    }
 
@@ -420,5 +426,13 @@ class TextField extends CommonTestCase {
       }
    }
 
-
+   public function testGetRenderedHtml() {
+      // XSS check
+      $instance = $this->newTestedInstance($this->getQuestion());
+      $instance->deserializeValue('"><img src=x onerror="alert(1337)" x=x>');
+      $output = $instance->getRenderedHtml('no_domain', false);
+      $this->string($output)->isEqualTo('"&#62;&#60;img src=x onerror="alert(1337)" x=x&#62;');
+      $output = $instance->getRenderedHtml('no_domain', true);
+      $this->string($output)->contains('&quot;><img src=x onerror=&quot;alert(1337)&quot; x=x>');
+   }
 }

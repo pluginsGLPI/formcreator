@@ -313,4 +313,28 @@ class TextareaField extends CommonTestCase {
       $output = $instance->getValueForApi();
       $this->string($output)->isEqualTo($expected);
    }
+
+   public function testGetRenderedHtml() {
+      // XSS check
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $instance = $this->newTestedInstance($this->getQuestion());
+      $instance->setFormAnswer($formAnswer);
+      $instance->deserializeValue('"><img src=x onerror="alert(1337)" x=x>');
+      $output = $instance->getRenderedHtml('no_domain', false);
+      $this->string($output)->isEqualTo('"&gt;<img src="x" alt="image"  loading="lazy">');
+      $output = $instance->getRenderedHtml('no_domain', true);
+      $this->string($output)->contains('"><img src=x onerror="alert(1337)" x=x>');
+   }
+
+   public function providerGetValueForTargetText() {
+      $fieldtype = 'textarea';
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => $fieldtype,
+         ]),
+         'value' => '<p>foo</p><p>bar</p>',
+         'expectedValue' => 'foobar',
+         'expectedRichValue' => '<p>foo</p><p>bar</p>',
+      ];
+   }
 }

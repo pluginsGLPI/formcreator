@@ -787,33 +787,12 @@ var plugin_formcreator = new function() {
       });
    };
 
-   this.editQuestion = function (button) {
-      var data = null;
-      var forms = $('form[data-itemtype="PluginFormcreatorQuestion"]');
-      if (button.getAttribute('type') === 'submit') {
-         // Submitting the modal; then let's save the inputs of all tabs
-         for (const form of Object.values(forms)) {
-            var formData = $(form).serializeArray();
-            if (data === null) {
-               data = formData;
-            } else {
-               data = data.concat(formData);
-            }
-         }
-      } else {
-         // Save only the inputs of the current tab
-         for (const form of Object.values(forms)) {
-            if (!form.checkVisibility()) {
-               continue;
-            }
-            data = $(form).serializeArray();
-            break;
-         }
-      }
-      // Get questin ID in the 1st available form of the modal
-      var questionId = forms[0].querySelector('[name="id"]').value;
+   this.editQuestion = function (form) {
+      // Get question ID in the 1st available form of the modal
+      var questionId = form.closest('.tab-content').querySelectorAll('form')[0].querySelector('[name="id"]').value;
       var that = this;
       tinyMCE.triggerSave();
+      var data = $(form).serializeArray();
       $.post({
          url: formcreatorRootDoc + '/ajax/question_update.php',
          data: data,
@@ -1517,7 +1496,7 @@ var plugin_formcreator = new function() {
 // === TARGETS ===
 
 $(document).on('click', '.plugin_formcreator_duplicate_target', function() {
-   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to duplicate this target:', 'formcreator'))) {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to duplicate this target?', 'formcreator'))) {
       $.post({
         url: formcreatorRootDoc + '/ajax/form_duplicate_target.php',
         data: {
@@ -1534,7 +1513,7 @@ $(document).on('click', '.plugin_formcreator_duplicate_target', function() {
 });
 
 $(document).on('click', '.plugin_formcreator_delete_target', function() {
-   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this target:', 'formcreator'))) {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this target?', 'formcreator'))) {
       $.post({
         url: formcreatorRootDoc + '/ajax/form_delete_target.php',
         data: {

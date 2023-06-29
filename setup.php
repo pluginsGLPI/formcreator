@@ -37,7 +37,7 @@ define('PLUGIN_FORMCREATOR_VERSION', '2.14.0-dev');
 // Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.14');
 // is or is not an official release of the plugin
-define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
+define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', false);
 
 // Minimal GLPI version, inclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '10.0.5');
@@ -332,6 +332,9 @@ function plugin_formcreator_hook(): void {
       PluginFormcreatorCommon::class, 'hookPostShowTab',
    ];
 
+   // declare specific JavaScript
+   $PLUGIN_HOOKS['javascript']['plugin_formcreator_tags'][] = Plugin::getWebDir('formcreator', false) . '/js/tag.js';
+
    // Load JS and CSS files if we are on a page which need them
    if (isset($_SERVER['REQUEST_URI'])) {
       if (strpos($_SERVER['REQUEST_URI'], 'formcreator') !== false
@@ -340,7 +343,7 @@ function plugin_formcreator_hook(): void {
             Session::getCurrentInterface() == 'helpdesk') {
 
          // Add specific JavaScript
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js';
+         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'js/scripts.js';
       }
 
       if (isset($_SESSION['glpiactiveentities_string'])) {

@@ -30,6 +30,11 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorLinker;
+use PluginFormcreatorCondition;
+use PluginFormcreatorForm;
+use PluginFormcreatorSection;
+use PluginFormcreatorForm_Validator;
 
 class PluginFormcreatorQuestion extends CommonTestCase {
 
@@ -39,15 +44,15 @@ class PluginFormcreatorQuestion extends CommonTestCase {
 
    public function setup() {
       // instanciate classes
-      $form           = new \PluginFormcreatorForm;
-      $form_section   = new \PluginFormcreatorSection;
+      $form           = new PluginFormcreatorForm;
+      $form_section   = new PluginFormcreatorSection;
       $form_question  = new \PluginFormcreatorQuestion;
 
       // create objects
       $forms_id = $form->add([
          'name'                => "test clone form",
          'is_active'           => true,
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER
       ]);
 
       $sections_id = $form_section->add([
@@ -77,8 +82,8 @@ class PluginFormcreatorQuestion extends CommonTestCase {
 
          case 'testPrepareInputForAdd':
          case 'testPrepareInputForUpdate':
-            $this->form = new \PluginFormcreatorForm;
-            $this->section = new \PluginFormcreatorSection;
+            $this->form = new PluginFormcreatorForm;
+            $this->section = new PluginFormcreatorSection;
             $this->form->add([
                'name' => "$method"
             ]);
@@ -129,7 +134,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $this->integer($newQuestion_id)->isGreaterThan(0);
 
       //get cloned question
-      $new_question  = new \PluginFormcreatorQuestion;
+      $new_question  = $this->newTestedInstance();
       $new_question->getFromDB($newQuestion_id);
 
       // check uuid
@@ -152,26 +157,25 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'required'                       => '0',
                'default_values'                 => 'empty@example.com',
                'desription'                     => "",
-               'row'                            => '1',
+               'row'                            => '0',
                'col'                            => '0',
                'width'                          => '4',
                'height'                         => '1',
-               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'                      => PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
             ],
             'expected' => [
                'plugin_formcreator_sections_id' => $section1->getID(),
                'fieldtype'                      => 'email',
                'name'                           => "email field",
                'values'                         => "",
-               'required'                       => '1',
+               'required'                       => '0',
                'default_values'                 => 'empty@example.com',
                'desription'                     => "",
-               'row'                            => '1',
+               'row'                            => '0',
                'col'                            => '0',
                'width'                          => '4',
                'height'                         => '1',
-               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'itemtype'                       => '',
+               'show_rule'                      => PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
             ],
             'expectedError' => null,
          ],
@@ -186,7 +190,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $section2 = $this->getSection(
          [],
          [
-            'access_rights' => \PluginFormcreatorForm::ACCESS_PUBLIC,
+            'access_rights' => PluginFormcreatorForm::ACCESS_PUBLIC,
          ]
       );
       $dataset = [
@@ -204,7 +208,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'col'                            => '0',
                'width'                          => '4',
                'height'                         => '1',
-               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'                      => PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -230,7 +234,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'col'                            => '0',
                'width'                          => '4',
                'height'                         => '1',
-               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'                      => PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'itemtype'                       => '',
                '_parameters'     => [
                   'text' => [
@@ -260,7 +264,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'col'                            => '0',
                'width'                          => '4',
                'height'                         => '1',
-               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'                      => PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'itemtype'                       => '',
                '_parameters'     => [
                   'text' => [
@@ -291,7 +295,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'col'                            => '0',
                'width'                          => '4',
                'height'                         => '1',
-               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'                      => PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'itemtype'                       => '',
                '_parameters'     => [
                   'text' => [
@@ -326,11 +330,11 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          'values' => '',
          'description' => '',
          'order' => '1',
-         'show_rule' => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+         'show_rule' => PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
          'uuid' => $uuid,
       ];
 
-      $linker = new \PluginFormcreatorLinker();
+      $linker = new PluginFormcreatorLinker();
       $questionId = \PluginFormcreatorQuestion::import($linker, $input, $section->getID());
       $this->integer($questionId)->isGreaterThan(0);
 
@@ -349,25 +353,20 @@ class PluginFormcreatorQuestion extends CommonTestCase {
    }
 
    /**
-    * @dataProvider providerPrepareInputForAdd
+    * @data Provider providerPrepareInputForAdd
     * @dataProvider providerPrepareInputForAddEmail
     */
    public function testPrepareInputForAdd($input, $expected, $expectedError) {
-      $instance = new \PluginFormcreatorQuestion();
+      $instance = $this->newTestedInstance();
       $output = $instance->prepareInputForAdd($input);
 
       if ($expectedError !== null) {
          $this->sessionHasMessage($expectedError, ERROR);
          $this->array($output)->hasSize(0);
       } else {
-         $this->array($output)->hasKeys(array_keys($expected));
-         /*
-         // Disabled for now
-         $this->array($output)->containsValues($expected);
-         */
-         $this->array($output)->hasKey('uuid');
-         // The method added a UUID key
-         $this->array($output)->size->isEqualTo(count($expected) + 1);
+         // The UUID is the same as the one we provided
+         $expected['uuid'] = $output['uuid'];
+         $this->array($output)->isEqualTo($expected);
       }
    }
 

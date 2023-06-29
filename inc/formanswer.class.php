@@ -1172,7 +1172,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // retrieve answers
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $fields = $this->getQuestionFields($this->fields[$formFk]);
+      $this->getQuestionFields($this->fields[$formFk]);
 
       $this->deserializeAnswers();
 
@@ -1235,11 +1235,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
 
          // Don't save tags, additional fields or descriptions in "full form"
-         if (in_array($question_line['fieldtype'], ['tag', 'fields', 'description'])) {
+         if ($this->questionFields[$question_line['id']]->isRenderedInTarget() === false) {
             continue;
          }
 
-         if (!PluginFormcreatorFields::isVisible($fields[$question_line['id']]->getQuestion(), $this->questionFields)) {
+         if (!PluginFormcreatorFields::isVisible($this->questionFields[$question_line['id']]->getQuestion(), $this->questionFields)) {
             continue;
          }
 
@@ -1437,7 +1437,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                }
             }
          }
-         // $content = str_replace('##answer_' . $questionId . '##', Sanitizer::sanitize($value ?? ''), $content);
          $content = str_replace('##answer_' . $questionId . '##', $value ?? '', $content);
 
          if ($this->questionFields[$questionId] instanceof DropdownField) {
@@ -1482,11 +1481,26 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $this->isAnswersValid = !in_array(false, $fieldValidities, true);
 
       if ($this->isAnswersValid) {
+         $form = $this->getForm();
+         $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
          foreach ($this->questionFields as $id => $field) {
             if (!$this->questionFields[$id]->isPrerequisites()) {
                continue;
             }
+            // Count the errors in session
+            $errors_count = count($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR] ?? []);
             if (PluginFormcreatorFields::isVisible($field->getQuestion(), $this->questionFields) && !$this->questionFields[$id]->isValid()) {
+               $new_errors_count = count($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR] ?? []);
+               if ($new_errors_count <= $errors_count) {
+                  // If there are no new errors, we add a message to the user
+                  $field_name = __($field->getQuestion()->fields['name'], $domain);
+                  Session::addMessageAfterRedirect(
+                     sprintf(__('Answer is invalid in %1$s', 'formcreator'), $field_name),
+                     true,
+                     ERROR
+                  );
+               }
+
                $this->isAnswersValid = false;
             }
          }

@@ -506,7 +506,7 @@ PluginFormcreatorTranslatableInterface
          return [
             1 => self::createTabEntry(
                _n('Target', 'Targets', $nb, 'formcreator'),
-               $item->countTargets()
+               $nb
             ),
             2 => __('Preview'),
             3 => __('Form answer properties', 'formcreator'),
@@ -2765,5 +2765,23 @@ PluginFormcreatorTranslatableInterface
       $form_url = $baseUrl . FORMCREATOR_ROOTDOC . '/front/formdisplay.php?id=' . $this->getID();
 
       return $form_url;
+   }
+
+   /*
+    * Get all tags availabie for targets of the form
+    *
+    * @param string $search Search string to filter tags
+    * @return array
+    */
+   public function getTags(string $search = ''): array {
+      $tags = [];
+
+      $questions = PluginFormcreatorQuestion::getQuestionsFromForm($this->getID());
+
+      foreach ($questions as $question) {
+         $tags = array_merge($tags, $question->getTags($search));
+      }
+
+      return $tags;
    }
 }

@@ -30,19 +30,26 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorCommon;
+use PluginFormcreatorCondition;
+use PluginFormcreatorConditionnableInterface;
+use PluginFormcreatorForm;
+use PluginFormcreatorLinker;
+use PluginFormcreatorQuestion;
+use PluginFormcreatorForm_Validator;
 
 class PluginFormcreatorSection extends CommonTestCase {
    public function setup() {
       // instanciate classes
-      $form           = new \PluginFormcreatorForm;
+      $form           = new PluginFormcreatorForm;
       $form_section   = new \PluginFormcreatorSection;
-      $form_question  = new \PluginFormcreatorQuestion;
+      $form_question  = new PluginFormcreatorQuestion;
 
       // create objects
       $forms_id = $form->add([
          'name'                => "test clone form",
          'is_active'           => true,
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER
       ]);
 
       $sections_id = $form_section->add([
@@ -77,29 +84,53 @@ class PluginFormcreatorSection extends CommonTestCase {
    public function testDuplicate() {
       global $DB;
 
-      // instanciate classes
-      $form      = new \PluginFormcreatorForm;
-      $section   = new \PluginFormcreatorSection;
-      $question  = new \PluginFormcreatorQuestion;
-
       // create objects
-      $forms_id = $form->add(['name'                => "test clone form",
-                              'is_active'           => true,
-                              'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER]);
-      $sections_id = $section->add(['name'                        => "test clone section",
-                                    'plugin_formcreator_forms_id' => $forms_id]);
-      $question->add(['name'                           => "test clone question 1",
-                      'fieldtype'                      => 'text',
-                      'plugin_formcreator_sections_id' => $sections_id]);
-      $question->add(['name'                           => "test clone question 2",
-                      'fieldtype'                      => 'textarea',
-                      'plugin_formcreator_sections_id' => $sections_id]);
+      $form = $this->getForm([
+         'name'                => "test clone form",
+         'is_active'           => true,
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER
+      ]);
+      $other_section = $this->getSection([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $other_question = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $other_section->getID(),
+      ]);
+      $section = $this->getSection([
+         'name'                        => "test clone section",
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $condition = new PluginFormcreatorCondition();
+      $condition->add([
+         'itemtype'                        => $section::getType(),
+         'items_id'                        => $section->getID(),
+         'show_logic'                      => PluginFormcreatorCondition::SHOW_LOGIC_AND,
+         'show_condition'                  => PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+         'show_value'                      => 'foo',
+         'plugin_formcreator_questions_id' => $other_question->getID(),
+      ]);
+      $this->boolean($condition->isNewItem())->isFalse();
 
-      //get section
-      $section->getFromDB($sections_id);
+      $DB->update($section::getTable(), [
+         'show_rule' => PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+      ], [
+         'id' => $section->getID(),
+      ]);
+      $section->getFromDB($section->getID()); // Refresh instance
+
+      $this->getQuestion([
+         'name'                           => "test clone question 1",
+         'fieldtype'                      => 'text',
+         'plugin_formcreator_sections_id' => $section->getID(),
+      ]);
+      $this->getQuestion([
+         'name'                           => "test clone question 2",
+         'fieldtype'                      => 'textarea',
+         'plugin_formcreator_sections_id' => $section->getID(),
+      ]);
 
       //get max order of sections
-      $max = \PluginFormcreatorCommon::getMax(
+      $max = PluginFormcreatorCommon::getMax(
          $section,
          ['plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id']],
          'order'
@@ -110,7 +141,7 @@ class PluginFormcreatorSection extends CommonTestCase {
       $this->integer($newSection_id)->isGreaterThan(0);
 
       //get cloned section
-      $new_section = new \PluginFormcreatorSection;
+      $new_section = $this->newTestedInstance();
       $new_section->getFromDB($newSection_id);
 
       // check uuid
@@ -122,14 +153,14 @@ class PluginFormcreatorSection extends CommonTestCase {
       // check questions
       $all_questions = $DB->request([
          'SELECT' => ['uuid'],
-         'FROM'   => \PluginFormcreatorQuestion::getTable(),
+         'FROM'   => PluginFormcreatorQuestion::getTable(),
          'WHERE'  => [
             'plugin_formcreator_sections_id' => $section->getID()
          ]
       ]);
       $all_new_questions = $DB->request([
          'SELECT' => ['uuid'],
-         'FROM'   => \PluginFormcreatorQuestion::getTable(),
+         'FROM'   => PluginFormcreatorQuestion::getTable(),
          'WHERE'  => [
             'plugin_formcreator_sections_id' => $new_section->getID()
          ]
@@ -145,6 +176,39 @@ class PluginFormcreatorSection extends CommonTestCase {
          $new_uuids[] = $question['uuid'];
       }
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
+
+      // Check conditions
+      $all_conditions = $DB->request([
+         'SELECT' => ['uuid'],
+         'FROM'   => PluginFormcreatorCondition::getTable(),
+         'WHERE'  => [
+            'itemtype' => $section::getType(),
+            'items_id' => $section->getID(),
+         ],
+      ]);
+
+      $all_new_conditions = $DB->request([
+         'SELECT' => ['uuid'],
+         'FROM'   => PluginFormcreatorCondition::getTable(),
+         'WHERE'  => [
+            'itemtype' => $new_section::getType(),
+            'items_id' => $new_section->getID(),
+         ],
+      ]);
+      $this->integer(count($all_new_questions))->isEqualTo(count($all_questions));
+
+      // check that all conditions uuid are new
+      $uuids = $new_uuids = [];
+      foreach ($all_conditions as $condition) {
+         $uuids[] = $condition['uuid'];
+      }
+      foreach ($all_new_conditions as $condition) {
+         $new_uuids[] = $condition['uuid'];
+      }
+      $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
+
+      // Check that new section has same show rule as original
+      $this->integer($section->fields['show_rule'])->isEqualTo($new_section->fields['show_rule']);
    }
 
    public function testExport() {
@@ -189,7 +253,7 @@ class PluginFormcreatorSection extends CommonTestCase {
       $input = [
          'name'       => $this->getUniqueString(),
          'order'      => '1',
-         'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+         'show_rule'  => PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
          'uuid'       => $uuid,
       ];
 
@@ -199,21 +263,22 @@ class PluginFormcreatorSection extends CommonTestCase {
 
       unset($input['uuid']);
 
+      $testedClassName = $this->getTestedClassName();
       $this->exception(
-         function() use($linker, $input, $form) {
-            \PluginFormcreatorSection::import($linker, $input, $form->getID());
+         function() use($linker, $input, $form, $testedClassName) {
+            $testedClassName::import($linker, $input, $form->getID());
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
       ->hasMessage('UUID or ID is mandatory for Section'); // passes
 
       $input['id'] = $sectionId;
-      $sectionId2 = \PluginFormcreatorSection::import($linker, $input, $form->getID());
+      $sectionId2 = $testedClassName::import($linker, $input, $form->getID());
       $this->variable($sectionId2)->isNotFalse();
       $this->integer((int) $sectionId)->isNotEqualTo($sectionId2);
    }
 
    public function testMoveUp() {
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $form = $this->getForm();
       $section = $this->getSection(
          [
@@ -242,7 +307,7 @@ class PluginFormcreatorSection extends CommonTestCase {
    }
 
    public function testMoveDown() {
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $form = $this->getForm();
       $sectionToMove = $this->getSection(
          [
@@ -271,8 +336,9 @@ class PluginFormcreatorSection extends CommonTestCase {
    }
 
    public function testIsEmptyRow() {
+      $testedClassName = $this->getTestedClassName();
       $section = $this->getSection();
-      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      $sectionFk = $testedClassName::getForeignKeyField();
       [
          0 => $this->getQuestion([
             $sectionFk => $section->getID(),
@@ -300,8 +366,8 @@ class PluginFormcreatorSection extends CommonTestCase {
       $data = file_get_contents(dirname(__DIR__) . '/fixture/all_question_types_form.json');
       $data = json_decode($data, true);
       foreach ($data['forms'] as $formData) {
-         $form = new \PluginFormcreatorForm();
-         $formId = $form->import(new \PluginFormcreatorLinker(), $formData);
+         $form = new PluginFormcreatorForm();
+         $formId = $form->import(new PluginFormcreatorLinker(), $formData);
          $this->boolean($form->isNewID($formId))->isFalse();
       }
 
@@ -459,7 +525,7 @@ class PluginFormcreatorSection extends CommonTestCase {
       $this->integer((int) $sections[1]->fields['order'])->isEqualTo(1);
 
       /** @var PluginFormcreatorForm $form */
-      $form = \PluginFormcreatorForm::getById($sections[1]->fields['plugin_formcreator_forms_id']);
+      $form = PluginFormcreatorForm::getById($sections[1]->fields['plugin_formcreator_forms_id']);
       $this->boolean($form->isNewItem())->isFalse();
 
       $sections[2] = $this->getSection([
@@ -495,20 +561,17 @@ class PluginFormcreatorSection extends CommonTestCase {
       $this->integer((int) $sections[3]->fields['order'])->isEqualTo(2);
 
       // check the questions are deleted
-      $this->boolean(\PluginFormcreatorQuestion::getById($questions[1]->getID()))->isFalse();
-      $this->boolean(\PluginFormcreatorQuestion::getById($questions[2]->getID()))->isFalse();
+      $this->boolean(PluginFormcreatorQuestion::getById($questions[1]->getID()))->isFalse();
+      $this->boolean(PluginFormcreatorQuestion::getById($questions[2]->getID()))->isFalse();
    }
 
    public function testGetSectionsFromForm() {
       $form = $this->getForm();
       $this->boolean($form->isNewItem())->isFalse();
 
-      $output = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
-      $count = 0;
-      foreach ($output as $section) {
-         $count++;
-      }
-      $this->integer($count)->IsEqualTo(0);
+      $testedClassName = $this->getTestedClassName();
+      $output = $testedClassName::getSectionsFromForm($form->getID());
+      $this->array(iterator_to_array($output))->hasSize(0);
 
       $sections = [];
       $section = $this->getSection([
@@ -523,14 +586,10 @@ class PluginFormcreatorSection extends CommonTestCase {
       $this->boolean($section->isNewItem())->isFalse();
       $sections[] = $section;
 
-      $output = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
-      $count = 0;
-      foreach ($output as $section) {
-         $count++;
-      }
-      $this->integer($count)->isEqualTo(2);
+      $output = $testedClassName::getSectionsFromForm($form->getID());
+      $this->array(iterator_to_array($output))->hasSize(2);
 
-      $output = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
+      $output = $testedClassName::getSectionsFromForm($form->getID());
       $found = 0;
       foreach ($output as $section) {
          foreach ($sections as $search) {
@@ -540,6 +599,5 @@ class PluginFormcreatorSection extends CommonTestCase {
          }
       }
       $this->integer($found)->isEqualTo(2);
-
    }
 }

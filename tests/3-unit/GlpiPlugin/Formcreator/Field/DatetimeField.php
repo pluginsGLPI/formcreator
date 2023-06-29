@@ -236,6 +236,11 @@ class DatetimeField extends CommonTestCase {
             'answer'    => '2019-01-01 03:00:00',
             'expected'  => true,
          ],
+         [
+            'value'     => '',
+            'answer'    => '2019-01-01 03:00:00',
+            'expected'  => false,
+         ],
       ];
    }
 
@@ -265,6 +270,11 @@ class DatetimeField extends CommonTestCase {
             'value'     => '2019-01-01 03:00:00',
             'answer'    => '2019-01-01 03:00:00',
             'expected'  => false,
+         ],
+         [
+            'value'     => '',
+            'answer'    => '2019-01-01 03:00:00',
+            'expected'  => true,
          ],
       ];
    }

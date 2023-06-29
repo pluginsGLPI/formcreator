@@ -64,7 +64,7 @@ class TextField extends PluginFormcreatorAbstractField
 
    public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
-         return $this->value;
+         return Sanitizer::encodeHtmlSpecialChars($this->value);
       }
 
       $html         = '';
@@ -109,7 +109,7 @@ class TextField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($domain, $richText): ?string {
-      return Sanitizer::unsanitize($this->value);
+      return Sanitizer::encodeHtmlSpecialChars($this->value ?? '');
    }
 
    public function moveUploads() {

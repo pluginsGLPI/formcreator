@@ -29,8 +29,8 @@
  * ---------------------------------------------------------------------
  */
 namespace tests\units;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Entity;
+use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorForm;
 use Session;
 

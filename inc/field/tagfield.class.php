@@ -254,6 +254,10 @@ class TagField extends DropdownField
       return false;
    }
 
+   public function isRenderedInTarget(): bool {
+      return false;
+   }
+
    public function getHtmlIcon() {
       return '<i class="fas fa-tag" aria-hidden="true"></i>';
    }

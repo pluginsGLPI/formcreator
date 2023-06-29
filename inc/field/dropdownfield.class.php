@@ -59,11 +59,10 @@ use Search;
 use SLA;
 use SLM;
 use OLA;
+use QueryExpression;
 use QuerySubQuery;
-use QueryUnion;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
-use QueryExpression;
 use State;
 
 class DropdownField extends PluginFormcreatorAbstractField
@@ -267,9 +266,11 @@ class DropdownField extends PluginFormcreatorAbstractField
             $currentUser = Session::getLoginUserID();
             if (!Session::haveRight(Ticket::$rightname, Ticket::READMY) && !Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
                // No right to view any ticket, then force the dropdown to be empty
-               $dparams_cond_crit['OR'] = new \QueryExpression('0=1');
+               $dparams_cond_crit['OR'] = new QueryExpression('0=1');
                break;
             }
+            $tickets_filter = ['users_id_recipient' => $currentUser];
+
             if (Session::haveRight(Ticket::$rightname, Ticket::READMY)) {
                $requestersObserversQuery = new QuerySubQuery([
                   'SELECT' => 'tickets_id',
@@ -279,34 +280,23 @@ class DropdownField extends PluginFormcreatorAbstractField
                      'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
                   ],
                ]);
-               $dparams_cond_crit['OR'] = [
+               $tickets_filter[] = [
                   'id' => $requestersObserversQuery,
-                  'users_id_recipient' => $currentUser,
                ];
             }
-            if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
-               $sub_query = [
+
+            if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP) && count($_SESSION['glpigroups']) > '0') {
+               $requestersObserversGroupsQuery = new QuerySubQuery([
                   'SELECT' => 'tickets_id',
                   'FROM' => Group_Ticket::getTable(),
                   'WHERE' => [
-                     'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
+                     'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER],
+                     'groups_id' => $_SESSION['glpigroups'],
                   ],
-               ];
-               if (count($_SESSION['glpigroups']) > '0') {
-                  $sub_query['WHERE']['groups_id'] = $_SESSION['glpigroups'];
-               }
-               $requestersObserversGroupsQuery = new QuerySubQuery($sub_query);
-               if (!isset($dparams_cond_crit['OR']['id'])) {
-                  $dparams_cond_crit['OR'] = [
-                     'id' => $requestersObserversGroupsQuery,
-                  ];
-               } else {
-                  $dparams_cond_crit['OR']['id'] = new QueryUnion([
-                     $dparams_cond_crit['OR']['id'],
-                     $requestersObserversGroupsQuery,
-                  ]);
-               }
+               ]);
+               $tickets_filter[] = ['id' => $requestersObserversGroupsQuery];
             }
+            $dparams_cond_crit['OR'] = $tickets_filter;
             break;
 
          default:
@@ -352,14 +342,15 @@ class DropdownField extends PluginFormcreatorAbstractField
       // Set specific root if defined (CommonTreeDropdown)
       $baseLevel = 0;
       if (isset($decodedValues['show_tree_root'])
-         && (int) $decodedValues['show_tree_root'] > 0
+         && ((int) $decodedValues['show_tree_root'] > 0
+           || $itemtype == Entity::class && (int) $decodedValues['show_tree_root'] > -1)
       ) {
          $sons = (new DBUtils)->getSonsOf(
             $itemtype::getTable(),
             $decodedValues['show_tree_root']
          );
          $decodedValues['selectable_tree_root'] = $decodedValues['selectable_tree_root'] ?? '1';
-         if (!isset($decodedValues['selectable_tree_root']) || $decodedValues['selectable_tree_root'] == '0') {
+         if ($decodedValues['selectable_tree_root'] == '0') {
             unset($sons[$decodedValues['show_tree_root']]);
          }
 
@@ -873,26 +864,17 @@ class DropdownField extends PluginFormcreatorAbstractField
       // $questionID = $question->fields['id'];
       $questionID = $this->getQuestion()->getID();
 
-      // We need english locale to search searchOptions by name
-      $oldLocale = $TRANSLATE->getLocale();
-      $TRANSLATE->setLocale("en_GB");
-
       // Load target item from DB
-      // $itemtype = $question->getField('values');
       $itemtype = $this->question->fields['itemtype'];
-
-      // Itemtype is stored in plaintext for GlpiselectField and in
-      // json for DropdownField
-      $json = json_decode($itemtype);
-
-      if ($json) {
-         $itemtype = $json->itemtype;
-      }
 
       // Safe check
       if (empty($itemtype) || !class_exists($itemtype)) {
          return $content;
       }
+
+      // We need english locale to search searchOptions by name
+      $oldLocale = $TRANSLATE->getLocale();
+      $TRANSLATE->setLocale("en_GB");
 
       $item = new $itemtype;
       $item->getFromDB($answer);
@@ -908,6 +890,11 @@ class DropdownField extends PluginFormcreatorAbstractField
          // Convert Property_Name to Property Name
          $property = str_replace("_", " ", $property);
          $searchOption = $item->getSearchOptionByField("name", $property);
+         if (count($searchOption) == 0) {
+            trigger_error("No search option found for $property", E_USER_WARNING);
+            $TRANSLATE->setLocale($oldLocale);
+            return $content;
+         }
 
          // Execute search
          $data = Search::prepareDatasForSearch(get_class($item), [
@@ -1038,5 +1025,53 @@ class DropdownField extends PluginFormcreatorAbstractField
          $this->getSubItemtype(),
          $this->value,
       ];
+   }
+
+   public function getTags(string $search = ''): array {
+      global $TRANSLATE;
+
+      $itemtype = $this->question->fields['itemtype'];
+
+      // Safe check
+      if (empty($itemtype) || !class_exists($itemtype)) {
+         return [];
+      }
+
+      /** @var CommonDBTM $item */
+      $item = new $itemtype;
+
+      $oldLocale = $TRANSLATE->getLocale();
+      $TRANSLATE->setLocale("en_GB");
+      $search_options = $item->rawSearchOptions();
+      $TRANSLATE->setLocale($oldLocale);
+
+      $tags = [];
+      foreach ($search_options as $search_option) {
+         if (!isset($search_option['field'])) {
+            continue;
+         }
+
+         $name = str_replace(' ', '_', $search_option['name']);
+
+         // Must match alowed tag format, see self::parseObjectProperties
+         if (!preg_match('/^[a-zA-Z0-9_.]+$/', $name)) {
+            continue;
+         }
+
+         $id   = $search_option['id'];
+         $question_id = $this->question->getID();
+
+         $text = 'question_' . $question_id . '.' . $name;
+         if ($search == '' || strpos(strtolower($text), strtolower($search)) !== false || strpos(strtolower($this->getQuestion()->fields['name']), strtolower($search)) !== false) {
+            $tags[] = [
+               'id'     => 'answer_' . $question_id . '.' . $id,
+               'name'   => 'answer_' . $question_id . '.' . $name,
+               'text'   => 'answer_' . $question_id . '.' . $name,
+               'q_name' => $this->getQuestion()->fields['name'], // Do not use form translation here
+            ];
+         }
+      }
+
+      return $tags;
    }
 }

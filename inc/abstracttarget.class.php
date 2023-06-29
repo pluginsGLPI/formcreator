@@ -217,11 +217,11 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
    /**
     * Append fields data to input
     *
-    * @param PluginFormcreatorFormanswer $formanswer the source formanswer
     * @param array $input data of the generated target
-    * @return void
+    * @param PluginFormcreatorFormanswer $formanswer the source formanswer
+    * @return array
     */
-   protected function appendFieldsData(PluginFormcreatorFormanswer $formanswer, &$input): void {
+   protected function appendFieldsData(array $input, PluginFormcreatorFormanswer $formanswer): array {
       global $DB;
 
       //get all PluginFormcreatorAnswer
@@ -262,6 +262,8 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
          }
          $input['c_id'] = $blocks_field;
       }
+
+      return $input;
    }
 
 

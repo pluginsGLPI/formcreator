@@ -43,6 +43,7 @@ use PluginFormcreatorLinker;
 use PluginFormcreatorTargetTicket;
 use PluginFormcreatorTargetChange;
 use QueuedNotification;
+use Central;
 use User;
 use UserEmail;
 
@@ -124,7 +125,6 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function testCanCreate() {
       $testedClassName = $this->getTestedClassName();
-
       $this->login('glpi', 'glpi');
       $output = $testedClassName::canCreate();
       $this->boolean((bool) $output)->isTrue();
@@ -140,7 +140,6 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function testCanView() {
       $testedClassName = $this->getTestedClassName();
-
       $this->login('glpi', 'glpi');
       $output = $testedClassName::canView();
       $this->boolean((bool) $output)->isTrue();
@@ -156,7 +155,6 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function testCanDelete() {
       $testedClassName = $this->getTestedClassName();
-
       $this->login('glpi', 'glpi');
       $output = $testedClassName::canDelete();
       $this->boolean((bool) $output)->isTrue();
@@ -172,7 +170,6 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function testCanPurge() {
       $testedClassName = $this->getTestedClassName();
-
       $this->login('glpi', 'glpi');
       $output = $testedClassName::canPurge();
       $this->boolean((bool) $output)->isTrue();
@@ -187,7 +184,6 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function testCanPurgeItem() {
       $testedClassName = $this->getTestedClassName();
-
       $form = $this->getForm();
       $output = $form->canPurgeItem();
       $this->boolean((boolean) $output)->isTrue();
@@ -327,7 +323,7 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function testGetTabNameForItem() {
       $form = $this->getForm();
-      $item = new \Central();
+      $item = new Central();
       $output = $form->getTabNameForItem($item);
       $this->string($output)->isEqualTo('Forms');
 
@@ -489,7 +485,7 @@ class PluginFormcreatorForm extends CommonTestCase {
     * @dataProvider providerCreateValidationNotification
     */
    public function testCreateValidationNotification(User $requester, User $validator, $expectedNotificationCount) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       $form = $this->getForm();
       $formValidator = new PluginFormcreatorForm_Validator();

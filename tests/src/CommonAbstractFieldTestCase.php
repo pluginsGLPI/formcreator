@@ -29,29 +29,43 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+namespace GlpiPlugin\Formcreator\Tests;
 
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+use Glpi\Toolbox\Sanitizer;
+
+abstract class CommonAbstractFieldTestCase extends CommonTestCase {
+
+   /**
+    * @dataProvider providerGetValueForTargetText
+    *
+    * @return void
+    */
+   public function testGetValueForTargetText($question, $value, $expectedValue, $expectedRichValue = null) {
+      $instance = $this->newTestedInstance($question);
+      $output = $instance->parseAnswerValues([
+         'formcreator_field_' . $question->getID() => $value
+      ]);
+
+      // Simple text output
+      $output = $instance->getValueForTargetText('', false);
+      if ($expectedValue === null) {
+         $this->variable($output)->isNull();
+      } else {
+         $this->string($output)
+            ->isEqualTo($expectedValue);
+      }
+
+      // Rich text output
+      $output = $instance->getValueForTargetText('', true);
+      if ($expectedValue === null) {
+         $this->variable($output)->isNull();
+         return;
+      }
+
+      if ($expectedRichValue === null) {
+         $expectedRichValue = $expectedValue;
+      }
+      $this->string($output)
+         ->isEqualTo($expectedRichValue);
+   }
 }
-
-if (!isset($_POST['plugin_formcreator_form_languages_id'])) {
-   http_response_code(400);
-   die();
-}
-
-Session::checkRight('entity', UPDATE);
-
-// if (!isset($_POST['plugin_formcreator_translations_id'])) {
-//    http_response_code(400);
-//    die();
-// }
-
-$formLanguage = new PluginFormcreatorForm_Language();
-if (!$formLanguage->getFromDB((int) $_POST['plugin_formcreator_form_languages_id'])) {
-   http_response_code(400);
-   die();
-}
-
-echo PluginFormcreatorTranslation::getEditorFieldsHtml($formLanguage, $_POST['plugin_formcreator_translations_id']);

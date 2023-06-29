@@ -176,6 +176,11 @@ class DateField extends CommonTestCase {
             'answer'    => '2019-01-01',
             'expected'  => true,
          ],
+         [
+            'value'     => '',
+            'answer'    => '2019-01-01',
+            'expected'  => false,
+         ],
       ];
    }
 
@@ -206,7 +211,11 @@ class DateField extends CommonTestCase {
             'answer'    => '2019-01-01',
             'expected'  => false,
          ],
-
+         [
+            'value'     => '',
+            'answer'    => '2019-01-01',
+            'expected'  => true,
+         ],
       ];
    }
 

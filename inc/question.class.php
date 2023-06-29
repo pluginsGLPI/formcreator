@@ -55,7 +55,7 @@ PluginFormcreatorTranslatableInterface
    public $taborientation  = 'horizontal';
 
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
-   private ?PluginFormcreatorFieldInterface $field = null;
+   public ?PluginFormcreatorFieldInterface $field = null;
 
    private $skipChecks = false;
 
@@ -308,8 +308,6 @@ PluginFormcreatorTranslatableInterface
          return '';
       }
 
-      $html = '';
-
       $field = $this->getSubField();
       if (!$field->isPrerequisites()) {
          return '';
@@ -321,7 +319,7 @@ PluginFormcreatorTranslatableInterface
       $x = $this->fields['col'];
       $width = $this->fields['width'];
       $hiddenAttribute = $isVisible ? '' : 'hidden=""';
-      $html .= '<div'
+      $html = '<div'
          . ' gs-x="' . $x . '"'
          . ' gs-w="' . $width . '"'
          . ' data-itemtype="' . self::class . '"'
@@ -372,7 +370,6 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
       // - field type is compatible with accessibility of the form
-      $form = new PluginFormcreatorForm();
       $section = PluginFormcreatorSection::getById($input[PluginFormcreatorSection::getForeignKeyField()]);
       $form = PluginFormcreatorForm::getByItem($section);
       if ($form->isPublicAccess() && !$this->field->isPublicFormCompatible()) {
@@ -380,7 +377,10 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
 
-      $input['itemtype'] = $this->fields['itemtype'] ?? ($input['itemtype'] ?? '');
+      $temp_itemtype = $this->fields['itemtype'] ?? ($input['itemtype'] ?? '');
+      if ($temp_itemtype instanceof CommonDBTM) {
+         $input['itemtype'] = $temp_itemtype;
+      }
       $input = $this->field->prepareQuestionInputForSave($input);
       if ($input === false || !is_array($input)) {
          // Invalid data
@@ -1214,6 +1214,7 @@ PluginFormcreatorTranslatableInterface
             Phone::class              => Phone::getTypeName($plural),
             Line::class               => Line::getTypeName($plural),
             PassiveDCEquipment::class => PassiveDCEquipment::getTypeName($plural),
+            PDU::class                => PDU::getTypeName($plural),
          ],
          __("Assistance") => [
             Ticket::class             => Ticket::getTypeName($plural),
@@ -1303,5 +1304,44 @@ PluginFormcreatorTranslatableInterface
       }
 
       return $parameters;
+   }
+
+   /*
+    * Get all tags availabie for targets of the form
+    *
+    * @param string $search Search string to filter tags
+    * @return array
+    */
+   public function getTags(string $search = ''): array {
+      if (!$this->loadField($this->fields['fieldtype'])) {
+         return [];
+      }
+
+      $tags = [];
+      $text = 'question_' . $this->getID();
+      if ($search == '' || strpos(strtolower($text), strtolower($search)) !== false || strpos(strtolower($this->fields['name']), strtolower($search)) !== false) {
+         $tags[] = [
+            'id'     => 'question_' . $this->getID(),
+            'name'   => 'question_' . $this->getID(),
+            'text'   => 'question_' . $this->getID(),
+            'q_name' => $this->fields['name'], // Do not use form translation here
+         ];
+      }
+
+      $text = 'answer_' . $this->getID();
+      if ($search == '' || strpos(strtolower($text), strtolower($search)) !== false || strpos(strtolower($this->fields['name']), strtolower($search)) !== false) {
+         $tags[] = [
+            'id'     => 'answer_' . $this->getID(),
+            'name'   => 'answer_' . $this->getID(),
+            'text'   => 'answer_' . $this->getID(),
+            'q_name' => $this->fields['name'], // Do not use form translation here
+         ];
+      }
+
+      if ($this->fields['fieldtype'] == 'dropdown' || $this->fields['fieldtype'] == 'glpiselect') {
+         $tags = array_merge($tags, $this->field->getTags($search));
+      }
+
+      return $tags;
    }
 }
