@@ -1513,7 +1513,7 @@ msgstr "Brak formularzy oczekujących na zatwierdzenie"
 
 #: inc/form.class.php:984
 msgid "All my forms (validator)"
-msgstr "Moje wszystkie formilarze (zatwierdzający)"
+msgstr "Moje wszystkie formularze (zatwierdzający)"
 
 #: inc/form.class.php:1180
 msgid "Cannot use empty name for form answers. Keeping the previous value."
