@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Norbert Błaszczyk, 2022
 # Thierry Bugier <tbugier@teclib.com>, 2022
@@ -11,7 +11,7 @@
 # Agnieszka Pacyga <papilota@gmail.com>, 2022
 # Ryszard Jeziorski <ryszard.jeziorski@gmail.com>, 2022
 # Daniel Wróblewski <dewuer@gmail.com>, 2023
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -2803,7 +2803,7 @@ msgstr "Moje %1$d ostatnie formularze (zatwierdzający)"
 
 #: entrée standard:63
 msgid "All my forms (validator)"
-msgstr "Moje wszystkie formilarze (zatwierdzający)"
+msgstr "Moje wszystkie formularze (zatwierdzający)"
 
 #: entrée standard:42
 msgid "Min"
