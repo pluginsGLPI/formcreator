@@ -343,7 +343,7 @@ function plugin_formcreator_hook(): void {
             Session::getCurrentInterface() == 'helpdesk') {
 
          // Add specific JavaScript
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js';
+         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'js/scripts.js';
       }
 
       if (isset($_SESSION['glpiactiveentities_string'])) {

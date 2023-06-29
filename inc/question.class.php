@@ -370,7 +370,6 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
       // - field type is compatible with accessibility of the form
-      $form = new PluginFormcreatorForm();
       $section = PluginFormcreatorSection::getById($input[PluginFormcreatorSection::getForeignKeyField()]);
       $form = PluginFormcreatorForm::getByItem($section);
       if ($form->isPublicAccess() && !$this->field->isPublicFormCompatible()) {
