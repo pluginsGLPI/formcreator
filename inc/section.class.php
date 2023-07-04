@@ -552,7 +552,7 @@ PluginFormcreatorTranslatableInterface
       ]);
       $formId = $this->fields[PluginFormcreatorForm::getForeignKeyField()];
       $onclick = 'plugin_formcreator.showSectionForm(' . $formId . ', ' . $sectionId . ');';
-      $html = '<a href="#" onclick=' . $onclick . '" data-field="name">';
+      $html = '<a href="#" onclick="' . $onclick . '" data-field="name">';
       $html .= "<sup class='plugin_formcreator_conditions_count' title='" . __('Count of conditions', 'formcreator') ."'>$nb</sup>";
       $html .= '<span>';
       $html .= empty($this->fields['name']) ? '(' . $sectionId . ')' : $this->fields['name'];
