@@ -772,6 +772,21 @@ PluginFormcreatorTranslatableInterface
             $export[$key] = $value;
          }
       }
+
+      // Before importing the question, we need to give to the linker the questions
+      // used in the conditions of the question being duplicated
+      $conditions = (new PluginFormcreatorCondition())->find([
+         'itemtype' => self::getType(),
+         'items_id' => $this->getID()
+      ]);
+      foreach ($conditions as $row) {
+         $question = PluginFormcreatorQuestion::getById($row['plugin_formcreator_questions_id']);
+         if ($question === null || $question === false) {
+            continue;
+         }
+         $linker->addObject($row['plugin_formcreator_questions_id'], $question);
+      }
+
       $newQuestionId = static::import($linker, $export, $this->fields[$sectionFk]);
 
       if ($newQuestionId === false) {

@@ -239,6 +239,20 @@ PluginFormcreatorTranslatableInterface
       ) + 1;
       $newSectionId = static::import($linker, $export, $this->fields[$formFk]);
 
+      // Before importing the section, we need to give to the linker the questions
+      // used in the conditions of the section being duplicated
+      $conditions = (new PluginFormcreatorCondition())->find([
+         'itemtype' => self::getType(),
+         'items_id' => $this->getID()
+      ]);
+      foreach ($conditions as $row) {
+         $question = PluginFormcreatorQuestion::getById($row['plugin_formcreator_questions_id']);
+         if ($question === null || $question === false) {
+            continue;
+         }
+         $linker->addObject($row['plugin_formcreator_questions_id'], $question);
+      }
+
       if ($newSectionId === false) {
          return false;
       }
