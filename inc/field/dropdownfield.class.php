@@ -614,31 +614,33 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (!isset($input['itemtype']) || empty($input['itemtype'])) {
-         Session::addMessageAfterRedirect(
-            sprintf(__('The itemtype field is required: %s', 'formcreator'), $input['name']),
-            false,
-            ERROR
-         );
-         return [];
-      }
-      $allowedDropdownValues = [];
-      $stdtypes = Dropdown::getStandardDropdownItemTypes();
-      foreach ($stdtypes as $categoryOfTypes) {
-         $allowedDropdownValues = array_merge($allowedDropdownValues, array_keys($categoryOfTypes));
-      }
-      $allowedDropdownValues[] = SLA::getType();
-      $allowedDropdownValues[] = OLA::getType();
+      if (isset($input['itemtype'])) {
+         if (empty($input['itemtype'])) {
+            Session::addMessageAfterRedirect(
+               sprintf(__('The itemtype field is required: %s', 'formcreator'), $input['name']),
+               false,
+               ERROR
+            );
+            return [];
+         }
+         $allowedDropdownValues = [];
+         $stdtypes = Dropdown::getStandardDropdownItemTypes();
+         foreach ($stdtypes as $categoryOfTypes) {
+            $allowedDropdownValues = array_merge($allowedDropdownValues, array_keys($categoryOfTypes));
+         }
+         $allowedDropdownValues[] = SLA::getType();
+         $allowedDropdownValues[] = OLA::getType();
 
-      if (!in_array($input['itemtype'], $allowedDropdownValues)) {
-         Session::addMessageAfterRedirect(
-            sprintf(__('Invalid dropdown type: %s', 'formcreator'), $input['name']),
-            false,
-            ERROR
-         );
-         return [];
+         if (!in_array($input['itemtype'], $allowedDropdownValues)) {
+            Session::addMessageAfterRedirect(
+               sprintf(__('Invalid dropdown type: %s', 'formcreator'), $input['name']),
+               false,
+               ERROR
+            );
+            return [];
+         }
       }
-      $itemtype = $input['itemtype'];
+      $itemtype = $input['itemtype'] ?? ($this->question->fields['itemtype']);
       $input['values'] = [];
 
       // Params for CommonTreeDropdown fields
