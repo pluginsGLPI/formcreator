@@ -110,18 +110,24 @@ class RadiosField extends PluginFormcreatorAbstractField
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (!isset($input['values']) || empty($input['values'])) {
-         Session::addMessageAfterRedirect(
-            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-            false,
-            ERROR
-         );
-         return [];
+      if (isset($input['values'])) {
+         if (strlen($input['values']) === 0) {
+            Session::addMessageAfterRedirect(
+               __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+               false,
+               ERROR
+            );
+            return [];
+         }
+
+         // trim values
+         $input['values'] = $this->trimValue($input['values']);
       }
 
-      // trim values
-      $input['values'] = $this->trimValue($input['values']);
-      $input['default_values'] = trim($input['default_values']);
+      if (isset($input['default_values'])) {
+         // trim values
+         $input['default_values'] = trim($input['default_values']);
+      }
 
       return $input;
    }
