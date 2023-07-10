@@ -768,7 +768,7 @@ JAVASCRIPT;
          $newMenu['faq'] = $menus['faq'];
          $newMenu['faq']['default'] = Plugin::getWebDir('formcreator', false) . '/front/knowbaseitem.php';
       }
-      if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
+      if (Session::haveRightsOr("reservation", [READ, ReservationItem::RESERVEANITEM])) {
          if (isset($menus['reservation'])) {
             $newMenu['reservation'] = $menus['reservation'];
          }
