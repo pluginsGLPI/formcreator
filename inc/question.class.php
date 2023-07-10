@@ -742,14 +742,17 @@ PluginFormcreatorTranslatableInterface
       $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', self::getType(), $this->getID());
 
       // $options may contain values from a form
-      foreach ($options as $request_key => $request_value) {
-         if (isset($this->fields[$request_key])) {
-            $this->fields[$request_key] = $_REQUEST[$request_key];
-         } else {
-            $values[$request_key] = $request_value;
-         }
-      }
-      $this->fields['values'] = json_encode($values);
+      // foreach ($options as $request_key => $request_value) {
+      //    if (in_array($request_key, ['id'])) {
+      //       continue;
+      //    }
+      //    if (isset($this->fields[$request_key])) {
+      //       $this->fields[$request_key] = $request_value;
+      //    } else {
+      //       $values[$request_key] = $request_value;
+      //    }
+      // }
+      // $this->fields['values'] = json_encode($values);
 
       if (!$this->isNewItem()) {
          $options['addbuttons'] = [
