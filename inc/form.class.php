@@ -2001,6 +2001,7 @@ PluginFormcreatorTranslatableInterface
       }
 
       $form_query = PluginFormcreatorForm::getFormListQuery();
+      $form_query['DISTINCT'] = true;
       $form_query['SELECT'] = [
          $form_table => ['id', 'name', 'description', $formCategoryFk],
       ];
