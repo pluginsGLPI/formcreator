@@ -624,7 +624,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   'table'                => PluginFormcreatorFormAnswer::getTable(),
                   'joinparams'           => [
                      'jointype'          => 'itemtype_item_revert',
-                     'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
+                     'specific_itemtype'  => Ticket::class,
                   ]
                ],
             ],
