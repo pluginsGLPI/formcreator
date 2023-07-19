@@ -41,6 +41,7 @@ use Session;
 use DBUtils;
 use Document;
 use Dropdown;
+use CommonDBTM;
 use CommonITILActor;
 use CommonITILObject;
 use CommonTreeDropdown;
