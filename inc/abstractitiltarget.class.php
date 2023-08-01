@@ -738,34 +738,6 @@ PluginFormcreatorTranslatableInterface
       return true;
    }
 
-   /**
-    * Attach documents of the answer to the target
-    */
-   protected function attachDocument($formAnswerId, $itemtype, $targetID) {
-      global $CFG_GLPI;
-
-      $docItem = new Document_Item();
-      if (count($this->attachedDocuments) <= 0) {
-         return;
-      }
-
-      foreach ($this->attachedDocuments as $documentID => $dummy) {
-         $docItem->add([
-            'documents_id' => $documentID,
-            'itemtype'     => $itemtype,
-            'items_id'     => $targetID,
-         ]);
-         if ($itemtype === Ticket::class) {
-            $document = new Document();
-            $documentCategoryFk = DocumentCategory::getForeignKeyField();
-            $document->update([
-               'id' => $documentID,
-               $documentCategoryFk => $CFG_GLPI["documentcategories_id_forticket"],
-            ]);
-         }
-      }
-   }
-
    public function addAttachedDocument($documentId) {
       $this->attachedDocuments[$documentId] = true;
    }
