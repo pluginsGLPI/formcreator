@@ -523,7 +523,7 @@ function plugin_formcreator_redirect() {
 
    $pages = [
       'front/reservationitem.php' => FORMCREATOR_ROOTDOC . '/front/reservationitem.php',
-      'front/helpdesk.faq.php' => FORMCREATOR_ROOTDOC . '/front/wizard.php',
+      // 'front/helpdesk.faq.php' => FORMCREATOR_ROOTDOC . '/front/wizard.php',
       'front/ticket.php' => FORMCREATOR_ROOTDOC . '/front/issue.php',
    ];
    foreach ($pages as $srcPage => $dstPage) {

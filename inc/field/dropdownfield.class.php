@@ -43,6 +43,7 @@ use DBUtils;
 use Document;
 use Dropdown;
 use CommonGLPI;
+use CommonDBTM;
 use CommonITILActor;
 use CommonITILObject;
 use CommonTreeDropdown;

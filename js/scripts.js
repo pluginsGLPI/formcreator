@@ -415,7 +415,7 @@ function buildTiles(list) {
       // Build a HTML tile
       var url = formcreatorRootDoc + '/front/formdisplay.php?id=' + item.id;
       if (item.type != 'form') {
-         url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
+         url = rootDoc + '/front/helpdesk.faq.php?id=' + item.id;
       }
 
       var tiles_design = "";
