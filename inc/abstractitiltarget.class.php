@@ -2412,9 +2412,7 @@ SCRIPT;
       $data['_tag_filename'] = [];
 
       // emulate file uploads of inline images
-      // TODO: replace PluginFormcreatorCommon::getDocumentsFromTag by Toolbox::getDocumentsFromTag
-      // when is merged https://github.com/glpi-project/glpi/pull/9335
-      foreach (PluginFormcreatorCommon::getDocumentsFromTag($data['content']) as $document) {
+      foreach (Toolbox::getDocumentsFromTag($data['content']) as $document) {
          $prefix = uniqid('', true);
          $filename = $prefix . 'image_paste.' . pathinfo($document['filename'], PATHINFO_EXTENSION);
          if (!@copy(GLPI_DOC_DIR . '/' . $document['filepath'], GLPI_TMP_DIR . '/' . $filename)) {

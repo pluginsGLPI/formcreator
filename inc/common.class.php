@@ -584,28 +584,6 @@ JAVASCRIPT;
    }
 
    /**
-    * Find documents data matching the tags found in the string
-    * Tags are deduplicated
-    *
-    * @param string $content_text String to search tags from
-    *
-    * @return array data from documents having tags found
-    */
-   public static function getDocumentsFromTag(string $content_text): array {
-      preg_match_all(
-         '/'.Document::getImageTag('(([a-z0-9]+|[\.\-]?)+)').'/',
-         $content_text,
-         $matches, PREG_PATTERN_ORDER
-      );
-      if (!isset($matches[1]) || count($matches[1]) == 0) {
-         return [];
-      }
-
-      $document = new Document();
-      return $document->find(['tag' => array_unique($matches[1])]);
-   }
-
-   /**
     * find a document with a file attached, with respect of blacklisting
     *
     * @param integer $entity    entity of the document

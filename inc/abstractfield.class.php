@@ -131,7 +131,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
 
       if ($this->isEditableField() && !empty($this->question->fields['description'])) {
          $description = $this->question->fields['description'];
-         foreach (PluginFormcreatorCommon::getDocumentsFromTag($description) as $document) {
+         foreach (Toolbox::getDocumentsFromTag($description) as $document) {
             $prefix = uniqid('', true);
             $filename = $prefix . 'image_paste.' . pathinfo($document['filename'], PATHINFO_EXTENSION);
             if (!copy(GLPI_DOC_DIR . '/' . $document['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
