@@ -803,6 +803,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
     * @return Ticket|null Generated ticket if success, null otherwise
     */
    public function save(PluginFormcreatorFormAnswer $formanswer): ?CommonDBTM {
+      global $CFG_GLPI;
+
       $ticket  = new Ticket();
       $form = $formanswer->getForm();
       $data = $this->getDefaultData($formanswer);
@@ -902,6 +904,22 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $data['_auto_import'] = true;
       if (!$ticketID = $ticket->add($data)) {
          return null;
+      }
+
+      // Set default document category
+      $document_category = $CFG_GLPI['documentcategories_id_forticket'] ?? 0;
+      if ($document_category) {
+         foreach (array_keys($this->attachedDocuments) as $documents_id) {
+            $document = Document::getById($documents_id);
+            if (!$document) {
+               continue;
+            }
+
+            $document->update([
+               'id' => $document->fields['id'],
+               'documentcategories_id' => $document_category,
+            ]);
+         }
       }
 
       $this->saveTags($formanswer, $ticketID);
