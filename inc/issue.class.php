@@ -182,7 +182,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   'DISTINCT' => true,
                   'FROM'  => $ticketUserTable,
                   'WHERE' => [
-                     'type' => CommonITILActor::REQUESTER,
+                  'type' => CommonITILActor::REQUESTER,
                   ],
                   'GROUPBY' => 'tickets_id',
                   'ORDER' => ['id ASC']
@@ -661,54 +661,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ],
          'forcegroupby'       => true,
          'massiveaction'      => false,
-         'joinparams'         => [
-            'beforejoin'         => [
-               [
-                  'table'              => TicketValidation::getTable(),
-                  'joinparams'         => [
-                     'jointype'           => 'child',
-                     'beforejoin'         => [
-                        'table'              => Ticket::getTable(),
-                        'joinparams'         => [
-                           'jointype'        => 'itemtype_item_revert',
-                           'specific_itemtype'  => Ticket::class,
-                        ]
-                     ]
-                  ]
-               ],
-               [
-                  'table'              => TicketValidation::getTable(),
-                  'joinparams'         => [
-                     'jointype'           => 'child',
-                     'beforejoin'         => [
-                        'table'              => Ticket::getTable(),
-                        'joinparams'      => [
-                           'jointype'        => 'empty',
-                           'condition'       => [
-                              new QueryExpression(
-                                 '1=1'
-                              ),
-                           ],
-                           'beforejoin'      => [
-                              'table'           => Item_Ticket::getTable(),
-                              'joinparams'      => [
-                                 'jointype'        => 'itemtype_item',
-                                 'specific_itemtype' => PluginFormcreatorFormAnswer::class,
-                                 'beforejoin'      => [
-                                    'table'           => PluginFormcreatorFormAnswer::getTable(),
-                                    'joinparams'      => [
-                                       'jointype'          => 'itemtype_item_revert',
-                                       'specific_itemtype' => PluginFormcreatorFormAnswer::class,
-                                    ],
-                                 ],
-                              ],
-                           ],
-                        ],
-                     ]
-                  ]
-               ],
-            ],
-         ]
       ];
       if (version_compare(GLPI_VERSION, '10.1') >= 0) {
          $newtab['linkfield'] = 'items_id_target';
@@ -965,52 +917,47 @@ class PluginFormcreatorIssue extends CommonDBTM {
                'joinparams'      => [
                   'jointype'        => 'child',
                   'condition'       => [
-                     // glpi_tickets_a89eed976546dbc70964a86fe8724e95 matches the table in the 1st item in before join below
-                     new QueryExpression(
-                        'NEWTABLE.type = ' . CommonITILActor::ASSIGN .
-                        ' OR ' . '`glpi_tickets_a89eed976546dbc70964a86fe8724e95`.`id` = `NEWTABLE`.`tickets_id`' .
-                        'AND NEWTABLE.type = ' . CommonITILActor::ASSIGN
-                     ),
+                     'NEWTABLE.type = ' . CommonITILActor::ASSIGN
                   ],
-                  'beforejoin'      => [
-                     [
-                        'table'           => Ticket::getTable(),
-                        'joinparams'      => [
-                           'jointype'        => 'itemtype_item_revert',
-                           'specific_itemtype'  => Ticket::class,
-                           'condition'       => [
-                              new QueryExpression(
-                                 '2=2'
-                              ),
-                           ],
-                        ],
-                     ],
-                     [
-                        'table'           => Ticket::getTable(),
-                        'joinparams'      => [
-                           'jointype'        => 'empty',
-                           'condition'       => [
-                              new QueryExpression(
-                                 '3=3'
-                              ),
-                           ],
-                           'beforejoin'      => [
-                              'table'           => Item_Ticket::getTable(),
-                              'joinparams'      => [
-                                 'jointype'        => 'itemtype_item',
-                                 'specific_itemtype' => PluginFormcreatorFormAnswer::class,
-                                 'beforejoin'      => [
-                                    'table'           => PluginFormcreatorFormAnswer::getTable(),
-                                    'joinparams'      => [
-                                       'jointype'          => 'itemtype_item_revert',
-                                       'specific_itemtype' => PluginFormcreatorFormAnswer::class,
-                                    ],
-                                 ],
-                              ],
-                           ],
-                        ],
-                     ],
-                  ],
+                  // 'beforejoin'      => [
+                  //    [
+                  //       'table'           => Ticket::getTable(),
+                  //       'joinparams'      => [
+                  //          'jointype'        => 'itemtype_item_revert',
+                  //          'specific_itemtype'  => Ticket::class,
+                  //          'condition'       => [
+                  //             new QueryExpression(
+                  //                '2=2'
+                  //             ),
+                  //          ],
+                  //       ],
+                  //    ],
+                  //    [
+                  //       'table'           => Ticket::getTable(),
+                  //       'joinparams'      => [
+                  //          'jointype'        => 'empty',
+                  //          'condition'       => [
+                  //             new QueryExpression(
+                  //                '3=3'
+                  //             ),
+                  //          ],
+                  //          'beforejoin'      => [
+                  //             'table'           => Item_Ticket::getTable(),
+                  //             'joinparams'      => [
+                  //                'jointype'        => 'itemtype_item',
+                  //                'specific_itemtype' => PluginFormcreatorFormAnswer::class,
+                  //                'beforejoin'      => [
+                  //                   'table'           => PluginFormcreatorFormAnswer::getTable(),
+                  //                   'joinparams'      => [
+                  //                      'jointype'          => 'itemtype_item_revert',
+                  //                      'specific_itemtype' => PluginFormcreatorFormAnswer::class,
+                  //                   ],
+                  //                ],
+                  //             ],
+                  //          ],
+                  //       ],
+                  //    ],
+                  // ],
                ],
             ],
          ],

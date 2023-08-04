@@ -105,7 +105,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                $issueSo[9]['linkfield'],
                0,
                0,
-               $issueSo[9]['joinparams']
+               $issueSo[9]['joinparams'] ?? null
             );
             $join .= Search::addLeftJoin(
                $itemtype,
@@ -115,7 +115,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                $issueSo[11]['linkfield'],
                0,
                0,
-               $issueSo[11]['joinparams']
+               $issueSo[11]['joinparams'] ?? null
             );
             $join .= Search::addLeftJoin(
                $itemtype,
@@ -125,7 +125,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                $issueSo[16]['linkfield'],
                0,
                0,
-               $issueSo[16]['joinparams']
+               $issueSo[16]['joinparams'] ?? null
             );
             $join .= Search::addLeftJoin(
                $itemtype,
@@ -135,7 +135,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                $issueSo[42]['linkfield'],
                0,
                0,
-               $issueSo[42]['joinparams']
+               $issueSo[42]['joinparams'] ?? null
             );
             $join .= Search::addLeftJoin(
                $itemtype,
@@ -145,7 +145,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                $issueSo[43]['linkfield'],
                0,
                0,
-               $issueSo[43]['joinparams']
+               $issueSo[43]['joinparams'] ?? null
             );
             $join .= Search::addLeftJoin(
                $itemtype,
@@ -155,7 +155,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                $issueSo[44]['linkfield'],
                0,
                0,
-               $issueSo[44]['joinparams']
+               $issueSo[44]['joinparams'] ?? null
             );
          }
          break;
@@ -362,6 +362,112 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
    }
 }
 
+function plugin_formcreator_addLeftJoin($itemtype, $ref_table, $new_table, $linkfield, $already_link_tables) {
+   switch ($itemtype) {
+      case PluginFormcreatorIssue::class:
+         if ($linkfield == 'users_id_validate' && $ref_table == PluginFormcreatorIssue::getTable() && $new_table == User::getTable()) {
+            $ticket_validation_table = TicketValidation::getTable();
+            $ticket_table = Ticket::getTable();
+            $formanswer_table = PluginFormcreatorFormAnswer::getTable();
+            $item_ticket_table = Item_Ticket::getTable();
+            $unions = [
+               new QuerySubQuery([
+                  'SELECT' => [$ticket_validation_table => ['id', 'users_id_validate']],
+                  'FROM' => $ticket_validation_table,
+                  'LEFT JOIN' => [
+                     $ticket_table => [
+                        'FKEY' => [
+                           $ticket_table => 'id',
+                           $ticket_validation_table => 'tickets_id'
+                        ]
+                     ]
+                  ],
+               ]),
+               new QuerySubQuery([
+                  'SELECT' => [$ticket_validation_table => ['id', 'users_id_validate']],
+                  'FROM' => $ticket_validation_table,
+                  'LEFT JOIN' => [
+                     $ticket_table => [
+                        'FKEY' => [
+                           $ticket_table => 'id',
+                           $ticket_validation_table => 'tickets_id'
+                        ]
+                     ],
+                     $item_ticket_table => [
+                        'FKEY' => [
+                           $item_ticket_table => 'tickets_id',
+                           $ticket_table => 'id'
+                        ]
+                     ],
+                     $formanswer_table => [
+                        'FKEY' => [
+                           $formanswer_table => 'id',
+                           $item_ticket_table => 'items_id',
+                           [
+                              'AND' => ['itemtype' => PluginFormcreatorFormAnswer::class],
+                           ]
+                        ]
+                     ]
+                  ],
+               ]),
+            ];
+
+            global $DB;
+            $join_criteria = (new DBmysqlIterator($DB))->analyseCrit([
+               'AND' => [
+                  "$ref_table.itemtype" => PluginFormcreatorFormAnswer::class,
+                  "$ref_table.items_id" => new QueryExpression("$formanswer_table.id"),
+               ]
+            ]);
+            return ' LEFT JOIN ' . (new QueryUnion($unions, false, 'glpi_users_users_id_validate'))->getQuery() . " ON ($join_criteria)";
+         } else if ($linkfield == 'tickets_users_id' && $ref_table == PluginFormcreatorIssue::getTable() && $new_table == Ticket_User::getTable()) {
+            $ticket_validation_table = TicketValidation::getTable();
+            $ticket_table = Ticket::getTable();
+            $formanswer_table = PluginFormcreatorFormAnswer::getTable();
+            $item_ticket_table = Item_Ticket::getTable();
+            $unions = [
+               new QuerySubQuery([
+                  'SELECT' => [$ticket_table => ['id']],
+                  'FROM'   => $ticket_table,
+
+               ]),
+               new QuerySubQuery([
+                  'SELECT' => [$ticket_table => ['id']],
+                  'FROM'   => $ticket_table,
+                  'LEFT JOIN' => [
+                     $item_ticket_table => [
+                        'FKEY' => [
+                           $item_ticket_table => 'tickets_id',
+                           $ticket_table => 'id'
+                        ]
+                     ],
+                     $formanswer_table => [
+                        'FKEY' => [
+                           $formanswer_table => 'id',
+                           $item_ticket_table => 'items_id',
+                           [
+                              'AND' => ['itemtype' => PluginFormcreatorFormAnswer::class],
+                           ]
+                        ]
+                     ]
+                  ],
+               ]),
+            ];
+
+            global $DB;
+            $join_criteria = (new DBmysqlIterator($DB))->analyseCrit([
+               'AND' => [
+                  "$ref_table.itemtype" => PluginFormcreatorFormAnswer::class,
+                  "$ref_table.items_id" => new QueryExpression("$formanswer_table.id"),
+               ]
+            ]);
+            return ' LEFT JOIN ' . (new QueryUnion($unions, false, 'glpi_users_f8a71b671b11b33c49b070230fcec152'))->getQuery() . " ON ($join_criteria)";
+         }
+         break;
+   }
+
+   return '';
+}
 
 function plugin_formcreator_AssignToTicket($types) {
    $types[PluginFormcreatorFormAnswer::class] = PluginFormcreatorFormAnswer::getTypeName();
