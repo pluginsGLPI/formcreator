@@ -2001,7 +2001,6 @@ PluginFormcreatorTranslatableInterface
       }
 
       $form_query = PluginFormcreatorForm::getFormListQuery();
-      $form_query['DISTINCT'] = true;
       $form_query['SELECT'] = [
          $form_table => ['id', 'name', 'description', $formCategoryFk],
       ];
@@ -2677,6 +2676,7 @@ PluginFormcreatorTranslatableInterface
 
       $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($formTable, '', '', true, false, (new PluginFormcreatorForm())->maybeRecursive());
       $condition = [
+         'DISTINCT' => true,
          'FROM' => $formTable,
          'LEFT JOIN' => [
             $formLanguageTable => [
