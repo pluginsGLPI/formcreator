@@ -1598,7 +1598,7 @@ PluginFormcreatorTranslatableInterface
       }
 
       $listQuery = self::getFormListQuery();
-      $listQuery['COUNT DISTINCT'] = 'c';
+      $listQuery['COUNT'] = 'c';
       $result = $DB->request($listQuery);
       $result->rewind();
       $nb = $result->current()['c'];
