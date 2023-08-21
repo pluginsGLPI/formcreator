@@ -712,8 +712,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
          return null;
       }
 
-      $this->saveTags($formanswer, $changeID);
-
       // Add link between Change and FormAnswer
       $itemlink = $this->getItem_Item();
       $itemlink->add([
@@ -721,6 +719,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
          'items_id'     => $formanswer->fields['id'],
          'changes_id'  => $changeID,
       ]);
+
+      $this->saveTags($formanswer, $changeID);
 
       return $change;
    }
