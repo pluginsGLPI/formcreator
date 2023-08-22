@@ -52,7 +52,7 @@ PluginFormcreatorTranslatableInterface
    static public $items_id = 'plugin_formcreator_sections_id';
 
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
-   private ?PluginFormcreatorFieldInterface $field = null;
+   public ?PluginFormcreatorFieldInterface $field = null;
 
    private $skipChecks = false;
 
@@ -279,8 +279,6 @@ PluginFormcreatorTranslatableInterface
          return '';
       }
 
-      $html = '';
-
       $field = $this->getSubField();
       if (!$field->isPrerequisites()) {
          return '';
@@ -292,7 +290,7 @@ PluginFormcreatorTranslatableInterface
       $x = $this->fields['col'];
       $width = $this->fields['width'];
       $hiddenAttribute = $isVisible ? '' : 'hidden=""';
-      $html .= '<div'
+      $html = '<div'
          . ' gs-x="' . $x . '"'
          . ' gs-w="' . $width . '"'
          . ' data-itemtype="' . self::class . '"'
@@ -354,7 +352,6 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
       // - field type is compatible with accessibility of the form
-      $form = PluginFormcreatorCommon::getForm();
       $section = PluginFormcreatorSection::getById($input[PluginFormcreatorSection::getForeignKeyField()]);
       $form = PluginFormcreatorForm::getByItem($section);
       if ($form->isPublicAccess() && !$this->field->isPublicFormCompatible()) {
@@ -775,6 +772,21 @@ PluginFormcreatorTranslatableInterface
             $export[$key] = $value;
          }
       }
+
+      // Before importing the question, we need to give to the linker the questions
+      // used in the conditions of the question being duplicated
+      $conditions = (new PluginFormcreatorCondition())->find([
+         'itemtype' => self::getType(),
+         'items_id' => $this->getID()
+      ]);
+      foreach ($conditions as $row) {
+         $question = PluginFormcreatorQuestion::getById($row['plugin_formcreator_questions_id']);
+         if ($question === null || $question === false) {
+            continue;
+         }
+         $linker->addObject($row['plugin_formcreator_questions_id'], $question);
+      }
+
       $newQuestionId = static::import($linker, $export, $this->fields[$sectionFk]);
 
       if ($newQuestionId === false) {

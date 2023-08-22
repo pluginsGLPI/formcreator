@@ -396,7 +396,7 @@ function buildTiles(list) {
       // Build a HTML tile
       var url = formcreatorRootDoc + '/front/formdisplay.php?id=' + item.id;
       if (item.type != 'form') {
-         url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
+         url = rootDoc + '/front/helpdesk.faq.php?id=' + item.id;
       }
 
       var tiles_design = "";
@@ -1043,7 +1043,7 @@ var plugin_formcreator = new function() {
          displayAjaxMessageAfterRedirect();
       }).done(function (data) {
          var section = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"]');
-         section.find('[data-field="name"]').replaceWith(data['name']);
+         section.find(' > [data-field="name"]').replaceWith(data['name']);
          that.resetTabs();
       }).complete(function () {
          var myModal = form.closest('div.modal');

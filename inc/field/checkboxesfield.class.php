@@ -204,9 +204,19 @@ class CheckboxesField extends PluginFormcreatorAbstractField
 
       foreach ($value as $item) {
          if (trim($item) == '') {
+            Session::addMessageAfterRedirect(
+               sprintf(__('Empty values are not allowed: %s', 'formcreator'), $this->getTtranslatedLabel()),
+               false,
+               ERROR
+            );
             return false;
          }
          if (!in_array($item, $this->getAvailableValues())) {
+            Session::addMessageAfterRedirect(
+               sprintf(__('This value %1$s is not alowed: %2$s', 'formcreator'), $item, $this->getTtranslatedLabel()),
+               false,
+               ERROR
+            );
             return false;
          }
       }

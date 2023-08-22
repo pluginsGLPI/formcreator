@@ -222,7 +222,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
 
       $data = $this->prepareUploadedFiles($data, $formanswer);
 
-      $this->appendFieldsData($formanswer, $data);
+      $data = $this->appendFieldsData($data, $formanswer);
 
       // Cleanup actors array
       $data = $this->cleanActors($data);
@@ -232,8 +232,6 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
          return null;
       }
 
-      $this->saveTags($formanswer, $problemID);
-
       // Add link between Problem and FormAnswer
       $itemlink = $this->getItem_Item();
       $itemlink->add([
@@ -241,6 +239,8 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
          'items_id'     => $formanswer->fields['id'],
          'problems_id'  => $problemID,
       ]);
+
+      $this->saveTags($formanswer, $problemID);
 
       return $problem;
    }

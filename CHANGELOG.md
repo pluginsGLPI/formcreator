@@ -1,3 +1,44 @@
+<a name="2.13.7"></a>
+## [2.13.7](https://github.com/pluginsGLPI/formcreator/compare/2.13.6..2.13.7) (2023-07-19)
+
+
+### Bug Fixes
+
+*  Adding READ right for display reservations menu tab ([03e6281e](https://github.com/pluginsGLPI/formcreator/commit/03e6281e))
+*  bad lcoale in en_US ([db9986f1](https://github.com/pluginsGLPI/formcreator/commit/db9986f1))
+*  resize dashboard to match GLPI's core (#3306) ([9272cda3](https://github.com/pluginsGLPI/formcreator/commit/9272cda3))
+*  show FAQ without tabs for self-service ([c5499ad4](https://github.com/pluginsGLPI/formcreator/commit/c5499ad4))
+* **TargetChange:** use RichText instead of plaintext ([8845b888](https://github.com/pluginsGLPI/formcreator/commit/8845b888))
+* **checkboxesfield,radiosfield,selectfield:** add missing error messages ([66585193](https://github.com/pluginsGLPI/formcreator/commit/66585193))
+* **datefield, datetimefield:** comparison against empty string ([be4831c7](https://github.com/pluginsGLPI/formcreator/commit/be4831c7))
+* **dropdownfield:** SQL error for GLPI objects / tickets and some specific rights ([2539e366](https://github.com/pluginsGLPI/formcreator/commit/2539e366))
+* **dropdownfield:** handle specific case with Entity itemtype ([bd25e7d1](https://github.com/pluginsGLPI/formcreator/commit/bd25e7d1))
+* **dropdownfield:** missing entity restriction setting ([54543cb3](https://github.com/pluginsGLPI/formcreator/commit/54543cb3))
+* **dropdownfield:** prevent language switching and log error ([49f8fc07](https://github.com/pluginsGLPI/formcreator/commit/49f8fc07))
+* **fieldsfield:** restore mandatory field as read only ([52a9fc2b](https://github.com/pluginsGLPI/formcreator/commit/52a9fc2b))
+* **form,category:** obey show count on tabs parameter ([f4ebf9e5](https://github.com/pluginsGLPI/formcreator/commit/f4ebf9e5))
+* **form_language:** obey show counter in tab setting ([9dfc3b8d](https://github.com/pluginsGLPI/formcreator/commit/9dfc3b8d))
+* **formanswer:** php warning ([ce078990](https://github.com/pluginsGLPI/formcreator/commit/ce078990))
+* **formanswer:** prevent silent rejection of answers ([d630302d](https://github.com/pluginsGLPI/formcreator/commit/d630302d))
+* **formanswer:** redirect to login if session expired ([eb0acb65](https://github.com/pluginsGLPI/formcreator/commit/eb0acb65))
+* **glpiselectfield:** fix namespace (#3287) ([613e0fad](https://github.com/pluginsGLPI/formcreator/commit/613e0fad))
+* **install:** missing row in sql query, causing PHP warning ([0c47776a](https://github.com/pluginsGLPI/formcreator/commit/0c47776a))
+* **issue:** php warnings when anonymisation enabled ([f6f01d7d](https://github.com/pluginsGLPI/formcreator/commit/f6f01d7d))
+* **issue:** prevent fatal error in tooltip ([3419affc](https://github.com/pluginsGLPI/formcreator/commit/3419affc))
+* **question,section:** duplicate a question or section must duplicate inner conditions ([22597832](https://github.com/pluginsGLPI/formcreator/commit/22597832))
+* **section:** cannot rename section twice ([7bbb9b81](https://github.com/pluginsGLPI/formcreator/commit/7bbb9b81))
+* **section:** condition rule loss after duplicate / import ([883a1227](https://github.com/pluginsGLPI/formcreator/commit/883a1227))
+* **section:** duplicate form may lead to bad question id in condition ([a6f9c41c](https://github.com/pluginsGLPI/formcreator/commit/a6f9c41c))
+* **section:** rename section impacts display of inner questions ([c4277d8c](https://github.com/pluginsGLPI/formcreator/commit/c4277d8c))
+* **selectfield,multiselectfield:** fix possible encoding problem ([8aaec8ac](https://github.com/pluginsGLPI/formcreator/commit/8aaec8ac))
+* **tag:** tag was always deleted ([6201d61d](https://github.com/pluginsGLPI/formcreator/commit/6201d61d))
+* **targetchange,targetproblem:** folow method call signature for fields plugin ([016696ab](https://github.com/pluginsGLPI/formcreator/commit/016696ab))
+* **textfield:** Unescaped HTML when displaying a form answer ([6ce71f95](https://github.com/pluginsGLPI/formcreator/commit/6ce71f95))
+* **textfield:** exception while displaying counters ([0a857d7f](https://github.com/pluginsGLPI/formcreator/commit/0a857d7f))
+* **textfield:** target ticket title need html encoding ([1b71d652](https://github.com/pluginsGLPI/formcreator/commit/1b71d652))
+
+
+
 <a name="2.13.6"></a>
 ## [2.13.6](https://github.com/pluginsGLPI/formcreator/compare/2.13.5..2.13.6) (2023-05-26)
 

@@ -401,7 +401,7 @@ class TextField extends CommonTestCase {
             'question' => $this->getQuestion(),
             'value' => '"><img src=x onerror="alert(1337)" x=x>',
             'expected' => true,
-            'expectedValue' => '"><img src=x onerror="alert(1337)" x=x>',
+            'expectedValue' => '"&#62;&#60;img src=x onerror="alert(1337)" x=x&#62;',
          ],
       ];
    }

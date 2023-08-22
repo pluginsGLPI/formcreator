@@ -33,7 +33,7 @@ use Glpi\Plugin\Hooks;
 
 global $CFG_GLPI;
 // Version of the plugin (major.minor.bugfix)
-define('PLUGIN_FORMCREATOR_VERSION', '2.13.6');
+define('PLUGIN_FORMCREATOR_VERSION', '2.13.7');
 // Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.13');
 // is or is not an official release of the plugin
@@ -337,7 +337,7 @@ function plugin_formcreator_hook(): void {
             Session::getCurrentInterface() == 'helpdesk') {
 
          // Add specific JavaScript
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js';
+         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'js/scripts.js';
       }
 
       if (isset($_SESSION['glpiactiveentities_string'])) {
@@ -515,7 +515,7 @@ function plugin_formcreator_redirect() {
 
    $pages = [
       'front/reservationitem.php' => FORMCREATOR_ROOTDOC . '/front/reservationitem.php',
-      'front/helpdesk.faq.php' => FORMCREATOR_ROOTDOC . '/front/wizard.php',
+      // 'front/helpdesk.faq.php' => FORMCREATOR_ROOTDOC . '/front/wizard.php',
       'front/ticket.php' => FORMCREATOR_ROOTDOC . '/front/issue.php',
    ];
    foreach ($pages as $srcPage => $dstPage) {

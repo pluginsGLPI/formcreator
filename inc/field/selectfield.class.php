@@ -37,6 +37,7 @@ use Html;
 use Session;
 use Toolbox;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
 
 class SelectField extends RadiosField
 {
@@ -71,7 +72,8 @@ class SelectField extends RadiosField
       if (!empty($this->question->fields['values'])) {
          foreach ($values as $value) {
             if ((trim($value) != '')) {
-               $translatedValues[$value] = __($value, $domain);
+               $unsanitized = Sanitizer::unsanitize(__($value, $domain));
+               $translatedValues[$unsanitized] = $unsanitized;
             }
          }
 
@@ -116,7 +118,16 @@ class SelectField extends RadiosField
          return true;
       }
       $value = trim($value);
-      return in_array($value, $this->getAvailableValues());
+      if (!in_array($value, $this->getAvailableValues())) {
+         Session::addMessageAfterRedirect(
+            sprintf(__('This value %1$s is not allowed: %2$s', 'formcreator'), $value, $this->getTtranslatedLabel()),
+            false,
+            ERROR
+         );
+         return false;
+      }
+
+      return true;
    }
 
    public function equals($value): bool {

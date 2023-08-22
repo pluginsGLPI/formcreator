@@ -325,4 +325,16 @@ class TextareaField extends CommonTestCase {
       $output = $instance->getRenderedHtml('no_domain', true);
       $this->string($output)->contains('"><img src=x onerror="alert(1337)" x=x>');
    }
+
+   public function providerGetValueForTargetText() {
+      $fieldtype = 'textarea';
+      yield [
+         'question' => $this->getQuestion([
+            'fieldtype' => $fieldtype,
+         ]),
+         'value' => '<p>foo</p><p>bar</p>',
+         'expectedValue' => 'foobar',
+         'expectedRichValue' => '<p>foo</p><p>bar</p>',
+      ];
+   }
 }

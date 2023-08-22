@@ -33,7 +33,6 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use PluginFormcreatorCommon;
-use PluginFormcreatorQuestion;
 use PluginFormcreatorForm;
 use PluginFormcreatorFormAnswer;
 use Html;
@@ -165,15 +164,6 @@ class TextareaField extends TextField
          'enable_fileupload' => false,
          'uploads'           => $this->uploads,
       ]);
-      // The following file upload area is needed to allow embedded pics in the textarea
-      $html .=  '<div style="display:none;">';
-      Html::file(['editor_id'    => "$fieldName$rand",
-                  'filecontainer' => "filecontainer$rand",
-                  'onlyimages'    => true,
-                  'showtitle'     => false,
-                  'multiple'      => true,
-                  'display'       => false]);
-      $html .=  '</div>';
       $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
       });");

@@ -34,6 +34,7 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use Dropdown;
 use Html;
+use Glpi\Toolbox\Sanitizer;
 
 class MultiSelectField extends CheckboxesField
 {
@@ -55,8 +56,10 @@ class MultiSelectField extends CheckboxesField
       $fieldName = 'formcreator_field_' . $id;
       $values    = $this->getAvailableValues();
       $translatedValues = [];
+
       foreach ($values as $key => $value) {
-         $translatedValues[$key] = __($value, $domain);
+         $unsanitized = Sanitizer::unsanitize(__($value, $domain));
+         $translatedValues[$key] = $unsanitized;
       }
       if (!empty($values)) {
          $html .= Dropdown::showFromArray($fieldName, $translatedValues, [

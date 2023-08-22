@@ -29,34 +29,43 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+namespace GlpiPlugin\Formcreator\Tests;
 
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
-}
+use Glpi\Toolbox\Sanitizer;
 
-if (! plugin_formcreator_replaceHelpdesk()) {
-   Html::redirect(FORMCREATOR_ROOTDOC . '/front/formlist.php');
-}
+abstract class CommonAbstractFieldTestCase extends CommonTestCase {
 
-if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader(
-      __('Service catalog', 'formcreator'),
-      'seek_assistance',
-      PluginFormcreatorForm::class
-   );
-} else {
-   Html::header(__('Service catalog', 'formcreator'));
-}
+   /**
+    * @dataProvider providerGetValueForTargetText
+    *
+    * @return void
+    */
+   public function testGetValueForTargetText($question, $value, $expectedValue, $expectedRichValue = null) {
+      $instance = $this->newTestedInstance($question);
+      $output = $instance->parseAnswerValues([
+         'formcreator_field_' . $question->getID() => $value
+      ]);
 
-PluginFormcreatorCommon::showMiniDashboard();
+      // Simple text output
+      $output = $instance->getValueForTargetText('', false);
+      if ($expectedValue === null) {
+         $this->variable($output)->isNull();
+      } else {
+         $this->string($output)
+            ->isEqualTo($expectedValue);
+      }
 
-$form = PluginFormcreatorCommon::getForm();
-$form->showServiceCatalog();
+      // Rich text output
+      $output = $instance->getValueForTargetText('', true);
+      if ($expectedValue === null) {
+         $this->variable($output)->isNull();
+         return;
+      }
 
-if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpFooter();
-} else {
-   Html::footer();
+      if ($expectedRichValue === null) {
+         $expectedRichValue = $expectedValue;
+      }
+      $this->string($output)
+         ->isEqualTo($expectedRichValue);
+   }
 }

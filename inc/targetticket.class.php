@@ -803,6 +803,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
     * @return Ticket|null Generated ticket if success, null otherwise
     */
    public function save(PluginFormcreatorFormAnswer $formanswer): ?CommonDBTM {
+      global $CFG_GLPI;
+
       $ticket  = new Ticket();
       $form = $formanswer->getForm();
       $data = $this->getDefaultData($formanswer);
@@ -813,7 +815,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $richText = true;
       $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
       $data['name'] = $this->prepareTemplate(
-         __($this->fields['target_name'], $domain),
+         Sanitizer::unsanitize(__($this->fields['target_name'], $domain)),
          $formanswer,
          false
       );
@@ -893,7 +895,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 
       $data = $this->prepareUploadedFiles($data, $formanswer);
 
-      $this->appendFieldsData($formanswer, $data);
+      $data = $this->appendFieldsData($data, $formanswer);
 
       // Cleanup actors array
       $data = $this->cleanActors($data);
@@ -904,7 +906,21 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          return null;
       }
 
-      $this->saveTags($formanswer, $ticketID);
+      // Set default document category
+      $document_category = $CFG_GLPI['documentcategories_id_forticket'] ?? 0;
+      if ($document_category) {
+         foreach (array_keys($this->attachedDocuments) as $documents_id) {
+            $document = Document::getById($documents_id);
+            if (!$document) {
+               continue;
+            }
+
+            $document->update([
+               'id' => $document->fields['id'],
+               'documentcategories_id' => $document_category,
+            ]);
+         }
+      }
 
       // Add link between Ticket and FormAnswer
       $itemlink = $this->getItem_Item();
@@ -913,6 +929,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          'items_id'   => $formanswer->fields['id'],
          'tickets_id' => $ticketID,
       ]);
+
+      $this->saveTags($formanswer, $ticketID);
 
       // Attach validation message as first ticket followup if validation is required and
       // if is set in ticket target configuration

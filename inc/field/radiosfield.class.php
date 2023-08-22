@@ -38,6 +38,7 @@ use Session;
 use Toolbox;
 use PluginFormcreatorFormAnswer;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
 
 class RadiosField extends PluginFormcreatorAbstractField
 {
@@ -174,7 +175,7 @@ class RadiosField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($domain, $richText): ?string {
-      return __($this->value, $domain);
+      return Sanitizer::unsanitize(__($this->value, $domain));
    }
 
    public function moveUploads() {
@@ -203,8 +204,18 @@ class RadiosField extends PluginFormcreatorAbstractField
       if ($value == '') {
          return true;
       }
+
       $value = trim($value);
-      return in_array($value, $this->getAvailableValues());
+      if (!in_array($value, $this->getAvailableValues())) {
+         Session::addMessageAfterRedirect(
+            sprintf(__('This value %1$s is not allowed: %2$s', 'formcreator'), $value, $this->getTtranslatedLabel()),
+            false,
+            ERROR
+         );
+         return false;
+      }
+
+      return true;
    }
 
    public static function canRequire(): bool {

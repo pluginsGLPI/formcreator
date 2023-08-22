@@ -1397,11 +1397,32 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $this->isAnswersValid = !in_array(false, $fieldValidities, true);
 
       if ($this->isAnswersValid) {
+         $form = $this->getForm();
+         $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
          foreach ($this->questionFields as $id => $field) {
             if (!$this->questionFields[$id]->isPrerequisites()) {
                continue;
             }
+            // Count the errors in session
+            $errors_count = 0;
+            if (isset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR])) {
+               $errors_count = count($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
+            }
             if (PluginFormcreatorFields::isVisible($field->getQuestion(), $this->questionFields) && !$this->questionFields[$id]->isValid()) {
+               $new_errors_count = $_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]
+                                   ? count($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR])
+                                   : 0;
+
+               if ($new_errors_count <= $errors_count) {
+                  // If there are new errors, we add a message to the user
+                  $field_name = __($field->getQuestion()->fields['name'], $domain);
+                  Session::addMessageAfterRedirect(
+                     sprintf(__('Answer is invalid in %1$s', 'formcreator'), $field_name),
+                     true,
+                     ERROR
+                  );
+               }
+
                $this->isAnswersValid = false;
             }
          }

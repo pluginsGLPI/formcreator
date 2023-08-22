@@ -2450,7 +2450,7 @@ msgid ""
 "ignored."
 msgstr ""
 "Le mini tableau de bord de Formcreator n'est pas utilisable comme défaut. Ce"
-" paramètres a été ignoré."
+" paramètre a été ignoré."
 
 #: js/scripts.js:296
 msgid "No form found. Please choose a form below instead."

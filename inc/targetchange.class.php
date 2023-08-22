@@ -664,11 +664,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
          $data[$changeField] = $this->prepareTemplate(
             Sanitizer::unsanitize(__($this->fields[$changeField], $domain)) ?? '',
             $formanswer,
-            $changeField == 'content' // only content supports rich text
+            true // all *content supports rich text
          );
          $data[$changeField] = $data[$changeField] ?? '';
 
-         $data[$changeField] = $formanswer->parseTags($data[$changeField], $this, $changeField == 'content');
+         $data[$changeField] = $formanswer->parseTags($data[$changeField], $this, true); // all *content supports rich text
       }
 
       $data['_users_id_recipient'] = $formanswer->fields['requester_id'];
@@ -702,7 +702,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
 
       $data = $this->prepareUploadedFiles($data, $formanswer);
 
-      $this->appendFieldsData($formanswer, $data);
+      $data = $this->appendFieldsData($data, $formanswer);
 
       // Cleanup actors array
       $data = $this->cleanActors($data);
@@ -712,8 +712,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
          return null;
       }
 
-      $this->saveTags($formanswer, $changeID);
-
       // Add link between Change and FormAnswer
       $itemlink = $this->getItem_Item();
       $itemlink->add([
@@ -721,6 +719,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
          'items_id'     => $formanswer->fields['id'],
          'changes_id'  => $changeID,
       ]);
+
+      $this->saveTags($formanswer, $changeID);
 
       return $change;
    }

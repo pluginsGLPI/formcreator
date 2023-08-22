@@ -64,9 +64,12 @@ implements PluginFormcreatorExportableInterface
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       if ($item instanceof PluginFormcreatorForm) {
-         $nb = (new DbUtils())->countElementsInTable(self::getTable(), [
-            'plugin_formcreator_forms_id' => $item->getID(),
-         ]);
+         $nb = 0;
+         if ($_SESSION['glpishow_count_on_tabs']) {
+            $nb = (new DbUtils())->countElementsInTable(self::getTable(), [
+               'plugin_formcreator_forms_id' => $item->getID(),
+            ]);
+         }
          return self::createTabEntry(
             self::getTypeName(Session::getPluralNumber()),
             $nb
