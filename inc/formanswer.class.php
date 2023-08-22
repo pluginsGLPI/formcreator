@@ -1582,7 +1582,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'items_id'           => $ticketId,
          'itemtype'           => Ticket::class,
          'name'               => $issueName,
-         'status'             => $ticket->fields['status'],
+         'status'             => PluginFormcreatorCommon::getTicketStatusForIssue($ticket),
          'date_creation'      => $ticket->fields['date'],
          'date_mod'           => $ticket->fields['date_mod'],
          'entities_id'        => $ticket->fields['entities_id'],
