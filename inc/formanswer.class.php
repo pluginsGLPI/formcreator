@@ -1368,6 +1368,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $content = Sanitizer::sanitize($content);
       }
 
+      $content = $this->parseExtraTags($content, $target, $richText);
+
       $hook_data = Plugin::doHookFunction('formcreator_parse_extra_tags', [
          'formanswer' => $this,
          'content'    => $content,
@@ -1376,6 +1378,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       ]);
 
       return $hook_data['content'];
+   }
+
+   protected function parseExtraTags(string $content, PluginFormcreatorTargetInterface $target = null, $richText = false): string {
+      $content = str_replace('##answer_id##', $this->getField('id'), $content);
+
+      return $content;
    }
 
    /**

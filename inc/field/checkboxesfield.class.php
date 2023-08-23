@@ -249,22 +249,33 @@ class CheckboxesField extends PluginFormcreatorAbstractField
    }
 
    public function prepareQuestionInputForSave($input) {
+      global $DB;
+
       if (!isset($input['values']) || empty($input['values'])) {
          Session::addMessageAfterRedirect(
-            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+            __('The field value is required.', 'formcreator'),
             false,
             ERROR
          );
          return [];
       }
 
-      // trim values
-      $input['values'] = $this->trimValue($input['values']);
-
-      if (isset($input['default_values'])) {
+      $values = $this->trimValue($input['values']);
+      $defaultValues = $this->trimValue($input['default_values'] ?? '');
+      if (count($defaultValues) > 0) {
          // trim values
-         $input['default_values'] = $this->trimValue($input['default_values']);
+         $validDefaultValues = array_intersect($this->getAvailableValues($values), $defaultValues);
+         if (count($validDefaultValues) != (count($defaultValues))) {
+            Session::addMessageAfterRedirect(
+               __('The default values are not in the list of available values.', 'formcreator'),
+               false,
+               ERROR
+            );
+            return [];
+         }
+         $input['default_values'] = $DB->escape(json_encode($defaultValues, JSON_UNESCAPED_UNICODE));
       }
+      $input['values'] = $DB->escape(json_encode($values, JSON_UNESCAPED_UNICODE));
 
       return $input;
    }

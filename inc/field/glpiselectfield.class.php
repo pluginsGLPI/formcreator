@@ -72,6 +72,7 @@ class GlpiselectField extends DropdownField
       }
       $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
       $this->deserializeValue($this->question->fields['default_values']);
+      $this->question->fields['_default_values'] = $this->value;
 
       TemplateRenderer::getInstance()->display($template, [
          'item' => $this->question,
@@ -93,6 +94,8 @@ class GlpiselectField extends DropdownField
    }
 
    public function prepareQuestionInputForSave($input) {
+      global $DB;
+
       if (!isset($input['itemtype']) || empty($input['itemtype'])) {
          Session::addMessageAfterRedirect(
             __('The field value is required:', 'formcreator') . ' ' . $input['name'],
@@ -122,7 +125,7 @@ class GlpiselectField extends DropdownField
       unset($input['show_tree_depth']);
       unset($input['selectable_tree_root']);
 
-      $input['values'] = json_encode($input['values']);
+      $input['values'] = $DB->escape(json_encode($input['values'], JSON_UNESCAPED_UNICODE));
 
       return $input;
    }
@@ -131,7 +134,7 @@ class GlpiselectField extends DropdownField
       return true;
    }
 
-   public function getAvailableValues(): array {
+   public function getAvailableValues(array $values = null): array {
       return [];
    }
 
