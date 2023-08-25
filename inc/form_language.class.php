@@ -364,7 +364,7 @@ implements PluginFormcreatorExportableInterface
       $header = '<tr>';
       $header.= '<th>' . Html::getCheckAllAsCheckbox("translation_list$rand", $rand) . '</th>';
       $header.= '<th>' . __('Original string', 'formcreator') . '</th>';
-      $header.= '<th>' . __('Translation', 'Translations', 1, 'formcreator') . '</th>';
+      $header.= '<th>' . _n('Translation', 'Translations', 1, 'formcreator') . '</th>';
       $header.= '</tr>';
       echo $header;
       echo '</thead>';
