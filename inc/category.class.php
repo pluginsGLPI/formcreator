@@ -119,7 +119,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $forms_criteria['SELECT'] = [
          PluginFormcreatorForm::getTableField('id'),
       ];
-      // $count_forms_criteria['COUNT'] = 'count';
       $forms_criteria['WHERE']["`$form_table`.`$categoryFk`"] = new QueryExpression("`$cat_table`.`id`");
 
       $count_forms_criteria = [
