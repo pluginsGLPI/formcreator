@@ -32,47 +32,132 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonAbstractFieldTestCase;
 use PluginFormcreatorFormAnswer;
+use PluginFormcreatorCondition;
 
 class RadiosField extends CommonAbstractFieldTestCase {
-   public function testPrepareQuestionInputForSave() {
+
+   public function providerPrepareQuestionInputForSave() {
+      global $DB;
+
       $question = $this->getQuestion([
          'fieldtype'       => 'radios',
          'name'            => 'question',
          'required'        => '0',
-         'default_values'  => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
-         'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
+         'default_values'  => '1',
+         'values'          => '1',
          'order'           => '1',
-         'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+         'show_rule'       => PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
          'range_min'       => 3,
          'range_max'       => 4,
       ]);
-      $fieldInstance = $this->newTestedInstance($question);
 
-      // Test a value is mandatory
-      $input = [
-         'values'          => "",
-         'name'            => 'foo',
+      yield [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'   => "",
+            'name'     => 'foo',
+         ],
+         'expected' => [],
+         'message'  => 'The field value is required.',
       ];
-      $out = $fieldInstance->prepareQuestionInputForSave($input);
-      $this->integer(count($out))->isEqualTo(0);
 
-      // Test accented chars are kept
-      $input = [
-         'values'          => 'éè\r\nsomething else',
-         'default_values'  => 'éè',
+      yield [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'          => 'éè\r\nsomething else',
+            'default_values'  => 'éè',
+         ],
+         'expected' => [
+            'values' => '[\"éè\",\"something else\"]',
+            'default_values' => 'éè',
+         ],
+         'message'  => '',
       ];
-      $out = $fieldInstance->prepareQuestionInputForSave($input);
-      $this->string($out['values'])->isEqualTo('[\"éè\",\"something else\"]');
-      $this->string($out['default_values'])->isEqualTo("éè");
 
-      // Test values are trimmed
-      $input = [
-         'values'          => ' something \r\n  something else  ',
-         'default_values'  => ' something      ',
+      yield [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'          => ' something \r\n  something else  ',
+            'default_values'  => ' something      ',
+         ],
+         'expected' => [
+            'values' => '[\"something\",\"something else\"]',
+            'default_values' => 'something',
+         ],
+         'message'  => '',
       ];
-      $out = $fieldInstance->prepareQuestionInputForSave($input);
-      $this->string($out['values'])->isEqualTo('[\"something\",\"something else\"]');
-      $this->string($out['default_values'])->isEqualTo("something");
+
+      yield 'no default value' => [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'   => 'a\r\nb\r\nc',
+            'name'     => 'foo',
+            'default_values' => ''
+         ],
+         'expected' => [
+            'values'   => $DB->escape('["a","b","c"]'),
+            'name'     => 'foo',
+            'default_values' => null,
+         ],
+         'message'  => '',
+      ];
+
+      yield 'several default values not allowed' => [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'   => 'a\r\nb\r\nc',
+            'name'     => 'foo',
+            'default_values' => 'a\r\n\b'
+         ],
+         'expected' => [],
+         'message'  => 'Only one default value is allowed.',
+      ];
+
+      yield 'one default value' => [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'   => 'a\r\nb\r\nc',
+            'name'     => 'foo',
+            'default_values' => 'b'
+         ],
+         'expected' => [
+            'values'   => $DB->escape('["a","b","c"]'),
+            'name'     => 'foo',
+            'default_values' => 'b'
+         ],
+         'message'  => '',
+      ];
+
+      yield 'invalid default value' => [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'   => 'a\r\nb\r\nc',
+            'name'     => 'foo',
+            'default_values' => 'z'
+         ],
+         'expected' => [],
+         'message'  => 'The default value is not in the list of available values.',
+      ];
+   }
+
+   /**
+    * @dataProvider providerPrepareQuestionInputForSave
+    *
+    * @return void
+    */
+   public function testPrepareQuestionInputForSave($field, $input, $expected, $message) {
+      // Clean error messages
+      $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
+
+      $output = $field->prepareQuestionInputForSave($input);
+      if ($expected === false || is_array($expected) && count($expected) == 0) {
+         $this->array($output)->hasSize(0);
+         $this->sessionHasMessage($message, ERROR);
+         //End of test on expected failure
+         return;
+      }
+
+      $this->array($output)->isEqualTo($expected);
    }
 
    public function testGetName() {

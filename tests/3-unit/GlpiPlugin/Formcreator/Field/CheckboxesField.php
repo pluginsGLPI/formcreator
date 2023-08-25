@@ -234,32 +234,161 @@ class CheckboxesField extends CommonAbstractFieldTestCase {
       $this->string($output)->isEqualTo(implode(', ', $expected));
    }
 
-   public function testPrepareQuestionInputForSave() {
+   public function providerPrepareQuestionInputForSave() {
+      global $DB;
+
       $question = $this->getQuestion([
          'fieldtype'       => 'checkboxes',
          'name'            => 'question',
          'required'        => '0',
-         'default_values'  => json_encode(['1', '2', '3', '5', '6']),
-         'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+         'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
+         'default_values'  => '1\r\n2\r\n3\r\n5\r\n6',
          'order'           => '1',
          'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
          'range_min'       => 3,
          'range_max'       => 4,
       ]);
+
+      yield [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'   => "",
+            'name'     => 'foo',
+         ],
+         'expected' => [],
+         'message'  => 'The field value is required.',
+      ];
+
+      yield [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'          => 'éè\r\nsomething else',
+            'default_values'  => 'éè',
+         ],
+         'expected' => [
+            'values' => '[\"éè\",\"something else\"]',
+            'default_values'  => '[\"éè\"]',
+         ],
+         'message'  => '',
+      ];
+
+      yield [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'          => ' something \r\n  something else  ',
+            'default_values'  => ' something      ',
+         ],
+         'expected' => [
+            'values' => '[\"something\",\"something else\"]',
+            'default_values' => '[\"something\"]',
+         ],
+         'message'  => '',
+      ];
+
+      yield 'no default value' => [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'   => 'a\r\nb\r\nc',
+            'name'     => 'foo',
+            'default_values' => ''
+         ],
+         'expected' => [
+            'values'   => $DB->escape('["a","b","c"]'),
+            'name'     => 'foo',
+            'default_values' => '',
+         ],
+         'message'  => '',
+      ];
+
+      yield 'several default values' => [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'   => 'a\r\nb\r\nc',
+            'name'     => 'foo',
+            'default_values' => 'a\r\n\b'
+         ],
+         'expected' => [
+            'values'   => $DB->escape('["a","b","c"]'),
+            'name'     => 'foo',
+            'default_values' => $DB->escape('["a","b"]'),
+         ],
+         'message'  => '',
+      ];
+
+      yield 'one default value' => [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'   => 'a\r\nb\r\nc',
+            'name'     => 'foo',
+            'default_values' => 'b'
+         ],
+         'expected' => [
+            'values'   => $DB->escape('["a","b","c"]'),
+            'name'     => 'foo',
+            'default_values' => $DB->escape('["b"]'),
+         ],
+         'message'  => '',
+      ];
+
+      yield 'invalid default value' => [
+         'field'    => $this->newTestedInstance($question),
+         'input'    => [
+            'values'   => 'a\r\nb\r\nc',
+            'name'     => 'foo',
+            'default_values' => 'z'
+         ],
+         'expected' => [],
+         'message'  => 'The default values are not in the list of available values.',
+      ];
+   }
+
+   /**
+    * @dataProvider providerPrepareQuestionInputForSave
+    *
+    * @return void
+    */
+   public function testPrepareQuestionInputForSave($field, $input, $expected, $message) {
+
+      // Clean error messages
+      $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
+
+      $output = $field->prepareQuestionInputForSave($input);
+      if ($expected === false || is_array($expected) && count($expected) == 0) {
+         $this->array($output)->hasSize(0);
+         $this->sessionHasMessage($message, ERROR);
+         //End of test on expected failure
+         return;
+      }
+
+      $this->array($output)->isEqualTo($expected);
+
+      return;
+
+      $question = $this->getQuestion([
+        'fieldtype'       => 'checkboxes',
+        'name'            => 'question',
+        'required'        => '0',
+        'default_values'  => json_encode(['1', '2', '3', '5', '6']),
+        'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+        'order'           => '1',
+        'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+        'range_min'       => 3,
+        'range_max'       => 4,
+      ]);
       $fieldInstance = $this->newTestedInstance($question);
 
       // Test a value is mandatory
       $input = [
-         'values'          => "",
-         'name'            => 'foo',
+        'values'          => "",
+        'name'            => 'foo',
       ];
       $out = $fieldInstance->prepareQuestionInputForSave($input);
       $this->integer(count($out))->isEqualTo(0);
 
       // Test accented chars are kept
       $input = [
-         'values'          => 'éè\r\nsomething else',
-         'default_values'  => 'éè',
+        'values'          => 'éè\r\nsomething else',
+        'default_values'  => 'éè',
       ];
       $out = $fieldInstance->prepareQuestionInputForSave($input);
       $this->string($out['values'])->isEqualTo('[\"éè\",\"something else\"]');
@@ -267,8 +396,8 @@ class CheckboxesField extends CommonAbstractFieldTestCase {
 
       // Test values are trimmed
       $input = [
-         'values'          => ' something \r\n  something else  ',
-         'default_values'  => ' something      ',
+        'values'          => ' something \r\n  something else  ',
+        'default_values'  => ' something      ',
       ];
       $out = $fieldInstance->prepareQuestionInputForSave($input);
       $this->string($out['values'])->isEqualTo('[\"something\",\"something else\"]');

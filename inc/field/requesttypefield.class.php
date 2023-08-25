@@ -112,7 +112,7 @@ class RequestTypeField extends SelectField
       return true;
    }
 
-   public function getAvailableValues() {
+   public function getAvailableValues(array $values = null): array {
       return Ticket::getTypes();
    }
 

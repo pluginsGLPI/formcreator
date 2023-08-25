@@ -907,8 +907,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          }
       }
 
-      $this->saveTags($formanswer, $ticketID);
-
       // Add link between Ticket and FormAnswer
       $itemlink = $this->getItem_Item();
       $itemlink->add([
@@ -916,6 +914,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          'items_id'   => $formanswer->fields['id'],
          'tickets_id' => $ticketID,
       ]);
+
+      $this->saveTags($formanswer, $ticketID);
 
       // Attach validation message as first ticket followup if validation is required and
       // if is set in ticket target configuration

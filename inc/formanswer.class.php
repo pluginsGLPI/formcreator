@@ -1452,6 +1452,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $content = Sanitizer::sanitize($content);
       }
 
+      $content = $this->parseExtraTags($content, $target, $richText);
+
       $hook_data = Plugin::doHookFunction('formcreator_parse_extra_tags', [
          'formanswer' => $this,
          'content'    => $content,
@@ -1460,6 +1462,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       ]);
 
       return $hook_data['content'];
+   }
+
+   protected function parseExtraTags(string $content, PluginFormcreatorTargetInterface $target = null, $richText = false): string {
+      $content = str_replace('##answer_id##', $this->getField('id'), $content);
+
+      return $content;
    }
 
    /**
@@ -1699,7 +1707,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'items_id'                   => $ticketId,
          'itemtype'                   => Ticket::class,
          'name'                       => $issueName,
-         'status'                     => $ticket->fields['status'],
+         'status'                     => PluginFormcreatorCommon::getTicketStatusForIssue($ticket),
          'date_creation'              => $ticket->fields['date'],
          'date_mod'                   => $ticket->fields['date_mod'],
          'entities_id'                => $ticket->fields['entities_id'],
