@@ -1598,12 +1598,15 @@ PluginFormcreatorTranslatableInterface
       }
 
       $listQuery = self::getFormListQuery();
-      $listQuery['COUNT'] = 'c';
-      $result = $DB->request($listQuery);
-      $result->rewind();
-      $nb = $result->current()['c'];
+      $countQuery = [
+         'SELECT' => [
+            'COUNT' => 'c'
+         ],
+         'FROM' => new QuerySubQuery($listQuery),
+      ];
+      $result = $DB->request($countQuery)->current();
 
-      return $nb;
+      return $result['c'];
    }
 
    public function export(bool $remove_uuid = false): array {
