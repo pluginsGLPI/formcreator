@@ -1474,12 +1474,13 @@ class PluginFormcreatorForm extends CommonTestCase {
          'language'    => 'de_DE',
       ]);
 
-      $output = \PluginFormcreatorForm::countAvailableForm();
+      $testedClassName = $this->getTestedClassName();
+      $output = $testedClassName::countAvailableForm();
 
       // Debug information in case test fails
       if ($output != 2) {
-         $listQuery = \PluginFormcreatorForm::getFormListQuery();
-         $listQuery['SELECT'] = \PluginFormcreatorForm::getTable() . '.name';
+         $listQuery = $testedClassName::getFormListQuery();
+         $listQuery['SELECT'] = $testedClassName::getTable() . '.name';
          $result = $DB->request($listQuery);
          var_dump(iterator_to_array($result));
       }

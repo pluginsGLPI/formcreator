@@ -1600,9 +1600,7 @@ PluginFormcreatorTranslatableInterface
       $listQuery = self::getFormListQuery();
       $listQuery['SELECT'] = PluginFormcreatorForm::getTableField('id');
       $countQuery = [
-         'SELECT' => [
-            'COUNT' => '* as c'
-         ],
+         'COUNT' => 'c',
          'FROM' => new QuerySubQuery($listQuery, 'forms'),
       ];
       $result = $DB->request($countQuery)->current();
