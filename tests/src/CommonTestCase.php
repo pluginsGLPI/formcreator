@@ -1,14 +1,26 @@
 <?php
 
 namespace GlpiPlugin\Formcreator\Tests;
+use CommonDBTM;
+use Entity;
 use Session;
 use Html;
 use DB;
 use Auth;
 use atoum;
+use Profile;
 use Ticket;
+use Toolbox;
 use User;
+use ReflectionMethod;
+use PluginFormcreatorCondition;
+use PluginFormcreatorQuestion;
 use PluginFormcreatorSection;
+use PluginFormcreatorForm;
+use PluginFormcreatorFormAnswer;
+use PluginFormcreatorTargetProblem;
+use PluginFormcreatorTargetTicket;
+use PluginFormcreatorTargetChange;
 
 abstract class CommonTestCase extends atoum
 {
@@ -82,11 +94,11 @@ abstract class CommonTestCase extends atoum
       if (isset($_SESSION['glpi_use_mode'])) {
          $this->debugMode = $_SESSION['glpi_use_mode'];
       }
-      \Toolbox::setDebugMode(Session::NORMAL_MODE);
+      Toolbox::setDebugMode(Session::NORMAL_MODE);
    }
 
    protected function restoreDebug() {
-      \Toolbox::setDebugMode($this->debugMode);
+      Toolbox::setDebugMode($this->debugMode);
    }
 
    public function afterTestMethod($method) {
@@ -140,16 +152,16 @@ abstract class CommonTestCase extends atoum
     * @param string $password
     * @param string $profileName
     * @param integer $entityId
-    * @return \User
+    * @return User
     */
    protected function getUser($name, $password = 'p@ssw0rd', $profileName = 'Super-Admin', $entityId = 0) {
-      $profile = new \Profile();
+      $profile = new Profile();
       $profile->getFromDBByRequest([
          'name' => $profileName
       ]);
       $this->boolean($profile->isNewItem())->isFalse('Profile not found to create a user');
 
-      $user = new \User();
+      $user = new User();
       $user->add([
          'name' => $name,
          'password' => $password,
@@ -196,7 +208,7 @@ abstract class CommonTestCase extends atoum
       if (!isset($input['is_active'])) {
          $input['is_active'] = 1;
       }
-      $form = new \PluginFormcreatorForm();
+      $form = new PluginFormcreatorForm();
       $form->add($input);
       $this->boolean($form->isNewItem())->isFalse();
       $form->getFromDB($form->getID());
@@ -205,7 +217,7 @@ abstract class CommonTestCase extends atoum
    }
 
    protected function getSection($input = [], $formInput = []) {
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       if (!isset($input[$formFk])) {
          $formId = $this->getForm($formInput)->getID();
          $input[$formFk] = $formId;
@@ -238,7 +250,7 @@ abstract class CommonTestCase extends atoum
          'row'                            => '0',
          'col'                            => '0',
          'width'                          => '4',
-         'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+         'show_rule'                      => PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
          '_parameters'                    => [],
       ];
       $input = array_merge($defaultInput, $input);
@@ -255,7 +267,7 @@ abstract class CommonTestCase extends atoum
       ];
       $input['_parameters'] = array_merge($defaultParams, $input['_parameters']);
 
-      $question = new \PluginFormcreatorQuestion();
+      $question = new PluginFormcreatorQuestion();
       $question->add($input);
       $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
       $question->getFromDB($question->getID());
@@ -268,12 +280,12 @@ abstract class CommonTestCase extends atoum
          $input['name'] = $this->getUniqueString();
       }
 
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       if (!isset($input[$formFk])) {
          $input[$formFk] = $this->getForm()->getID();
       }
 
-      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket = new PluginFormcreatorTargetTicket();
       $targetTicket->add($input);
       $this->boolean($targetTicket->isNewItem())->isFalse();
       $targetTicket->getFromDB($targetTicket->getID());
@@ -286,12 +298,12 @@ abstract class CommonTestCase extends atoum
          $input['name'] = $this->getUniqueString();
       }
 
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       if (!isset($input[$formFk])) {
          $input[$formFk] = $this->getForm()->getID();
       }
 
-      $targetChange = new \PluginFormcreatorTargetChange();
+      $targetChange = new PluginFormcreatorTargetChange();
       $targetChange->add($input);
       $this->boolean($targetChange->isNewItem())->isFalse();
       $targetChange->getFromDB($targetChange->getID());
@@ -299,10 +311,11 @@ abstract class CommonTestCase extends atoum
       return $targetChange;
    }
 
-   protected function getFormAnswer(array $input): ?\PluginFormcreatorFormAnswer {
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+   protected function getFormAnswer(array $input): ?PluginFormcreatorFormAnswer {
+      $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswer->add($input);
       $this->boolean($formAnswer->isNewItem())->isFalse();
+      $formAnswer->getFromDB($formAnswer->getID());
 
       return $formAnswer;
    }
@@ -312,12 +325,12 @@ abstract class CommonTestCase extends atoum
          $input['name'] = $this->getUniqueString();
       }
 
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       if (!isset($input[$formFk])) {
          $input[$formFk] = $this->getForm()->getID();
       }
 
-      $targetProblem = new \PluginFormcreatorTargetProblem();
+      $targetProblem = new PluginFormcreatorTargetProblem();
       $targetProblem->add($input);
       $this->boolean($targetProblem->isNewItem())->isFalse();
       $targetProblem->getFromDB($targetProblem->getID());
@@ -373,10 +386,10 @@ abstract class CommonTestCase extends atoum
     *
     * @param string $itemtype itemtype to create
     * @param array $input
-    * @return \CommonDBTM
+    * @return CommonDBTM
     */
-   protected function getGlpiCoreItem(string $itemtype, array $input = []): \CommonDBTM {
-      /** @var \CommonDBTM */
+   protected function getGlpiCoreItem(string $itemtype, array $input = []): CommonDBTM {
+      /** @var CommonDBTM */
       $item = new $itemtype();
 
       $this->handleDeprecations($itemtype, $input);
@@ -387,8 +400,8 @@ abstract class CommonTestCase extends atoum
          if (Session::getLoginUserID(true)) {
             $entity = Session::getActiveEntity();
          }
-         if (!isset($input[\Entity::getForeignKeyField()])) {
-            $input[\Entity::getForeignKeyField()] = $entity;
+         if (!isset($input[Entity::getForeignKeyField()])) {
+            $input[Entity::getForeignKeyField()] = $entity;
          }
       }
 
@@ -458,7 +471,7 @@ abstract class CommonTestCase extends atoum
     * @return mixed
     */
    protected function callPrivateMethod($instance, string $methodName, ...$args) {
-      $method = new \ReflectionMethod($instance, $methodName);
+      $method = new ReflectionMethod($instance, $methodName);
       $method->setAccessible(true);
 
       return $method->invoke($instance, ...$args);
