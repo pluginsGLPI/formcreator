@@ -489,7 +489,6 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
          'requester_id'       => $requester,
          'comment'            => addslashes($item->fields['content']),
       ]);
-      return;
    }
 
    // No issue linked to the ticket,

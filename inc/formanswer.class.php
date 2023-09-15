@@ -1945,76 +1945,77 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    /**
-    * Get the lowest status among the associated tickets
+    * Get the most appropriate status among the associated tickets
+    *
+    * Conversion matrix between the temporary status of the form answer
+    * and the status of the ticket under process. The matrix below is subjective
+    * and is designed in a way to give priority to requester's action.
+    *
+    *                      Status of the ticket under process
+    *                +----------+-- -------+---------+---------+--------+--------+
+    *                | INCOMING | ASSIGNED | PLANNED | WAITING | SOLVED | CLOSED
+    *     + ---------+----------+----------+---------+---------+--------+--------+
+    *     | (null)   | INCOMING   ASSIGNED   PLANNED   WAITING   SOLVED   CLOSED
+    *   S | INCOMING | INCOMING   ASSIGNED   PLANNED   WAITING  INCOMING  INCOMING
+    * T t | ASSIGNED | ASSIGNED   ASSIGNED   PLANNED   WAITING  ASSIGNED  ASSIGNED
+    * e a | PLANNED  | PLANNED    PLANNED    PLANNED   WAITING  PLANNED   PLANNED
+    * m t | WAITING  | WAITING    WAITING    WAITING   WAITING  WAITING   WAITING
+    * p u | SOLVED   | INCOMING   ASSIGNED   PLANNED   WAITING   SOLVED   SOLVED
+    *   s | CLOSED   | INCOMING   ASSIGNED   PLANNED   WAITING   SOLVED   CLOSED
+    *
+    * T = status picked from Ticket
+    * V = status picked from Validation
     *
     * @return null|int
     */
    public function getAggregatedStatus(): ?int {
       $generatedTargets = $this->getGeneratedTargets([PluginFormcreatorTargetTicket::getType()]);
-
-      $isWaiting = false;
-      $isAssigned = false;
-      $isProcessing = false;
-
-      // Find the minimal status of the first generated tickets in the array (deleted items excluded)
-      $generatedTarget = array_shift($generatedTargets);
-      while ($generatedTarget!== null && $generatedTarget->fields['is_deleted']) {
-         $generatedTarget = array_shift($generatedTargets);
-      }
-      if ($generatedTarget === null) {
+      if (count($generatedTargets) === 0) {
          // No target found, nothing to do
          return null;
       }
 
-      // Find status of the first ticket in the array
-      $aggregatedStatus = PluginFormcreatorCommon::getTicketStatusForIssue($generatedTarget);
-      if ($aggregatedStatus == CommonITILObject::ASSIGNED) {
-         $isAssigned = true;
-      }
-      if ($aggregatedStatus == CommonITILObject::PLANNED) {
-         $isProcessing = true;
-      }
-      if ($aggregatedStatus == CommonITILObject::WAITING) {
-         $isWaiting = true;
-      }
+      $aggregatedStatus = null;
 
-      // Traverse all other tickets and set the minimal status
+      // Traverse all tickets and set the minimal status
       foreach ($generatedTargets as $generatedTarget) {
          /** @var Ticket $generatedTarget  */
          if ($generatedTarget::getType() != Ticket::getType()) {
             continue;
          }
          if ($generatedTarget->isDeleted()) {
+            // Ignore deleted tickets
             continue;
          }
          $ticketStatus = PluginFormcreatorCommon::getTicketStatusForIssue($generatedTarget);
          if ($ticketStatus >= PluginFormcreatorFormAnswer::STATUS_WAITING) {
+            // Ignore tickets refused or pending for validation
+            // getTicketStatusForIssue() does not returns STATUS_ACCEPTED
             continue;
          }
 
-         if ($ticketStatus == CommonITILObject::ASSIGNED) {
-            $isAssigned = true;
+         if ($ticketStatus == CommonITILObject::WAITING) {
+            $aggregatedStatus = CommonITILObject::WAITING;
+            break;
          }
          if ($ticketStatus == CommonITILObject::PLANNED) {
-            $isProcessing = true;
+            $aggregatedStatus = CommonITILObject::PLANNED;
+            continue;
          }
-         if ($ticketStatus == CommonITILObject::WAITING) {
-            $isWaiting = true;
+         if ($ticketStatus == CommonITILObject::ASSIGNED) {
+            $aggregatedStatus = CommonITILObject::ASSIGNED;
+            continue;
          }
-         $aggregatedStatus = min($aggregatedStatus, $ticketStatus);
-      }
+         if ($ticketStatus == CommonITILObject::INCOMING) {
+            $aggregatedStatus = CommonITILObject::INCOMING;
+            continue;
+         }
+         if ($aggregatedStatus === null) {
+            $aggregatedStatus = $ticketStatus;
+            continue;
+         }
 
-      // Assigned status takes precedence
-      if ($isAssigned) {
-         $aggregatedStatus = CommonITILObject::ASSIGNED;
-      }
-      // Planned status takes precedence
-      if ($isProcessing) {
-         $aggregatedStatus = CommonITILObject::PLANNED;
-      }
-      // Waiting status takes precedence to inform the requester his feedback is required
-      if ($isWaiting) {
-         $aggregatedStatus = CommonITILObject::WAITING;
+         $aggregatedStatus = min($aggregatedStatus, $ticketStatus);
       }
 
       return $aggregatedStatus;

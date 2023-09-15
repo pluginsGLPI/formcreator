@@ -69,6 +69,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          case 'testGetTargets':
          case 'testGetGeneratedTargets':
          case 'testGetAggregatedStatus':
+         case 'testStatus':
             $this->login('glpi', 'glpi');
       }
    }
@@ -613,20 +614,6 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       ]);
    }
 
-   public function testUpdateStatus() {
-      global $CFG_GLPI;
-
-      $CFG_GLPI['use_notifications'] = 0;
-
-      // Prepare test context
-      $form = $this->getForm();
-
-      $formAnswer = $this->newTestedInstance();
-      $formAnswer->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
-   }
-
    public function testGetGeneratedTargets() {
       $form = $this->getForm();
       $targets = [];
@@ -720,7 +707,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'status' => CommonITILObject::INCOMING,
       ]);
       $output = $instance->getAggregatedStatus();
-      $this->integer($output)->isEqualTo(CommonITILObject::ASSIGNED);
+      $this->integer($output)->isEqualTo(CommonITILObject::INCOMING);
 
       $tickets[0]->update([
          'id'     => $tickets[0]->getID(),
