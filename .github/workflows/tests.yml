@@ -83,7 +83,7 @@ jobs:
           ls -l /usr/bin/chromium*
           $CHROME_DRIVER_BINARY --version
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: "Run tests"
         run: |
           GLPI_BRANCH=${{ matrix.glpi-branch }}
@@ -126,7 +126,7 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           coverage: xdebug
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: "Code quality tests"
         run: |
           . ./tests/script-functions.sh

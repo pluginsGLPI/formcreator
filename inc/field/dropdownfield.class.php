@@ -65,6 +65,7 @@ use QuerySubQuery;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
 use State;
+use Plugin;
 
 class DropdownField extends PluginFormcreatorAbstractField
 {
@@ -878,6 +879,9 @@ class DropdownField extends PluginFormcreatorAbstractField
       // We need english locale to search searchOptions by name
       $oldLocale = $TRANSLATE->getLocale();
       $TRANSLATE->setLocale("en_GB");
+      if ($plug = isPluginItemType($itemtype)) {
+         Plugin::loadLang(strtolower($plug['plugin']), "en_GB");
+      }
 
       $item = new $itemtype;
       $item->getFromDB($answer);
@@ -939,6 +943,10 @@ class DropdownField extends PluginFormcreatorAbstractField
       }
       // Put the old locales on succes or if an expection was thrown
       $TRANSLATE->setLocale($oldLocale);
+      if ($plug = isPluginItemType($itemtype)) {
+         Plugin::loadLang(strtolower($plug['plugin']), $oldLocale);
+      }
+
       return $content;
    }
 

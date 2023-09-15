@@ -108,7 +108,13 @@ class RoboFilePlugin extends \Robo\Tasks
     * @return void
     */
    public function localesPush() {
-      $this->_exec('python3 `which tx` push -s');
+      $success = $this->taskExec('tx')
+         ->arg('push')
+         ->arg('-s')
+         ->run();
+      if ($success->getExitCode() != 0) {
+         throw new RuntimeException("failed to send source locales to transifex");
+      }
       return $this;
    }
 
