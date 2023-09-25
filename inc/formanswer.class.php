@@ -1951,6 +1951,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * and the status of the ticket under process. The matrix below is subjective
     * and is designed in a way to give priority to requester's action.
     *
+    * The function traverses all generated tickets and computes a temporary status
+    * fron the previous temporary status and the ticket being processed.
+    * When all tickets are processed, the final status is known.
+    *
+    *
     *                      Status of the ticket under process
     *                +----------+-- -------+---------+---------+--------+--------+
     *                | INCOMING | ASSIGNED | PLANNED | WAITING | SOLVED | CLOSED
