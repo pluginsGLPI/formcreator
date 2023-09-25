@@ -157,12 +157,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       ]);
       $request = [
          'SELECT' => [
-            'id',
-            'name',
             'icon',
             'icon_color',
             'background_color',
-            'comment',
+            self::getTableField('id'),
             "$categoryFk as parent",
             'level',
             new QueryExpression(
@@ -170,8 +168,43 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
             ),
          ],
          'FROM' => $cat_table,
+         'LEFT JOIN' => [],
          'ORDER' => ["level DESC", "name DESC"],
       ];
+      $translation_table = DropdownTranslation::getTable();
+      if (Session::haveTranslations(self::getType(), 'name')) {
+         $request['LEFT JOIN']["$translation_table as namet"] = [
+            'FKEY' => [
+               $cat_table => 'id',
+               'namet' => 'items_id',
+               ['AND' => [
+                  'namet.language' => $_SESSION['glpilanguage'],
+                  'namet.itemtype' => self::getType(),
+                  'namet.field' => 'name',
+               ]],
+            ],
+         ];
+         $request['SELECT'][] = 'namet.value as name';
+      } else {
+         $request['SELECT'][] = 'name';
+         $request['SELECT'][] = 'comment';
+      }
+      if (Session::haveTranslations(self::getType(), 'comment')) {
+         $request['LEFT JOIN']["$translation_table as commentt"] = [
+            'FKEY' => [
+               $cat_table => 'id',
+               'commentt' => 'items_id',
+               ['AND' => [
+                  'namet.language' => $_SESSION['glpilanguage'],
+                  'namet.itemtype' => self::getType(),
+                  'namet.field' => 'comment',
+               ]],
+            ],
+         ];
+         $request['SELECT'][] = 'commentt.value as comment';
+      } else {
+         $request['SELECT'][] = 'comment';
+      }
       $result = $DB->request($request);
 
       $categories = [];
