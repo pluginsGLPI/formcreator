@@ -564,7 +564,6 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
          'date'                       => $item->fields['date'],
          'takeintoaccount_delay_stat' => $item->fields['takeintoaccount_delay_stat'],
       ]);
-      return;
    }
 
    // No issue linked to the ticket,
