@@ -15,12 +15,12 @@ use User;
 use ReflectionMethod;
 use PluginFormcreatorCondition;
 use PluginFormcreatorQuestion;
-use PluginFormcreatorSection;
 use PluginFormcreatorForm;
 use PluginFormcreatorFormAnswer;
 use PluginFormcreatorTargetProblem;
 use PluginFormcreatorTargetTicket;
 use PluginFormcreatorTargetChange;
+use PluginFormcreatorSection;
 
 abstract class CommonTestCase extends atoum
 {
@@ -316,6 +316,12 @@ abstract class CommonTestCase extends atoum
       return $targetChange;
    }
 
+   /**
+    * Undocumented function
+    *
+    * @param array $input
+    * @return PluginFormcreatorFormAnswer|null
+    */
    protected function getFormAnswer(array $input): ?PluginFormcreatorFormAnswer {
       $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswer->add($input);
@@ -432,6 +438,24 @@ abstract class CommonTestCase extends atoum
       $this->boolean($item->isNewItem())->isFalse($this->getSessionMessage());
 
       return $item;
+   }
+
+   /**
+    * Create an entity and switch to it
+    *
+    * @return void
+    */
+   protected function isolateInEntity($login, $password) {
+      $entity      = new Entity();
+      $rand        = mt_rand();
+      $entities_id = $entity->add([
+         'name'        => "test formcreator sub entity $rand",
+         'entities_id' => 0
+      ]);
+
+      $this->login($login, $password);
+      $success = Session::changeActiveEntities($entities_id);
+      $this->boolean($success)->isTrue('Failed to change active entity');
    }
 
    /**
