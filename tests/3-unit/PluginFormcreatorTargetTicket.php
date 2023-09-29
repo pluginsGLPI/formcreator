@@ -955,6 +955,59 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
       ];
    }
 
+   public function providerSetTargetCategory_TargetOverridesTemplate() {
+      // When the target ticket uses a ticket template and specifies a category
+      $category1 = new ITILCategory();
+      $category1Id = $category1->import([
+         'name' => 'category 1',
+         'entities_id' => 0,
+      ]);
+
+      $category2 = new ITILCategory();
+      $category2Id = $category2->import([
+         'name' => 'category 2',
+         'entities_id' => 0,
+      ]);
+
+      $ticketTemplate = $this->getGlpiCoreItem(
+         TicketTemplate::getType(), [
+            'name' => 'template with predefined category to be overriden',
+         ]
+      );
+      $this->getGlpiCoreItem(TicketTemplatePredefinedField::getType(), [
+         'tickettemplates_id' => $ticketTemplate->getID(),
+         'num'                => 7, // ITIL category
+         'value'              => $category1Id
+      ]);
+
+      $form = $this->getForm();
+
+      /** @var \PluginFormcreatorTargetTicket */
+      $instance1 = $this->newTestedInstance();
+      $instance1->add([
+         'name' => 'target ticket',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'tickettemplates_id' => $ticketTemplate->getID(),
+         'category_rule' => $instance1::CATEGORY_RULE_SPECIFIC,
+         'category_question' => $category2Id,
+      ]);
+
+      $formanswer = new PluginFormcreatorFormAnswer();
+      $formanswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formanswer->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer,
+            'expected'   => $category2Id,
+         ],
+      ];
+   }
+
    /**
     * Test if a template with a predefined category is properly applied
     *
@@ -1010,7 +1063,8 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
       return array_merge(
          $this->providerSetTargetCategory_nothing(),
          $this->providerSetTargetCategory_noTemplate(),
-         $this->providerSetTargetCategory_FromTemplate()
+         $this->providerSetTargetCategory_FromTemplate(),
+         $this->providerSetTargetCategory_TargetOverridesTemplate()
       );
    }
 
@@ -1019,8 +1073,7 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
     */
    public function testSetTargetCategory($instance, $formanswer, $expected) {
       PluginFormcreatorFields::resetVisibilityCache();
-      $data = $this->callPrivateMethod($instance, 'getDefaultData', $formanswer);
-      $output = $this->callPrivateMethod($instance, 'setTargetCategory', $data, $formanswer);
+      $output = $this->callPrivateMethod($instance, 'getDefaultData', $formanswer);
 
       $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected);
    }
