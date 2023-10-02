@@ -609,6 +609,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       . ' class="plugin_formcreator_form"'
       . ' action="' . $formUrl . '"'
       . ' id="plugin_formcreator_form"'
+      . ' data-submit-once="true"'
       . '>';
 
       $form = $this->getForm();
