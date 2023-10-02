@@ -105,7 +105,7 @@
 
       > .plugin_formcreator_section {
          line-height: 32px;
-         background: #CCC;
+         background-color: var(--table-head-bg);
          padding-bottom: 1px;
          display: flex;
          flex-wrap: wrap;
@@ -118,6 +118,7 @@
             text-overflow: ellipsis;
             flex: 1;
             margin: 5px 0 0 5px;
+            color: inherit;
          }
       }
    }
@@ -149,9 +150,13 @@
       padding-left: 16px;
       padding-right: 10px;
       margin: 0 2px;
-      background: #F0F0F0;
+      background-color: var(--light-mix);
       display: flex;
       align-items: center;
+
+      > i {
+         min-width: 14px;
+      }
    }
 
    .grid-stack-item .grid-stack-item-content a[data-field=name] {
@@ -175,10 +180,14 @@
    }
 
    .plugin_formcreator_question {
-      background: #F0F0F0;
+      background-color: var(--tabs-active-bg);
       margin: 5px 2px;
       padding-left: 15px;
       flex: 1;
+
+      a {
+         color: inherit;
+      }
    }
 
    /* actions on sections or questions */
@@ -350,7 +359,7 @@ form#plugin_formcreator_form {
 }
 #plugin_formcreator_form .form-group > .help-block {
    font-size: 0.8em;
-   color: #333;
+   color: var(--text-muted);
    padding: 3px 0;
 
    p {
@@ -996,7 +1005,8 @@ a.plugin_formcreator_formTile_title {
 /* Count of conditions in design view */
 .plugin_formcreator_conditions_count {
    border-radius: 50%;
-   background-color: #FFF;
+   background-color: var(--contrast-dark);
+   color: var(--contrast-light);
    min-width: 18px;
    height: 18px;
    text-align: center;
