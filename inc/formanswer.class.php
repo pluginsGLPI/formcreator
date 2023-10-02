@@ -25,7 +25,7 @@
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
- * @link      http://plugins.glpi-project.org/#/plugin/formcreatorp@
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
 
@@ -615,6 +615,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // Edit mode for validator
       $editMode = !isset($options['edit']) ? false : ($options['edit'] != '0');
+      // Can the current user edit the answers ?
+      $canEdit = $this->fields['status'] == self::STATUS_REFUSED
+         && Session::getLoginUserID() == $this->fields['requester_id']
+         || $this->fields['status'] == self::STATUS_WAITING
+         && $this->canValidate() && $editMode;
 
       // form title
       if (version_compare(GLPI_VERSION, '10.0.3') < 0) {
@@ -699,7 +704,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   }
                }
             }
-            echo $question->getRenderedHtml($domain, $editMode, $this, $visibility[$question->getType()][$question->getID()]);
+            echo $question->getRenderedHtml($domain, $canEdit, $this, $visibility[$question->getType()][$question->getID()]);
             $lastQuestion = $question;
          }
          echo '</div>';
