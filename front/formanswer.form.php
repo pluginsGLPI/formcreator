@@ -77,7 +77,7 @@ if (Session::getCurrentInterface() == 'helpdesk') {
       $formanswer->fields['name'],
       '',
       'admin',
-      'PluginFormcreatorForm'
+      PluginFormcreatorForm::class
    );
 }
 
