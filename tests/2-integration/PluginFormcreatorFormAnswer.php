@@ -31,8 +31,10 @@
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorForm_Validator;
+use PluginFormcreatorIssue;
 use Search;
 use TicketValidation;
+use Ticket;
 
 /**
  * The methods conflict when running in parallel
@@ -303,5 +305,173 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       foreach ($search['data']['items'] as $id => $order) {
          $this->boolean(in_array($id, $formAnswers))->isTrue();
       }
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @return void
+    */
+   public function testDeleteTicket() {
+      $form = $this->getForm();
+
+      $targetTicket1 = $this->getTargetTicket([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $formAnswer = $this->newTestedInstance();
+      $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formAnswer->isNewItem())->isFalse();
+      $this->array($formAnswer->targetList)->hasSize(1);
+      /** @var Ticket */
+      $ticket = $formAnswer->targetList[0];
+      $issue = new PluginFormcreatorIssue();
+      $issue->getFromDbByCrit([
+         'itemtype' => $ticket::getType(),
+         'items_id' => $ticket->getID(),
+      ]);
+      $this->boolean($issue->isNewItem())->isFalse();
+
+      $ticket->delete([
+         'id' => $ticket->getID(),
+      ]);
+
+      // Test the issue has been deleted
+      $issue = new PluginFormcreatorIssue();
+      $issue->getFromDbByCrit([
+         'itemtype' => $ticket::getType(),
+         'items_id' => $ticket->getID(),
+      ]);
+      $this->boolean($issue->isNewItem())->isTrue();
+
+      // Add a 2nd ttarget ticket to the form
+      $targetTicket2 = $this->getTargetTicket([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+
+      $formAnswer = $this->newTestedInstance();
+      $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formAnswer->isNewItem())->isFalse();
+      $this->array($formAnswer->targetList)->hasSize(2);
+      $ticket = $formAnswer->targetList[0];
+      $issue = new PluginFormcreatorIssue();
+      $issue->getFromDbByCrit([
+         'itemtype' => $formAnswer::getType(),
+         'items_id' => $formAnswer->getID(),
+      ]);
+      $this->boolean($issue->isNewItem())->isFalse();
+
+      $ticket->delete([
+         'id' => $ticket->getID(),
+      ]);
+
+      // Test the issue still exists
+      $issue = new PluginFormcreatorIssue();
+      $issue->getFromDbByCrit([
+         'itemtype' => $formAnswer::getType(),
+         'items_id' => $formAnswer->getID(),
+      ]);
+      $this->boolean($issue->isNewItem())->isFalse();
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @return void
+    */
+   public function testRestoreTicket() {
+      $form = $this->getForm();
+
+      $targetTicket = $this->getTargetTicket([
+        $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $formAnswer = $this->newTestedInstance();
+      $formAnswer->add([
+        'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formAnswer->isNewItem())->isFalse();
+      $this->array($formAnswer->targetList)->hasSize(1);
+      /** @var Ticket */
+      $ticket = $formAnswer->targetList[0];
+      $issue = new PluginFormcreatorIssue();
+      $issue->getFromDbByCrit([
+        'itemtype' => $ticket::getType(),
+        'items_id' => $ticket->getID(),
+      ]);
+      $this->boolean($issue->isNewItem())->isFalse();
+
+      $ticket->delete([
+        'id' => $ticket->getID(),
+      ]);
+
+      // Test the issue has been deleted
+      $issue = new PluginFormcreatorIssue();
+      $issue->getFromDbByCrit([
+        'itemtype' => $ticket::getType(),
+        'items_id' => $ticket->getID(),
+      ]);
+      $this->boolean($issue->isNewItem())->isTrue();
+
+      // Restore the ticket (triggers plugin's hook)
+      $ticket->restore([
+        'id' => $ticket->getID(),
+      ]);
+
+      // Test the issue has been recreated
+      $issue = new PluginFormcreatorIssue();
+      $issue->getFromDbByCrit([
+        'itemtype' => $ticket::getType(),
+        'items_id' => $ticket->getID(),
+      ]);
+      $this->boolean($issue->isNewItem())->isFalse();
+
+      // Add a 2nd ttarget ticket to the form
+      $targetTicket2 = $this->getTargetTicket([
+        $form::getForeignKeyField() => $form->getID(),
+      ]);
+
+      $formAnswer = $this->newTestedInstance();
+      $formAnswer->add([
+        'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formAnswer->isNewItem())->isFalse();
+      $this->array($formAnswer->targetList)->hasSize(2);
+      $ticket = $formAnswer->targetList[0];
+      $issue = new PluginFormcreatorIssue();
+      $issue->getFromDbByCrit([
+        'itemtype' => $formAnswer::getType(),
+        'items_id' => $formAnswer->getID(),
+      ]);
+      $this->boolean($issue->isNewItem())->isFalse();
+
+      $ticket->delete([
+        'id' => $ticket->getID(),
+      ]);
+
+      // Test the issue still exists
+      $issue = new PluginFormcreatorIssue();
+      $issue->getFromDbByCrit([
+        'itemtype' => $formAnswer::getType(),
+        'items_id' => $formAnswer->getID(),
+      ]);
+      $this->boolean($issue->isNewItem())->isFalse();
+
+      // Restore the ticket (triggers plugin's hook)
+      $ticket->restore([
+        'id' => $ticket->getID(),
+      ]);
+
+      // Test there is still only 1 issue
+      $issue = new PluginFormcreatorIssue();
+      $issue->getFromDbByCrit([
+        'itemtype' => $formAnswer::getType(),
+        'items_id' => $formAnswer->getID(),
+      ]);
+      // If no issue or several issues matches the previous request,
+      // then the issue is not populated from DB
+      $this->boolean($issue->isNewItem())->isFalse();
    }
 }
