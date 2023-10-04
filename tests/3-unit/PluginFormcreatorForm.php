@@ -38,6 +38,7 @@ use PluginFormcreatorQuestion;
 use PluginFormcreatorForm_Language;
 use PluginFormcreatorForm_Profile;
 use PluginFormcreatorForm_Validator;
+use PluginFormcreatorLinker;
 use Central;
 use User;
 use UserEmail;
@@ -110,7 +111,7 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function testGetEnumAccessType() {
       $testedClassName = $this->getTestedClassName();
-      $output = \PluginFormcreatorForm::getEnumAccessType();
+      $output = $testedClassName::getEnumAccessType();
       $this->array($output)->isEqualTo([
          $testedClassName::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
          $testedClassName::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
@@ -714,12 +715,13 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function testImport() {
+      $testedClassName = $this->getTestedClassName();
       $uuid = plugin_formcreator_getUuid();
       $input = [
          'name' => $this->getUniqueString(),
          '_entity' => 'Root entity',
          'is_recursive' => '0',
-         'access_rights' => \PluginFormcreatorForm::ACCESS_RESTRICTED,
+         'access_rights' => $testedClassName::ACCESS_RESTRICTED,
          'description' => '',
          'content' => '',
          '_plugin_formcreator_category' => '',
@@ -735,21 +737,21 @@ class PluginFormcreatorForm extends CommonTestCase {
          'uuid' => $uuid,
       ];
 
-      $linker = new \PluginFormcreatorLinker ();
-      $formId = \PluginFormcreatorForm::import($linker, $input);
+      $linker = new PluginFormcreatorLinker ();
+      $formId = $testedClassName::import($linker, $input);
       $this->integer($formId)->isGreaterThan(0);
 
       unset($input['uuid']);
 
       $this->exception(
-         function() use($linker, $input) {
-            \PluginFormcreatorForm::import($linker, $input);
+         function() use($testedClassName, $linker, $input) {
+            $testedClassName::import($linker, $input);
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
       ->hasMessage('UUID or ID is mandatory for Form'); // passes
 
       $input['id'] = $formId;
-      $formId2 = \PluginFormcreatorForm::import($linker, $input);
+      $formId2 = $testedClassName::import($linker, $input);
       $this->variable($formId2)->isNotFalse();
       $this->integer((int) $formId)->isNotEqualTo($formId2);
    }
@@ -937,7 +939,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->integer($newForm_id)->isGreaterThan(0);
 
       // get cloned form
-      $new_form = new \PluginFormcreatorForm();
+      $new_form = $this->newTestedInstance();
       $new_form->getFromDB($newForm_id);
 
       // check uuid
