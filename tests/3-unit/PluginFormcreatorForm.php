@@ -43,6 +43,8 @@ use PluginFormcreatorLinker;
 use PluginFormcreatorTargetTicket;
 use PluginFormcreatorTargetChange;
 use QueuedNotification;
+use PluginFormcreatorForm_Validator;
+use PluginFormcreatorLinker;
 use Central;
 use User;
 use UserEmail;
@@ -758,7 +760,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       unset($input['uuid']);
 
       $this->exception(
-         function() use($linker, $input, $testedClassName) {
+         function() use($testedClassName, $linker, $input) {
             $testedClassName::import($linker, $input);
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)

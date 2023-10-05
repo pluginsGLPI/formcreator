@@ -1892,15 +1892,20 @@ PluginFormcreatorTranslatableInterface
          $input[$key] = $DB->escape($input[$key]);
       }
 
+      // Do not process theses fields when adding / updating forms
+      // They will be imported later; see the variable $subItems below
+      $input2 = $input;
+      unset($input2['users'], $input2['groups'], $input2['profiles']);
+
       // Add or update the form
       $originalId = $input[$idKey];
       $item->skipChecks = true;
       if ($itemId !== false) {
-         $input['id'] = $itemId;
-         $item->update($input);
+         $input2['id'] = $itemId;
+         $item->update($input2);
       } else {
-         unset($input['id']);
-         $itemId = $item->add($input);
+         unset($input2['id']);
+         $itemId = $item->add($input2);
       }
       $item->skipChecks = false;
       if ($itemId === false) {

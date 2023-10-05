@@ -662,6 +662,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       . ' class="plugin_formcreator_form"'
       . ' action="' . $formUrl . '"'
       . ' id="plugin_formcreator_form"'
+      . ' data-submit-once="true"'
       . '>';
 
       $form = $this->getForm();
@@ -2125,6 +2126,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * Conversion matrix between the temporary status of the form answer
     * and the status of the ticket under process. The matrix below is subjective
     * and is designed in a way to give priority to requester's action.
+    *
+    * The function traverses all generated tickets and computes a temporary status
+    * fron the previous temporary status and the ticket being processed.
+    * When all tickets are processed, the final status is known.
+    *
     *
     *                      Status of the ticket under process
     *                +----------+-- -------+---------+---------+--------+--------+

@@ -879,6 +879,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       // We need english locale to search searchOptions by name
       $oldLocale = $TRANSLATE->getLocale();
       $TRANSLATE->setLocale("en_GB");
+      $_SESSION['glpilanguage'] = "en_GB";
       if ($plug = isPluginItemType($itemtype)) {
          Plugin::loadLang(strtolower($plug['plugin']), "en_GB");
       }
@@ -900,6 +901,7 @@ class DropdownField extends PluginFormcreatorAbstractField
          if (count($searchOption) == 0) {
             trigger_error("No search option found for $property", E_USER_WARNING);
             $TRANSLATE->setLocale($oldLocale);
+            $_SESSION['glpilanguage'] = $oldLocale;
             return $content;
          }
 
@@ -943,6 +945,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       }
       // Put the old locales on succes or if an expection was thrown
       $TRANSLATE->setLocale($oldLocale);
+      $_SESSION['glpilanguage'] = $oldLocale;
       if ($plug = isPluginItemType($itemtype)) {
          Plugin::loadLang(strtolower($plug['plugin']), $oldLocale);
       }

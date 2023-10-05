@@ -243,7 +243,6 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       );
 
       return $value;
-      return $DB->escape(json_encode($value, JSON_UNESCAPED_UNICODE));
    }
 
    public function getFieldTypeName(): string {
