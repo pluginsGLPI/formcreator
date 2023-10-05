@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-30 14:13+0200\n"
+"POT-Creation-Date: 2023-05-31 16:21+0200\n"
 "PO-Revision-Date: 2022-06-15 12:10+0000\n"
 "Last-Translator: Nuria Costa <nuria.costa@uvic.cat>, 2023\n"
 "Language-Team: Catalan (Spain) (https://app.transifex.com/teclib/teams/28042/ca_ES/)\n"
@@ -179,16 +179,15 @@ msgid "Textarea"
 msgstr "Textarea"
 
 #: inc/field/textareafield.class.php:249 inc/field/dropdownfield.class.php:594
-#: inc/field/ldapselectfield.class.php:115 inc/field/textfield.class.php:126
+#: inc/field/ldapselectfield.class.php:115
 #: inc/field/urgencyfield.class.php:166 inc/field/tagfield.class.php:166
 #: inc/field/timefield.class.php:114 inc/field/fieldsfield.class.php:489
 #: inc/field/requesttypefield.class.php:161
 msgid "A required field is empty:"
 msgstr "Un camp obligatori està buit:"
 
-#: inc/field/textareafield.class.php:267 inc/field/textfield.class.php:179
-#: inc/field/integerfield.class.php:112 inc/field/floatfield.class.php:194
-#: inc/conditionnabletrait.class.php:70
+#: inc/field/textareafield.class.php:267 inc/field/integerfield.class.php:112
+#: inc/field/floatfield.class.php:194 inc/conditionnabletrait.class.php:70
 msgid "The regular expression is invalid"
 msgstr "Expressió regular no vàlida"
 
@@ -249,45 +248,12 @@ msgstr "Directori LDAP no defnint!"
 msgid "LDAP directory not found!"
 msgstr "Directori LDAP no trobat!"
 
-#: inc/field/textfield.class.php:147 inc/field/integerfield.class.php:71
-#: inc/field/floatfield.class.php:156
-#, php-format
-msgid "Specific format does not match: %s"
-msgstr "El format específic no coincideix: %s"
-
-#: inc/field/textfield.class.php:156
-#, php-format
-msgid "The text is too short (minimum %d characters): %s"
-msgstr "El text és massa curt (mínim %d caràcters): %s"
-
-#: inc/field/textfield.class.php:161
-#, php-format
-msgid "The text is too long (maximum %d characters): %s"
-msgstr "El text és massa llarg (màxim %d caràcters): %s"
-
-#: inc/field/textfield.class.php:169
-msgid "Text"
-msgstr "Text"
-
-#: inc/field/textfield.class.php:218 inc/field/floatfield.class.php:235
-#: inc/questionregex.class.php:62 entrée standard:42
-msgid "Regular expression"
-msgstr "Expressió regular"
-
-#: inc/field/textfield.class.php:223 inc/field/floatfield.class.php:240
-msgid "Range"
-msgstr "Interval"
-
-#: inc/field/textfield.class.php:229 inc/field/floatfield.class.php:246
-msgid "Additional validation"
-msgstr "Validació addicional"
-
 #: inc/field/radiosfield.class.php:108
 msgid "Radios"
 msgstr "Radios"
 
-#: inc/field/radiosfield.class.php:114 inc/field/glpiselectfield.class.php:112
-#: inc/field/fieldsfield.class.php:513 inc/field/checkboxesfield.class.php:245
+#: inc/field/radiosfield.class.php:114 inc/field/fieldsfield.class.php:513
+#: inc/field/checkboxesfield.class.php:245
 msgid "The field value is required:"
 msgstr "El camp Valor és obligatori"
 
@@ -303,6 +269,11 @@ msgstr "Un camp obligatori està buit: %s"
 #, php-format
 msgid "This is not an integer: %s"
 msgstr "Això no és un enter: %s"
+
+#: inc/field/integerfield.class.php:71 inc/field/floatfield.class.php:156
+#, php-format
+msgid "Specific format does not match: %s"
+msgstr "El format específic no coincideix: %s"
 
 #: inc/field/integerfield.class.php:85 inc/field/floatfield.class.php:167
 #, php-format
@@ -366,12 +337,6 @@ msgid "Tag"
 msgid_plural "Tags"
 msgstr[0] "Etiqueta"
 msgstr[1] "Etiquetes"
-
-#: inc/field/glpiselectfield.class.php:97 entrée standard:38
-msgid "GLPI object"
-msgid_plural "GLPI objects"
-msgstr[0] ""
-msgstr[1] ""
 
 #: inc/field/hostnamefield.class.php:116
 msgid "Hostname"
@@ -508,6 +473,19 @@ msgstr "Això no és un número: %s"
 msgid "Decimal number"
 msgstr ""
 
+#: inc/field/floatfield.class.php:235 inc/questionregex.class.php:62 entrée
+#: standard:42
+msgid "Regular expression"
+msgstr "Expressió regular"
+
+#: inc/field/floatfield.class.php:240
+msgid "Range"
+msgstr "Interval"
+
+#: inc/field/floatfield.class.php:246
+msgid "Additional validation"
+msgstr "Validació addicional"
+
 #: inc/field/datefield.class.php:137
 msgid "Date"
 msgstr "Data"
@@ -563,7 +541,7 @@ msgstr "Mostra llevat que"
 #: inc/form.class.php:1908 inc/targetchange.class.php:304
 #: inc/questionfilter.class.php:222 inc/section.class.php:381
 #: inc/restrictedformcriteria.class.php:200 inc/question.class.php:867
-#: inc/questionparameter/range.class.php:202 inc/questionregex.class.php:188
+#: inc/questionparameter/range.class.php:198 inc/questionregex.class.php:188
 #: inc/questiondependency.class.php:196 inc/item_targetticket.class.php:154
 #: inc/targetticket.class.php:1461
 #, php-format
@@ -576,7 +554,7 @@ msgstr "No s'ha pogut afegir o actualitzar %1$s%2$s"
 #: inc/form.class.php:1569 inc/targetchange.class.php:149
 #: inc/questionfilter.class.php:154 inc/section.class.php:406
 #: inc/restrictedformcriteria.class.php:226 inc/question.class.php:894
-#: inc/questionparameter/range.class.php:137 inc/questionregex.class.php:120
+#: inc/questionparameter/range.class.php:133 inc/questionregex.class.php:120
 #: inc/questiondependency.class.php:211 inc/item_targetticket.class.php:64
 #: inc/targetticket.class.php:1500
 #, php-format
@@ -758,38 +736,38 @@ msgstr ""
 msgid "Ticket technician"
 msgstr ""
 
-#: inc/issue.class.php:1465
+#: inc/issue.class.php:1469
 #, php-format
 msgid "%1$s %2$s"
 msgstr "%1$s %2$s"
 
-#: inc/issue.class.php:1723 inc/filter/itilcategoryfilter.class.php:56
+#: inc/issue.class.php:1727 inc/filter/itilcategoryfilter.class.php:56
 #: hook.php:766
 msgid "All"
 msgstr "Tot"
 
-#: inc/issue.class.php:1729 hook.php:767
+#: inc/issue.class.php:1733 hook.php:767
 msgid "New"
 msgstr "Nou"
 
-#: inc/issue.class.php:1735 hook.php:768
+#: inc/issue.class.php:1739 hook.php:768
 msgid "Assigned"
 msgstr "Assignat"
 
-#: inc/issue.class.php:1741 inc/formanswer.class.php:78
+#: inc/issue.class.php:1745 inc/formanswer.class.php:78
 #: inc/form_validator.class.php:70 hook.php:769
 msgid "Waiting"
 msgstr "Esperant"
 
-#: inc/issue.class.php:1747 hook.php:770
+#: inc/issue.class.php:1751 hook.php:770
 msgid "To validate"
 msgstr "Per validar"
 
-#: inc/issue.class.php:1753 hook.php:771
+#: inc/issue.class.php:1757 hook.php:771
 msgid "Solved"
 msgstr "Resolt"
 
-#: inc/issue.class.php:1759 hook.php:772
+#: inc/issue.class.php:1763 hook.php:772
 msgid "Closed"
 msgstr "Tancat"
 
@@ -1078,15 +1056,15 @@ msgstr ""
 msgid "Cannot generate targets!"
 msgstr "No es poden generar objectius!"
 
-#: inc/formanswer.class.php:1512
+#: inc/formanswer.class.php:1511
 msgid "No captcha set."
 msgstr ""
 
-#: inc/formanswer.class.php:1518
+#: inc/formanswer.class.php:1517
 msgid "You failed the captcha test."
 msgstr ""
 
-#: inc/formanswer.class.php:1541
+#: inc/formanswer.class.php:1540
 msgid "You must select validator!"
 msgstr "Cal que seleccionis un/a validador/a!"
 
@@ -2584,6 +2562,12 @@ msgstr "Mostra les categories del tiquet"
 #: entrée standard:146 standard:118
 msgid "Selectable root"
 msgstr "Arrel seleccionable"
+
+#: entrée standard:38
+msgid "GLPI object"
+msgid_plural "GLPI objects"
+msgstr[0] ""
+msgstr[1] ""
 
 #: entrée standard:63
 msgid "Direct access on homepage"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-30 14:13+0200\n"
+"POT-Creation-Date: 2023-05-31 16:21+0200\n"
 "PO-Revision-Date: 2022-06-15 12:10+0000\n"
 "Last-Translator: 조성현 (jaymz9634) <jaymz9634@gmail.com>, 2023\n"
 "Language-Team: Korean (Korea) (https://app.transifex.com/teclib/teams/28042/ko_KR/)\n"
@@ -177,16 +177,15 @@ msgid "Textarea"
 msgstr "텍스트에어리어"
 
 #: inc/field/textareafield.class.php:249 inc/field/dropdownfield.class.php:594
-#: inc/field/ldapselectfield.class.php:115 inc/field/textfield.class.php:126
+#: inc/field/ldapselectfield.class.php:115
 #: inc/field/urgencyfield.class.php:166 inc/field/tagfield.class.php:166
 #: inc/field/timefield.class.php:114 inc/field/fieldsfield.class.php:489
 #: inc/field/requesttypefield.class.php:161
 msgid "A required field is empty:"
 msgstr "필수 항목이 비었습니다:"
 
-#: inc/field/textareafield.class.php:267 inc/field/textfield.class.php:179
-#: inc/field/integerfield.class.php:112 inc/field/floatfield.class.php:194
-#: inc/conditionnabletrait.class.php:70
+#: inc/field/textareafield.class.php:267 inc/field/integerfield.class.php:112
+#: inc/field/floatfield.class.php:194 inc/conditionnabletrait.class.php:70
 msgid "The regular expression is invalid"
 msgstr "정규식이 잘못되었습니다"
 
@@ -244,45 +243,12 @@ msgstr "LDAP 디렉토리가 정의되지 않았습니다!"
 msgid "LDAP directory not found!"
 msgstr "LDAP 디렉토리를 찾을 수 없습니다!"
 
-#: inc/field/textfield.class.php:147 inc/field/integerfield.class.php:71
-#: inc/field/floatfield.class.php:156
-#, php-format
-msgid "Specific format does not match: %s"
-msgstr "지정한 형식이 일치하지 않음: %s"
-
-#: inc/field/textfield.class.php:156
-#, php-format
-msgid "The text is too short (minimum %d characters): %s"
-msgstr "문구가 너무 짧음 (최소 %d 자): %s"
-
-#: inc/field/textfield.class.php:161
-#, php-format
-msgid "The text is too long (maximum %d characters): %s"
-msgstr "문구가 너무 김 (최대 %d 자): %s"
-
-#: inc/field/textfield.class.php:169
-msgid "Text"
-msgstr "문구"
-
-#: inc/field/textfield.class.php:218 inc/field/floatfield.class.php:235
-#: inc/questionregex.class.php:62 entrée standard:42
-msgid "Regular expression"
-msgstr "정규식"
-
-#: inc/field/textfield.class.php:223 inc/field/floatfield.class.php:240
-msgid "Range"
-msgstr "범위"
-
-#: inc/field/textfield.class.php:229 inc/field/floatfield.class.php:246
-msgid "Additional validation"
-msgstr "추가 확인"
-
 #: inc/field/radiosfield.class.php:108
 msgid "Radios"
 msgstr "라디오"
 
-#: inc/field/radiosfield.class.php:114 inc/field/glpiselectfield.class.php:112
-#: inc/field/fieldsfield.class.php:513 inc/field/checkboxesfield.class.php:245
+#: inc/field/radiosfield.class.php:114 inc/field/fieldsfield.class.php:513
+#: inc/field/checkboxesfield.class.php:245
 msgid "The field value is required:"
 msgstr "항목 값은 필수입니다:"
 
@@ -298,6 +264,11 @@ msgstr "필수 항목이 비었습니다: %s"
 #, php-format
 msgid "This is not an integer: %s"
 msgstr "이것은 정수가 아닙니다: %s"
+
+#: inc/field/integerfield.class.php:71 inc/field/floatfield.class.php:156
+#, php-format
+msgid "Specific format does not match: %s"
+msgstr "지정한 형식이 일치하지 않음: %s"
 
 #: inc/field/integerfield.class.php:85 inc/field/floatfield.class.php:167
 #, php-format
@@ -359,11 +330,6 @@ msgstr "경고: 태그 플러그인이 비활성화 됐거나 없습니다."
 msgid "Tag"
 msgid_plural "Tags"
 msgstr[0] "태그"
-
-#: inc/field/glpiselectfield.class.php:97 entrée standard:38
-msgid "GLPI object"
-msgid_plural "GLPI objects"
-msgstr[0] "GLPI 객체"
 
 #: inc/field/hostnamefield.class.php:116
 msgid "Hostname"
@@ -497,6 +463,19 @@ msgstr "이것은 숫자가 아님: %s"
 msgid "Decimal number"
 msgstr "10진수"
 
+#: inc/field/floatfield.class.php:235 inc/questionregex.class.php:62 entrée
+#: standard:42
+msgid "Regular expression"
+msgstr "정규식"
+
+#: inc/field/floatfield.class.php:240
+msgid "Range"
+msgstr "범위"
+
+#: inc/field/floatfield.class.php:246
+msgid "Additional validation"
+msgstr "추가 확인"
+
 #: inc/field/datefield.class.php:137
 msgid "Date"
 msgstr "날짜"
@@ -550,7 +529,7 @@ msgstr "그 외에 표시됨"
 #: inc/form.class.php:1908 inc/targetchange.class.php:304
 #: inc/questionfilter.class.php:222 inc/section.class.php:381
 #: inc/restrictedformcriteria.class.php:200 inc/question.class.php:867
-#: inc/questionparameter/range.class.php:202 inc/questionregex.class.php:188
+#: inc/questionparameter/range.class.php:198 inc/questionregex.class.php:188
 #: inc/questiondependency.class.php:196 inc/item_targetticket.class.php:154
 #: inc/targetticket.class.php:1461
 #, php-format
@@ -563,7 +542,7 @@ msgstr "%1$s %2$s의 추가 또는 갱신에 실패함"
 #: inc/form.class.php:1569 inc/targetchange.class.php:149
 #: inc/questionfilter.class.php:154 inc/section.class.php:406
 #: inc/restrictedformcriteria.class.php:226 inc/question.class.php:894
-#: inc/questionparameter/range.class.php:137 inc/questionregex.class.php:120
+#: inc/questionparameter/range.class.php:133 inc/questionregex.class.php:120
 #: inc/questiondependency.class.php:211 inc/item_targetticket.class.php:64
 #: inc/targetticket.class.php:1500
 #, php-format
@@ -740,38 +719,38 @@ msgstr ""
 msgid "Ticket technician"
 msgstr ""
 
-#: inc/issue.class.php:1465
+#: inc/issue.class.php:1469
 #, php-format
 msgid "%1$s %2$s"
 msgstr "%1$s %2$s"
 
-#: inc/issue.class.php:1723 inc/filter/itilcategoryfilter.class.php:56
+#: inc/issue.class.php:1727 inc/filter/itilcategoryfilter.class.php:56
 #: hook.php:766
 msgid "All"
 msgstr "전체"
 
-#: inc/issue.class.php:1729 hook.php:767
+#: inc/issue.class.php:1733 hook.php:767
 msgid "New"
 msgstr "신규"
 
-#: inc/issue.class.php:1735 hook.php:768
+#: inc/issue.class.php:1739 hook.php:768
 msgid "Assigned"
 msgstr "할당됨"
 
-#: inc/issue.class.php:1741 inc/formanswer.class.php:78
+#: inc/issue.class.php:1745 inc/formanswer.class.php:78
 #: inc/form_validator.class.php:70 hook.php:769
 msgid "Waiting"
 msgstr "대기 중"
 
-#: inc/issue.class.php:1747 hook.php:770
+#: inc/issue.class.php:1751 hook.php:770
 msgid "To validate"
 msgstr "확인 예정"
 
-#: inc/issue.class.php:1753 hook.php:771
+#: inc/issue.class.php:1757 hook.php:771
 msgid "Solved"
 msgstr "해결됨"
 
-#: inc/issue.class.php:1759 hook.php:772
+#: inc/issue.class.php:1763 hook.php:772
 msgid "Closed"
 msgstr "마감됨"
 
@@ -1055,15 +1034,15 @@ msgstr ""
 msgid "Cannot generate targets!"
 msgstr "대상을 생성할 수 없습니다!"
 
-#: inc/formanswer.class.php:1512
+#: inc/formanswer.class.php:1511
 msgid "No captcha set."
 msgstr ""
 
-#: inc/formanswer.class.php:1518
+#: inc/formanswer.class.php:1517
 msgid "You failed the captcha test."
 msgstr ""
 
-#: inc/formanswer.class.php:1541
+#: inc/formanswer.class.php:1540
 msgid "You must select validator!"
 msgstr "확인자를 선택해야 합니다!"
 
@@ -2527,6 +2506,11 @@ msgstr "티켓 분류 표시"
 #: entrée standard:146 standard:118
 msgid "Selectable root"
 msgstr "선택가능 root"
+
+#: entrée standard:38
+msgid "GLPI object"
+msgid_plural "GLPI objects"
+msgstr[0] "GLPI 객체"
 
 #: entrée standard:63
 msgid "Direct access on homepage"
