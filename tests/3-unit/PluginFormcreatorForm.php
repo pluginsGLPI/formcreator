@@ -30,6 +30,7 @@
  */
 namespace tests\units;
 use Config;
+use DocumentType;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Group;
 use PluginFormcreatorFormAnswer;
@@ -763,7 +764,7 @@ class PluginFormcreatorForm extends CommonTestCase {
     * @return void
     */
    public function _testCreateDocumentType() {
-      $documentType = new \DocumentType();
+      $documentType = new DocumentType();
       $documentType->deleteByCriteria([
          'ext' => 'json'
       ]);
@@ -784,7 +785,7 @@ class PluginFormcreatorForm extends CommonTestCase {
    public function testEnableDocumentType() {
       $this->_testCreateDocumentType();
 
-      $documentType = new \DocumentType();
+      $documentType = new DocumentType();
       $documentType->getFromDBByCrit([
         'ext' => 'json'
       ]);
