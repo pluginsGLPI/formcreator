@@ -31,7 +31,6 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorFormAnswer;
-use Glpi\Toolbox\Sanitizer;
 
 class TextareaField extends CommonTestCase {
    public function testGetName() {
