@@ -88,28 +88,29 @@ if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
 }
 
 // redirect to created item
-if ($_SESSION['glpibackcreated'] && Ticket::canView()) {
-   if (strpos($_SERVER['HTTP_REFERER'], 'form.form.php') === false) {
-      // User was not testing the form from preview
-      if (count($formAnswer->targetList) == 1) {
-         $target = current($formAnswer->targetList);
-         echo json_encode(
-            [
-               'redirect' => $target->getFormURLWithID($target->getID()),
-            ], JSON_FORCE_OBJECT
-         );
-         die();
-      }
+if ($_SESSION['glpibackcreated']) {
+   if (strpos($_SERVER['HTTP_REFERER'], 'form.form.php') !== false) {
       echo json_encode(
          [
-            'redirect' => $formAnswer->getFormURLWithID($formAnswer->getID()),
+            'redirect' => (new PluginFormcreatorForm())->getFormURLWithID($formAnswer->fields['plugin_formcreator_forms_id']),
+         ], JSON_FORCE_OBJECT
+      );
+      die();
+   }
+   // User was not testing the form from preview
+   reset($formAnswer->targetList);
+   $target = current($formAnswer->targetList);
+   if (count($formAnswer->targetList) == 1 && $target::canView()) {
+      echo json_encode(
+         [
+            'redirect' => $target->getFormURLWithID($target->getID()),
          ], JSON_FORCE_OBJECT
       );
       die();
    }
    echo json_encode(
       [
-         'redirect' => (new PluginFormcreatorForm())->getFormURLWithID($formAnswer->fields['plugin_formcreator_forms_id']),
+         'redirect' => $formAnswer->getFormURLWithID($formAnswer->getID()),
       ], JSON_FORCE_OBJECT
    );
    die();
