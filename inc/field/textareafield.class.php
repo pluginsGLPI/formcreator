@@ -149,14 +149,15 @@ class TextareaField extends TextField
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
-      $value = $this->value;
+      // Translations are saved sanitized, so we need to sanitize initial value and unsanitize translated value
+      $defaultValue = Sanitizer::unsanitize(__(Sanitizer::sanitize($this->value), $domain));
       $html = '';
       $form = PluginFormcreatorForm::getByItem($this->getQuestion());
       $html .= Html::textarea([
          'name'              => $fieldName,
          'editor_id'         => "$fieldName$rand",
          'rand'              => $rand,
-         'value'             => $value,
+         'value'             => $defaultValue,
          'rows'              => 5,
          'display'           => false,
          'enable_richtext'   => true,
