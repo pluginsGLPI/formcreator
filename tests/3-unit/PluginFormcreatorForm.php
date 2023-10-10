@@ -485,7 +485,7 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       $form = $this->getForm([
          'name'                  => 'validation notification',
-         'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         'validation_required'   => PluginFormcreatorForm_Validator::VALIDATION_USER,
          '_validator_users'      => [$validator->getID()],
       ]);
       $this->getSection([
