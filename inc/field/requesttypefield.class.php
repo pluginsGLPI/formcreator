@@ -174,7 +174,15 @@ class RequestTypeField extends SelectField
    }
 
    public function equals($value): bool {
+      global $TRANSLATE;
+
+      $oldLocale = $TRANSLATE->getLocale();
+      $TRANSLATE->setLocale("en_GB");
+      $_SESSION['glpilanguage'] = "en_GB";
       $available = $this->getAvailableValues();
+      $TRANSLATE->setLocale($oldLocale);
+      $_SESSION['glpilanguage'] = $oldLocale;
+
       if (!isset($available[$this->value])) {
          return false;
       }
@@ -182,7 +190,15 @@ class RequestTypeField extends SelectField
    }
 
    public function notEquals($value): bool {
+      global $TRANSLATE;
+
+      $oldLocale = $TRANSLATE->getLocale();
+      $TRANSLATE->setLocale("en_GB");
+      $_SESSION['glpilanguage'] = "en_GB";
       $available = $this->getAvailableValues();
+      $TRANSLATE->setLocale($oldLocale);
+      $_SESSION['glpilanguage'] = $oldLocale;
+
       if (!isset($available[$this->value])) {
          return false;
       }
@@ -190,7 +206,15 @@ class RequestTypeField extends SelectField
    }
 
    public function greaterThan($value): bool {
+      global $TRANSLATE;
+
+      $oldLocale = $TRANSLATE->getLocale();
+      $TRANSLATE->setLocale("en_GB");
+      $_SESSION['glpilanguage'] = "en_GB";
       $available = $this->getAvailableValues();
+      $TRANSLATE->setLocale($oldLocale);
+      $_SESSION['glpilanguage'] = $oldLocale;
+
       if (!isset($available[$this->value])) {
          return false;
       }
@@ -198,7 +222,15 @@ class RequestTypeField extends SelectField
    }
 
    public function lessThan($value): bool {
+      global $TRANSLATE;
+
+      $oldLocale = $TRANSLATE->getLocale();
+      $TRANSLATE->setLocale("en_GB");
+      $_SESSION['glpilanguage'] = "en_GB";
       $available = $this->getAvailableValues();
+      $TRANSLATE->setLocale($oldLocale);
+      $_SESSION['glpilanguage'] = $oldLocale;
+
       if (!isset($available[$this->value])) {
          return false;
       }

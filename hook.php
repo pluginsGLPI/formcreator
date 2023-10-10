@@ -602,7 +602,8 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
       }
    }
 
-   // Delete the issue
+   // Delete the issue associated to the ticlet
+   // (when a form generated one and only one ticket)
    // TODO: add is_deleted column to issue ?
    $issue = new PluginFormcreatorIssue();
    $issue->deleteByCriteria([
@@ -614,7 +615,14 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
 function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
    $formAnswer = new PluginFormcreatorFormAnswer();
    if ($formAnswer->getFromDbByTicket($item)) {
-      $formAnswer->createIssue();
+      $relations = (new Item_Ticket())->find([
+         'itemtype' => $formAnswer->getType(),
+         'items_id' => $formAnswer->getID(),
+      ]);
+      if (count($relations) === 1) {
+         // Recreate the issue when one and only one ticket has been created by the form
+         $formAnswer->createIssue();
+      }
       $minimalStatus = $formAnswer->getAggregatedStatus();
       if ($minimalStatus !== null) {
          $formAnswer->updateStatus($minimalStatus);

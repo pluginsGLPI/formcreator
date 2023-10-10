@@ -279,13 +279,13 @@ PluginFormcreatorTranslatableInterface
       $html .= "</span>";
 
       // Toggle mandatory for the question
+      $html .= "<span class='form_control pointer'>";
       if ($fieldType::canRequire()) {
-         $html .= "<span class='form_control pointer'>";
          $required = ($this->fields['required'] == '0') ? 'far fa-circle' : 'far fa-check-circle';
          $html .= '<i class="' . $required .'"
                   onclick="plugin_formcreator.toggleRequired(this)"></i> ';
-         $html .= "</span>";
       }
+      $html .= "</span>";
 
       $html .= '</div>'; // grid stack item content
 
