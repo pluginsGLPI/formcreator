@@ -357,11 +357,17 @@ class DropdownField extends PluginFormcreatorAbstractField
          $item = new $itemtype();
          $value = '';
          if ($item->getFromDB($this->value)) {
-            $column = 'name';
+            $value = $item->fields['name'];
             if ($item instanceof CommonTreeDropdown) {
-               $column = 'completename';
+               $value = $item->fields['completename'];
+            } else {
+               /** @var CommonDBTM $item */
+               switch ($item->getType()) {
+                  case User::class:
+                     $value = (new DbUtils())->getUserName($item->getID());
+                     break;
+               }
             }
-            $value = $item->fields[$column];
          }
 
          return $value;
