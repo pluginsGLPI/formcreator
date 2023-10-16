@@ -884,6 +884,7 @@ class DropdownField extends PluginFormcreatorAbstractField
          Plugin::loadLang(strtolower($plug['plugin']), "en_GB");
       }
 
+      /** @var CommonDBTM $item  */
       $item = new $itemtype;
       $item->getFromDB($answer);
 
