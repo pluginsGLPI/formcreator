@@ -309,6 +309,10 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return $this->question;
    }
 
+   public function provideFile(): bool {
+      return false;
+   }
+
    public function getTranslatableStrings(array $options = []) : array {
       $strings = [
          'itemlink' => [],

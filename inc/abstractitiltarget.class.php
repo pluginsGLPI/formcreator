@@ -720,6 +720,10 @@ PluginFormcreatorTranslatableInterface
       return true;
    }
 
+   public static function canHaveDocument(): bool {
+      return true;
+   }
+
    /**
     * Attach documents of the answer to the target
     */

@@ -199,6 +199,10 @@ class FileField extends PluginFormcreatorAbstractField
       return true;
    }
 
+   public function provideFile(): bool {
+      return true;
+   }
+
    public function saveUploads($input) {
       $key = 'formcreator_field_' . $this->question->getID();
       $index = 0;

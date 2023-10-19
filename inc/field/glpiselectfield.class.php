@@ -186,6 +186,15 @@ class GlpiselectField extends DropdownField
       return true;
    }
 
+   public function provideFile(): bool {
+      if ($this->getQuestion()->fields['itemtype'] == Document::class) {
+         return true;
+      }
+
+      return false;
+   }
+
+
    public function getAvailableValues(array $values = null): array {
       return [];
    }

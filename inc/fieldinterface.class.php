@@ -50,6 +50,13 @@ interface PluginFormcreatorFieldInterface
    public static function canRequire(): bool;
 
    /**
+    * Do the field provide a file to upload ?
+    *
+    * @return boolean
+    */
+   public function provideFile(): bool;
+
+   /**
     * Are the prerequisites met to use this field ?
     *
     * @return boolean true if prerequisites met, false otherwise
