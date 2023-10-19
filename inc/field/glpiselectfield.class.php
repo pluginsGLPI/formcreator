@@ -194,7 +194,6 @@ class GlpiselectField extends DropdownField
       return false;
    }
 
-
    public function getAvailableValues(array $values = null): array {
       return [];
    }
