@@ -1354,7 +1354,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          // $content = str_replace('##question_' . $questionId . '##', Sanitizer::sanitize($name), $content);
          $content = str_replace('##question_' . $questionId . '##', $name, $content);
-         if ($question->fields['fieldtype'] === 'file') {
+         if ($question->fields['fieldtype'] === 'file' || $question->fields['fieldtype'] == 'glpiselect' && $question->fields['itemtype'] == Document::class) {
             if (strpos($content, '##answer_' . $questionId . '##') !== false) {
                if ($target !== null && $target instanceof PluginFormcreatorAbstractItilTarget) {
                   foreach ($this->questionFields[$questionId]->getDocumentsForTarget() as $documentId) {

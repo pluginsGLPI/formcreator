@@ -35,17 +35,20 @@ namespace GlpiPlugin\Formcreator\Field;
 use Html;
 use Session;
 use Dropdown;
+use Document;
 use Entity;
 use CommonTreeDropdown;
 use CommonDBTM;
 use Ticket;
 use User;
-
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
+use PluginFormcreatorFormAnswer;
 
 class GlpiselectField extends DropdownField
 {
+   use Uploadable;
+
    public function showForm(array $options): void {
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
@@ -89,7 +92,57 @@ class GlpiselectField extends DropdownField
          return true;
       }
 
+      if ($itemtype == Document::class) {
+         // Use the ID of the selected document
+         foreach ($this->uploadData as $item) {
+            if (!parent::isValidValue($item)) {
+               Session::addMessageAfterRedirect(
+                  __('Invalid value for ', 'formcreator') . ' ' . $this->getTtranslatedLabel(),
+                  false,
+                  ERROR
+               );
+            }
+         }
+
+         return true;
+      }
+
       return parent::isValidValue($value);
+   }
+
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
+      if ($this->getQuestion()->fields['itemtype'] == Document::class) {
+         return json_encode($this->uploadData, true);
+      }
+
+      return parent::serializeValue($formanswer);
+   }
+
+   public function deserializeValue($value) {
+      if ($this->getQuestion()->fields['itemtype'] == Document::class) {
+         $this->uploadData = [];
+         $this->value = __('No attached document', 'formcreator');
+         if ($value === null) {
+            return;
+         }
+         $this->uploadData = json_decode($value, true);
+         if (!is_array($this->uploadData)) {
+            $this->uploadData = [];
+         }
+         if (count($this->uploadData) > 0) {
+            $this->value = __('Attached document', 'formcreator');
+         }
+      } else {
+         parent::deserializeValue($value);
+      }
+   }
+
+   public function getValueForTargetText($domain, $richText): ?string {
+      if ($this->getQuestion()->fields['itemtype'] == Document::class) {
+         return $this->value;
+      }
+
+      return parent::getValueForDesign($domain, $richText);
    }
 
    public function prepareQuestionInputForSave($input) {
@@ -135,6 +188,59 @@ class GlpiselectField extends DropdownField
 
    public function getAvailableValues(array $values = null): array {
       return [];
+   }
+
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
+      if ($this->getQuestion()->fields['itemtype'] == Document::class) {
+         $key = 'formcreator_field_' . $this->question->getID();
+         if (isset($input['_tag_' . $key]) && isset($input['_' . $key]) && isset($input['_prefix_' . $key])) {
+            $this->uploads['_' . $key] = $input['_' . $key];
+            $this->uploads['_prefix_' . $key] = $input['_prefix_' . $key];
+            $this->uploads['_tag_' . $key] = $input['_tag_' . $key];
+         }
+         if (isset($input["_$key"])) {
+            if (!is_array($input["_$key"])) {
+               return false;
+            }
+
+            if ($this->hasInput($input)) {
+               $this->value = __('Attached document', 'formcreator');
+            }
+            return true;
+         }
+         if (isset($input[$key])) {
+            // To restore input from database
+            $this->uploadData = json_decode('[' . $input[$key] . ']');
+            $this->value = __('Attached document', 'formcreator');
+            return true;
+
+         }
+         $this->uploadData = [];
+         $this->value = '';
+         return true;
+      }
+
+      return parent::parseAnswerValues($input, $nonDestructive);
+   }
+
+   public function moveUploads() {
+      if ($this->uploadData !== null) {
+         $doc = new Document();
+         $items = [$this->uploadData];
+         foreach ($items as $item) {
+            if (is_numeric($item) && $doc->getFromDB($item)) {
+               $prefix = uniqid('', true);
+               $filename = $prefix . $doc->fields['filename'];
+               if (!copy(GLPI_DOC_DIR . '/' . $doc->fields['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
+                  continue;
+               }
+               $key = 'formcreator_field_' . $this->getQuestion()->getID();
+               $this->uploads['_' . $key][] = $filename;
+               $this->uploads['_prefix_' . $key][] = $prefix;
+               $this->uploads['_tag_' . $key][] = $doc->fields['tag'];
+            }
+         }
+      }
    }
 
    public function buildParams($rand = null) {
