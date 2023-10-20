@@ -126,7 +126,7 @@ class RoboFilePlugin extends \Robo\Tasks
     * @return void
     */
    public function localesPull($percent = 70) {
-      $this->_exec('tx pull --debug -f -a --minimum-perc=' .$percent);
+      $this->_exec('tx pull -f -a --minimum-perc=' .$percent);
       return $this;
    }
 
