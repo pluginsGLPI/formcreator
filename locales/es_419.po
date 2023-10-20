@@ -2,11 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Nelson Guerrero <nelsonnet@gmail.com>, 2022
 # Lorenzo Salvador Osorio Orellana, 2023
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -479,7 +479,7 @@ msgid "Some URL fields contains invalid links"
 msgstr "Algunos campos de URL contienen enlaces no válidos"
 
 #: inc/field/fieldsfield.class.php:565
-msgid "Additionnal fields"
+msgid "Additional fields"
 msgstr "Campos Adicionales"
 
 #: inc/field/checkboxesfield.class.php:132
