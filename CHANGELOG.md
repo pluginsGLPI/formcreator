@@ -1,3 +1,42 @@
+<a name="2.13.8"></a>
+## [2.13.8](https://github.com/pluginsGLPI/formcreator/compare/2.13.7..2.13.8) (2023-111-08)
+
+
+### Bug Fixes
+
+*  restoring ticket may create inconsistency in DB ([3cf3e4ebd](https://github.com/pluginsGLPI/formcreator/commit/3cf3e4ebd))
+* **abstractitiltarget:** itil category from template shall not take precedence ([8f8d9a7c4](https://github.com/pluginsGLPI/formcreator/commit/8f8d9a7c4))
+* **category:** translation feature of dropdowns not handled ([6287f1b34](https://github.com/pluginsGLPI/formcreator/commit/6287f1b34))
+* **dropdownfield:** display of username ([af43a9cf1](https://github.com/pluginsGLPI/formcreator/commit/af43a9cf1))
+* **form:** better theme compatibility, UI enhancement ([9146ea57a](https://github.com/pluginsGLPI/formcreator/commit/9146ea57a))
+* **form:** import access restrictions may ignore uuids ([9d23d4c1e](https://github.com/pluginsGLPI/formcreator/commit/9d23d4c1e))
+* **formanswer:** redirect after submit may lead to unavailable page ([599451af4](https://github.com/pluginsGLPI/formcreator/commit/599451af4))
+* **formanswer:** requester can edit refused answer ([c4f799b2c](https://github.com/pluginsGLPI/formcreator/commit/c4f799b2c))
+* **formanswer:** show spinner when validate ([c59dc72ac](https://github.com/pluginsGLPI/formcreator/commit/c59dc72ac))
+* **formanswer:** status update on ticket change ([079a12063](https://github.com/pluginsGLPI/formcreator/commit/079a12063))
+* **glpiselectfield:** disable anonymization of user for answer resolution ([66bea30e0](https://github.com/pluginsGLPI/formcreator/commit/66bea30e0))
+* **glpiselectfield,dropdownfield:** prevent php warning ([4da93e38e](https://github.com/pluginsGLPI/formcreator/commit/4da93e38e))
+* **install:** ineffective data fix un upgrade to 2.13.7 ([c31134c35](https://github.com/pluginsGLPI/formcreator/commit/c31134c35))
+* **issue:** SQL scaping problem when updating a ticket ([56ddff261](https://github.com/pluginsGLPI/formcreator/commit/56ddff261))
+* **issue:** bad status if ticket has valdiation on creation ([fc0ea0a00](https://github.com/pluginsGLPI/formcreator/commit/fc0ea0a00))
+* **locales:** resolve locales management warnings ([d5db37452](https://github.com/pluginsGLPI/formcreator/commit/d5db37452))
+* **radiosfield,checkboxesfield,glpiselectfield,requesttypefield,urgencyfield:** validate default value before saving ([4815abeda](https://github.com/pluginsGLPI/formcreator/commit/4815abeda))
+* **requesttype:** force english for comparisons ([7b9e94114](https://github.com/pluginsGLPI/formcreator/commit/7b9e94114))
+* **selectfield:** translation breaks validation checks ([28b4781d8](https://github.com/pluginsGLPI/formcreator/commit/28b4781d8))
+* **target_actor:** actors ID not converted when duplicating a form ([c5167c16c](https://github.com/pluginsGLPI/formcreator/commit/c5167c16c))
+* **textareadield:** missing translation for default value ([bda43df77](https://github.com/pluginsGLPI/formcreator/commit/bda43df77))
+
+
+### Features
+
+* **DropdownField:** Load translation for plugin too ([16a1379a8](https://github.com/pluginsGLPI/formcreator/commit/16a1379a8))
+* **DropdownField:** Load translation for plugin too ([6af1766d1](https://github.com/pluginsGLPI/formcreator/commit/6af1766d1))
+* **formanswer:** log any failure when saving a answer ([5d84054af](https://github.com/pluginsGLPI/formcreator/commit/5d84054af))
+* **formanswer:** show item's name in web page title ([c7e81cb9d](https://github.com/pluginsGLPI/formcreator/commit/c7e81cb9d))
+* **glpiselectfield:** attach existing documents to targets ([63999d068](https://github.com/pluginsGLPI/formcreator/commit/63999d068))
+
+
+
 <a name="2.13.7"></a>
 ## [2.13.7](https://github.com/pluginsGLPI/formcreator/compare/2.13.6..2.13.7) (2023-07-19)
 
