@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Thierry Bugier <tbugier@teclib.com>, 2021
 # Alessandro Carloni <kaya84@gmail.com>, 2021
 # Roberto <rizrob@gmail.com>, 2021
 # Pierfrancesco Passerini <p.passerini@gmail.com>, 2022
 # Davide <spam@habilitas.it>, 2023
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -480,7 +480,7 @@ msgid "Some URL fields contains invalid links"
 msgstr ""
 
 #: inc/field/fieldsfield.class.php:565
-msgid "Additionnal fields"
+msgid "Additional fields"
 msgstr "Campi addizionali"
 
 #: inc/field/checkboxesfield.class.php:132

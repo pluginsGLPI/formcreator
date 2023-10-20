@@ -562,7 +562,7 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public static function getName(): string {
-      return __("Additionnal fields", "fields");
+      return __("Additional fields", "fields");
    }
 
    public static function canRequire(): bool {

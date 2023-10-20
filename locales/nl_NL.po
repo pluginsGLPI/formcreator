@@ -2,11 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Chris Gralike, 2022
 # Glenn Franssen <github@glennfrn.nl>, 2022
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -469,7 +469,7 @@ msgid "Some URL fields contains invalid links"
 msgstr "Enkele URL velden bevatten ongeldige waarden"
 
 #: inc/field/fieldsfield.class.php:565
-msgid "Additionnal fields"
+msgid "Additional fields"
 msgstr "Aanvullende velden"
 
 #: inc/field/checkboxesfield.class.php:132
