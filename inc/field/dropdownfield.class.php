@@ -60,7 +60,6 @@ use SLM;
 use OLA;
 use QueryExpression;
 use QuerySubQuery;
-use QueryUnion;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
 use Plugin;
@@ -366,6 +365,10 @@ class DropdownField extends PluginFormcreatorAbstractField
                   case User::class:
                      $value = (new DbUtils())->getUserName($item->getID());
                      break;
+                  case Document::class:
+                     /** @var Document $item */
+                     $value = $item->getDownloadLink($this->form_answer);
+                     break;
                }
             }
          }
@@ -427,7 +430,12 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function getDocumentsForTarget(): array {
-      return [];
+      $itemtype = $this->getSubItemtype();
+      if ($itemtype !== Document::class) {
+         return [];
+      }
+
+      return [$this->value]; // Array of a single document ID
    }
 
    public static function getName(): string {
