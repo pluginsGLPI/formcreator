@@ -1720,7 +1720,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /**
     * get all fields from a form
     *
-    * @param int $formId ID of the form where come the fileds to load
+    * @param int $formId ID of the form where come the fields to load
     * @return PluginFormcreatorAbstractField[]
     */
    public function getQuestionFields($formId) : array {
