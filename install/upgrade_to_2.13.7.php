@@ -62,7 +62,7 @@ class PluginFormcreatorUpgradeTo2_13_7 {
 
       $table = 'glpi_plugin_formcreator_questions';
       $result = $DB->request([
-         'SELECT' => 'id',
+         'SELECT' => ['id', 'values'],
          'FROM' => $table,
          'WHERE' => [
             'fieldtype' => ['select', 'multiselect'],
@@ -78,7 +78,8 @@ class PluginFormcreatorUpgradeTo2_13_7 {
          foreach ($values as &$value) {
             $value = Sanitizer::encodeHtmlSpecialChars($value);
          }
-         $values = json_encode($values);
+         $values = json_encode($values, JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES);
+         $values = $DB->escape($values);
          $DB->update(
             $table,
             ['values' => $values],
