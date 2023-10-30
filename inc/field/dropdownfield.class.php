@@ -602,7 +602,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function equals($value): bool {
-      $value = html_entity_decode($value);
+      $value = html_entity_decode($value ?? '');
       $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if ($dropdown->isNewId($this->value)) {
@@ -624,7 +624,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function greaterThan($value): bool {
-      $value = html_entity_decode($value);
+      $value = html_entity_decode($value ?? '');
       $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if (!$dropdown->getFromDB($this->value)) {
@@ -643,7 +643,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function regex($value): bool {
-      $value = html_entity_decode($value);
+      $value = html_entity_decode($value ?? '');
       $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if (!$dropdown->getFromDB($this->value)) {
