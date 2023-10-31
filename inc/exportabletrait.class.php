@@ -111,6 +111,7 @@ trait PluginFormcreatorExportableTrait
                }
             }
             // Delete all other restrictions
+            /** @var PluginFormcreatorExportableInterface $subItem */
             $subItem = new $itemtype();
             $subItem->deleteObsoleteItems($parent, $importedItems);
          }
