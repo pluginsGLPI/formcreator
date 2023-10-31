@@ -877,6 +877,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $data = $this->setTargeAssigned($data, $formanswer);
       $data = $this->setTargetSuppliers($data, $formanswer);
 
+      $data = $this->setDocuments($data, $formanswer);
       $data = $this->prepareUploadedFiles($data, $formanswer);
 
       $data = $this->appendFieldsData($data, $formanswer);

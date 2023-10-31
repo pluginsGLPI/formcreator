@@ -2401,6 +2401,29 @@ SCRIPT;
    }
 
    /**
+    * Undocumented function
+    *
+    * @param array $data
+    * @param PluginFormcreatorFormAnswer $formanswer
+    * @return array
+    */
+   protected function setDocuments($data, PluginFormcreatorFormAnswer $formanswer): array {
+      foreach ($formanswer->getQuestionFields($formanswer->getForm()->getID()) ?? [] as $field) {
+         $question = $field->getQuestion();
+         if ($question->fields['fieldtype'] !== 'glpiselect') {
+            continue;
+         }
+         if ($question->fields['itemtype'] !== Document::class) {
+            continue;
+         }
+
+         $data['_documents_id'][] = $field->getRawValue();
+      }
+
+      return $data;
+   }
+
+   /**
     * Emulate file uploads for documents provided to file questions
     *
     * @param array $data

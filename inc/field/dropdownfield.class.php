@@ -504,11 +504,21 @@ class DropdownField extends PluginFormcreatorAbstractField
       if (!$canEdit) {
          $value = '';
          if ($item->getFromDB($this->value)) {
-            $column = 'name';
+            $value = $item->fields['name'];
             if ($item instanceof CommonTreeDropdown) {
-               $column = 'completename';
+               $value = $item->fields['completename'];
+            } else {
+               /** @var CommonDBTM $item */
+               switch ($item->getType()) {
+                  case User::class:
+                     $value = (new DbUtils())->getUserName($item->getID());
+                     break;
+                  case Document::class:
+                     /** @var Document $item */
+                     $value = $item->getDownloadLink($this->form_answer);
+                     break;
+               }
             }
-            $value = $item->fields[$column];
          }
 
          return $value;
@@ -571,7 +581,12 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function getDocumentsForTarget(): array {
-      return [];
+      $itemtype = $this->getSubItemtype();
+      if ($itemtype !== Document::class) {
+         return [];
+      }
+
+      return [$this->value]; // Array of a single document ID
    }
 
    public static function getName(): string {
@@ -752,7 +767,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function equals($value): bool {
-      $value = html_entity_decode($value);
+      $value = html_entity_decode($value ?? '');
       $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if ($dropdown->isNewId($this->value)) {
@@ -774,7 +789,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function greaterThan($value): bool {
-      $value = html_entity_decode($value);
+      $value = html_entity_decode($value ?? '');
       $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if (!$dropdown->getFromDB($this->value)) {
@@ -793,7 +808,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function regex($value): bool {
-      $value = html_entity_decode($value);
+      $value = html_entity_decode($value ?? '');
       $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if (!$dropdown->getFromDB($this->value)) {

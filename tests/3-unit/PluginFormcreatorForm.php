@@ -487,14 +487,11 @@ class PluginFormcreatorForm extends CommonTestCase {
    public function testCreateValidationNotification(User $requester, User $validator, $expectedNotificationCount) {
       global $DB, $CFG_GLPI;
 
-      $form = $this->getForm();
-      $formValidator = new PluginFormcreatorForm_Validator();
-      $formValidator->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'itemtype'                    => $validator->getType(),
-         'items_id'                    => $validator->getID()
+      $form = $this->getForm([
+         'name'                  => 'validation notification',
+         'validation_required'   => PluginFormcreatorForm_Validator::VALIDATION_USER,
+         '_validator_users'      => [$validator->getID()],
       ]);
-      $this->boolean($formValidator->isNewItem())->isFalse();
       $testedClasName = $this->getTestedClassName();
       $this->getSection([
          $testedClasName::getForeignKeyField() => $form->getID(),

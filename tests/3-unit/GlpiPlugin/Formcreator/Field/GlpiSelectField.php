@@ -33,6 +33,7 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Computer;
+use User;
 
 class GlpiselectField extends CommonTestCase {
 
@@ -329,5 +330,44 @@ class GlpiselectField extends CommonTestCase {
       $instance->deserializeValue($input);
       $output = $instance->getValueForApi();
       $this->array($output)->isEqualTo($expected);
+   }
+
+
+   public function providerGetRenderedHtml() {
+      $question = $this->getQuestion([
+         'fieldtype' => 'glpiselect',
+         'itemtype' => User::class,
+      ]);
+      $field = $question->getSubField();
+
+      yield [
+         'field' => $field,
+         'value' => User::getIdByName('glpi'),
+         'expectFunction' => function () use ($field) {
+            $this->string($field->getRenderedHtml('', false))->isEqualTo('glpi');
+         },
+      ];
+
+      $login = $this->getUniqueString();
+      $this->getGlpiCoreItem(User::class, [
+         'name' => $login,
+         'firstname' => 'Alan',
+         'realname'  => 'Turing'
+      ]);
+      yield [
+         'field' => $field,
+         'value' => User::getIdByName($login),
+         'expectFunction' => function () use ($field) {
+            $this->string($field->getRenderedHtml('', false))->isEqualTo('Turing Alan');
+         },
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetRenderedHtml
+    */
+   public function testGetRenderedHtml($field, $value, $expectFunction) {
+      $field->deserializeValue($value);
+      $expectFunction();
    }
 }

@@ -173,7 +173,7 @@ class GlpiselectField extends DropdownField
    }
 
    public function equals($value): bool {
-      $value = html_entity_decode($value);
+      $value = html_entity_decode($value ?? '');
       $itemtype = $this->getSubItemtype();
       $item = new $itemtype();
       if ($item->isNewId($this->value)) {
@@ -190,7 +190,7 @@ class GlpiselectField extends DropdownField
    }
 
    public function greaterThan($value): bool {
-      $value = html_entity_decode($value);
+      $value = html_entity_decode($value ?? '');
       $itemtype = $this->getSubItemtype();
       $item = new $itemtype();
       if (!$item->getFromDB($this->value)) {
