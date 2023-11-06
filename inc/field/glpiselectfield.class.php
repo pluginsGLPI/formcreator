@@ -34,6 +34,7 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use Html;
 use Session;
+use DBUtils;
 use Dropdown;
 use Entity;
 use CommonTreeDropdown;
@@ -148,6 +149,16 @@ class GlpiselectField extends DropdownField
 
    public function getAvailableValues(array $values = null): array {
       return [];
+   }
+
+   public function getValueForTargetText($domain, $richText): ?string {
+      $itemtype = $this->getSubItemtype();
+      if ($itemtype == User::class) {
+         $DbUtil = new DbUtils();
+         return $DbUtil->getUserName($this->value);
+      }
+
+      return parent::getValueForTargetText($domain, $richText);
    }
 
    public function buildParams($rand = null) {
