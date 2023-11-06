@@ -252,7 +252,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
       ]);
    }
 
-   public function testGvetEnumHomePage() {
+   public function testGetEnumHomePage() {
       $output = \PluginFormcreatorEntityconfig::getEnumHomePage();
       $this->array($output)->isEqualTo([
          \PluginFormcreatorEntityconfig::CONFIG_PARENT                       => __('Inheritance of the parent entity'),
