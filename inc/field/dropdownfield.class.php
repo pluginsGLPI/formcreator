@@ -419,7 +419,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $DbUtil = new DbUtils();
       $itemtype = $this->getSubItemtype();
       if ($itemtype == User::class) {
-         $value = $DbUtil->getUserName($this->value);
+         $value = $DbUtil->getUserName($this->value, 0, true);
       } else {
          $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($itemtype), $this->value);
       }
