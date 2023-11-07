@@ -155,7 +155,7 @@ class GlpiselectField extends DropdownField
       $itemtype = $this->getSubItemtype();
       if ($itemtype == User::class) {
          $DbUtil = new DbUtils();
-         return $DbUtil->getUserName($this->value);
+         return $DbUtil->getUserName($this->value, 0, true);
       }
 
       return parent::getValueForTargetText($domain, $richText);
