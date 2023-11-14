@@ -4,12 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Jorge Saiz, 2022
-# Nuria Costa <nuria.costa@uvic.cat>, 2022
-# Óscar Beiro, 2022
-# Alejandro Jorge Trujillo Roca, 2022
-# Ricardo Herrero <ricardo.herrero@gmail.com>, 2022
-# 5b63a00e0726b96d7ef35c99d5553cd0_b787b5f <8bb2d0f7e8927228f17fba8639d787be_31711>, 2022
+# INOUE Daisuke, 2023
 # 
 #, fuzzy
 msgid ""
@@ -18,22 +13,22 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-31 16:21+0200\n"
 "PO-Revision-Date: 2022-06-15 12:10+0000\n"
-"Last-Translator: 5b63a00e0726b96d7ef35c99d5553cd0_b787b5f <8bb2d0f7e8927228f17fba8639d787be_31711>, 2022\n"
-"Language-Team: Spanish (Spain) (https://app.transifex.com/teclib/teams/28042/es_ES/)\n"
+"Last-Translator: INOUE Daisuke, 2023\n"
+"Language-Team: Japanese (Japan) (https://app.transifex.com/teclib/teams/28042/ja_JP/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es_ES\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Language: ja_JP\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ajax/question_update.php:38 ajax/section_update.php:37
 msgid "Bad request"
-msgstr "Petición incorrecta"
+msgstr "不正なリクエスト"
 
 #: ajax/question_update.php:47 ajax/question_move.php:45
 #: ajax/question_delete.php:42 ajax/question_toggle_required.php:49
 msgid "Question not found"
-msgstr "La pregunta no se encuentra"
+msgstr "質問がありません"
 
 #: ajax/question_update.php:53 ajax/question_duplicate.php:49
 #: ajax/question_move.php:50 ajax/section_add.php:38
@@ -41,68 +36,68 @@ msgstr "La pregunta no se encuentra"
 #: ajax/section_duplicate.php:50 ajax/question_delete.php:49
 #: ajax/question_toggle_required.php:55 ajax/section_update.php:44
 msgid "You don't have right for this action"
-msgstr "No tienes permisos para realizar esta acción"
+msgstr "この操作をする権限がありません"
 
 #: ajax/question_duplicate.php:43
 msgid "Source question not found"
-msgstr "La pregunta de origen no se ha encontrado"
+msgstr "ソースの質問がありません"
 
 #: ajax/question_move.php:73
 msgid "Could not move some questions"
-msgstr "No se pudieron mover algunas preguntas"
+msgstr "いくつかの質問を移動できませんでした"
 
 #: ajax/section_add.php:44
 msgid "Could not add the section"
-msgstr "No se pudo añadir la sección"
+msgstr "セクションを追加できませんでした"
 
 #: ajax/commontree.php:55 entrée standard:128 standard:100
 msgid "Subtree root"
-msgstr "Subtree root"
+msgstr "サブツリー ルート"
 
 #: ajax/commontree.php:59
 msgid "Selectable"
-msgstr "Seleccionable"
+msgstr "選択的"
 
 #: ajax/commontree.php:74 entrée standard:137 standard:109
 msgid "Limit subtree depth"
-msgstr "Limitar la profundidad del subarbol"
+msgstr "サブツリー階層の制限"
 
 #: ajax/commontree.php:84
 msgid "No limit"
-msgstr "Sin límite"
+msgstr "制限なし"
 
 #: ajax/section_delete.php:44 ajax/section_move.php:49
 #: ajax/section_duplicate.php:44
 msgid "Source section not found"
-msgstr "La sección fuente no se encuentra"
+msgstr "元のセクションがありません"
 
 #: ajax/section_delete.php:56
 msgid "Could not delete the section"
-msgstr "No se pudo borrar la sección"
+msgstr "このセクションを削除できません"
 
 #: ajax/question_add.php:45
 msgid "Could not add the question"
-msgstr ""
+msgstr "質問を追加できません"
 
 #: ajax/section_move.php:66
 msgid "Could not move the section"
-msgstr "No se pudo mover la sección"
+msgstr "セクションを移動できません"
 
 #: ajax/target_actor.php:51
 msgid "Failed to add the actor"
-msgstr ""
+msgstr "アクターの追加に失敗"
 
 #: ajax/target_actor.php:62
 msgid "Failed to delete the actor"
-msgstr ""
+msgstr "アクターの削除に失敗"
 
 #: ajax/section_duplicate.php:56
 msgid "Could not duplicate the section"
-msgstr "No se pudo duplicar la sección"
+msgstr "セクションの複製ができません"
 
 #: ajax/section_update.php:50
 msgid "Could not update the section"
-msgstr "No se pudo actualizar la sección"
+msgstr "セクションの更新ができません"
 
 #: front/knowbaseitem.php:42 front/knowbaseitem.php:47
 #: front/wizardreminders.php:49 front/wizardreminders.php:51
@@ -114,74 +109,72 @@ msgstr "No se pudo actualizar la sección"
 #: front/formanswer.form.php:74 front/reservation.form.php:46
 #: front/reservation.form.php:48
 msgid "Service catalog"
-msgstr "Catálogo de Servicios"
+msgstr "サービスカタログ"
 
 #: front/issue.form.php:46
 msgid "Item not found"
-msgstr ""
+msgstr "アイテムがありません"
 
 #: front/targetticket.form.php:46 front/targetticket.form.php:56
 #: front/targetticket.form.php:81 front/targetchange.form.php:46
 #: front/targetproblem.form.php:46
 msgid "No right to update this item."
-msgstr ""
+msgstr "このアイテムを更新する権限がありません。"
 
 #: front/targetticket.form.php:75
 msgid "Bad request while deleting an actor."
-msgstr ""
+msgstr "アクターの削除で不正なリクエスト。"
 
 #: front/targetticket.form.php:95 front/targetchange.form.php:81
 #: front/formanswer.php:47 front/targetproblem.form.php:81
 #: front/formanswer.form.php:77 front/form.php:43 inc/common.class.php:654
 #: inc/common.class.php:661
 msgid "Form Creator"
-msgstr "Creador de Formulario"
+msgstr "フォーム作成"
 
 #: front/targetticket.form.php:105 front/targetchange.form.php:90
 #: front/targetproblem.form.php:90
 #, php-format
 msgid "%1$s = %2$s"
-msgstr ""
+msgstr "%1$s = %2$s"
 
 #: front/formlist.php:46 front/formlist.php:52 inc/common.class.php:648
 msgid "Form list"
-msgstr "Lista de formulario"
+msgstr "フォーム一覧"
 
 #: front/formdisplay.php:90 inc/formanswer.class.php:1077
 #: inc/formanswer.class.php:1325 inc/formanswer.class.php:1376
 msgid "The form has been successfully saved!"
-msgstr "¡El formulario ha sido guardado exitosamente!"
+msgstr "フォームを保存しました！"
 
 #. TRANS: %s is the user login
 #: front/reservation.form.php:71
 #, php-format
 msgid "%1$s purges the reservation for item %2$s"
-msgstr ""
+msgstr "%1$s が %2$s アイテムの予約を抹消"
 
 #: front/reservation.form.php:124
 #, php-format
 msgid "%1$s adds the reservation %2$s for item %3$s"
-msgstr ""
+msgstr "%1$s が %3$s アイテムの予約を %2$s に追加。　 "
 
 #: inc/knowbase.class.php:60 inc/entityconfig.class.php:478
 #: inc/form.class.php:611
 msgid "Category"
 msgid_plural "Categories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "カテゴリー"
 
 #: inc/knowbase.class.php:62 inc/form.class.php:614 entrée standard:39
 msgid "See all"
-msgstr ""
+msgstr "すべて表示"
 
 #: inc/knowbase.class.php:83
 msgid "Please, describe your need here"
-msgstr "Por favor, describe tu necesidad aquí"
+msgstr "あなたの要望を記入してください"
 
 #: inc/field/textareafield.class.php:186
 msgid "Textarea"
-msgstr "Textarea"
+msgstr "テキスト エリア"
 
 #: inc/field/textareafield.class.php:249 inc/field/dropdownfield.class.php:594
 #: inc/field/ldapselectfield.class.php:115
@@ -189,80 +182,75 @@ msgstr "Textarea"
 #: inc/field/timefield.class.php:114 inc/field/fieldsfield.class.php:489
 #: inc/field/requesttypefield.class.php:161
 msgid "A required field is empty:"
-msgstr "Un campo requerido está vacío:"
+msgstr "必要なフィールドが空 : "
 
 #: inc/field/textareafield.class.php:267 inc/field/integerfield.class.php:112
 #: inc/field/floatfield.class.php:194 inc/conditionnabletrait.class.php:70
 msgid "The regular expression is invalid"
-msgstr "La expresión regular es inválida"
+msgstr "正規表現が無効"
 
 #: inc/field/dropdownfield.class.php:81 inc/filter/entityfilter.class.php:48
 msgid "User and form"
-msgstr "Usuario y formulario"
+msgstr "ユーザーとフォーム"
 
 #: inc/field/dropdownfield.class.php:87
 msgid "Search filter"
-msgstr ""
+msgstr "検索フィルター"
 
 #: inc/field/dropdownfield.class.php:585 entrée standard:38
 msgid "Dropdown"
 msgid_plural "Dropdowns"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "ドロップダウン"
 
 #: inc/field/dropdownfield.class.php:616
 msgid "Invalid value for "
-msgstr "Valor incorrecto para"
+msgstr "無効な値 : "
 
 #: inc/field/dropdownfield.class.php:628
 #, php-format
 msgid "The itemtype field is required: %s"
-msgstr ""
+msgstr "アイテムの型のフィールドが必要です : %s"
 
 #: inc/field/dropdownfield.class.php:644
 #, php-format
 msgid "Invalid dropdown type: %s"
-msgstr "Tipo de desplegable inválido: %s"
+msgstr "不正なドロップダウンの型 : %s"
 
 #: inc/field/dropdownfield.class.php:704 inc/questionfilter.class.php:62
 #: entrée standard:68
 msgid "Filter"
-msgstr "Filtro"
+msgstr "フィルター"
 
 #: inc/field/dropdownfield.class.php:987 entrée standard:162 standard:134
 msgid "Entity restriction"
-msgstr "Restricciones de Entidad"
+msgstr "エンティティ制限"
 
 #: inc/field/dropdownfield.class.php:996
 msgid ""
 "To respect the GLPI entity system, \"Form\" should be selected. Others "
 "settings will break the entity restrictions"
-msgstr ""
-"Para respetar el sistema de entidades GLPI, se debe seleccionar "
-"\"Formulario\". Otras configuraciones romperán las restricciones de la "
-"entidad"
+msgstr "GLPI のエンティティ システムを尊重するには、「フォーム」を選択すべきです。それ以外の設定の場合は、エンティティ制限を逸脱します。"
 
 #: inc/field/ldapselectfield.class.php:96
 msgid "LDAP Select"
-msgstr "LDAP Select"
+msgstr "LDAP 選択"
 
 #: inc/field/ldapselectfield.class.php:140
 msgid "LDAP directory not defined!"
-msgstr "El directorio LDAP no está definido!"
+msgstr "LDAP ディレクトリが未定義です！"
 
 #: inc/field/ldapselectfield.class.php:147
 msgid "LDAP directory not found!"
-msgstr "El directorio LDAP no se ha encontrado!"
+msgstr "LDAP ディレクトリーがありません！"
 
 #: inc/field/radiosfield.class.php:108
 msgid "Radios"
-msgstr "Radios"
+msgstr "ラジオボタン"
 
 #: inc/field/radiosfield.class.php:114 inc/field/fieldsfield.class.php:513
 #: inc/field/checkboxesfield.class.php:245
 msgid "The field value is required:"
-msgstr "El campo valor es requerido:"
+msgstr "フィールドの値が必要です : "
 
 #: inc/field/radiosfield.class.php:192 inc/field/selectfield.class.php:104
 #: inc/field/datetimefield.class.php:119 inc/field/actorfield.class.php:258
@@ -270,284 +258,270 @@ msgstr "El campo valor es requerido:"
 #: inc/field/datefield.class.php:116
 #, php-format
 msgid "A required field is empty: %s"
-msgstr "Un campo obligatorio está vacío: %s"
+msgstr "必要なフィールドが空 : %s"
 
 #: inc/field/integerfield.class.php:59
 #, php-format
 msgid "This is not an integer: %s"
-msgstr "No es un entero: %s"
+msgstr "これは整数ではありません : %s"
 
 #: inc/field/integerfield.class.php:71 inc/field/floatfield.class.php:156
 #, php-format
 msgid "Specific format does not match: %s"
-msgstr "El formato especificado no coincide: %s"
+msgstr "特定の書式がマッチしません : %s"
 
 #: inc/field/integerfield.class.php:85 inc/field/floatfield.class.php:167
 #, php-format
 msgid "The following number must be greater than %d: %s"
-msgstr "El siguiente número debe ser mayor que %d: %s"
+msgstr "以下の数字は %d より大きくしてください : %s"
 
 #: inc/field/integerfield.class.php:91 inc/field/floatfield.class.php:173
 #, php-format
 msgid "The following number must be lower than %d: %s"
-msgstr "El siguiente número debe ser menor que %d: %s"
+msgstr "以下の数字は %d より小さくしてください : %s"
 
 #: inc/field/integerfield.class.php:101
 msgid "Integer"
-msgstr "Integer"
+msgstr "整数"
 
 #: inc/field/undefinedfield.class.php:44
 msgid "Undefined"
-msgstr ""
+msgstr "未定義"
 
 #: inc/field/ipfield.class.php:123
 msgid "IP address"
 msgid_plural "IP addresses"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "IP アドレス"
 
 #: inc/field/urgencyfield.class.php:86 inc/abstractitiltarget.class.php:1040
 msgid "Urgency"
-msgstr "Urgencia"
+msgstr "緊急度"
 
 #: inc/field/urgencyfield.class.php:120
 msgctxt "urgency"
 msgid "Very high"
-msgstr "Muy alta"
+msgstr "最高"
 
 #: inc/field/urgencyfield.class.php:121
 msgctxt "urgency"
 msgid "High"
-msgstr "Alta"
+msgstr "高"
 
 #: inc/field/urgencyfield.class.php:122
 msgctxt "urgency"
 msgid "Medium"
-msgstr "Medio"
+msgstr "中"
 
 #: inc/field/urgencyfield.class.php:123
 msgctxt "urgency"
 msgid "Low"
-msgstr "Baja"
+msgstr "低"
 
 #: inc/field/urgencyfield.class.php:124
 msgctxt "urgency"
 msgid "Very low"
-msgstr "Muy baja"
+msgstr "最低"
 
 #: inc/field/tagfield.class.php:52
 msgid "Warning: Tag plugin is disabled or missing"
-msgstr ""
+msgstr "警告 : タグ プラグインが無効かインストールされていません"
 
 #: inc/field/tagfield.class.php:200
 msgid "Tag"
 msgid_plural "Tags"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "タグ"
 
 #: inc/field/hostnamefield.class.php:116
 msgid "Hostname"
 msgid_plural "Hostnames"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "ホスト名"
 
 #: inc/field/timefield.class.php:130
 msgid "Time"
-msgstr "tiempo"
+msgstr "時間"
 
 #: inc/field/emailfield.class.php:89
 #, php-format
 msgid "This is not a valid e-mail: %s"
-msgstr "Este no es un e-mail válido: %s"
+msgstr "無効なメールアドレスです : %s"
 
 #: inc/field/emailfield.class.php:100
 msgid "Email"
 msgid_plural "Emails"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "メールアドレス"
 
 #: inc/field/selectfield.class.php:97
 msgid "Select"
-msgstr "Select"
+msgstr "選択"
 
 #: inc/field/datetimefield.class.php:140
 msgid "Date & time"
-msgstr "Fecha & Hora"
+msgstr "日時"
 
 #: inc/field/actorfield.class.php:84
 msgid "Actor"
 msgid_plural "Actors"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "アクター"
 
 #: inc/field/actorfield.class.php:268
 #, php-format
 msgid "Invalid value: %s"
-msgstr "Valor inválido: %s"
+msgstr "無効な値 : %s"
 
 #: inc/field/actorfield.class.php:291
 #, php-format
 msgid "User not found or invalid email address: %s"
-msgstr "No se ha encontrado al usuario o el email es inválido: %s"
+msgstr "ユーザーが見つからないか、無効なメールアドレス : %s"
 
 #: inc/field/filefield.class.php:124
 msgid "No attached document"
-msgstr "No hay documento adjunto"
+msgstr "文書が添付されていません"
 
 #: inc/field/filefield.class.php:133 inc/field/filefield.class.php:254
 #: inc/field/filefield.class.php:261
 msgid "Attached document"
-msgstr "Documento adjunto"
+msgstr "添付文書"
 
 #: inc/field/filefield.class.php:175
 #, php-format
 msgid "A required file is missing: %s"
-msgstr "Un campo obligatorio está vacío: %s"
+msgstr "必要なファイルがありません : %s"
 
 #: inc/field/filefield.class.php:192
 msgid "File"
-msgstr "Archivo"
+msgstr "ファイル"
 
 #: inc/field/multiselectfield.class.php:86
 msgid "Multiselect"
-msgstr "Multiselect"
+msgstr "複数選択"
 
 #: inc/field/fieldsfield.class.php:154
 msgid "Warning: Additional Fields plugin is disabled or missing"
-msgstr ""
+msgstr "警告 : 追加のフィールドプラグインが無効か、インストールされていません"
 
 #: inc/field/fieldsfield.class.php:168
 msgid "Block"
-msgstr ""
+msgstr "ブロック"
 
 #: inc/field/fieldsfield.class.php:172 inc/targetticket.class.php:346
 msgid "Field"
-msgstr "Campo"
+msgstr "フィールド"
 
 #: inc/field/fieldsfield.class.php:254
 msgid "show"
-msgstr ""
+msgstr "表示"
 
 #: inc/field/fieldsfield.class.php:390
 #, php-format
 msgid "Field '%1$s' type not implemented yet!"
-msgstr ""
+msgstr "「%1$s」フィールドの型は未実装です！"
 
 #: inc/field/fieldsfield.class.php:467
 msgid "Some numeric fields contains non numeric values"
-msgstr ""
+msgstr "数字でない値を含む数値フィールドがあります"
 
 #: inc/field/fieldsfield.class.php:472
 msgid "Some URL fields contains invalid links"
-msgstr ""
+msgstr "無効なリンクを含む URL フィールドがあります"
 
 #: inc/field/fieldsfield.class.php:566
 msgid "Additionnal fields"
-msgstr ""
+msgstr "追加のフィールド"
 
 #: inc/field/checkboxesfield.class.php:133
 msgid "Checkboxes"
-msgstr "Checkboxes"
+msgstr "チェックボックス"
 
 #: inc/field/checkboxesfield.class.php:227
 #, php-format
 msgid "The following question needs at least %d answers: %s"
-msgstr ""
+msgstr "以下の質問では、少なくとも %d 個の回答が必要です : %s"
 
 #: inc/field/checkboxesfield.class.php:233
 #, php-format
 msgid "The following question does not accept more than %d answers: %s"
-msgstr ""
+msgstr "以下の質問では、%d 個を超える回答は受け付けません : %s"
 
 #: inc/field/checkboxesfield.class.php:305
 msgid "Range min"
-msgstr ""
+msgstr "範囲の下限"
 
 #: inc/field/checkboxesfield.class.php:306
 msgid "Range max"
-msgstr ""
+msgstr "範囲の上限"
 
 #: inc/field/requesttypefield.class.php:87 inc/targetticket.class.php:1150
 msgid "Request type"
-msgstr "Tipo de Petición"
+msgstr "要求の型"
 
 #: inc/field/floatfield.class.php:142
 #, php-format
 msgid "This is not a number: %s"
-msgstr "Esto no es un número: %s"
+msgstr "これは数値ではありません : %s"
 
 #: inc/field/floatfield.class.php:183
 msgid "Decimal number"
-msgstr ""
+msgstr "10進数"
 
 #: inc/field/floatfield.class.php:235 inc/questionregex.class.php:62 entrée
 #: standard:42
 msgid "Regular expression"
-msgstr "Expresión regular"
+msgstr "正規表現"
 
 #: inc/field/floatfield.class.php:240
 msgid "Range"
-msgstr "Rango"
+msgstr "範囲"
 
 #: inc/field/floatfield.class.php:246
 msgid "Additional validation"
-msgstr "Validación adicional"
+msgstr "追加の検証"
 
 #: inc/field/datefield.class.php:137
 msgid "Date"
-msgstr "Fecha"
+msgstr "日付"
 
 #: inc/field/descriptionfield.class.php:106 inc/form.class.php:151
 #: inc/question.class.php:188 entrée standard:82 standard:52 standard:114
 msgid "Description"
-msgstr "Descripción"
+msgstr "説明"
 
 #: inc/field/descriptionfield.class.php:113
 msgid "A description field should have a description:"
-msgstr "El campo descripción debe tener una descripción:"
+msgstr "記述フィールドには記述が必要です : "
 
 #: inc/field/hiddenfield.class.php:96
 msgid "Hidden field"
 msgid_plural "Hidden fields"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "非表示フィールド"
 
 #: inc/condition.class.php:65
 msgid "Condition"
 msgid_plural "Conditions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "状態"
 
 #: inc/condition.class.php:103
 msgid "is visible"
-msgstr "Es visible"
+msgstr "表示？"
 
 #: inc/condition.class.php:104
 msgid "is not visible"
-msgstr "No es visible"
+msgstr "非表示"
 
 #: inc/condition.class.php:105
 msgid "regular expression matches"
-msgstr "La expresión regular coincide"
+msgstr "正規表現で照合"
 
 #: inc/condition.class.php:116
 msgid "Always displayed"
-msgstr "Mostrar siempre"
+msgstr "常時表示"
 
 #: inc/condition.class.php:117
 msgid "Hidden unless"
-msgstr "Oculto a menos"
+msgstr "非表示条件 : "
 
 #: inc/condition.class.php:118
 msgid "Displayed unless"
-msgstr "Mostrar a meno que"
+msgstr "表示条件 : "
 
 #: inc/condition.class.php:178 inc/target_actor.class.php:233
 #: inc/form_language.class.php:565 inc/form_validator.class.php:248
@@ -560,7 +534,7 @@ msgstr "Mostrar a meno que"
 #: inc/targetticket.class.php:1461
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
-msgstr "Fallo al añadir o actualizar el %1$s %2$s"
+msgstr "%1$s %2$s の追加・更新に失敗　"
 
 #: inc/condition.class.php:200 inc/target_actor.class.php:254
 #: inc/form_language.class.php:581 inc/form_validator.class.php:288
@@ -573,41 +547,38 @@ msgstr "Fallo al añadir o actualizar el %1$s %2$s"
 #: inc/targetticket.class.php:1500
 #, php-format
 msgid "Cannot export an empty object: %s"
-msgstr "No se puede exportar un objeto vacío: %s"
+msgstr "空のオブジェクトはエクスポートできません : %s"
 
 #: inc/condition.class.php:268
 msgid "Conditions"
-msgstr "Condiciones"
+msgstr "状態"
 
 #: inc/linker.class.php:78
 msgid "Importing"
-msgstr "Importando"
+msgstr "インポート中"
 
 #: inc/linker.class.php:80
 msgid "Import in progress"
-msgstr "Importación en curso"
+msgstr "インポートしています"
 
 #: inc/issue.class.php:43
 msgid "Issue"
 msgid_plural "Issues"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "問題"
 
 #: inc/issue.class.php:56
 msgid "Update issue data from tickets and form answers"
-msgstr ""
-"Problema de actualización de datos de tiquets y respuestas de formulario"
+msgstr "チケットとフォームの回答をもとに問題データを更新する"
 
 #: inc/issue.class.php:393
 msgid "Satisfaction survey expired"
-msgstr "Encuesta de satisfacción caducada"
+msgstr "満足度調査の期限切れ"
 
 #: inc/issue.class.php:531 inc/form_language.class.php:229
 #: inc/form.class.php:2208 entrée standard:52 standard:49 standard:57
 #: standard:38 standard:39 standard:105 standard:46
 msgid "Name"
-msgstr "Nombre"
+msgstr "名前"
 
 #: inc/issue.class.php:543 inc/formanswer.class.php:229
 #: inc/formanswer.class.php:320 inc/targetproblem.class.php:610
@@ -621,28 +592,24 @@ msgstr "ID"
 #: standard:65 standard:104 standard:4
 msgid "Type"
 msgid_plural "Types"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "型"
 
 #: inc/issue.class.php:565 inc/formanswer.class.php:307
 msgid "Status"
-msgstr "Estado"
+msgstr "状態"
 
 #: inc/issue.class.php:577
 msgid "Opening date"
-msgstr "Fecha de apertura"
+msgstr "開始日"
 
 #: inc/issue.class.php:586
 msgid "Last update"
-msgstr "Última modificación"
+msgstr "最終更新日"
 
 #: inc/issue.class.php:595 inc/abstracttarget.class.php:517
 msgid "Entity"
 msgid_plural "Entities"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "エンティティ"
 
 #: inc/issue.class.php:605 inc/notificationtargetformanswer.class.php:76
 #: inc/notificationtargetformanswer.class.php:96
@@ -651,592 +618,573 @@ msgstr[2] ""
 #: standard:48
 msgid "Requester"
 msgid_plural "Requesters"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "要求者"
 
 #: inc/issue.class.php:619 inc/formanswer.class.php:258
 msgid "Form approver"
-msgstr "Aprobador del formulario"
+msgstr "フォーム承認者"
 
 #: inc/issue.class.php:651 inc/formanswer.class.php:691
 #: inc/formanswer.class.php:698 inc/formanswer.class.php:777
 #: inc/form_language.class.php:243
 msgid "Comment"
-msgstr "Comentario"
+msgstr "コメント"
 
 #: inc/issue.class.php:663
 msgid "Ticket approver"
-msgstr "Aprobador del ticket"
+msgstr "チケットの承認者"
 
 #: inc/issue.class.php:736
 msgid "Technician"
-msgstr "Técnico"
+msgstr "技術者"
 
 #: inc/issue.class.php:767
 msgid "Technician group"
-msgstr "Grupo de técnicos"
+msgstr "技術者グループ"
 
 #: inc/issue.class.php:799 inc/formanswer.class.php:287
 msgid "Form approver group"
-msgstr "Grupo de aprobación del formulario"
+msgstr "フォーム承認グループ"
 
 #: inc/issue.class.php:829
 msgid "Ticket approver group"
-msgstr ""
+msgstr "チケット承認者グループ"
 
 #: inc/issue.class.php:863 inc/abstractitiltarget.class.php:787 entrée
 #: standard:108
 msgid "Time to resolve"
-msgstr "Tiempo para Resolver"
+msgstr "解決までの時間"
 
 #: inc/issue.class.php:874
 msgid "Time to resolve + Progress"
-msgstr ""
+msgstr "解決までの時間 + 進捗状況"
 
 #: inc/issue.class.php:884
 msgid "Internal time to resolve"
-msgstr ""
+msgstr "解決までの内部時間 "
 
 #: inc/issue.class.php:895
 msgid "Internal time to resolve + Progress"
-msgstr ""
+msgstr "解決までの内部時間 + 進捗状況"
 
 #: inc/issue.class.php:905
 msgid "Resolution date"
-msgstr ""
+msgstr "解決日"
 
 #: inc/issue.class.php:914
 msgid "Internal time to own"
-msgstr ""
+msgstr "割当までの内部時間"
 
 #: inc/issue.class.php:925
 msgid "Internal time to own + Progress"
-msgstr ""
+msgstr "割当までの内部時間 + 進捗状況"
 
 #: inc/issue.class.php:935 entrée standard:109
 msgid "Time to own"
-msgstr "Tiempo hasta Asignación"
+msgstr "割当までの時間"
 
 #: inc/issue.class.php:946
 msgid "Time to own + Progress"
-msgstr ""
+msgstr "割当までの時間 + 進捗状況"
 
 #: inc/issue.class.php:958
 msgid "Approver substitute"
-msgstr ""
+msgstr "承認者の交代"
 
 #: inc/issue.class.php:1022
 msgid "Substitute of a member of approver group"
-msgstr ""
+msgstr "承認者グループのメンバーの交代"
 
 #: inc/issue.class.php:1095
 msgid "Form approver substitute"
-msgstr ""
+msgstr "フォーム承認者交代"
 
 #: inc/issue.class.php:1163
 msgid "Current form approver group"
-msgstr ""
+msgstr "現在のフォーム承認者グループ"
 
 #: inc/issue.class.php:1193
 msgid "Current form approver"
-msgstr ""
+msgstr "現在のフォーム承認者"
 
 #: inc/issue.class.php:1227
 msgid "Ticket requester"
-msgstr ""
+msgstr "チケット要求者"
 
 #: inc/issue.class.php:1274
 msgid "Ticket observer"
-msgstr ""
+msgstr "チケット オブザーバー"
 
 #: inc/issue.class.php:1322
 msgid "Ticket technician"
-msgstr ""
+msgstr "チケット技術者"
 
 #: inc/issue.class.php:1469
 #, php-format
 msgid "%1$s %2$s"
-msgstr ""
+msgstr "%1$s %2$s"
 
 #: inc/issue.class.php:1727 inc/filter/itilcategoryfilter.class.php:56
 #: hook.php:766
 msgid "All"
-msgstr "Todos"
+msgstr "すべて"
 
 #: inc/issue.class.php:1733 hook.php:767
 msgid "New"
-msgstr "Nuevo"
+msgstr "新規"
 
 #: inc/issue.class.php:1739 hook.php:768
 msgid "Assigned"
-msgstr "Asignado"
+msgstr "割当済み"
 
 #: inc/issue.class.php:1745 inc/formanswer.class.php:78
 #: inc/form_validator.class.php:70 hook.php:769
 msgid "Waiting"
-msgstr "Esperando"
+msgstr "待ち"
 
 #: inc/issue.class.php:1751 hook.php:770
 msgid "To validate"
-msgstr "Para validar"
+msgstr "検証待ち"
 
 #: inc/issue.class.php:1757 hook.php:771
 msgid "Solved"
-msgstr "Resuelto"
+msgstr "解決"
 
 #: inc/issue.class.php:1763 hook.php:772
 msgid "Closed"
-msgstr "Cerrado"
+msgstr "終了"
 
 #: inc/category.class.php:50 hook.php:72
 msgid "Form category"
 msgid_plural "Form categories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "フォームの分類"
 
 #: inc/category.class.php:80
 msgid "Knowbase category"
-msgstr "Categoría de la base de conocimiento"
+msgstr "ナレッジベースの分類"
 
 #: inc/category.class.php:86
 msgid "As child of"
-msgstr ""
+msgstr "親 "
 
 #: inc/category.class.php:92 inc/form.class.php:247 entrée standard:65
 msgid "Icon"
-msgstr "Icono"
+msgstr "アイコン"
 
 #: inc/category.class.php:98 inc/form.class.php:255 entrée standard:67
 msgid "Icon color"
-msgstr "Color del icono"
+msgstr "アイコンの色"
 
 #: inc/category.class.php:104 inc/form.class.php:263 entrée standard:80
 msgid "Background color"
-msgstr "Color del fondo"
+msgstr "背景色"
 
 #: inc/formlist.class.php:46 inc/entityconfig.class.php:93
 #: inc/form.class.php:111 inc/form.class.php:516 inc/form.class.php:2015
 #: entrée standard:47
 msgid "Form"
 msgid_plural "Forms"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "フォーム"
 
 #: inc/notificationtargetformanswer.class.php:43
 msgid "The form as been saved"
-msgstr "El formulario ha sido guardado"
+msgstr "フォームを保存しました"
 
 #: inc/notificationtargetformanswer.class.php:44
 msgid "A form need to be validate"
-msgstr "Un formulario necesita ser validado"
+msgstr "フォームは検証が必要です"
 
 #: inc/notificationtargetformanswer.class.php:45 install/install.php:490
 msgid "The form is refused"
-msgstr "El formulario está rechazado"
+msgstr "フォームの再利用"
 
 #: inc/notificationtargetformanswer.class.php:46 install/install.php:496
 msgid "The form is accepted"
-msgstr "El formulario es aceptado"
+msgstr "フォームを受け付けました"
 
 #: inc/notificationtargetformanswer.class.php:47 install/install.php:502
 msgid "The form is deleted"
-msgstr "El formulario es eliminado"
+msgstr "フォームを削除しました"
 
 #: inc/notificationtargetformanswer.class.php:74
 msgid "Form ID"
-msgstr ""
+msgstr "フォーム ID"
 
 #: inc/notificationtargetformanswer.class.php:75
 #: inc/notificationtargetformanswer.class.php:95
 msgid "Form name"
-msgstr "Formulario nombre"
+msgstr "フォーム名"
 
 #: inc/notificationtargetformanswer.class.php:77
 #: inc/form_validator.class.php:91
 msgid "Validator"
 msgid_plural "Validators"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "検証者"
 
 #: inc/notificationtargetformanswer.class.php:78
 #: inc/notificationtargetformanswer.class.php:98 inc/formanswer.class.php:278
 #: entrée standard:49
 msgid "Creation date"
-msgstr ""
+msgstr "作成日"
 
 #: inc/notificationtargetformanswer.class.php:79
 #: inc/notificationtargetformanswer.class.php:99
 msgid "Full form answers"
-msgstr "Respuestas del formulario completas"
+msgstr "全フォーム回答"
 
 #: inc/notificationtargetformanswer.class.php:80
 msgid "Validation comment"
-msgstr ""
+msgstr "検証コメント"
 
 #: inc/notificationtargetformanswer.class.php:81
 #: inc/notificationtargetformanswer.class.php:101
 msgid "Validation link"
-msgstr "Vinculo de validación"
+msgstr "検証リンク"
 
 #: inc/notificationtargetformanswer.class.php:82
 msgid "Request ID"
-msgstr ""
+msgstr "要求 ID"
 
 #: inc/notificationtargetformanswer.class.php:94
 msgid "Form #"
-msgstr "Formulario #"
+msgstr "フォーム #"
 
 #: inc/notificationtargetformanswer.class.php:97
 msgctxt "tag"
 msgid "Validator"
-msgstr "Validador"
+msgstr "検証者"
 
 #: inc/notificationtargetformanswer.class.php:100
 msgid "Refused comment"
-msgstr "Comentario negado"
+msgstr "拒否コメント"
 
 #: inc/notificationtargetformanswer.class.php:102
 msgid "Request #"
-msgstr "Solicitud #"
+msgstr "要求 #"
 
 #: inc/notificationtargetformanswer.class.php:114
 msgid "Author"
-msgstr "Autor"
+msgstr "作者"
 
 #: inc/notificationtargetformanswer.class.php:115
 #: inc/abstractitiltarget.class.php:1374
 msgid "Approver"
-msgstr ""
+msgstr "承認者"
 
 #: inc/target_actor.class.php:70 inc/abstractitiltarget.class.php:2141
 msgid "Form author"
-msgstr "Autor del formulario"
+msgstr "フォーム作者"
 
 #: inc/target_actor.class.php:71 inc/abstractitiltarget.class.php:2144
 msgid "Form validator"
-msgstr "Desde el validador"
+msgstr "フォーム検証者"
 
 #: inc/target_actor.class.php:72
 msgid "Specific person"
-msgstr "Persona específica"
+msgstr "特定の人"
 
 #: inc/target_actor.class.php:73 inc/abstractitiltarget.class.php:2154
 msgid "Person from the question"
-msgstr "Persona desde la pregunta"
+msgstr "質問で特定する人"
 
 #: inc/target_actor.class.php:74
 msgid "Specific group"
-msgstr "Grupo específico"
+msgstr "特定のグループ"
 
 #: inc/target_actor.class.php:75 inc/abstractitiltarget.class.php:2165
 msgid "Group from the question"
-msgstr "Grupo desde la pregunta"
+msgstr "質問で特定するグループ"
 
 #: inc/target_actor.class.php:76
 msgid "Group from an object"
-msgstr "Grupo desde un objeto"
+msgstr "オブジェクトのグループ"
 
 #: inc/target_actor.class.php:77
 msgid "Tech group from an object"
-msgstr "Grupo Técnico desde un objeto"
+msgstr "オブジェクトの技術者グループ"
 
 #: inc/target_actor.class.php:78
 msgid "Specific supplier"
-msgstr "Proveedor específico"
+msgstr "特定のサプライヤ"
 
 #: inc/target_actor.class.php:79 inc/abstractitiltarget.class.php:2194
 msgid "Supplier from the question"
-msgstr "Proveedor desde la pregunta"
+msgstr "質問で特定するサプライヤ"
 
 #: inc/target_actor.class.php:80 inc/abstractitiltarget.class.php:2183
 msgid "Actors from the question"
-msgstr "Actores de la pregunta"
+msgstr "質問で特定する実行者"
 
 #: inc/target_actor.class.php:81 inc/abstractitiltarget.class.php:2198
 msgid "Form author's supervisor"
-msgstr "Supervisor del autor del formulario"
+msgstr "フォーム作成者の担当責任者"
 
 #: inc/target_actor.class.php:102
 msgid "Observer"
-msgstr "Observador"
+msgstr "オブザーバー"
 
 #: inc/target_actor.class.php:103 inc/abstractitiltarget.class.php:1818
 msgid "Assigned to"
-msgstr "Asignado a"
+msgstr "割当先"
 
 #: inc/target_actor.class.php:109
 msgid "Target actor"
 msgid_plural "Target actors"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "対象実行者"
 
 #: inc/target_actor.class.php:115 inc/target_actor.class.php:131
 #: inc/target_actor.class.php:140
 msgid "Bad request while adding an actor."
-msgstr ""
+msgstr "実行者の追加で不正なリクエスト。"
 
 #: inc/target_actor.class.php:197
 #, php-format
 msgid "Failed to find a user: %1$s"
-msgstr ""
+msgstr "ユーザーの検索に失敗 : %1$s"
 
 #: inc/target_actor.class.php:206
 #, php-format
 msgid "Failed to find a group: %1$s"
-msgstr ""
+msgstr "グループの検索に失敗 : %1$s"
 
 #: inc/target_actor.class.php:215
 #, php-format
 msgid "Failed to find a supplier: %1$s"
-msgstr ""
+msgstr "サプライヤの検索に失敗 : %1$s"
 
 #: inc/formanswer.class.php:79 inc/form_validator.class.php:72
 msgid "Refused"
-msgstr "Rechazado"
+msgstr "拒否済み"
 
 #: inc/formanswer.class.php:80 inc/form_validator.class.php:71
 msgid "Accepted"
-msgstr "Aceptado"
+msgstr "承認"
 
 #: inc/formanswer.class.php:214
 msgid "Form answer"
 msgid_plural "Form answers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "フォームの回答"
 
 #: inc/formanswer.class.php:676
 msgid "Print this form"
-msgstr "Imprimir este formulario"
+msgstr "このフォームを印刷"
 
 #: inc/formanswer.class.php:701
 msgid "Form accepted by validator."
-msgstr "Formulario aceptado y validado"
+msgstr "フォームが検証者に承認されました。"
 
 #: inc/formanswer.class.php:703
 msgid "Form successfully saved."
-msgstr "Formulario guardado exitosamente."
+msgstr "フォームを保存しました。"
 
 #: inc/formanswer.class.php:770
 msgid "Save"
-msgstr "Guardar"
+msgstr "保存"
 
 #: inc/formanswer.class.php:782
 msgid "Required if refused"
-msgstr "Se requiere si se negó"
+msgstr "拒否されたら必須"
 
 #: inc/formanswer.class.php:788
 msgid "Refuse"
-msgstr "Denegado"
+msgstr "拒否"
 
 #: inc/formanswer.class.php:796
 msgid "Edit answers"
-msgstr "Editar las respuestas"
+msgstr "回答を編集"
 
 #: inc/formanswer.class.php:802
 msgid "Cancel edition"
-msgstr "Cancelar la edición"
+msgstr "編集をキャンセル"
 
 #: inc/formanswer.class.php:809
 msgid "Accept"
-msgstr "Aceptado"
+msgstr "承認"
 
 #: inc/formanswer.class.php:828
 msgid "Refused comment is required!"
-msgstr "¡Comentario denegado es requerido!"
+msgstr "拒否する場合はコメント必須です！"
 
 #: inc/formanswer.class.php:882 inc/formanswer.class.php:899
 msgid ""
 "An internal error occured when verifying your answers. Please report it to "
 "your administrator."
-msgstr ""
+msgstr "回答の検証で内部エラー発生。管理者に報告してください。"
 
 #: inc/formanswer.class.php:933
 msgid "You are not the validator of these answers"
-msgstr "No eres el validador de estas respuestas"
+msgstr "あなたはこの回答の検証者ではありません"
 
 #: inc/formanswer.class.php:1083
 #, php-format
 msgid "Item sucessfully added: %1$s (%2$s: %3$s)"
-msgstr ""
+msgstr "アイテムを追加 : %1$s (%2$s: %3$s)"
 
 #: inc/formanswer.class.php:1166 inc/formanswer.class.php:1168
 msgid "Form data"
-msgstr "Datos del formulario"
+msgstr "フォーム データ"
 
 #: inc/formanswer.class.php:1301
 msgid ""
 "You are a validator of the form, then your approval hs been added "
 "automatically."
-msgstr ""
+msgstr "あなたはフォームの承認者です。あなたの承認を自動的に追加します。"
 
 #: inc/formanswer.class.php:1310 inc/formanswer.class.php:1363
 msgid "Cannot generate targets!"
-msgstr "¡No se puede generar objetivos!"
+msgstr "対象を生成できません！"
 
 #: inc/formanswer.class.php:1511
 msgid "No captcha set."
-msgstr ""
+msgstr "captcha 設定なし。"
 
 #: inc/formanswer.class.php:1517
 msgid "You failed the captcha test."
-msgstr ""
+msgstr "captcha テストに失敗しました。"
 
 #: inc/formanswer.class.php:1540
 msgid "You must select validator!"
-msgstr "Debe seleccionar un validador"
+msgstr "検証者を選択してください！"
 
 #: inc/common.class.php:229
 msgid "You cannot delete this issue. Maybe it is taken into account."
-msgstr ""
-"No puedes borrar esta tarea. Probablemente está en posesión de otra cuenta"
+msgstr "この問題を削除できません。アカウントを考慮していると思われます。"
 
 #: inc/common.class.php:234
 msgid "Failed to delete this issue. An internal error occured."
-msgstr "Fallo al borrar esta tarea. Ha ocurrido un error interno"
+msgstr "この問題を削除できません。内部エラーが発生しました。"
 
 #: inc/common.class.php:745
 msgid "Seek assistance"
-msgstr "Buscar ayuda"
+msgstr "ユーザーサポートを検索"
 
 #: inc/common.class.php:751 inc/common.class.php:755
 msgid "My requests for assistance"
-msgstr "Mis solicitudes de asistencia"
+msgstr "自分へのサポート要求"
 
 #: inc/common.class.php:791
 msgid "Consult reminders"
-msgstr ""
+msgstr "リマインダーを参照する"
 
 #: inc/common.class.php:811
 msgid "Consult feeds"
-msgstr "Consultar feeds"
+msgstr "フィードを参照する"
 
 #: inc/abstractfield.class.php:89 inc/question.class.php:758
 msgid "Apply"
-msgstr ""
+msgstr "適用"
 
 #: inc/formaccesstype.class.php:41 entrée standard:39
 msgid "Access type"
 msgid_plural "Access types"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "アクセスの型"
 
 #: inc/form_language.class.php:51
 msgid "Form language"
 msgid_plural "Form languages"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "フォームの言語"
 
 #: inc/form_language.class.php:78 inc/form_language.class.php:364
 msgid "Translation"
 msgid_plural "Translations"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "翻訳"
 
 #: inc/form_language.class.php:119
 msgid "The name cannot be empty."
-msgstr ""
+msgstr "名前を入力してください。"
 
 #: inc/form_language.class.php:127
 msgid "The language must be associated to a form."
-msgstr ""
+msgstr "言語をフォームに関連付けてください。"
 
 #: inc/form_language.class.php:135
 msgid "The specified language is not available."
-msgstr ""
+msgstr "指定の言語は無効です。"
 
 #: inc/form_language.class.php:265
 msgid "Add a translation"
-msgstr "Añadir una traducción"
+msgstr "翻訳の追加"
 
 #: inc/form_language.class.php:299 js/scripts.js:1214
 msgid "Update a translation"
-msgstr ""
+msgstr "翻訳の更新"
 
 #: inc/form_language.class.php:329 inc/form_language.class.php:331
 msgid "New translation"
-msgstr "Nueva traducción"
+msgstr "新しい翻訳"
 
 #: inc/form_language.class.php:334
 msgid "Filter list"
-msgstr "Lista de filtrado"
+msgstr "フィルター一覧"
 
 #: inc/form_language.class.php:339 inc/form_language.class.php:438
 msgid "No translation found"
-msgstr "No se ha encontrado una traducción"
+msgstr "翻訳がありません"
 
 #: inc/form_language.class.php:344
 msgid "Do you want to delete the selected items?"
-msgstr "¿Quieres borrar los ítems seleccionados?"
+msgstr "選択したアイテムを削除します。よろしいですか？"
 
 #: inc/form_language.class.php:353 inc/form_language.class.php:401
 #: inc/abstractitiltarget.class.php:1710 entrée standard:124 standard:31
 msgid "Delete"
-msgstr "Eliminar"
+msgstr "削除"
 
 #: inc/form_language.class.php:363
 msgid "Original string"
-msgstr "Cadena original"
+msgstr "元の文字列"
 
 #: inc/form_language.class.php:424
 msgid "Add a new language"
-msgstr "Agregar un nuevo idioma"
+msgstr "新しい言語を追加"
 
 #: inc/form_language.class.php:457 inc/form_language.class.php:489
 #: inc/form.class.php:178 entrée standard:72
 msgid "Language"
-msgstr "Idioma"
+msgstr "言語"
 
 #: inc/form_validator.class.php:69 inc/targetticket.class.php:99
 #: inc/abstractitiltarget.class.php:186
 msgid "None"
-msgstr "Ninguno"
+msgstr "なし"
 
 #: inc/form_validator.class.php:78 inc/abstractitiltarget.class.php:2552
 msgid "No"
-msgstr "No"
+msgstr "いいえ"
 
 #: inc/form_validator.class.php:81
 msgid "Supervisor of the requester"
-msgstr ""
+msgstr "要求者の監督者"
 
 #: inc/form_validator.class.php:116 inc/translation.class.php:221
 msgid "Form not found."
-msgstr "Formulario no encontrado"
+msgstr "フォームが見つかません。"
 
 #: inc/form_validator.class.php:121 inc/form_validator.class.php:129
 #: inc/form_validator.class.php:138
 msgid "Invalid validator."
-msgstr ""
+msgstr "無効な承認者。"
 
 #: inc/form_validator.class.php:147
 #, php-format
 msgid "Only level 1 is allowed for %s."
-msgstr ""
+msgstr "%s はレベル 1 のみ許可しています"
 
 #: inc/form_validator.class.php:156
 msgid "Invalid validator type."
-msgstr ""
+msgstr "無効な承認者型です。"
 
 #: inc/form_validator.class.php:194 entrée standard:103
 msgid "Level"
-msgstr ""
+msgstr "レベル"
 
 #: inc/form_validator.class.php:592 inc/abstractitiltarget.class.php:1354
 msgid "Validation"
-msgstr "Validación"
+msgstr "検証"
 
 #: inc/form_validator.class.php:594
 msgid "Choose a validator"
-msgstr "Elija un validador"
+msgstr "検証者を選択"
 
 #: inc/profile.class.php:62 inc/targetproblem.class.php:147
 #: inc/entityconfig.class.php:520 inc/targetchange.class.php:484
@@ -1244,20 +1192,18 @@ msgstr "Elija un validador"
 #: inc/abstractitiltarget.class.php:2124
 msgctxt "button"
 msgid "Save"
-msgstr "Guardar"
+msgstr "保存"
 
 #: inc/targetproblem.class.php:43 entrée standard:43
 msgid "Target problem"
 msgid_plural "Target problems"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "対象の問題"
 
 #: inc/targetproblem.class.php:109 inc/targetproblem.class.php:565
 #: inc/targetchange.class.php:105 inc/targetchange.class.php:441
 #: inc/targetticket.class.php:135 inc/targetticket.class.php:238
 msgid "Properties"
-msgstr "Propiedades"
+msgstr "プロパティー"
 
 #: inc/targetproblem.class.php:509 inc/targetchange.class.php:286
 #: inc/targetticket.class.php:1443
@@ -1265,35 +1211,33 @@ msgstr "Propiedades"
 msgid ""
 "Failed to add or update the %1$s %2$s: a question is missing and is used in "
 "a parameter of the target"
-msgstr ""
-"Fallo al añadir o actualizar el %1$s %2$s: una pregunta está vacía y se ha "
-"empleado en un parámetro del objetivo"
+msgstr "%1$s %2$s の追加または更新に失敗 : 質問が存在せず、対象のパラメーターとして設定されています　"
 
 #: inc/targetproblem.class.php:566 inc/targetchange.class.php:106
 #: inc/targetticket.class.php:136 inc/abstractitiltarget.class.php:1216
 msgid "Actors"
-msgstr "Actores"
+msgstr "アクター"
 
 #: inc/targetproblem.class.php:619 entrée standard:48
 msgid "Problem title"
-msgstr "Título del problema"
+msgstr "問題のタイトル"
 
 #: inc/targetproblem.class.php:629 inc/targetchange.class.php:354
 #: inc/targetticket.class.php:199
 msgid "Content"
-msgstr "Contenido"
+msgstr "内容"
 
 #: inc/targetproblem.class.php:639 inc/targetchange.class.php:364
 msgid "Impact"
-msgstr "Impacto"
+msgstr "影響"
 
 #: inc/targetproblem.class.php:649 entrée standard:56
 msgid "Cause"
-msgstr "Motivo"
+msgstr "原因"
 
 #: inc/targetproblem.class.php:659 entrée standard:58
 msgid "Symptom"
-msgstr "Síntoma"
+msgstr "症状"
 
 #: inc/entityconfig.class.php:101 inc/entityconfig.class.php:110
 #: inc/entityconfig.class.php:118 inc/entityconfig.class.php:126
@@ -1302,420 +1246,408 @@ msgstr "Síntoma"
 #: inc/entityconfig.class.php:166 inc/entityconfig.class.php:180
 #: inc/entityconfig.class.php:188 inc/entityconfig.class.php:196
 msgid "Inheritance of the parent entity"
-msgstr ""
+msgstr "親エンティティーの検証"
 
 #: inc/entityconfig.class.php:102
 msgid "GLPi's helpdesk"
-msgstr "GLPI helpdesk"
+msgstr "GLPI ヘルプデスク"
 
 #: inc/entityconfig.class.php:103
 msgid "Service catalog simplified"
-msgstr "Catálogo de servicios simplificado"
+msgstr "シンプル サービスカタログ"
 
 #: inc/entityconfig.class.php:104
 msgid "Service catalog extended"
-msgstr "Catálogo de servicios extendido"
+msgstr "拡張 サービスカタログ"
 
 #: inc/entityconfig.class.php:111
 msgid "All available forms"
-msgstr ""
+msgstr "すべての有効なフォーム"
 
 #: inc/entityconfig.class.php:112
 msgid "Only default forms"
-msgstr ""
+msgstr "標準フォームのみ"
 
 #: inc/entityconfig.class.php:119
 msgid "Popularity sort"
-msgstr "Orden por popularidad"
+msgstr "活用順"
 
 #: inc/entityconfig.class.php:120
 msgid "Alphabetic sort"
-msgstr "Orden alfabético"
+msgstr "辞書順"
 
 #: inc/entityconfig.class.php:127
 msgid "Merged with Forms"
-msgstr "Fusionado con Formularios"
+msgstr "フォームとマージ済み"
 
 #: inc/entityconfig.class.php:128
 msgid "Distinct menu entry"
-msgstr "Entra de menu diferente"
+msgstr "個別のメニューエントリー"
 
 #: inc/entityconfig.class.php:135 inc/entityconfig.class.php:143
 #: inc/entityconfig.class.php:151 inc/entityconfig.class.php:159
 #: inc/entityconfig.class.php:189 inc/form.class.php:271 entrée standard:100
 msgid "Visible"
-msgstr "Visible"
+msgstr "表示"
 
 #: inc/entityconfig.class.php:136 inc/entityconfig.class.php:144
 #: inc/entityconfig.class.php:152 inc/entityconfig.class.php:160
 #: inc/entityconfig.class.php:190
 msgid "Hidden"
-msgstr "Oculto"
+msgstr "非表示"
 
 #: inc/entityconfig.class.php:167
 msgid "Variable height"
-msgstr ""
+msgstr "可変の高さ"
 
 #: inc/entityconfig.class.php:168
 msgid "Uniform height"
-msgstr ""
+msgstr "統一した高さ"
 
 #: inc/entityconfig.class.php:173
 msgid "Search for assistance"
-msgstr ""
+msgstr "ユーザーサポートを検索"
 
 #: inc/entityconfig.class.php:174
 msgid "User's assistance requests"
-msgstr ""
+msgstr "ユーザーのサポート要求"
 
 #: inc/entityconfig.class.php:181
 msgid "Only forms"
-msgstr ""
+msgstr "フォームのみ"
 
 #: inc/entityconfig.class.php:182
 msgid "Forms and list of requests"
-msgstr ""
+msgstr "フォームと要求の一覧"
 
 #: inc/entityconfig.class.php:197
 msgid "Folded"
-msgstr ""
+msgstr "折りたたみ"
 
 #: inc/entityconfig.class.php:198
 msgid "Unfolded"
-msgstr ""
+msgstr "展開"
 
 #: inc/entityconfig.class.php:298
 msgid "Helpdesk"
-msgstr "Helpdesk"
+msgstr "ヘルプデスク"
 
 #: inc/entityconfig.class.php:306 inc/entityconfig.class.php:534 entrée
 #: standard:44
 msgid "Helpdesk mode"
-msgstr "Modo Helpdesk"
+msgstr "ヘルプデスク モード"
 
 #: inc/entityconfig.class.php:317 inc/entityconfig.class.php:604
 msgid "Default Form list mode"
-msgstr ""
+msgstr "標準フォーム一覧モード"
 
 #: inc/entityconfig.class.php:335 inc/entityconfig.class.php:544
 msgid "Sort order"
-msgstr "Orden de clasificación"
+msgstr "並び順"
 
 #: inc/entityconfig.class.php:351 inc/entityconfig.class.php:554
 msgid "Knowledge base"
-msgstr "Base de conocimiento"
+msgstr "ナレッジベース"
 
 #: inc/entityconfig.class.php:366
 msgid "Search"
-msgstr "Búsqueda"
+msgstr "検索"
 
 #: inc/entityconfig.class.php:382 inc/entityconfig.class.php:614
 msgid "Counters dashboard"
-msgstr ""
+msgstr "ダッシュボードのカウンター"
 
 #: inc/entityconfig.class.php:398
 msgid "Header message"
-msgstr "Mensaje de Cabecera"
+msgstr "ヘッダー メッセージ"
 
 #: inc/entityconfig.class.php:414 inc/entityconfig.class.php:624
 msgid "Search issue"
-msgstr ""
+msgstr "問題の検索"
 
 #: inc/entityconfig.class.php:430 inc/entityconfig.class.php:594
 msgid "Service catalog home page"
-msgstr ""
+msgstr "サービスカタログ ホームページ"
 
 #: inc/entityconfig.class.php:446 inc/entityconfig.class.php:634
 msgid "Tile design"
-msgstr ""
+msgstr "タイル デザイン"
 
 #: inc/entityconfig.class.php:462
 msgid "Home page"
-msgstr ""
+msgstr "ホームページ"
 
 #: inc/entityconfig.class.php:494
 msgid "Menu visibility (only for vertical menu)"
-msgstr ""
+msgstr "メニューの表示 （縦メニュー用）"
 
 #: inc/entityconfig.class.php:506 inc/entityconfig.class.php:584
 #: inc/form.class.php:225 entrée standard:84
 msgid "Header"
 msgid_plural "Headers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "ヘッダー"
 
 #: inc/entityconfig.class.php:564
 msgid "Display search field"
-msgstr "Mostrar campo de búsqueda"
+msgstr "検索フィールドを表示"
 
 #: inc/entityconfig.class.php:574
 msgid "Display header"
-msgstr "Mostrar cabecera"
+msgstr "ヘッダーを表示"
 
 #: inc/questionrange.class.php:52 inc/questionparameter/range.class.php:56
 msgid "Question range"
 msgid_plural "Question ranges"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "質問範囲"
 
 #: inc/questionrange.class.php:62 inc/questionparameter/range.class.php:66
 msgid "Minimum range"
-msgstr "Rango mínimo"
+msgstr "最小範囲"
 
 #: inc/questionrange.class.php:71 inc/questionparameter/range.class.php:75
 msgid "maximum range"
-msgstr "Rango máximo"
+msgstr "最大範囲"
 
 #: inc/form.class.php:66 inc/form.class.php:429
 msgid "Public access"
-msgstr "Acceso público"
+msgstr "オープン アクセス"
 
 #: inc/form.class.php:67 inc/form.class.php:433
 msgid "Private access"
-msgstr "Acceso privado"
+msgstr "自分のみアクセス"
 
 #: inc/form.class.php:68 inc/form.class.php:437
 msgid "Restricted access"
-msgstr "Acceso restringido"
+msgstr "制限アクセス"
 
 #: inc/form.class.php:122
 msgid "Answers waiting for validation"
-msgstr ""
+msgstr "検証待ちの回答"
 
 #: inc/form.class.php:124 inc/form.class.php:1663 inc/form.class.php:1689
 msgid "Import forms"
-msgstr "Importar formularios"
+msgstr "フォームのインポート"
 
 #: inc/form.class.php:169
 msgid "Recursive"
-msgstr "Recursivo"
+msgstr "再帰的"
 
 #: inc/form.class.php:190
 msgid "Homepage"
-msgstr "Página principal"
+msgstr "ホームページ"
 
 #: inc/form.class.php:203
 msgid "Access"
-msgstr "Acceso"
+msgstr "アクセス"
 
 #: inc/form.class.php:234 inc/form.class.php:327 inc/form.class.php:394 entrée
 #: standard:54
 msgid "Active"
-msgstr "Activo"
+msgstr "稼働"
 
 #: inc/form.class.php:286 inc/form.class.php:338 inc/form.class.php:413
 msgid "Default form"
-msgstr ""
+msgstr "標準フォーム"
 
 #: inc/form.class.php:296 entrée standard:106
 msgid "Next form"
-msgstr ""
+msgstr "次のフォーム"
 
 #: inc/form.class.php:326 inc/form.class.php:391
 msgid "Inactive"
-msgstr "Inactivo"
+msgstr "停止"
 
 #: inc/form.class.php:337 inc/form.class.php:410
 msgid "Not default form"
-msgstr ""
+msgstr "非標準フォーム"
 
 #: inc/form.class.php:361 inc/form.class.php:445 entrée standard:75
 msgid "All languages"
-msgstr ""
+msgstr "すべての言語"
 
 #: inc/form.class.php:508 entrée standard:3
 msgid "Target"
 msgid_plural "Targets"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "対象"
 
 #: inc/form.class.php:511
 msgid "Preview"
-msgstr "Vista previa"
+msgstr "プレビュー"
 
 #: inc/form.class.php:512
 msgid "Form answer properties"
-msgstr ""
+msgstr "フォーム回答プロパティー"
 
 #: inc/form.class.php:854
 msgid "What are you looking for?"
-msgstr "¿Qué estás buscando?"
+msgstr "何をお探しですか？"
 
 #: inc/form.class.php:993 inc/form.class.php:1156
 #: inc/abstracttarget.class.php:162 inc/abstractitiltarget.class.php:1625
 msgid "The name cannot be empty!"
-msgstr "¡El nombre no puede estar vacío!"
+msgstr "名前を入力してください！"
 
 #: inc/form.class.php:1026 inc/form.class.php:1191
 msgid "A loop is generated!"
-msgstr ""
+msgstr "ループができています！"
 
 #: inc/form.class.php:1167
 msgid "Cannot use empty name for form answers. Keeping the previous value."
-msgstr ""
+msgstr "フォームの回答では名前の入力が必要です。以前の値を使います。"
 
 #: inc/form.class.php:1303
 #, php-format
 msgid "The question %s is not compatible with public forms"
-msgstr "La pregunta %s no es compatible con los formularios publicos"
+msgstr "%s 質問は、オープン フォームとは互換性がありません"
 
 #: inc/form.class.php:1386
 msgid "Errored duplicate"
-msgstr "Duplicado erróneo"
+msgstr "複製でエラー"
 
 #: inc/form.class.php:1397 entrée standard:23
 msgid "Duplicate"
-msgstr "Duplicado"
+msgstr "複製"
 
 #: inc/form.class.php:1442 inc/form.class.php:1452
 msgctxt "button"
 msgid "Post"
-msgstr "Publicar"
+msgstr "投稿"
 
 #: inc/form.class.php:1475
 #, php-format
 msgid "Form duplicated: %s"
-msgstr "Formulario duplicado: %s"
+msgstr "複製済みフォーム : %s"
 
 #: inc/form.class.php:1491
 #, php-format
 msgid "Form Transfered: %s"
-msgstr "Formulario Transferido: %s"
+msgstr "転送済みフォーム : %s"
 
 #: inc/form.class.php:1515
 msgid "Back"
-msgstr "Atrás"
+msgstr "戻る"
 
 #: inc/form.class.php:1526
 #, php-format
 msgid "Form updated: %s"
-msgstr ""
+msgstr "フォームを更新しました : %s"
 
 #: inc/form.class.php:1636
 msgid "Upload of JSON files not allowed."
-msgstr "Carga de ficheros JSON no permitida."
+msgstr "JSON ファイルのアップロードを許可されていません"
 
 #: inc/form.class.php:1639
 msgid "You may allow JSON files right now."
-msgstr "Deberías permitir la carga de ficheros JSON ahora."
+msgstr "すぐに JSON ファイルを許可してもらえるでしょう。"
 
 #: inc/form.class.php:1640
 msgctxt "button"
 msgid "Create"
-msgstr "Crear"
+msgstr "作成"
 
 #: inc/form.class.php:1643 inc/form.class.php:1654
 msgid "Please contact your GLPI administrator."
-msgstr "Por favor, contacta con el administrador del GLPI."
+msgstr "GLPI 管理者に連絡してください。"
 
 #: inc/form.class.php:1644 inc/form.class.php:1655
 msgctxt "button"
 msgid "Back"
-msgstr "Atrás"
+msgstr "戻る"
 
 #: inc/form.class.php:1647
 msgid "Upload of JSON files not enabled."
-msgstr "Carga de ficheros JSON no habilitada."
+msgstr "JSON ファイルのアップロードは無効です。"
 
 #: inc/form.class.php:1650 inc/form.class.php:1653
 msgid "You may enable JSON files right now."
-msgstr "Deberías habilitar los ficheros JSON ahora."
+msgstr "すぐに JSON ファイルを有効にしてもらえるでしょう。"
 
 #: inc/form.class.php:1651
 msgctxt "button"
 msgid "Enable"
-msgstr "Habilitado"
+msgstr "有効"
 
 #: inc/form.class.php:1698
 msgctxt "button"
 msgid "Send"
-msgstr "Enviar"
+msgstr "送信"
 
 #: inc/form.class.php:1717
 msgid "Forms import impossible, the file is empty"
-msgstr "La importación del formulario es imposible, el fichero está vacío"
+msgstr "ファイルが空なので、フォームのインポートができません"
 
 #: inc/form.class.php:1721 inc/form.class.php:1725
 msgid "Forms import impossible, the file seems corrupt"
-msgstr ""
-"La importación del formulario es imposible, el fichero parece corrupto"
+msgstr "ファイルが壊れているようなので、フォームのインポートができません"
 
 #: inc/form.class.php:1731
 msgid "Forms import impossible, the file was generated with another version"
-msgstr ""
-"La importación del formulario es imposible, el fichero se generó con otra "
-"versión"
+msgstr "違うバージョンで作成されたファイルなので、フォームのインポートができません"
 
 #: inc/form.class.php:1738
 msgid ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10. Giving up."
-msgstr ""
-"El fichero no especifica la versión del esquema. Fue probablemente generado "
-"con una versión anterior a la 2.10. No se realiza"
+msgstr "ファイルでスキーマバージョンが指定されていません。おそらく 2.10 よりも古いバージョンで作成されたのでしょう。対応できません。"
 
 #: inc/form.class.php:1764
 #, php-format
 msgid "Failed to import %s"
-msgstr "Fallo al importar %s"
+msgstr "%s のインポートに失敗"
 
 #: inc/form.class.php:1769
 #, php-format
 msgid "Forms successfully imported from %s"
-msgstr "Formularios importados correctamente de %s"
+msgstr "%s からフォームをインポートしました"
 
 #: inc/form.class.php:1832
 #, php-format
 msgid "The form %1$s already exists and is in an unmodifiable entity."
-msgstr ""
-"El formulario %1$s ya existe y está en una entidad que no se puede modificar"
+msgstr "%1$s フォームはすでに存在し、変更不可能なエンティティー内にあります。"
 
 #: inc/form.class.php:1840
 #, php-format
 msgid "You don't have right to update the entity %1$s."
-msgstr ""
+msgstr "%1$s エンティティーを更新する権限がありません。"
 
 #: inc/form.class.php:1850
 #, php-format
 msgid "The entity %1$s is required for the form %2$s."
-msgstr "Se requiere la entidad %1$s para el formulario %2$s."
+msgstr "%2$s フォームは %1$s エンティティーを必要としてます。"
 
 #: inc/form.class.php:1952
 msgid "Failed to create JSON document type"
-msgstr "Error al crear el tipo de documento JSON."
+msgstr "JSON 書式の作成に失敗"
 
 #: inc/form.class.php:1959
 msgid "JSON document type not found"
-msgstr "Tipo de documento JSON no encontrado"
+msgstr "JSON 書式が見つかりません"
 
 #: inc/form.class.php:1966
 msgid "Failed to update JSON document type"
-msgstr "Error al actualizar el tipo de documento JSON"
+msgstr "JSON 書式の更新に失敗"
 
 #: inc/form.class.php:1986
 msgid "Forms without category"
-msgstr "Formularios sin categoría"
+msgstr "分類のないフォーム"
 
 #: inc/form.class.php:2007
 msgid "No form available"
-msgstr "No hay un formulario disponible"
+msgstr "有効なフォームがありません"
 
 #: inc/form.class.php:2205 entrée standard:47
 msgid "Add a target"
-msgstr "Añadir un objetivo"
+msgstr "対象を追加"
 
 #: inc/form.class.php:2236 inc/targetticket.class.php:398
 #: inc/abstractitiltarget.class.php:1828 inc/abstractitiltarget.class.php:2124
 #: entrée standard:92 standard:94
 msgid "Add"
-msgstr "Añadir"
+msgstr "追加"
 
 #: inc/form.class.php:2254 inc/form.class.php:2277 inc/form.class.php:2299
 msgid "Unsupported target type."
-msgstr "Tipo de Objetivo no soportado"
+msgstr "未対応の対象型です。"
 
 #: inc/form.class.php:2333
 msgid "plugin_formcreator_load_check"
@@ -1724,639 +1656,607 @@ msgstr "plugin_formcreator_load_check"
 #: inc/targetchange.class.php:44 entrée standard:43
 msgid "Target change"
 msgid_plural "Target changes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "対象の変更"
 
 #: inc/targetchange.class.php:344 entrée standard:48
 msgid "Change title"
-msgstr "Cambiar título"
+msgstr "変更のタイトル"
 
 #: inc/targetchange.class.php:374 entrée standard:56
 msgid "Control list"
-msgstr "Lista de control"
+msgstr "制御一覧"
 
 #: inc/targetchange.class.php:384 entrée standard:58
 msgid "Deployment plan"
-msgstr "Plan de Despliegue"
+msgstr "配置計画"
 
 #: inc/targetchange.class.php:394 entrée standard:60
 msgid "Backup plan"
-msgstr "Plan de Backup"
+msgstr "バックアップ計画"
 
 #: inc/targetchange.class.php:404
 msgid "Check list"
-msgstr "Check list"
+msgstr "チェックリスト"
 
 #: inc/questionfilter.class.php:52
 msgid "Question filter"
 msgid_plural "Question filters"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "質問フィルター"
 
 #: inc/section.class.php:71 entrée standard:53 standard:44
 msgid "Section"
 msgid_plural "Sections"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "セクション"
 
 #: inc/section.class.php:123 inc/section.class.php:166
 #: inc/question.class.php:348
 msgid "The title is required"
-msgstr "El título es requerido"
+msgstr "タイトルを入力してください"
 
 #: inc/section.class.php:553 inc/question.class.php:234 entrée standard:37
 msgid "Count of conditions"
-msgstr "Cuenta de condiciones"
+msgstr "条件のカウント"
 
 #: inc/restrictedformcriteria.class.php:179
 #, php-format
 msgid "Failed to find %1$s %2$s"
-msgstr ""
+msgstr "%1$s %2$s が見つかりません"
 
 #: inc/question.class.php:73 inc/abstractitiltarget.class.php:1127 entrée
 #: standard:41
 msgid "Question"
 msgid_plural "Questions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "質問"
 
 #: inc/question.class.php:197 entrée standard:43 standard:50 standard:44
 #: standard:49 standard:79
 msgid "Required"
-msgstr "Requerido"
+msgstr "必須"
 
 #: inc/question.class.php:355
 msgid "The section is required"
-msgstr "La sección es requerida"
+msgstr "セクションが必要です"
 
 #: inc/question.class.php:365
 #, php-format
 msgid "Field type %1$s is not available for question %2$s."
-msgstr "El tipo de campo %1$s no está disponible para la pregunta %2$s."
+msgstr "質問 %2$s には、%1$s のフィールド型は使用できません。"
 
 #: inc/question.class.php:379
 msgid "This type of question is not compatible with public forms."
-msgstr "Este tipo de pregunta no es compatible con los formularios publicos"
+msgstr "この型の質問は、オープン フォームと互換性がありません。"
 
 #: inc/question.class.php:469
 msgid "The field type cannot be changed. Delete then recreate the question."
-msgstr ""
+msgstr "フィールド型は変更できません。質問を削除して再作成してください。"
 
 #: inc/question.class.php:1184
 msgid "Service levels"
-msgstr "Niveles de servicio"
+msgstr "サービスレベル"
 
 #: inc/question.class.php:1185 inc/abstractitiltarget.class.php:851
 msgid "SLA"
-msgstr "ANS"
+msgstr "SLA"
 
 #: inc/question.class.php:1186 inc/abstractitiltarget.class.php:924
 msgid "OLA"
-msgstr "Acuerdo de Nivel de Operación"
+msgstr "OLA"
 
 #: inc/question.class.php:1205 inc/question.class.php:1248
 #: inc/question.class.php:1251
 msgid "Assets"
-msgstr "Activos"
+msgstr "情報資産"
 
 #: inc/question.class.php:1219 hook.php:780 hook.php:797
 msgid "Assistance"
-msgstr "Asistencia"
+msgstr "ユーザーサポート"
 
 #: inc/question.class.php:1225
 msgid "Management"
-msgstr "Gestión"
+msgstr "管理"
 
 #: inc/question.class.php:1236
 msgid "Tools"
-msgstr "Herramientas"
+msgstr "ツール"
 
 #: inc/question.class.php:1237
 msgid "Notes"
-msgstr "Notas"
+msgstr "メモ"
 
 #: inc/question.class.php:1238
 msgid "RSS feed"
-msgstr "Canal RSS"
+msgstr "RSS フィード"
 
 #: inc/question.class.php:1240
 msgid "Administration"
-msgstr "Administración"
+msgstr "管理"
 
 #: inc/question.class.php:1248 inc/question.class.php:1251
 msgid "Plugin"
 msgid_plural "Plugins"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "プラグイン"
 
 #: inc/abstractquestionparameter.class.php:98
 msgid "Parameter"
-msgstr "Parámetro"
+msgstr "パラメーター"
 
 #: inc/abstractquestionparameter.class.php:105
 msgid "Field name"
-msgstr "Nombre del campo"
+msgstr "フィールド名"
 
 #: inc/abstracttarget.class.php:97
 msgid "Current active entity"
-msgstr "Entidad activa actual"
+msgstr "現在の稼働中エンティティー"
 
 #: inc/abstracttarget.class.php:98
 msgid "Default requester user's entity"
-msgstr "Entidad por defecto del solicitante"
+msgstr "要求者の標準エンティティー"
 
 #: inc/abstracttarget.class.php:99
 msgid "First dynamic requester user's entity (alphabetical)"
-msgstr "Primera entidad dinámica del solicitante (orden alfabético)"
+msgstr "最初の動的要求者エンティティー（辞書順）"
 
 #: inc/abstracttarget.class.php:100
 msgid "Last dynamic requester user's entity (alphabetical)"
-msgstr "Última entidad dinámica del solicitante (orden alfabético)"
+msgstr "最後の動的要求者エンティティー（辞書順）"
 
 #: inc/abstracttarget.class.php:101
 msgid "The form entity"
-msgstr "Entidad del formulario"
+msgstr "フォームエンティティー"
 
 #: inc/abstracttarget.class.php:102
 msgid "Default entity of the validator"
-msgstr "Entidad por defecto del validador"
+msgstr "検証者の標準エンティティー"
 
 #: inc/abstracttarget.class.php:103
 msgid "Specific entity"
-msgstr "Entidad específica "
+msgstr "特定のエンティティー"
 
 #: inc/abstracttarget.class.php:104
 msgid "Default entity of a user type question answer"
-msgstr "Entidad por defecto de una pregunta de respuesta del tipo de usuario"
+msgstr "ユーザーの型への回答の標準エンティティー"
 
 #: inc/abstracttarget.class.php:105
 msgid "From a GLPI object > Entity type question answer"
-msgstr "Desde un objeto GLPI > Tipo de entidad pregunta respuesta"
+msgstr "GLPI オブジェクト > エンティティー型質問の回答"
 
 #: inc/abstracttarget.class.php:116
 msgid "Always generated"
-msgstr "Generar siempre"
+msgstr "常に生成"
 
 #: inc/abstracttarget.class.php:117
 msgid "Disabled unless"
-msgstr "Deshabilitado a menos"
+msgstr "無効条件 : "
 
 #: inc/abstracttarget.class.php:118
 msgid "Generated unless"
-msgstr "Generado a menos"
+msgstr "生成条件 : "
 
 #: inc/abstracttarget.class.php:129
 msgid "A target must be associated to a form."
-msgstr "Un objetivo debe estar asociado a un formulario"
+msgstr "対象は、フォームに関連付いていなくてはなりません。"
 
 #: inc/abstracttarget.class.php:134
 msgid "A target must be associated to an existing form."
-msgstr "Un objetivo debe estar asociado a un formulario existente"
+msgstr "対象は、既存のフォームに関連付いていなくてはなりません。"
 
 #: inc/abstracttarget.class.php:139
 msgid "Name is required."
-msgstr "Se requiere el Nombre"
+msgstr "名前を入力してください。"
 
 #: inc/abstracttarget.class.php:502
 msgid "Destination entity"
-msgstr "Entidad de destino"
+msgstr "宛先エンティティー"
 
 #: inc/abstracttarget.class.php:518
 msgid "User type question"
-msgstr "Pregunta tipo usuario"
+msgstr "ユーザー型の質問"
 
 #: inc/abstracttarget.class.php:519
 msgid "Entity type question"
-msgstr "Pregunta tipo entidad"
+msgstr "エンティティー型の質問"
 
 #: inc/command/cleanticketscommand.class.php:53
 msgid "Searching for invalid items..."
-msgstr ""
+msgstr "無効な項目を検索しています..."
 
 #: inc/command/cleanticketscommand.class.php:61
 msgid "Done."
-msgstr ""
+msgstr "完了しました。"
 
 #: inc/command/cleanticketscommand.class.php:135
 msgid "Step 1: double encoded < and > signs."
-msgstr ""
+msgstr "ステップ 1 : URL エンコーディングした < と > の特殊記号。"
 
 #: inc/command/cleanticketscommand.class.php:146
 #: inc/command/cleanticketscommand.class.php:196
 #: inc/command/cleanticketscommand.class.php:260
 msgid "No invalid items found."
-msgstr ""
+msgstr "無効なアイテムは見つかりません。"
 
 #: inc/command/cleanticketscommand.class.php:187
 msgid "Step 2: literal BR tag."
-msgstr ""
+msgstr "ステップ 2 : 明示的 BR タグ。"
 
 #: inc/command/cleanticketscommand.class.php:251
 msgid "Step 3: litteral > sign."
-msgstr ""
+msgstr "ステップ 3 : 明示的 > 特殊文字。"
 
 #: inc/filter/itilcategoryfilter.class.php:52
 #: inc/filter/itilcategoryfilter.class.php:54
 msgid "Request categories"
-msgstr "Request categories"
+msgstr "要求カテゴリー"
 
 #: inc/filter/itilcategoryfilter.class.php:53
 #: inc/filter/itilcategoryfilter.class.php:54
 msgid "Incident categories"
-msgstr "Categorías de Incidentes"
+msgstr "インシデント カテゴリー"
 
 #: inc/filter/itilcategoryfilter.class.php:55
 msgid "Change categories"
-msgstr "Cambiar categorías"
+msgstr "変更カテゴリー"
 
 #: inc/supervisorvalidator.class.php:44
 msgid "Requester supervisor"
 msgid_plural "Requester supervisors"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "要求者の監督者"
 
 #: inc/supervisorvalidator.class.php:52
 msgid "My supervisor"
-msgstr ""
+msgstr "自分の監督者"
 
 #: inc/questionregex.class.php:52
 msgid "Question regular expression"
 msgid_plural "Question regular expressions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "正規表現質問"
 
 #: inc/questiondependency.class.php:66
 msgid "Question dependency"
 msgid_plural "Question dependencies"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "質問の依存関係"
 
 #: inc/answer.class.php:66 entrée standard:43
 msgid "Answer"
 msgid_plural "Answers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "回答"
 
 #: inc/item_targetticket.class.php:52
 msgid "Composite ticket relation"
 msgid_plural "Composite ticket relations"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "チケットと関連付ける"
 
 #: inc/targetticket.class.php:57 entrée standard:43
 msgid "Target ticket"
 msgid_plural "Target tickets"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "対象チケット"
 
 #: inc/targetticket.class.php:100
 msgid "Specific asset"
-msgstr "Activo específico"
+msgstr "特定の情報資産"
 
 #: inc/targetticket.class.php:101 inc/targetticket.class.php:117
 #: inc/abstractitiltarget.class.php:207 inc/abstractitiltarget.class.php:215
 #: inc/abstractitiltarget.class.php:223 inc/abstractitiltarget.class.php:231
 #: inc/abstractitiltarget.class.php:240 inc/abstractitiltarget.class.php:249
 msgid "Equals to the answer to the question"
-msgstr "Igual a la respuesta a la pregunta"
+msgstr "質問の回答と等しい"
 
 #: inc/targetticket.class.php:102 inc/abstractitiltarget.class.php:232
 #: inc/abstractitiltarget.class.php:241 inc/abstractitiltarget.class.php:250
 msgid "Last valid answer"
-msgstr "Ultima respuesta válida"
+msgstr "最後の有効な回答"
 
 #: inc/targetticket.class.php:108
 msgid "Source from template or user default or GLPI default"
-msgstr ""
+msgstr "テンプレート、またはユーザーの標準、または GLPI の標準を元に"
 
 #: inc/targetticket.class.php:109
 msgid "Formcreator"
-msgstr ""
+msgstr "フォーム作成"
 
 #: inc/targetticket.class.php:115
 msgid "Default or from a template"
-msgstr "Valor por defecto o desde una plantilla"
+msgstr "標準またはテンプレートから"
 
 #: inc/targetticket.class.php:116
 msgid "Specific type"
-msgstr "Tipo específico"
+msgstr "特定の型"
 
 #: inc/targetticket.class.php:189 entrée standard:48
 msgid "Ticket title"
-msgstr "Título del ticket"
+msgstr "チケットのタイトル"
 
 #: inc/targetticket.class.php:307
 msgid "Add validation message as first ticket followup"
-msgstr "Agregar validación de mensaje como primer ticker de seguimiento"
+msgstr "最初の回答として検証メッセージを追加"
 
 #: inc/targetticket.class.php:341
 msgid "Add a field"
-msgstr "Agregar un campo"
+msgstr "フィールドを追加"
 
 #: inc/targetticket.class.php:369
 msgid "Managed fields"
-msgstr ""
+msgstr "管理フィールド"
 
 #: inc/targetticket.class.php:376
 msgid "No managed field"
-msgstr ""
+msgstr "管理フィールドがありません"
 
 #: inc/targetticket.class.php:396
 msgid "Link to an other ticket"
-msgstr "Enlazar con otro ticket"
+msgstr "別のチケットにリンク"
 
 #: inc/targetticket.class.php:405
 msgid "An other destination of this form"
-msgstr "A otro destino de este formulario"
+msgstr "このフォームの別の宛先"
 
 #: inc/targetticket.class.php:406
 msgid "An existing ticket"
-msgstr "A un ticket existente"
+msgstr "既存のチケット"
 
 #: inc/targetticket.class.php:407
 msgid "A ticket from an answer to a question"
-msgstr ""
+msgstr "質問に対する回答からのチケット"
 
 #: inc/targetticket.class.php:488
 msgctxt "button"
 msgid "Delete permanently"
-msgstr "Eliminar permanentemente"
+msgstr "完全に削除"
 
 #: inc/targetticket.class.php:743
 msgid "Invalid link type"
-msgstr "Tipo de enlace inválido"
+msgstr "無効なリンク型"
 
 #: inc/targetticket.class.php:763
 msgid "Invalid linked item type"
-msgstr "tipo de enlace a objeto inválido "
+msgstr "リンク先のアイテム型が無効"
 
 #: inc/targetticket.class.php:776
 msgid "Linked item does not exists"
-msgstr "El objeto enlazado no existe"
+msgstr "リンク先のアイテムが存在しません"
 
 #: inc/targetticket.class.php:789
 msgid "Failed to link the item"
-msgstr "Fallo al enlazar el item"
+msgstr "アイテムへのリンクに失敗"
 
 #: inc/targetticket.class.php:905 install/install.php:497
 msgid "Your form has been accepted by the validator"
-msgstr "Su formulario ha sido aceptado por el validador"
+msgstr "あなたのフォームは検証者に承認されました"
 
 #: inc/targetticket.class.php:1137
 msgid "Request source"
-msgstr ""
+msgstr "要求元"
 
 #: inc/targetticket.class.php:1162
 msgid "Type "
-msgstr "Tipo"
+msgstr "型"
 
 #: inc/targetticket.class.php:1190
 msgid "Associated elements"
-msgstr "Elementos asociados"
+msgstr "関連する要素"
 
 #: inc/targetticket.class.php:1201
 msgid "Item "
-msgstr "Item u Objeto"
+msgstr "アイテム"
 
 #: inc/translation.class.php:153
 msgid "No more string to translate"
-msgstr "No hay mas cadenas para traducir"
+msgstr "もう翻訳する文字列がありません"
 
 #: inc/translation.class.php:164
 msgid "Internal error: translatable string not found."
-msgstr ""
+msgstr "内部エラー : 翻訳可能な文字列がありません。"
 
 #: inc/translation.class.php:216
 msgid "Language not found."
-msgstr "Lenguaje no encontrado"
+msgstr "言語が見つかりません。"
 
 #: inc/translation.class.php:236
 msgid "Failed to add the translation."
-msgstr "Fallo al añadir la traducción"
+msgstr "翻訳の追加に失敗しました。"
 
 #: inc/abstractitiltarget.class.php:187
 msgid "Tags from questions"
-msgstr "Etiquetas desde preguntas"
+msgstr "質問からのタグ"
 
 #: inc/abstractitiltarget.class.php:188
 msgid "Specific tags"
-msgstr "Etiquetas específicas"
+msgstr "特定のタグ"
 
 #: inc/abstractitiltarget.class.php:189
 msgid "Tags from questions and specific tags"
-msgstr "Etiquetas desde preguntas y etiquetas específicas"
+msgstr "質問からのタグと特定のタグ"
 
 #: inc/abstractitiltarget.class.php:190
 msgid "Tags from questions or specific tags"
-msgstr "Etiquetas desde preguntas o etiquetas específicas"
+msgstr "質問からのタグまたは特定のタグ"
 
 #: inc/abstractitiltarget.class.php:196
 msgid "TTR from template or none"
-msgstr ""
+msgstr "テンプレートの TTR または、なし"
 
 #: inc/abstractitiltarget.class.php:197
 msgid "equals to the answer to the question"
-msgstr "es igual la respuesta a la pregunta"
+msgstr "質問の回答と等しい"
 
 #: inc/abstractitiltarget.class.php:198
 msgid "calculated from the ticket creation date"
-msgstr "calculada a partir de la fecha de creación del ticket"
+msgstr "チケットの作成日から計算"
 
 #: inc/abstractitiltarget.class.php:199
 msgid "calculated from the answer to the question"
-msgstr "calculada a partir de la respuesta del ticket"
+msgstr "質問の回答から計算"
 
 #: inc/abstractitiltarget.class.php:205
 msgid "SLA from template or none"
-msgstr "ANS desde plantilla o ninguno"
+msgstr "テンプレートからの SLA または、なし"
 
 #: inc/abstractitiltarget.class.php:206
 msgid "Specific SLA"
-msgstr "ANS específico"
+msgstr "特定の SLA"
 
 #: inc/abstractitiltarget.class.php:213
 msgid "OLA from template or none"
-msgstr "Acuerdo de Nivel de Operación desde plantilla o ninguno"
+msgstr "テンプレートからの OLA または、なし"
 
 #: inc/abstractitiltarget.class.php:214
 msgid "Specific OLA"
-msgstr "Acuerdo de Nivel de Operación específico"
+msgstr "特定の OLA"
 
 #: inc/abstractitiltarget.class.php:221
 msgid "Urgency from template or Medium"
-msgstr "Urgencia de plantilla o medio"
+msgstr "テンプレートからの緊急度または中"
 
 #: inc/abstractitiltarget.class.php:222
 msgid "Specific urgency"
-msgstr "Urgencia específica"
+msgstr "特定の緊急度"
 
 #: inc/abstractitiltarget.class.php:229
 msgid "Category from template or none"
-msgstr "Categoría desde plantilla o ninguna"
+msgstr "テンプレートのカテゴリーまたは、なし"
 
 #: inc/abstractitiltarget.class.php:230
 msgid "Specific category"
-msgstr "Categoría específica"
+msgstr "特定のカテゴリー"
 
 #: inc/abstractitiltarget.class.php:238
 msgid "Location from template or none"
-msgstr "Ubicación desde plantilla o ninguna"
+msgstr "テンプレートの場所またはなし"
 
 #: inc/abstractitiltarget.class.php:239
 msgid "Specific location"
-msgstr "Ubicación específica"
+msgstr "特定の場所"
 
 #: inc/abstractitiltarget.class.php:247
 msgid "Contract from template or none"
-msgstr ""
+msgstr "テンプレートの契約または、なし"
 
 #: inc/abstractitiltarget.class.php:248
 msgid "Specific contract"
-msgstr ""
+msgstr "特定の契約"
 
 #: inc/abstractitiltarget.class.php:256
 msgid "No validation"
-msgstr "Sin validación"
+msgstr "検証なし"
 
 #: inc/abstractitiltarget.class.php:257
 msgid "Specific user or group"
-msgstr "Usuario o grupo específicos"
+msgstr "特定のユーザーまたはグループ"
 
 #: inc/abstractitiltarget.class.php:258
 msgid "User from question answer"
-msgstr "Usuario desde la respuesta a la pregunta"
+msgstr "質問の回答からのユーザー"
 
 #: inc/abstractitiltarget.class.php:259
 msgid "Group from question answer"
-msgstr ""
+msgstr "質問の回答からのグループ"
 
 #: inc/abstractitiltarget.class.php:839
 msgid "Minute"
 msgid_plural "Minutes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "分"
 
 #: inc/abstractitiltarget.class.php:840
 msgid "Hour"
 msgid_plural "Hours"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "時間"
 
 #: inc/abstractitiltarget.class.php:841
 msgid "Day"
 msgid_plural "Days"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "日"
 
 #: inc/abstractitiltarget.class.php:842
 msgid "Month"
 msgid_plural "Months"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "月"
 
 #: inc/abstractitiltarget.class.php:874
 msgid "SLA (TTO/TTR)"
-msgstr "ANS (TTO/TTR)"
+msgstr "SLA （TTO・TTR）"
 
 #: inc/abstractitiltarget.class.php:875 inc/abstractitiltarget.class.php:948
 msgid "Question (TTO/TTR)"
-msgstr "Petición (TTO/TTR)"
+msgstr "質問（TTO・TTR）"
 
 #: inc/abstractitiltarget.class.php:947
 msgid "OLA (TTO/TTR)"
-msgstr "OLA (TTO/TTR)"
+msgstr "OLA （TTO・TTR）"
 
 #: inc/abstractitiltarget.class.php:1051
 msgid "Urgency "
-msgstr "Urgencia"
+msgstr "緊急度"
 
 #: inc/abstractitiltarget.class.php:1080
 msgid "Ticket tags"
-msgstr "Etiquetas de ticket"
+msgstr "チケットのタグ"
 
 #: inc/abstractitiltarget.class.php:1128
 msgid "Tags"
-msgstr "Etiquetas"
+msgstr "タグ"
 
 #: inc/abstractitiltarget.class.php:1247
 msgid "Location"
-msgstr "Ubicación"
+msgstr "場所「"
 
 #: inc/abstractitiltarget.class.php:1259
 msgid "Location "
-msgstr "Ubicación"
+msgstr "場所"
 
 #: inc/abstractitiltarget.class.php:1312
 msgid "Contract"
-msgstr ""
+msgstr "契約"
 
 #: inc/abstractitiltarget.class.php:1324
 msgid "Contract "
-msgstr ""
+msgstr "契約"
 
 #: inc/abstractitiltarget.class.php:1635
 msgid "The description cannot be empty!"
-msgstr "¡La descripción no puede estar vacía!"
+msgstr "説明を空にはできません！"
 
 #: inc/abstractitiltarget.class.php:1811
 msgid "Watcher"
 msgid_plural "Watchers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "助言者"
 
 #: inc/abstractitiltarget.class.php:1830
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "キャンセル"
 
 #: inc/abstractitiltarget.class.php:2118 inc/abstractitiltarget.class.php:2548
 #: inc/abstractitiltarget.class.php:2552
 msgid "Email followup"
-msgstr "Seguimiento por correo"
+msgstr "メール フォロー"
 
 #: inc/abstractitiltarget.class.php:2149 inc/abstractitiltarget.class.php:2536
 msgid "User"
-msgstr "Usuario"
+msgstr "ユーザー"
 
 #: inc/abstractitiltarget.class.php:2160 inc/abstractitiltarget.class.php:2540
 msgid "Group"
-msgstr "Grupo"
+msgstr "グループ"
 
 #: inc/abstractitiltarget.class.php:2171
 msgid "Group from the object"
-msgstr "Grupo desde un objeto"
+msgstr "オブジェクトのグループか"
 
 #: inc/abstractitiltarget.class.php:2177
 msgid "Tech group from the object"
-msgstr "Grupo Técnico desde un objeto"
+msgstr "オブジェクトの技術者グループ"
 
 #: inc/abstractitiltarget.class.php:2189 inc/abstractitiltarget.class.php:2544
 msgid "Supplier"
-msgstr "Proveedor"
+msgstr "サプライヤ"
 
 #: inc/abstractitiltarget.class.php:2548
 msgid "Yes"
-msgstr "Sí"
+msgstr "はい"
 
 #: install/install.php:163
 #, php-format
 msgid "Upgrade tables to innoDB; run %s"
-msgstr ""
+msgstr "innoDB のテーブルをアップグレードするには、%s を実行"
 
 #: install/install.php:199
 #, php-format
@@ -2364,11 +2264,12 @@ msgid ""
 "The database schema is not consistent with the previous version of "
 "Formcreator %s. To see the logs run the command %s"
 msgstr ""
+"データベーススキーマは、Formcreator の古い %s バージョンとの整合性がとれていません。ログを見るには、%s コマンドを実行してください。"
 
 #: install/install.php:208
 #, php-format
 msgid "To ignore the inconsistencies and upgrade anyway run %s"
-msgstr ""
+msgstr "矛盾を無視してアップグレードする場合は、%s を実行"
 
 #: install/install.php:225
 msgid ""
@@ -2376,13 +2277,15 @@ msgid ""
 " to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to"
 " GLPI 10 or later and Formcreator 2.13 or later."
 msgstr ""
+"2.5.0 より古いバージョンからのアップグレードはすでにサポートしていません。GLPI 9.5.7 にアップグレードし、「フォーム作成」を "
+"2.12.5 にアップグレードし、それから GLPI 10以上に、「フォーム作成」を 2.13 以降にそれぞれアップグレードしてください。"
 
 #: install/install.php:251
 #, php-format
 msgid ""
 "A fatal error occured in the upgrade from %s! Upgrade aborted. Please check "
 "logs to fix the problem then try again."
-msgstr ""
+msgstr "%s からのアップグレードで致命的なエラー！　アップグレードを中断しました。ログを確認して問題を解決し、再度実行してください。"
 
 #: install/install.php:294
 #, php-format
@@ -2390,18 +2293,20 @@ msgid ""
 "The database schema is not consistent with the current version of "
 "Formcreator %s. To see the logs enable the plugin and run the command %s"
 msgstr ""
+"データベース スキーマが現在の「フォーム作成」のバージョン、%s と整合性がとれていません。ログを見るには、プラグインを有効にして、%s "
+"コマンドを実行してください。"
 
 #: install/install.php:305
 msgid "The tables of the plugin passed the schema integrity check."
-msgstr ""
+msgstr "プラグインのテーブルは、スキーマ整合性チェックを通過しました。"
 
 #: install/install.php:478
 msgid "A form has been created"
-msgstr "El formulario ha sido creado"
+msgstr "フォームを作成しました"
 
 #: install/install.php:479
 msgid "Your request has been saved"
-msgstr "Tu solicitud ha sido guardada"
+msgstr "あなたからの要求を保存しました"
 
 #: install/install.php:480
 msgid ""
@@ -2409,29 +2314,28 @@ msgid ""
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
 "see your answers onto the following link:\\n##formcreator.validation_link##"
 msgstr ""
-"Hola,\\nTu solicitud desde GLPI haber sido guardada con éxito con el número "
-"##formcreator.request_id## y transmitida al equipo de asistencia.\\nTu "
-"puedes ver sus respuestas en el siguiente "
-"enlace:\\n##formcreator.validation_link##"
+"こんにちは。\\nGLPI にあなたが要求として投稿した内容は、受付番号 ##formcreator.request_id## "
+"として保存し、ヘルプデスク チームに転送しました。\\nご自分の回答は以下のリンクで確認できます : "
+"\\n##formcreator.validation_link##"
 
 #: install/install.php:484
 msgid "A form need validation"
-msgstr ""
+msgstr "フォームは検証が必要です"
 
 #: install/install.php:485
 msgid "A form from GLPI need to be validated"
-msgstr ""
+msgstr "GLPI のフォームで検証が必要です"
 
 #: install/install.php:486
 msgid ""
 "Hi,\\nA form from GLPI need to be validated and you have been choosen as the"
 " validator.\\nYou can access it by clicking onto this "
 "link:\\n##formcreator.validation_link##"
-msgstr ""
+msgstr "こんにちは。\\nGLPI のフォームで検証が必要となり、あなたが検証者として選ばれました。\\n以下のリンクでアクセスできます : "
 
 #: install/install.php:491
 msgid "Your form has been refused by the validator"
-msgstr "Su formulario ha sido rechazado por el validador"
+msgstr "あなたのフォームは検証者から拒否されました"
 
 #: install/install.php:492
 msgid ""
@@ -2440,320 +2344,309 @@ msgid ""
 "below:\\n##formcreator.validation_comment##\\n\\nYou can still modify and "
 "resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
 msgstr ""
-"Hola,\\nSentimos informarle que su formulario ha sido rechazado por el "
-"validador por el motivo a "
-"continuación:\\n##formcreator.validation_comment##\\n\\nUsted puede todavía "
-"modificarlo y volver a enviarlo haciendo clic en este "
-"enlace:\\n##formcreator.validation_link##"
+"こんにちは。\\n残念ながら、あなたのフォームは以下の理由により検証者に拒否されました : "
+"\\n##formcreator.validation_comment##\\n\\n以下のリンクをクリックして、変更・再検証を提出することができます "
+": \\n##formcreator.validation_link##"
 
 #: install/install.php:498
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
-msgstr ""
-"Hola,\\nNos complace informarle de que su formulario ha sido aceptado por el"
-" validador.\\n Su solicitud será considerada pronto."
+msgstr "こんにちは\\nあなたのフォームが検証者より承認されたことをご報告します。\\nすぐにあなたの要求の検討をはじめます。"
 
 #: install/install.php:503
 msgid "Your form has been deleted by an administrator"
-msgstr "Tu formulario ha sido eliminado por un administrador"
+msgstr "あなたのフォームは管理者が削除しました。"
 
 #: install/install.php:504
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
-msgstr ""
-"Hola,\\nLamentamos informarle de que su solicitud no puede ser considerada, "
-"y ha sido eliminado por un administrador."
+msgstr "こんにちは\\n残念ながらあなたの要求は検討に値しないものとして管理者が削除しました。"
 
 #: install/install.php:732
 msgid "Formcreator - Sync service catalog issues"
-msgstr ""
-"Formcreator - Problemas en la sincronización del catálogo de servicios"
+msgstr "フォーム作成 - サービス カタログの問題を同期"
 
 #: install/install.php:945
 msgid "Failed to check the sanity of the tables!"
-msgstr ""
+msgstr "テーブルの整合性検査に失敗しました！"
 
 #: install/install.php:959
 #, php-format
 msgid "Table schema differs for table \"%s\"."
-msgstr ""
+msgstr "「%s」テーブルのテーブルスキーマが異なります。"
 
 #: install/install.php:962
 #, php-format
 msgid "Table \"%s\" is missing."
-msgstr ""
+msgstr "「%s」テーブルが見つかりン銭。"
 
 #: install/install.php:965
 #, php-format
 msgid "Unknown table \"%s\" has been found in database."
-msgstr ""
+msgstr "不明な「%s」テーブルがデータベースに見つかりました。"
 
 #: hook.php:439
 msgctxt "button"
 msgid "Duplicate"
-msgstr "Duplicado"
+msgstr "複製"
 
 #: hook.php:440
 msgid "Transfer"
-msgstr "Transferir"
+msgstr "転送"
 
 #: hook.php:441
 msgctxt "button"
 msgid "Export"
-msgstr "Exportar"
+msgstr "エクスポート"
 
 #: hook.php:442
 msgctxt "button"
 msgid "Access rights"
-msgstr ""
+msgstr "アクセス権"
 
 #: hook.php:756
 msgid "Cancel my ticket"
-msgstr "Cancelar mi ticket"
+msgstr "自分のチケットを中止"
 
 #: hook.php:774
 msgid "Old"
-msgstr ""
+msgstr "古い"
 
 #: hook.php:781
 #, php-format
 msgid "Number of %s"
-msgstr ""
+msgstr "%s の数"
 
 #: hook.php:798
 msgid "Issues summary"
-msgstr ""
+msgstr "問題概要"
 
 #: hook.php:843
 msgid ""
 "Formcreator's mini dashboard not usable as default. This Setting has been "
 "ignored."
-msgstr ""
+msgstr "フォーム作成のミニダッシュボードは、標準では使用できません。この設定は無視されます。"
 
 #: js/scripts.js:300
 msgid "No form found. Please choose a form below instead."
-msgstr ""
+msgstr "フォームが見つかりません。代わりに以下のフォームから選択してください。"
 
 #: js/scripts.js:302
 msgid "No form found."
-msgstr ""
+msgstr "フォームが見つかりません。"
 
 #: js/scripts.js:306
 msgid "No FAQ item found."
-msgstr ""
+msgstr "FAQ アイテムが見つかりません。"
 
 #: js/scripts.js:707
 msgid "Are you sure you want to delete this question?"
-msgstr "¿Está seguro de que quiere eliminar esta pregunta?"
+msgstr "この質問を削除します。よろしいですか？"
 
 #: js/scripts.js:917
 msgid "Are you sure you want to delete this section?"
-msgstr "¿Está seguro de que quiere eliminar esta sección?"
+msgstr "このセクションを削除します。よろしいですか？"
 
 #: js/scripts.js:1161
 msgid "Add translations"
-msgstr ""
+msgstr "翻訳を追加"
 
 #: js/scripts.js:1300 js/scripts.js:1324
 msgid "An error occured while querying forms"
-msgstr "Se ha producido un error al consultar formularios"
+msgstr "フォームのクエリーでエラーが発生"
 
 #: js/scripts.js:1416 entrée standard:139
 msgid "Send"
-msgstr "Enviar"
+msgstr "送信"
 
 #: js/scripts.js:1425
 msgid "An internal error occurred. Please report it to administrator."
-msgstr ""
+msgstr "内部エラー発生。管理者に報告してください。"
 
 #: js/scripts.js:1468
 msgid "Are you sure you want to delete this validator ?"
-msgstr ""
+msgstr "この承認者を削除します。よろしいですか？"
 
 #: js/scripts.js:1520
 msgid "Are you sure you want to duplicate this target?"
-msgstr ""
+msgstr "この承認者を複製します。よろしいですか？"
 
 #: js/scripts.js:1537
 msgid "Are you sure you want to delete this target?"
-msgstr ""
+msgstr "この対象を削除します。よろしいですか？"
 
 #: entrée standard:57 standard:61 standard:60 standard:59 standard:43
 #: standard:69 standard:52 standard:76
 msgid "Default values"
-msgstr "Valores por defecto"
+msgstr "標準値"
 
 #: entrée standard:52 standard:59 standard:58
 msgid "Show empty"
-msgstr "Mostrar vacío"
+msgstr "空を表示"
 
 #: entrée standard:39
 msgid "LDAP directory"
 msgid_plural "LDAP directories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "LDAP ディレクトリー"
 
 #: entrée standard:78
 msgid "Attribute"
-msgstr "Atributo"
+msgstr "属性"
 
 #: entrée standard:70 standard:68
 msgid "Values"
-msgstr "Valores"
+msgstr "値"
 
 #: entrée standard:90
 msgid "Show ticket categories"
-msgstr "Mostrar categorías de los tickets"
+msgstr "チケット カテゴリーを表示"
 
 #: entrée standard:146 standard:118
 msgid "Selectable root"
-msgstr ""
+msgstr "選択可能なルート"
 
 #: entrée standard:38
 msgid "GLPI object"
 msgid_plural "GLPI objects"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "GLPI オブジェクト"
 
 #: entrée standard:63
 msgid "Direct access on homepage"
-msgstr "Acceso directo a la página principal"
+msgstr "ホームページへの直接接続"
 
 #: entrée standard:86
 msgid "Default form in service catalog"
-msgstr "Formulario por defecto del catálogo de servicios"
+msgstr "サービス カタログでの標準フォーム"
 
 #: entrée standard:113 standard:114
 msgid "Are you a robot ?"
-msgstr "¿Eres un robot?"
+msgstr "あなたはロボットですか？"
 
 #: entrée standard:64
 msgid "Condition to show the section"
-msgstr "Condición para mostrar la sección"
+msgstr "このセクションを表示する条件"
 
 #: entrée standard:40
 msgid "Condition to generate the target"
-msgstr "Condición para generar un objetivo"
+msgstr "対象を生成する条件"
 
 #: entrée standard:40
 msgid "General"
-msgstr ""
+msgstr "一般"
 
 #: entrée standard:45
 msgid "validation percent"
-msgstr ""
+msgstr "承認率"
 
 #: entrée standard:52
 msgid "Add a validator"
-msgstr ""
+msgstr "承認者の追加"
 
 #: entrée standard:57 standard:36
 msgid "Validation level"
-msgstr ""
+msgstr "承認レベル"
 
 #: entrée standard:73
 msgid "Validator type"
-msgstr ""
+msgstr "承認型"
 
 #: entrée standard:98
 msgid "Validators"
-msgstr ""
+msgstr "検証者"
 
 #: entrée standard:106 standard:5
 msgid "Actions"
-msgstr ""
+msgstr "操作"
 
 #: entrée standard:54
 msgid "Impacts"
-msgstr "Impactos"
+msgstr "影響"
 
 #: entrée standard:62
 msgid "Checklist"
-msgstr "Lista de Verificación"
+msgstr "チェックリスト"
 
 #: entrée standard:36
 msgid "Answers title"
-msgstr "Título de las respuestas"
+msgstr "回答のタイトル"
 
 #: entrée standard:45
 msgid "Add a section"
-msgstr "Agregar sección"
+msgstr "セクションの追加"
 
 #: entrée standard:55
 msgid "Condition to show the submit button"
-msgstr "Condición para mostrar el botón enviar"
+msgstr "「投稿する」を表示する条件"
 
 #: entrée standard:33
 msgid "No form answer yet"
-msgstr ""
+msgstr "まだフォームの回答なし"
 
 #: entrée standard:38
 #, php-format
 msgid "%s latest items"
-msgstr ""
+msgstr "最後に利用した %s 件のアイテム"
 
 #: entrée standard:54
 msgid "Please activate the form to view the link"
-msgstr "Por favor, active el formulario para ver el enlace"
+msgstr "リンクを表示するには、フォームを稼働させてください"
 
 #: entrée standard:63
 msgid "Enable captcha"
-msgstr "Habilitar Captcha"
+msgstr "CAPCHA を有効に"
 
 #: entrée standard:79
 msgid "Restricted to"
-msgstr ""
+msgstr "制限 : "
 
 #: entrée standard:83
 msgid "Add a question"
-msgstr "Agregar una pregunta"
+msgstr "質問を追加"
 
 #: entrée standard:39
 msgid "List of available tags"
-msgstr "Lista de etiquetas disponibles"
+msgstr "利用できるタグ一覧"
 
 #: entrée standard:42
 msgid "Title"
-msgstr "Título"
+msgstr "タイトル"
 
 #: entrée standard:47
 msgid "Full form"
-msgstr "Formulario lleno"
+msgstr "全フォーム"
 
 #: entrée standard:37
 msgid "Validation status"
-msgstr ""
+msgstr "承認状態"
 
 #: entrée standard:36
 #, php-format
 msgid "My %1$d last forms (requester)"
-msgstr "Mis %1$d ultimos formularios (peticionario)"
+msgstr "最近使った %1$d 件のフォーム（要求者）"
 
 #: entrée standard:39
 msgid "No form posted yet"
-msgstr "Formulario no publicado aún"
+msgstr "まだフォームを投稿していません"
 
 #: entrée standard:63
 msgid "All my forms (requester)"
-msgstr "Todos mis formularios (solicitante)"
+msgstr "自分のフォームのすべて（要求者）"
 
 #: entrée standard:36
 #, php-format
 msgid "My %1$d last forms (validator)"
-msgstr "Mis %1$d ultimos formularios (validador)"
+msgstr "最近使った %1$d 件のフォーム（検証者）"
 
 #: entrée standard:63
 msgid "All my forms (validator)"
-msgstr "Todos mis formularios (validador)"
+msgstr "自分のフォームのすべて（検証者）"
 
 #: entrée standard:42
 msgid "Min"
-msgstr "Min"
+msgstr "最小"
 
 #: entrée standard:53
 msgid "Max"
-msgstr "Max"
+msgstr "最大"

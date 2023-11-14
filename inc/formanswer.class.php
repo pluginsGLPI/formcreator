@@ -1282,10 +1282,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             'plugin_formcreator_questions_id'    => $questionId,
             'answer'                             => Toolbox::addslashes_deep($answer_value),
          ], [], 0);
-         if ($answer->isNewItem()) {
-            $formanswerId = $this->getID();
-            trigger_error("Formcreator: failed to save answer for question $questionId in formanswer ID $formanswerId. Value was: $answer_value", E_USER_WARNING);
-         }
          foreach ($field->getDocumentsForTarget() as $documentId) {
             $docItem = new Document_Item();
             $docItem->add([

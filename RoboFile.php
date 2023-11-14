@@ -206,7 +206,7 @@ class RoboFile extends RoboFilePlugin
       $success = $this->taskExec('composer')
          ->arg('install')
          ->arg('--no-dev')
-         ->arg("--working-dir='$archiveWorkdir/$pluginName'")
+         ->arg("--working-dir=$archiveWorkdir/$pluginName")
          ->run();
       if ($success->getExitCode() != 0) {
          throw new RuntimeException("failed to generate PHP resources");

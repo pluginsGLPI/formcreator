@@ -513,7 +513,7 @@ PluginFormcreatorTranslatableInterface
          ];
       }
       if ($item->getType() == Central::class) {
-         return _n('Form', 'Forms', Session::getPluralNumber(), 'formcreator');
+         return PluginFormcreatorForm::getTypeName(Session::getPluralNumber());
       }
       return '';
    }
@@ -2017,7 +2017,7 @@ PluginFormcreatorTranslatableInterface
 
       echo '<table class="tab_cadrehov" id="plugin_formcreatorHomepageForms">';
       echo '<tr class="noHover">';
-      echo '<th><a href="' . FORMCREATOR_ROOTDOC . '/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
+      echo '<th><a href="' . FORMCREATOR_ROOTDOC . '/front/formlist.php">' . PluginFormcreatorForm::getTypeName(Session::getPluralNumber()) . '</a></th>';
       echo '</tr>';
 
       $currentCategoryId = -1;
