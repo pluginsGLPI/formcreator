@@ -74,10 +74,10 @@ if (Session::getCurrentInterface() == 'helpdesk') {
    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
    Html::header(
-      __('Form Creator', 'formcreator'),
+      $formanswer->fields['name'],
       '',
       'admin',
-      'PluginFormcreatorForm'
+      PluginFormcreatorForm::class
    );
 }
 

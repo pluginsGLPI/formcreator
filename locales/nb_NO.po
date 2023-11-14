@@ -2,10 +2,10 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # jostein berge <jbe01@karmoy.kommune.no>, 2022
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -475,7 +475,7 @@ msgid "Some URL fields contains invalid links"
 msgstr ""
 
 #: inc/field/fieldsfield.class.php:533
-msgid "Additionnal fields"
+msgid "Additional fields"
 msgstr ""
 
 #: inc/field/checkboxesfield.class.php:116

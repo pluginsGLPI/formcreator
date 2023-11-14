@@ -49,7 +49,7 @@ class RadiosField extends PluginFormcreatorAbstractField
    public function showForm(array $options): void {
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $this->question->fields['values'] =  json_decode($this->question->fields['values']);
+      $this->question->fields['values'] = json_decode($this->question->fields['values']);
       $this->question->fields['values'] = is_array($this->question->fields['values']) ? $this->question->fields['values'] : [];
       $this->question->fields['values'] = implode("\r\n", $this->question->fields['values']);
       $this->deserializeValue($this->question->fields['default_values']);
@@ -109,18 +109,41 @@ class RadiosField extends PluginFormcreatorAbstractField
    }
 
    public function prepareQuestionInputForSave($input) {
+      global $DB;
+
       if (!isset($input['values']) || empty($input['values'])) {
          Session::addMessageAfterRedirect(
-            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+            __('The field value is required.', 'formcreator'),
             false,
             ERROR
          );
          return [];
       }
 
-      // trim values
-      $input['values'] = $this->trimValue($input['values']);
-      $input['default_values'] = trim($input['default_values']);
+      // trim values (actually there is only one value then no \r\n expected)
+      $defaultValues = $this->trimValue($input['default_values'] ?? '');
+      if (count($defaultValues) > 1) {
+         Session::addMessageAfterRedirect(
+            __('Only one default value is allowed.', 'formcreator'),
+            false,
+            ERROR
+         );
+         return [];
+      }
+      $values = $this->trimValue($input['values']);
+      if (count($defaultValues) > 0) {
+         $validDefaultValues = array_intersect($this->getAvailableValues($values), $defaultValues);
+         if (count($validDefaultValues) != count($defaultValues)) {
+            Session::addMessageAfterRedirect(
+               __('The default value is not in the list of available values.', 'formcreator'),
+               false,
+               ERROR
+            );
+            return [];
+         }
+      }
+      $input['values'] = $DB->escape(json_encode($values, JSON_UNESCAPED_UNICODE));
+      $input['default_values'] = array_pop($defaultValues);
 
       return $input;
    }

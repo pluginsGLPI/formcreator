@@ -453,7 +453,9 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
 
    $validationStatus = PluginFormcreatorCommon::getTicketStatusForIssue($item);
 
-   $issueName = $item->fields['name'] != '' ? addslashes($item->fields['name']) : '(' . $item->getID() . ')';
+   $issueName = $item->fields['name'] != ''
+      ? $item->fields['name']
+      : '(' . $item->getID() . ')';
    $issue = new PluginFormcreatorIssue();
    $issue->getFromDBByCrit([
       'AND' => [
@@ -480,16 +482,15 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
          'items_id'           => $id,
          'display_id'         => "t_$id",
          'itemtype'           => Ticket::class,
-         'name'               => $issueName,
+         'name'               => $DB->escape($issueName),
          'status'             => $validationStatus,
          'date_creation'      => $item->fields['date'],
          'date_mod'           => $item->fields['date_mod'],
          'entities_id'        => $item->fields['entities_id'],
          'is_recursive'       => '0',
          'requester_id'       => $requester,
-         'comment'            => addslashes($item->fields['content']),
+         'comment'            => $DB->escape($item->fields['content']),
       ]);
-      return;
    }
 
    // No issue linked to the ticket,
@@ -528,7 +529,8 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
       }
    }
 
-   // Delete the issue
+   // Delete the issue associated to the ticlet
+   // (when a form generated one and only one ticket)
    // TODO: add is_deleted column to issue ?
    $issue = new PluginFormcreatorIssue();
    $issue->deleteByCriteria([
@@ -540,7 +542,14 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
 function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
    $formAnswer = new PluginFormcreatorFormAnswer();
    if ($formAnswer->getFromDbByTicket($item)) {
-      $formAnswer->createIssue();
+      $relations = (new Item_Ticket())->find([
+         'itemtype' => $formAnswer->getType(),
+         'items_id' => $formAnswer->getID(),
+      ]);
+      if (count($relations) === 1) {
+         // Recreate the issue when one and only one ticket has been created by the form
+         $formAnswer->createIssue();
+      }
       $minimalStatus = $formAnswer->getAggregatedStatus();
       if ($minimalStatus !== null) {
          $formAnswer->updateStatus($minimalStatus);
@@ -604,7 +613,10 @@ function plugin_formcreator_hook_update_ticketvalidation(CommonDBTM $item) {
    if ($issue->isNewItem()) {
       return;
    }
-   $issue->update(['status' => $status] + $issue->fields);
+   $issue->update([
+      'id'     => $issue->getID(),
+      'status' => $status
+   ]);
 }
 
 function plugin_formcreator_hook_update_itilFollowup($followup) {

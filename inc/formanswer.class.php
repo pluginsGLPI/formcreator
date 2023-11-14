@@ -25,7 +25,7 @@
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
- * @link      http://plugins.glpi-project.org/#/plugin/formcreatorp@
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
 
@@ -609,12 +609,18 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       . ' class="plugin_formcreator_form"'
       . ' action="' . $formUrl . '"'
       . ' id="plugin_formcreator_form"'
+      . ' data-submit-once="true"'
       . '>';
 
       $form = $this->getForm();
 
       // Edit mode for validator
       $editMode = !isset($options['edit']) ? false : ($options['edit'] != '0');
+      // Can the current user edit the answers ?
+      $canEdit = $this->fields['status'] == self::STATUS_REFUSED
+         && Session::getLoginUserID() == $this->fields['requester_id']
+         || $this->fields['status'] == self::STATUS_WAITING
+         && $this->canValidate() && $editMode;
 
       // form title
       if (version_compare(GLPI_VERSION, '10.0.3') < 0) {
@@ -699,7 +705,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   }
                }
             }
-            echo $question->getRenderedHtml($domain, $editMode, $this, $visibility[$question->getType()][$question->getID()]);
+            echo $question->getRenderedHtml($domain, $canEdit, $this, $visibility[$question->getType()][$question->getID()]);
             $lastQuestion = $question;
          }
          echo '</div>';
@@ -1368,6 +1374,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $content = Sanitizer::sanitize($content);
       }
 
+      $content = $this->parseExtraTags($content, $target, $richText);
+
       $hook_data = Plugin::doHookFunction('formcreator_parse_extra_tags', [
          'formanswer' => $this,
          'content'    => $content,
@@ -1376,6 +1384,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       ]);
 
       return $hook_data['content'];
+   }
+
+   protected function parseExtraTags(string $content, PluginFormcreatorTargetInterface $target = null, $richText = false): string {
+      $content = str_replace('##answer_id##', $this->getField('id'), $content);
+
+      return $content;
    }
 
    /**
@@ -1582,7 +1596,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'items_id'           => $ticketId,
          'itemtype'           => Ticket::class,
          'name'               => $issueName,
-         'status'             => $ticket->fields['status'],
+         'status'             => PluginFormcreatorCommon::getTicketStatusForIssue($ticket),
          'date_creation'      => $ticket->fields['date'],
          'date_mod'           => $ticket->fields['date_mod'],
          'entities_id'        => $ticket->fields['entities_id'],
@@ -1702,7 +1716,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /**
     * get all fields from a form
     *
-    * @param int $formId ID of the form where come the fileds to load
+    * @param int $formId ID of the form where come the fields to load
     * @return PluginFormcreatorAbstractField[]
     */
    public function getQuestionFields($formId) : array {
@@ -1937,76 +1951,82 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    /**
-    * Get the lowest status among the associated tickets
+    * Get the most appropriate status among the associated tickets
+    *
+    * Conversion matrix between the temporary status of the form answer
+    * and the status of the ticket under process. The matrix below is subjective
+    * and is designed in a way to give priority to requester's action.
+    *
+    * The function traverses all generated tickets and computes a temporary status
+    * fron the previous temporary status and the ticket being processed.
+    * When all tickets are processed, the final status is known.
+    *
+    *
+    *                      Status of the ticket under process
+    *                +----------+-- -------+---------+---------+--------+--------+
+    *                | INCOMING | ASSIGNED | PLANNED | WAITING | SOLVED | CLOSED
+    *     + ---------+----------+----------+---------+---------+--------+--------+
+    *     | (null)   | INCOMING   ASSIGNED   PLANNED   WAITING   SOLVED   CLOSED
+    *   S | INCOMING | INCOMING   ASSIGNED   PLANNED   WAITING  INCOMING  INCOMING
+    * T t | ASSIGNED | ASSIGNED   ASSIGNED   PLANNED   WAITING  ASSIGNED  ASSIGNED
+    * e a | PLANNED  | PLANNED    PLANNED    PLANNED   WAITING  PLANNED   PLANNED
+    * m t | WAITING  | WAITING    WAITING    WAITING   WAITING  WAITING   WAITING
+    * p u | SOLVED   | INCOMING   ASSIGNED   PLANNED   WAITING   SOLVED   SOLVED
+    *   s | CLOSED   | INCOMING   ASSIGNED   PLANNED   WAITING   SOLVED   CLOSED
+    *
+    * T = status picked from Ticket
+    * V = status picked from Validation
     *
     * @return null|int
     */
    public function getAggregatedStatus(): ?int {
       $generatedTargets = $this->getGeneratedTargets([PluginFormcreatorTargetTicket::getType()]);
-
-      $isWaiting = false;
-      $isAssigned = false;
-      $isProcessing = false;
-
-      // Find the minimal status of the first generated tickets in the array (deleted items excluded)
-      $generatedTarget = array_shift($generatedTargets);
-      while ($generatedTarget!== null && $generatedTarget->fields['is_deleted']) {
-         $generatedTarget = array_shift($generatedTargets);
-      }
-      if ($generatedTarget === null) {
+      if (count($generatedTargets) === 0) {
          // No target found, nothing to do
          return null;
       }
 
-      // Find status of the first ticket in the array
-      $aggregatedStatus = PluginFormcreatorCommon::getTicketStatusForIssue($generatedTarget);
-      if ($aggregatedStatus == CommonITILObject::ASSIGNED) {
-         $isAssigned = true;
-      }
-      if ($aggregatedStatus == CommonITILObject::PLANNED) {
-         $isProcessing = true;
-      }
-      if ($aggregatedStatus == CommonITILObject::WAITING) {
-         $isWaiting = true;
-      }
+      $aggregatedStatus = null;
 
-      // Traverse all other tickets and set the minimal status
+      // Traverse all tickets and set the minimal status
       foreach ($generatedTargets as $generatedTarget) {
          /** @var Ticket $generatedTarget  */
          if ($generatedTarget::getType() != Ticket::getType()) {
             continue;
          }
          if ($generatedTarget->isDeleted()) {
+            // Ignore deleted tickets
             continue;
          }
          $ticketStatus = PluginFormcreatorCommon::getTicketStatusForIssue($generatedTarget);
          if ($ticketStatus >= PluginFormcreatorFormAnswer::STATUS_WAITING) {
+            // Ignore tickets refused or pending for validation
+            // getTicketStatusForIssue() does not returns STATUS_ACCEPTED
             continue;
          }
 
-         if ($ticketStatus == CommonITILObject::ASSIGNED) {
-            $isAssigned = true;
+         if ($ticketStatus == CommonITILObject::WAITING) {
+            $aggregatedStatus = CommonITILObject::WAITING;
+            break;
          }
          if ($ticketStatus == CommonITILObject::PLANNED) {
-            $isProcessing = true;
+            $aggregatedStatus = CommonITILObject::PLANNED;
+            continue;
          }
-         if ($ticketStatus == CommonITILObject::WAITING) {
-            $isWaiting = true;
+         if ($ticketStatus == CommonITILObject::ASSIGNED) {
+            $aggregatedStatus = CommonITILObject::ASSIGNED;
+            continue;
          }
-         $aggregatedStatus = min($aggregatedStatus, $ticketStatus);
-      }
+         if ($ticketStatus == CommonITILObject::INCOMING) {
+            $aggregatedStatus = CommonITILObject::INCOMING;
+            continue;
+         }
+         if ($aggregatedStatus === null) {
+            $aggregatedStatus = $ticketStatus;
+            continue;
+         }
 
-      // Assigned status takes precedence
-      if ($isAssigned) {
-         $aggregatedStatus = CommonITILObject::ASSIGNED;
-      }
-      // Planned status takes precedence
-      if ($isProcessing) {
-         $aggregatedStatus = CommonITILObject::PLANNED;
-      }
-      // Waiting status takes precedence to inform the requester his feedback is required
-      if ($isWaiting) {
-         $aggregatedStatus = CommonITILObject::WAITING;
+         $aggregatedStatus = min($aggregatedStatus, $ticketStatus);
       }
 
       return $aggregatedStatus;

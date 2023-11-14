@@ -60,9 +60,10 @@ use SLM;
 use OLA;
 use QueryExpression;
 use QuerySubQuery;
-use QueryUnion;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
+use Plugin;
+
 class DropdownField extends PluginFormcreatorAbstractField
 {
    const ENTITY_RESTRICT_USER = 1;
@@ -355,11 +356,21 @@ class DropdownField extends PluginFormcreatorAbstractField
          $item = new $itemtype();
          $value = '';
          if ($item->getFromDB($this->value)) {
-            $column = 'name';
+            $value = $item->fields['name'];
             if ($item instanceof CommonTreeDropdown) {
-               $column = 'completename';
+               $value = $item->fields['completename'];
+            } else {
+               /** @var CommonDBTM $item */
+               switch ($item->getType()) {
+                  case User::class:
+                     $value = (new DbUtils())->getUserName($item->getID());
+                     break;
+                  case Document::class:
+                     /** @var Document $item */
+                     $value = $item->getDownloadLink($this->form_answer);
+                     break;
+               }
             }
-            $value = $item->fields[$column];
          }
 
          return $value;
@@ -408,7 +419,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $DbUtil = new DbUtils();
       $itemtype = $this->getSubItemtype();
       if ($itemtype == User::class) {
-         $value = $DbUtil->getUserName($this->value);
+         $value = $DbUtil->getUserName($this->value, 0, true);
       } else {
          $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($itemtype), $this->value);
       }
@@ -419,7 +430,12 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function getDocumentsForTarget(): array {
-      return [];
+      $itemtype = $this->getSubItemtype();
+      if ($itemtype !== Document::class) {
+         return [];
+      }
+
+      return [$this->value]; // Array of a single document ID
    }
 
    public static function getName(): string {
@@ -586,7 +602,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function equals($value): bool {
-      $value = html_entity_decode($value);
+      $value = html_entity_decode($value ?? '');
       $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if ($dropdown->isNewId($this->value)) {
@@ -608,7 +624,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function greaterThan($value): bool {
-      $value = html_entity_decode($value);
+      $value = html_entity_decode($value ?? '');
       $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if (!$dropdown->getFromDB($this->value)) {
@@ -627,7 +643,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function regex($value): bool {
-      $value = html_entity_decode($value);
+      $value = html_entity_decode($value ?? '');
       $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if (!$dropdown->getFromDB($this->value)) {
@@ -713,7 +729,12 @@ class DropdownField extends PluginFormcreatorAbstractField
       // We need english locale to search searchOptions by name
       $oldLocale = $TRANSLATE->getLocale();
       $TRANSLATE->setLocale("en_GB");
+      $_SESSION['glpilanguage'] = "en_GB";
+      if ($plug = isPluginItemType($itemtype)) {
+         Plugin::loadLang(strtolower($plug['plugin']), "en_GB");
+      }
 
+      /** @var CommonDBTM $item  */
       $item = new $itemtype;
       $item->getFromDB($answer);
 
@@ -731,6 +752,7 @@ class DropdownField extends PluginFormcreatorAbstractField
          if (count($searchOption) == 0) {
             trigger_error("No search option found for $property", E_USER_WARNING);
             $TRANSLATE->setLocale($oldLocale);
+            $_SESSION['glpilanguage'] = $oldLocale;
             return $content;
          }
 
@@ -774,6 +796,11 @@ class DropdownField extends PluginFormcreatorAbstractField
       }
       // Put the old locales on succes or if an expection was thrown
       $TRANSLATE->setLocale($oldLocale);
+      $_SESSION['glpilanguage'] = $oldLocale;
+      if ($plug = isPluginItemType($itemtype)) {
+         Plugin::loadLang(strtolower($plug['plugin']), $oldLocale);
+      }
+
       return $content;
    }
 

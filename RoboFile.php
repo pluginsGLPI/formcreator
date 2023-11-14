@@ -203,10 +203,25 @@ class RoboFile extends RoboFilePlugin
       }
 
       // Add composer dependencies
-      $this->_exec("composer install --no-dev --working-dir='$archiveWorkdir/$pluginName'");
+      $success = $this->taskExec('composer')
+         ->arg('install')
+         ->arg('--no-dev')
+         ->arg("--working-dir=$archiveWorkdir/$pluginName")
+         ->run();
+      if ($success->getExitCode() != 0) {
+         throw new RuntimeException("failed to generate PHP resources");
+      }
 
       // Add JS dependencies
-      $this->_exec("yarn --cwd '$archiveWorkdir/$pluginName' install --prod");
+      $success = $this->taskExec('yarn')
+         ->arg('--cwd')
+         ->arg("$archiveWorkdir/$pluginName")
+         ->arg('install')
+         ->arg('--prod')
+         ->run();
+      if ($success->getExitCode() != 0) {
+         throw new RuntimeException("failed to generate JS resources");
+      }
 
       // Create the final archive
       $this->taskPack($archiveFile)

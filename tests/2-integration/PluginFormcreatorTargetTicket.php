@@ -31,6 +31,17 @@
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Entity;
+use Group;
+use RuleAction;
+use User;
+use Rule;
+use RuleCriteria;
+use RuleTicket;
+use Session;
+use Group_Ticket;
+use Group_User;
+use CommonITILObject;
+use Ticket;
 
 /**
  * @engine inline
@@ -171,5 +182,72 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             throw new \RuntimeException('Unexpected ticket');
          }
       }
+   }
+
+   public function testGenerateTicketAddAssignedByRule() {
+      $this->isolateInEntity('glpi', 'glpi');
+      $currentEntity = Session::getActiveEntity();
+      // Add a group and a user to the group
+      $group = $this->getGlpiCoreItem(Group::class, [
+          'name' => 'test group',
+      ]);
+      $login = $this->getUniqueString();
+      $this->getGlpiCoreItem(User::class, [
+         'name'                  => $login,
+         'password'              => 'superadmin',
+         'password2'             => 'superadmin',
+         '_profiles_id'          => '4', // super admin profile
+         '_entities_id'          => $currentEntity,
+         '_is_recursive'         => 1,
+      ]);
+      $this->getGlpiCoreItem(Group_User::class, [
+          'group' => $group->getID(),
+          'users_id' => User::getIdByName($login),
+      ]);
+
+      $rule = $this->getGlpiCoreItem(Rule::class, [
+          'sub_type'  => RuleTicket::class,
+          'name'      => 'add technicians',
+          'match'     => 'AND',
+          'is_active' => 1,
+          'condition' => 1,
+          'entities_id' => $currentEntity,
+      ]);
+      $ruleCriteria = $this->getGlpiCoreItem(RuleCriteria::class, [
+          $rule::getForeignKeyField() => $rule->getID(),
+          'criteria'                  => 'entities_id',
+          'condition'                 => 0,
+          'pattern'                   => $currentEntity,
+      ]);
+      $ruleAction = $this->getGlpiCoreItem(RuleAction::class, [
+          $rule::getForeignKeyField() => $rule->getID(),
+          'action_type'               => 'assign',
+          'field'                     => '_groups_id_assign',
+          'value'                     => $group->getID(),
+      ]);
+
+      $form = $this->getForm([
+          'name' => 'test support 29602',
+      ]);
+
+      $this->getTargetTicket([
+          $form::getForeignKeyField() => $form->getID(),
+      ]);
+
+      $formAnswer = $this->getFormAnswer([
+          $form::getForeignKeyField() => $form->getID(),
+      ]);
+
+      $targets = $formAnswer->getGeneratedTargets();
+      $this->array($targets)->hasSize(1);
+      $ticket = array_pop($targets);
+      $this->object($ticket)->isInstanceOf(Ticket::class);
+      $groupTicket = new Group_Ticket();
+      $groupTicket->getFromDBByCrit([
+         'type' => CommonITILObject::ASSIGNED,
+         $ticket::getForeignKeyField() => $ticket->getID(),
+         $group::getForeignKeyField() => $group->getID(),
+      ]);
+      $this->boolean($groupTicket->isNewItem())->isFalse();
    }
 }

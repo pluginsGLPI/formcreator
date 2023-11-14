@@ -73,7 +73,7 @@ class SelectField extends RadiosField
          foreach ($values as $value) {
             if ((trim($value) != '')) {
                $unsanitized = Sanitizer::unsanitize(__($value, $domain));
-               $translatedValues[$unsanitized] = $unsanitized;
+               $translatedValues[$value] = $unsanitized;
             }
          }
 

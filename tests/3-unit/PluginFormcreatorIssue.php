@@ -31,13 +31,18 @@
 
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use Ticket;
 use PluginFormcreatorFormAnswer;
+use PluginFormcreatorTargetTicket;
+use PluginFormcreatorTarget_Actor;
+use CommonITILActor;
 use RuleAction;
 use User;
 use Rule;
 use RuleCriteria;
 use CommonITILObject;
+use Ticket;
+use TicketValidation;
+use PluginFormcreatorForm;
 
 class PluginFormcreatorIssue extends CommonTestCase {
    public function beforeTestMethod($method) {
@@ -55,11 +60,11 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $ticket = $this->getGlpiCoreItem(Ticket::class, [
          'name'    => 'simple ticket',
          'content' => 'foo',
-         'status'  =>  \Ticket::INCOMING,
+         'status'  =>  Ticket::INCOMING,
          '_actors' => [
             'requester' => [
-               0 => ['itemtype' => \User::class,
-                  'items_id' => 2, // glpi
+               0 => ['itemtype' => User::class,
+                  'items_id' => User::getIdByName('glpi'), // glpi
                   'use_notification' => 1,
                   'alternative_email' => '',
                ]
@@ -72,11 +77,11 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $ticket2 = $this->getGlpiCoreItem(Ticket::class, [
          'name' => '',
          'content' => 'foo',
-         'status'  =>  \Ticket::INCOMING,
+         'status'  =>  Ticket::INCOMING,
          '_actors' => [
             'requester' => [
-               0 => ['itemtype' => \User::class,
-                  'items_id' => 2, // glpi
+               0 => ['itemtype' => User::class,
+                  'items_id' => User::getIdByName('glpi'), // glpi
                   'use_notification' => 1,
                   'alternative_email' => '',
                ]
@@ -94,7 +99,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'simpleTicket' => [
             'item' => $ticket,
             'expected' => [
-               'itemtype'      => \Ticket::getType(),
+               'itemtype'      => Ticket::getType(),
                'items_id'      => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $ticket->fields['name'],
@@ -107,7 +112,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'simpleTicket_without_name' => [
             'item' => $ticket2,
             'expected' => [
-               'itemtype'  => \Ticket::getType(),
+               'itemtype'  => Ticket::getType(),
                'items_id'   => $ticket2->getID(),
                'display_id'    => 't_' . $ticket2->getID(),
                'name'          => '(' . $ticket2->getID() . ')',
@@ -124,7 +129,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $form = $this->getForm([
          'formanswer_name' => $this->getUniqueString(),
       ]);
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -135,7 +140,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'simpleFormanswers' => [
             'item' => $formAnswer,
             'expected' => [
-               'itemtype'      => \PluginFormcreatorFormAnswer::getType(),
+               'itemtype'      => PluginFormcreatorFormAnswer::getType(),
                'items_id'      => $formAnswer->getID(),
                'display_id'    => 'f_' . $formAnswer->getID(),
                'name'          => $formAnswer->fields['name'],
@@ -151,21 +156,21 @@ class PluginFormcreatorIssue extends CommonTestCase {
    public function providerGetSyncIssuesRequest_formAnswerWithOneTicket() {
       // case 1
       $form = $this->getForm();
-      $targetTicket1 = new \PluginFormcreatorTargetTicket();
+      $targetTicket1 = new PluginFormcreatorTargetTicket();
       $targetTicket1->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'name' => 'foo',
       ]);
       $this->boolean($targetTicket1->isNewItem())->isFalse();
 
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
       $this->boolean($formAnswer->isNewItem())->isFalse();
       $formAnswer->getFromDB($formAnswer->getID());
       $ticket = array_shift($formAnswer->targetList);
-      $this->object($ticket)->isInstanceOf(\Ticket::getType());
+      $this->object($ticket)->isInstanceOf(Ticket::getType());
 
       // case 2
       // Add business rules to add 2 validators
@@ -194,7 +199,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'field'                     => 'users_id_validate',
          'value'                     => User::getIdByName('normal'),
       ]);
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -205,13 +210,13 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $this->boolean($formAnswer->isNewItem())->isFalse();
       $formAnswer->getFromDB($formAnswer->getID());
       $ticket2 = array_shift($formAnswer->targetList);
-      $this->object($ticket)->isInstanceOf(\Ticket::getType());
+      $this->object($ticket2)->isInstanceOf(Ticket::getType());
 
       return [
          'formAnswerWithOneTicket' => [
             'item' => $ticket,
             'expected' => [
-               'itemtype'      => \Ticket::getType(),
+               'itemtype'      => Ticket::getType(),
                'items_id'      => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $ticket->fields['name'],
@@ -224,7 +229,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'formAnswer With One Ticket Having several validators' => [
             'item' => $ticket2,
             'expected' => [
-               'itemtype'      => \Ticket::getType(),
+               'itemtype'      => Ticket::getType(),
                'items_id'      => $ticket2->getID(),
                'display_id'    => 't_' . $ticket2->getID(),
                'name'          => $ticket2->fields['name'],
@@ -239,20 +244,20 @@ class PluginFormcreatorIssue extends CommonTestCase {
 
    public function providerGetSyncIssuesRequest_formAnswerWithSeveralTickets() {
       $form = $this->getForm();
-      $targetTicket1 = new \PluginFormcreatorTargetTicket();
+      $targetTicket1 = new PluginFormcreatorTargetTicket();
       $targetTicket1->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'name' => 'foo',
       ]);
       $this->boolean($targetTicket1->isNewItem())->isFalse();
-      $targetTicket2 = new \PluginFormcreatorTargetTicket();
+      $targetTicket2 = new PluginFormcreatorTargetTicket();
       $targetTicket2->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'name' => 'bar',
       ]);
       $this->boolean($targetTicket2->isNewItem())->isFalse();
 
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -262,7 +267,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'formAnswerWithSeveralTickets' => [
             'item' => $formAnswer,
             'expected' => [
-               'itemtype'      => \PluginFormcreatorFormAnswer::getType(),
+               'itemtype'      => PluginFormcreatorFormAnswer::getType(),
                'items_id'      => $formAnswer->getID(),
                'display_id'    => 'f_' . $formAnswer->getID(),
                'name'          => $formAnswer->fields['name'],
@@ -275,52 +280,16 @@ class PluginFormcreatorIssue extends CommonTestCase {
       ];
    }
 
-   public function providerGetSyncIssuesRequest_formAnswerWithOneTickets() {
-      $form = $this->getForm();
-      $targetTicket1 = new \PluginFormcreatorTargetTicket();
-      $targetTicket1->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'name' => 'foo',
-      ]);
-      $this->boolean($targetTicket1->isNewItem())->isFalse();
-
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $formAnswer->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
-      $this->boolean($formAnswer->isNewItem())->isFalse();
-      $formAnswer->getFromDB($formAnswer->getID());
-
-      /** @var \Ticket */
-      $ticket = array_pop($formAnswer->targetList);
-      $this->object($ticket)->isInstanceOf(\Ticket::class);
-      return [
-         'formAnswerWithOneTickets' => [
-            'item' => $formAnswer,
-            'expected' => [
-               'itemtype'      => \PluginFormcreatorFormAnswer::getType(),
-               'items_id'      => $ticket->getID(),
-               'display_id'    => 't_' . $ticket->getID(),
-               'name'          => $formAnswer->fields['name'],
-               'status'        => $formAnswer->fields['status'],
-               'requester_id'  => $formAnswer->fields['requester_id'],
-               'date_creation' => $formAnswer->fields['request_date'],
-               'date_mod'      => $formAnswer->fields['request_date'],
-            ],
-         ],
-      ];
-   }
-
    public function providerGetSyncIssuesRequest_formanswerUnderValidation() {
       $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users' => [4] // tech
+         'validation_required' => PluginFormcreatorForm::VALIDATION_USER,
+         '_validator_users' => [User::getIdByName('tech')] // tech
       ]);
 
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => 4 // Tech
+         'formcreator_validator'       => User::getIdByName('tech') // Tech
       ]);
       $this->boolean($formAnswer->isNewItem())->isFalse();
       $formAnswer->getFromDB($formAnswer->getID());
@@ -329,7 +298,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'formanswerUnderValidation' => [
             'item' => $formAnswer,
             'expected' => [
-               'itemtype'            => \PluginFormcreatorFormAnswer::getType(),
+               'itemtype'            => PluginFormcreatorFormAnswer::getType(),
                'items_id'            => $formAnswer->getID(),
                'display_id'          => 'f_' . $formAnswer->getID(),
                'name'                => $formAnswer->fields['name'],
@@ -346,14 +315,14 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $ticket = $this->getGlpiCoreItem(Ticket::class, [
          'name'    => 'a ticket',
          'content' => 'foo',
-         'status'  =>  \Ticket::INCOMING,
+         'status'  =>  Ticket::INCOMING,
          '_add_validation' => '0',
          'validatortype' => User::class,
-         'users_id_validate' => [4], // Tech
+         'users_id_validate' => [User::getIdByName('tech')], // Tech
          '_actors' => [
             'requester' => [
-               0 => ['itemtype' => \User::class,
-                  'items_id' => 2, // glpi
+               0 => ['itemtype' => User::class,
+                  'items_id' => User::getIdByName('glpi'), // glpi
                   'use_notification' => 1,
                   'alternative_email' => '',
                ]
@@ -367,11 +336,11 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'ticketUnderValidation' => [
             'item' => $ticket,
             'expected' => [
-               'itemtype'  => \Ticket::getType(),
+               'itemtype'  => Ticket::getType(),
                'items_id'      => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $ticket->fields['name'],
-               'status'        => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'status'        => PluginFormcreatorFormAnswer::STATUS_WAITING,
                'requester_id'  => $ticket->fields['users_id_recipient'],
                'date_creation' => $ticket->fields['date'],
                'date_mod'      => $ticket->fields['date_mod'],
@@ -384,14 +353,14 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $ticket = $this->getGlpiCoreItem(Ticket::class, [
          'name'    => 'a ticket',
          'content' => 'foo',
-         'status'  =>  \Ticket::INCOMING,
+         'status'  =>  Ticket::INCOMING,
          '_add_validation' => '0',
          'validatortype' => User::class,
          'users_id_validate' => [4], // Tech
          '_actors' => [
             'requester' => [
-               0 => ['itemtype' => \User::class,
-                  'items_id' => 2, // glpi
+               0 => ['itemtype' => User::class,
+                  'items_id' => User::getIdByName('glpi'), // glpi
                   'use_notification' => 1,
                   'alternative_email' => '',
                ]
@@ -402,26 +371,26 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $ticket->getFromDB($ticket->getID());
 
       // Validate the ticket
-      $ticketValidation = new \TicketValidation();
+      $ticketValidation = new TicketValidation();
       $ticketValidation->getFromDBByCrit([
          'tickets_id' => $ticket->getID(),
       ]);
       $this->boolean($ticketValidation->isNewItem())->isFalse();
       $ticketValidation->update([
          'id' => $ticketValidation->getID(),
-         'status' => \TicketValidation::ACCEPTED
+         'status' => TicketValidation::ACCEPTED
       ]);
 
       $ticket2 = $this->getGlpiCoreItem(Ticket::class, [
          'name'    => 'a ticket',
          'content' => 'foo',
-         'status'  =>  \Ticket::INCOMING,
+         'status'  =>  Ticket::INCOMING,
          '_add_validation' => '0',
          'validatortype' => User::class,
          'users_id_validate' => [User::getIdByName('tech'), User::getIdByName('normal')], // Tech
          '_actors' => [
             'requester' => [
-               0 => ['itemtype' => \User::class,
+               0 => ['itemtype' => User::class,
                   'items_id' => User::getIdByName('glpi'), // glpi
                   'use_notification' => 1,
                   'alternative_email' => '',
@@ -436,11 +405,11 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'validatedTicket' => [
             'item' => $ticket,
             'expected' => [
-               'itemtype'      => \Ticket::getType(),
+               'itemtype'      => Ticket::getType(),
                'items_id'      => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $ticket->fields['name'],
-               'status'        => \Ticket::INCOMING,
+               'status'        => Ticket::INCOMING,
                'requester_id'  => $ticket->fields['users_id_recipient'],
                'date_creation' => $ticket->fields['date'],
                'date_mod'      => $ticket->fields['date_mod'],
@@ -449,7 +418,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'ticket with multiple validators' => [
             'item' => $ticket2,
             'expected' => [
-               'itemtype'      => \Ticket::getType(),
+               'itemtype'      => Ticket::getType(),
                'items_id'      => $ticket2->getID(),
                'display_id'    => 't_' . $ticket2->getID(),
                'name'          => $ticket2->fields['name'],
@@ -464,35 +433,35 @@ class PluginFormcreatorIssue extends CommonTestCase {
 
    public function providerGetSyncIssuesRequest_FormAnswerWithSeveralRequesters() {
       $form = $this->getForm();
-      $targetTicket1 = new \PluginFormcreatorTargetTicket();
+      $targetTicket1 = new PluginFormcreatorTargetTicket();
       $targetTicket1->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'name' => 'foo',
       ]);
       $this->boolean($targetTicket1->isNewItem())->isFalse();
 
-      $actor1 = new \PluginFormcreatorTarget_Actor();
+      $actor1 = new PluginFormcreatorTarget_Actor();
       $actor1->add([
          'itemtype'         => $targetTicket1->getType(),
          'items_id'         => $targetTicket1->getID(),
-         'actor_role'       => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
-         'actor_type'       => \CommonITILActor::REQUESTER,
+         'actor_role'       => PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
+         'actor_type'       => CommonITILActor::REQUESTER,
          'actor_value'      => 3,
          'use_notification' => '1',
       ]);
       $this->boolean($actor1->isNewItem())->isFalse();
-      $actor2 = new \PluginFormcreatorTarget_Actor();
+      $actor2 = new PluginFormcreatorTarget_Actor();
       $actor2->add([
          'itemtype'         => $targetTicket1->getType(),
          'items_id'         => $targetTicket1->getID(),
-         'actor_role'       => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
-         'actor_type'       => \CommonITILActor::REQUESTER,
+         'actor_role'       => PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
+         'actor_type'       => CommonITILActor::REQUESTER,
          'actor_value'      => 5,
          'use_notification' => '1',
       ]);
       $this->boolean($actor2->isNewItem())->isFalse();
 
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -500,12 +469,12 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $formAnswer->getFromDB($formAnswer->getID());
 
       $ticket = array_shift($formAnswer->targetList);
-      $this->object($ticket)->isInstanceOf(\Ticket::getType());
+      $this->object($ticket)->isInstanceOf(Ticket::getType());
       return [
          'formAnswerWithSeveralRequesters' => [
             'item' => $ticket,
             'expected' => [
-               'itemtype'      => \Ticket::getType(),
+               'itemtype'      => Ticket::getType(),
                'items_id'      => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $ticket->fields['name'],
@@ -559,18 +528,18 @@ class PluginFormcreatorIssue extends CommonTestCase {
       }
 
       // Test there are no other rows matching the form answer or ticket
-      if ($item->getType() == \Ticket::class) {
+      if ($item->getType() == Ticket::class) {
          $unwantedItems = $DB->request([
             'SELECT' => ['items_id'],
             'FROM' => \Item_Ticket::getTable(),
             'WHERE' => [
-               'itemtype'   => \PluginFormcreatorFormAnswer::getType(),
+               'itemtype'   => PluginFormcreatorFormAnswer::getType(),
                'tickets_id' => $item->getID(),
             ],
          ]);
          if (count($unwantedItems) > 0) {
             $unwantedWhere = [
-               'itemtype' => \PluginFormcreatorFormAnswer::getType(),
+               'itemtype' => PluginFormcreatorFormAnswer::getType(),
             ];
             foreach ($unwantedItems as $row) {
                $unwantedWhere['items_id'][] = $row['items_id'];
@@ -583,18 +552,18 @@ class PluginFormcreatorIssue extends CommonTestCase {
             $this->integer(count($result))->isEqualTo(0);
          }
       }
-      if ($item->getType() == \PluginFormcreatorFormAnswer::class) {
+      if ($item->getType() == PluginFormcreatorFormAnswer::class) {
          $unwantedItems = $DB->request([
             'SELECT' => ['tickets_id'],
             'FROM' => \Item_Ticket::getTable(),
             'WHERE' => [
-               'itemtype'   => \PluginFormcreatorFormAnswer::getType(),
+               'itemtype'   => PluginFormcreatorFormAnswer::getType(),
                'items_id' => $item->getID(),
             ],
          ]);
          if (count($unwantedItems) > 0) {
             $unwantedWhere = [
-               'itemtype' => \Ticket::getType(),
+               'itemtype' => Ticket::getType(),
             ];
             foreach ($unwantedItems as $row) {
                $unwantedWhere['items_id'][] = $row['tickets_id'];
@@ -619,7 +588,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
 
       $issue = new \PluginFormcreatorISsue();
       $issue->getFromDBByCrit([
-         'itemtype'  => \Ticket::getType(),
+         'itemtype'  => Ticket::getType(),
          'items_id'  => $ticket->getID(),
       ]);
       $this->boolean($issue->isNewItem())->isFalse();
@@ -630,12 +599,12 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $this->login('glpi', 'glpi'); // Needed to update the current datetime in session
       $followup = new \ITILFollowup();
       $followup->add([
-         'itemtype' => \Ticket::getType(),
+         'itemtype' => Ticket::getType(),
          'items_id' => $ticket->getID(),
          'content' => 'bar'
       ]);
       $this->boolean($followup->isNewItem())->isFalse();
-      $ticket = new \Ticket();
+      $ticket = new Ticket();
       $ticket->getFromDB($issue->fields['items_id']);
       $this->boolean($ticket->isNewItem())->isFalse();
       $this->string($ticket->fields['date_mod'])->isNotEqualTo($creationDate);
@@ -643,7 +612,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
 
       $issue = new \PluginFormcreatorISsue();
       $issue->getFromDBByCrit([
-         'itemtype' => \Ticket::getType(),
+         'itemtype' => Ticket::getType(),
          'items_id' => $ticket->getID(),
       ]);
       $this->string($issue->fields['date_creation'])->isEqualTo($creationDate);

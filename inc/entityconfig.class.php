@@ -81,7 +81,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       $tabNames = [];
       if (!$withtemplate) {
          if ($item->getType() == 'Entity') {
-            $tabNames[1] = _n('Form', 'Forms', 2, 'formcreator');
+            $tabNames[1] = PluginFormcreatorForm::getTypeName(Session::getPluralNumber());
          }
       }
       return $tabNames;
