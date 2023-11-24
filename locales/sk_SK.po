@@ -4,8 +4,9 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Miroslav Hlohovsky, 2022
 # Radoslav Koren, 2023
+# Miroslav Hlohovsky, 2023
+# feonsu <feonsu@gmail.com>, 2023
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-31 16:21+0200\n"
 "PO-Revision-Date: 2022-06-15 12:10+0000\n"
-"Last-Translator: Radoslav Koren, 2023\n"
+"Last-Translator: feonsu <feonsu@gmail.com>, 2023\n"
 "Language-Team: Slovak (Slovakia) (https://app.transifex.com/teclib/teams/28042/sk_SK/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -659,10 +660,10 @@ msgstr[3] ""
 #: standard:48
 msgid "Requester"
 msgid_plural "Requesters"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Žiadateľ"
+msgstr[1] "Žiadatelia"
+msgstr[2] "Žiadatelia"
+msgstr[3] "Žiadatelia"
 
 #: inc/issue.class.php:619 inc/formanswer.class.php:258
 msgid "Form approver"
@@ -831,10 +832,10 @@ msgstr "Farba pozadia"
 #: entrée standard:47
 msgid "Form"
 msgid_plural "Forms"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Formulár"
+msgstr[1] "Formuláre"
+msgstr[2] "Formuláre"
+msgstr[3] "Formuláre"
 
 #: inc/notificationtargetformanswer.class.php:43
 msgid "The form as been saved"
@@ -1778,10 +1779,10 @@ msgstr[3] ""
 #: inc/section.class.php:71 entrée standard:53 standard:44
 msgid "Section"
 msgid_plural "Sections"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Sekcia"
+msgstr[1] "Sekcie"
+msgstr[2] "Sekcie"
+msgstr[3] "Sekcie"
 
 #: inc/section.class.php:123 inc/section.class.php:166
 #: inc/question.class.php:348

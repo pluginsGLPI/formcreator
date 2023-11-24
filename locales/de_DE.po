@@ -13,6 +13,7 @@
 # Robert Langenkamp <teacas@web.de>, 2022
 # Florian Ried <florian.ried@kleiner.de>, 2022
 # Michael Schieferer, 2023
+# iDazai, 2023
 # 
 #, fuzzy
 msgid ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-31 16:21+0200\n"
 "PO-Revision-Date: 2022-06-15 12:10+0000\n"
-"Last-Translator: Michael Schieferer, 2023\n"
+"Last-Translator: iDazai, 2023\n"
 "Language-Team: German (Germany) (https://app.transifex.com/teclib/teams/28042/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -452,12 +453,12 @@ msgstr "Checkbox"
 #: inc/field/checkboxesfield.class.php:227
 #, php-format
 msgid "The following question needs at least %d answers: %s"
-msgstr ""
+msgstr "Die folgende Frage braucht mindestens %d Antworten: %s"
 
 #: inc/field/checkboxesfield.class.php:233
 #, php-format
 msgid "The following question does not accept more than %d answers: %s"
-msgstr ""
+msgstr "Die folgende Frage akzeptiert nicht mehr als %d Antworten: %s"
 
 #: inc/field/checkboxesfield.class.php:305
 msgid "Range min"
@@ -833,7 +834,7 @@ msgstr "Das Formular wurde gelöscht"
 
 #: inc/notificationtargetformanswer.class.php:74
 msgid "Form ID"
-msgstr ""
+msgstr "Formular ID"
 
 #: inc/notificationtargetformanswer.class.php:75
 #: inc/notificationtargetformanswer.class.php:95
@@ -860,7 +861,7 @@ msgstr "Formular Rückantworten"
 
 #: inc/notificationtargetformanswer.class.php:80
 msgid "Validation comment"
-msgstr ""
+msgstr "Genehmigungskommentar"
 
 #: inc/notificationtargetformanswer.class.php:81
 #: inc/notificationtargetformanswer.class.php:101
@@ -869,7 +870,7 @@ msgstr "Bestätigungslink"
 
 #: inc/notificationtargetformanswer.class.php:82
 msgid "Request ID"
-msgstr ""
+msgstr "Anfragen ID"
 
 #: inc/notificationtargetformanswer.class.php:94
 msgid "Form #"
@@ -1038,6 +1039,8 @@ msgid ""
 "An internal error occured when verifying your answers. Please report it to "
 "your administrator."
 msgstr ""
+"Beim Überprüfen Ihrer Antworten ist ein interner Fehler aufgetreten. Bitte "
+"melden Sie dies Ihrem Administrator."
 
 #: inc/formanswer.class.php:933
 msgid "You are not the validator of these answers"
@@ -1096,7 +1099,7 @@ msgstr "Meine Hilfsanfragen"
 
 #: inc/common.class.php:791
 msgid "Consult reminders"
-msgstr ""
+msgstr "Erinnerungen einsehen"
 
 #: inc/common.class.php:811
 msgid "Consult feeds"
@@ -1126,15 +1129,15 @@ msgstr[1] "Übersetzungen"
 
 #: inc/form_language.class.php:119
 msgid "The name cannot be empty."
-msgstr ""
+msgstr "Der Name kann nicht leer sein."
 
 #: inc/form_language.class.php:127
 msgid "The language must be associated to a form."
-msgstr ""
+msgstr "Die Sprache muss einem Formular zugeordnet sein."
 
 #: inc/form_language.class.php:135
 msgid "The specified language is not available."
-msgstr ""
+msgstr "Die gewählte Sprache ist nicht verfügbar."
 
 #: inc/form_language.class.php:265
 msgid "Add a translation"
@@ -1517,7 +1520,7 @@ msgstr "Vorschau"
 
 #: inc/form.class.php:512
 msgid "Form answer properties"
-msgstr ""
+msgstr "Eigenschaften Formularantworten"
 
 #: inc/form.class.php:854
 msgid "What are you looking for?"
@@ -1573,7 +1576,7 @@ msgstr "Zurück"
 #: inc/form.class.php:1526
 #, php-format
 msgid "Form updated: %s"
-msgstr ""
+msgstr "Formular aktualisiert: %s"
 
 #: inc/form.class.php:1636
 msgid "Upload of JSON files not allowed."
@@ -1910,29 +1913,29 @@ msgstr "Gruppen-Antwort"
 
 #: inc/command/cleanticketscommand.class.php:53
 msgid "Searching for invalid items..."
-msgstr ""
+msgstr "Suche nach ungültigen Einträgen..."
 
 #: inc/command/cleanticketscommand.class.php:61
 msgid "Done."
-msgstr ""
+msgstr "Erledigt."
 
 #: inc/command/cleanticketscommand.class.php:135
 msgid "Step 1: double encoded < and > signs."
-msgstr ""
+msgstr "Schritt 1: doppelt kodierte < und > Zeichen."
 
 #: inc/command/cleanticketscommand.class.php:146
 #: inc/command/cleanticketscommand.class.php:196
 #: inc/command/cleanticketscommand.class.php:260
 msgid "No invalid items found."
-msgstr ""
+msgstr "Keine ungültigen Einträge gefunden."
 
 #: inc/command/cleanticketscommand.class.php:187
 msgid "Step 2: literal BR tag."
-msgstr ""
+msgstr "Schritt 2: tatsächliches BR-tag."
 
 #: inc/command/cleanticketscommand.class.php:251
 msgid "Step 3: litteral > sign."
-msgstr ""
+msgstr "Schritt 3: tatsächliches > Zeichen."
 
 #: inc/filter/itilcategoryfilter.class.php:52
 #: inc/filter/itilcategoryfilter.class.php:54
@@ -2103,7 +2106,7 @@ msgstr "Keine weiteren Texte zum Übersetzen"
 
 #: inc/translation.class.php:164
 msgid "Internal error: translatable string not found."
-msgstr ""
+msgstr "Interner Fehler: Übersetzbarer String nicht gefunden."
 
 #: inc/translation.class.php:216
 msgid "Language not found."
@@ -2327,6 +2330,8 @@ msgid ""
 "The database schema is not consistent with the previous version of "
 "Formcreator %s. To see the logs run the command %s"
 msgstr ""
+"Das Datenbankschema ist nicht mit der vorherigen Version von Formcreator %s "
+"konsistent. Führe das Kommando %s aus, um die Ereignisse zu sehen."
 
 #: install/install.php:208
 #, php-format
@@ -2361,6 +2366,9 @@ msgid ""
 "The database schema is not consistent with the current version of "
 "Formcreator %s. To see the logs enable the plugin and run the command %s"
 msgstr ""
+"Das Datenbankschema ist nicht mit der vorherigen Version von Formcreator %s "
+"konsistent. Aktiviere das Plugin und führe das Kommando %s aus, um die "
+"Ereignisse zu sehen."
 
 #: install/install.php:305
 msgid "The tables of the plugin passed the schema integrity check."
@@ -2481,7 +2489,7 @@ msgstr "Export"
 #: hook.php:442
 msgctxt "button"
 msgid "Access rights"
-msgstr ""
+msgstr "Zugriffsrechte"
 
 #: hook.php:756
 msgid "Cancel my ticket"
@@ -2551,11 +2559,11 @@ msgstr ""
 
 #: js/scripts.js:1520
 msgid "Are you sure you want to duplicate this target?"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie dieses Ziel duplizieren möchten?"
 
 #: js/scripts.js:1537
 msgid "Are you sure you want to delete this target?"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie dieses Ziel löschen möchten?"
 
 #: entrée standard:57 standard:61 standard:60 standard:59 standard:43
 #: standard:69 standard:52 standard:76
