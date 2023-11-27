@@ -1373,7 +1373,7 @@ var plugin_formcreator = new function() {
             .off('click');
          $(form).removeAttr('data-submitted');
 
-         if (xhr.responseText == '') {
+         if (xhr.responseText.trim() == '') {
             displayAjaxMessageAfterRedirect();
             return;
          }
