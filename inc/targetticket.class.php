@@ -977,8 +977,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
                   'plugin_formcreator_questions_id'   => $this->fields['location_question']
                ]
             ])->current();
-            if (isset($location['answer']) && ctype_digit($location['answer'])) {
+            if (isset($location['answer']) && !Location::isNewID($location['answer'])) {
                $location = $location['answer'];
+            } else {
+               $location = null;
             }
             break;
          case self::LOCATION_RULE_SPECIFIC:
