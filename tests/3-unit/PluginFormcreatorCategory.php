@@ -73,6 +73,9 @@ class PluginFormcreatorCategory extends CommonTestCase {
          'PluginFormcreatorCategory$1' => 'Form categories',
          'Log$1' => "Historical",
       ];
+      $this->executeOnFailure(function () use ($output) {
+         dump($output);
+      });
       $this->array($output)
          ->isEqualTo($expected)
          ->hasSize(count($expected));
