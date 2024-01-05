@@ -194,7 +194,8 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
          case self::ACTOR_TYPE_PERSON:
          case self::ACTOR_TYPE_AUTHORS_SUPERVISOR:
             $user = new User;
-            $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['actor_value']);
+            $field = $idKey == 'id' ? 'id' : 'name';
+            $users_id = plugin_formcreator_getFromDBByField($user, $field, $input['actor_value']);
             if ($users_id === false) {
                throw new ImportFailureException(sprintf(__('Failed to find a user: %1$s'), $input['actor_value']));
             }
@@ -203,7 +204,8 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
 
          case self::ACTOR_TYPE_GROUP:
             $group = new Group;
-            $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['actor_value']);
+            $field = $idKey == 'id' ? 'id' : 'completename';
+            $groups_id = plugin_formcreator_getFromDBByField($group, $field, $input['actor_value']);
             if ($groups_id === false) {
                throw new ImportFailureException(sprintf(__('Failed to find a group: %1$s'), $input['actor_value']));
             }
@@ -212,7 +214,8 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
 
          case self::ACTOR_TYPE_SUPPLIER:
             $supplier = new Supplier;
-            $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['actor_value']);
+            $field = $idKey == 'id' ? 'id' : 'name';
+            $suppliers_id = plugin_formcreator_getFromDBByField($supplier, $field, $input['actor_value']);
             if ($suppliers_id === false) {
                throw new ImportFailureException(sprintf(__('Failed to find a supplier: %1$s'), $input['actor_value']));
             }
