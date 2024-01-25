@@ -66,6 +66,7 @@ class PluginFormcreatorCategory extends CommonTestCase {
    }
 
    public function testDefineTabs() {
+      $this->login('glpi', 'glpi');
       $instance = $this->newTestedInstance();
       $output = $instance->defineTabs();
       $expected = [

@@ -302,6 +302,8 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function testDefineTabs() {
+      $this->login('glpi', 'glpi');
+      $_SESSION['glpishow_count_on_tabs'] = 0;
       $instance = $this->newTestedInstance();
       $output = $instance->defineTabs();
       $expected = [
@@ -314,6 +316,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'PluginFormcreatorForm$3' => "Form answer properties",
          'PluginFormcreatorFormAnswer$1' => "Form answers",
          'PluginFormcreatorForm_Language$1' => 'Form languages',
+         'Document_Item$1' => "Documents",
          'Log$1' => "Historical",
       ];
       $this->array($output)
