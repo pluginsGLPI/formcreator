@@ -528,7 +528,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
       // Find template by name
       $input['problemtemplates_id'] = 0;
       if ($input['_problemtemplate'] !== '') {
-         $targetTemplate = self::getTemplateByName($input['_problemtemplate']);
+         $targetTemplate = self::getTemplateByName($input['_problemtemplate'] ?? '');
          if ($targetTemplate->isNewItem()) {
             $typeName = strtolower(self::getTypeName());
             throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s: It uses a non existent template ', 'formceator'), $typeName, $input['name']));
