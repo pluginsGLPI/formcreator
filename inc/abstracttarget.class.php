@@ -561,4 +561,14 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
       unset($input['uuid']);
       return $input;
    }
+
+   protected static function getTemplateByName(string $name) {
+      $targetTemplateType = (new static())->getTemplateItemtypeName();
+      $targetTemplate = new $targetTemplateType();
+      $targetTemplate->getFromDBByCrit([
+         'name' => $name,
+      ]);
+
+      return $targetTemplate;
+   }
 }
