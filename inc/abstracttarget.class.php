@@ -79,6 +79,8 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
     */
    abstract protected function getTaggableFields();
 
+   abstract protected function getTemplateItemtypeName();
+
    const DESTINATION_ENTITY_CURRENT = 1;
    const DESTINATION_ENTITY_REQUESTER = 2;
    const DESTINATION_ENTITY_REQUESTER_DYN_FIRST = 3;
