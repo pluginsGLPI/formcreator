@@ -533,8 +533,8 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
             $typeName = strtolower(self::getTypeName());
             throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s: It uses a non existent template ', 'formceator'), $typeName, $input['name']));
          }
+         $input['problemtemplates_id'] = $targetTemplate->getID();
       }
-      $input['problemtemplates_id'] = $targetTemplate->getID();
 
       // Add or update
       $originalId = $input[$idKey];
