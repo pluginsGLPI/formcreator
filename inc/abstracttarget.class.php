@@ -564,13 +564,17 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
       return $input;
    }
 
-   protected static function getTemplateByName(string $name) {
+   protected static function getTemplateByName(string $name): int {
       $targetTemplateType = (new static())->getTemplateItemtypeName();
       $targetTemplate = new $targetTemplateType();
       $targetTemplate->getFromDBByCrit([
          'name' => $name,
       ]);
 
-      return $targetTemplate;
+      if ($targetTemplate->isNewItem()) {
+         return 0;
+      }
+
+      return $targetTemplate->getID();
    }
 }

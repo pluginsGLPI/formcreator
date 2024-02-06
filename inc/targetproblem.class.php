@@ -527,15 +527,13 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
 
       // Find template by name
       $input['problemtemplates_id'] = 0;
-      if ($input['_problemtemplate'] !== '') {
-         $targetTemplate = self::getTemplateByName($input['_problemtemplate'] ?? '');
-         if ($targetTemplate->isNewItem()) {
+      if (is_string($input['_problemtemplate']) && strlen($input['_problemtemplate']) > 0) {
+         $input['problemtemplates_id'] = self::getTemplateByName($input['_problemtemplate']);
+         if ($input['problemtemplates_id'] === 0) {
             $typeName = strtolower(self::getTypeName());
-            throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s: It uses a non existent template ', 'formceator'), $typeName, $input['name']));
+            throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s: It uses a non existent template', 'formceator'), $typeName, $input['name']));
          }
-         $input['problemtemplates_id'] = $targetTemplate->getID();
       }
-
       // Add or update
       $originalId = $input[$idKey];
       $item->skipChecks = true;

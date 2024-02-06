@@ -290,13 +290,12 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
 
       // Find template by name
       $input['changetemplates_id'] = 0;
-      if ($input['_changetemplate'] !== '') {
-         $targetTemplate = self::getTemplateByName($input['_changetemplate'] ?? '');
-         if ($targetTemplate->isNewItem()) {
+      if (is_string($input['_changetemplate']) && strlen($input['_changetemplate']) > 0) {
+         $input['changetemplates_id'] = self::getTemplateByName($input['_changetemplate']);
+         if ($input['changetemplates_id'] === 0) {
             $typeName = strtolower(self::getTypeName());
             throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s: It uses a non existent template', 'formceator'), $typeName, $input['name']));
          }
-         $input['changetemplates_id'] = $targetTemplate->getID();
       }
 
       // Add or update
