@@ -940,11 +940,15 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return boolean true if pre_delete actions succeeded, false if not
     */
    public function pre_deleteItem() {
+      global $CFG_GLPI;
+
       $issue = new PluginFormcreatorIssue();
       $issue->deleteByCriteria([
          'items_id'    => $this->getID(),
          'itemtype'    => self::getType(),
       ]);
+
+      $CFG_GLPI['keep_tickets_on_delete'] = '1';
 
       return true;
    }
