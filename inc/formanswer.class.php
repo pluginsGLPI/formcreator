@@ -363,7 +363,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          case 'status' :
             if (!isAPI()) {
                switch ($values[$field]) {
-                  case PluginFormcreatorFormAnswer::STATUS_APPROVAL:
+                  case PluginFormcreatorFormAnswer::STATUS_WAITING:
                      $status = CommonITILObject::WAITING;
                      break;
                   case PluginFormcreatorFormAnswer::STATUS_REFUSED:
