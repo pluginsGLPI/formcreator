@@ -57,6 +57,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    // Values choosen to not conflict with status of ticket constants
    // @see PluginFormcreatorIssue::getNewStatusArray
+   const WAITING_APPROVAL = 101;
    const STATUS_WAITING = 101;
    const STATUS_REFUSED = 102;
    const STATUS_ACCEPTED = 103;
@@ -75,9 +76,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    public static function getStatuses() {
       return [
-         self::STATUS_WAITING  => __('Waiting for approval'),
-         self::STATUS_REFUSED  => __('Refused', 'formcreator'),
-         self::STATUS_ACCEPTED => __('Accepted', 'formcreator'),
+         self::WAITING_APPROVAL  => __('Waiting for approval'),
+         self::STATUS_WAITING    => __('Waiting', 'formcreator'),
+         self::STATUS_REFUSED    => __('Refused', 'formcreator'),
+         self::STATUS_ACCEPTED   => __('Accepted', 'formcreator'),
       ];
    }
 
@@ -1914,7 +1916,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    /**
-    * Get users or groupe in charge of valdiation
+    * Get users or groupe in charge of validation
     *
     * @return array|null
     */

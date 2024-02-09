@@ -274,7 +274,7 @@ JAVASCRIPT;
          switch ($item->fields['global_validation']) {
             case CommonITILValidation::WAITING:
                if (!in_array($item->fields['status'], [Ticket::SOLVED, Ticket::CLOSED])) {
-                  $status = PluginFormcreatorFormAnswer::STATUS_WAITING;
+                  $status = PluginFormcreatorFormAnswer::WAITING_APPROVAL;
                }
                break;
             case CommonITILValidation::REFUSED:

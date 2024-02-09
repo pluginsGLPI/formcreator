@@ -148,7 +148,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                IF(`$ticketTable`.`status` IN ('" . CommonITILObject::SOLVED . "', '" . CommonITILObject::CLOSED . "'),
                   `$ticketTable`.`status`,
                   IF(`$ticketTable`.`global_validation` = '" . CommonITILValidation::WAITING . "',
-                     '" . PluginFormcreatorFormAnswer::STATUS_WAITING . "',
+                     '" . PluginFormcreatorFormAnswer::WAITING_APPROVAL . "',
                      '" . PluginFormcreatorFormAnswer::STATUS_REFUSED . "'
                   )
                )
@@ -1189,7 +1189,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return ['criteria' => [['link'       => 'AND',
                               'field' => 4,
                               'searchtype' => 'equals',
-                              'value'      => PluginFormcreatorFormAnswer::STATUS_WAITING,
+                              'value'      => PluginFormcreatorFormAnswer::WAITING_APPROVAL,
                               ],
                             ],
               'reset'    => 'reset'];
