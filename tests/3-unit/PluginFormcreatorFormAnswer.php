@@ -142,7 +142,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
             'formcreator_validator'                   => $user::getType() . '_' . $user->getID(),
             'users_id_validator'                      => $user->getID(),
             'groups_id_validator'                     => 0,
-            'status'                                  => $testedClassName::STATUS_WAITING,
+            'status'                                  => $testedClassName::STATUS_APPROVAL,
             'request_date'                            => $_SESSION['glpi_currenttime'],
             'comment'                                 => '',
          ],

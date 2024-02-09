@@ -295,7 +295,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $ticket->fields['global_validation'] = \CommonITILValidation::WAITING;
          $dataSet = [
             'ticket' => $ticket,
-            'expected' => \PluginFormcreatorFormAnswer::STATUS_WAITING
+            'expected' => \PluginFormcreatorFormAnswer::STATUS_APPROVAL
          ];
          yield $dataSet;
       }

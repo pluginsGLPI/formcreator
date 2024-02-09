@@ -126,7 +126,7 @@ PluginFormcreatorTranslatableInterface
                                  title="' . PluginFormcreatorIssue::getTypeName(Session::getPluralNumber()) . '"></i>';
 
       $menu['links']['search']          = PluginFormcreatorFormList::getSearchURL(false);
-      $menu['links'][$validation_image] = PluginFormcreatorFormAnswer::getSearchURL(false).'?criteria[0][link]=AND&criteria[0][field]=8&criteria[0][searchtype]=equals&criteria[0][value]=' . PluginFormcreatorFormAnswer::STATUS_WAITING;
+      $menu['links'][$validation_image] = PluginFormcreatorFormAnswer::getSearchURL(false).'?criteria[0][link]=AND&criteria[0][field]=8&criteria[0][searchtype]=equals&criteria[0][value]=' . PluginFormcreatorFormAnswer::STATUS_APPROVAL;
       $menu['links'][$import_image]     = PluginFormcreatorForm::getFormURL(false)."?import_form=1";
       $menu['links'][$requests_image]   = PluginFormcreatorIssue::getSearchURL(false);
       return $menu;
@@ -939,7 +939,7 @@ PluginFormcreatorTranslatableInterface
          echo '<ul class="list-group">';
          foreach ($search['data']['rows'] as $formAnswer) {
             switch ($formAnswer['raw']["{$rawKeyBase}_8"]) {
-               case PluginFormcreatorFormAnswer::STATUS_WAITING:
+               case PluginFormcreatorFormAnswer::STATUS_APPROVAL:
                   $status = CommonITILObject::WAITING;
                   break;
                case PluginFormcreatorFormAnswer::STATUS_REFUSED:
@@ -1010,7 +1010,7 @@ PluginFormcreatorTranslatableInterface
          echo '<ul class="list-group">';
          foreach ($search['data']['rows'] as $formAnswer) {
             switch ($formAnswer['raw']["{$rawKeyBase}_8"]) {
-               case PluginFormcreatorFormAnswer::STATUS_WAITING:
+               case PluginFormcreatorFormAnswer::STATUS_APPROVAL:
                   $status = CommonITILObject::WAITING;
                   break;
                case PluginFormcreatorFormAnswer::STATUS_REFUSED:

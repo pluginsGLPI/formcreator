@@ -553,7 +553,7 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
                PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
                'name' => $form1->fields['name'],
                'requester_id' => 2, // glpi user id
-               'status' => PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'status' => PluginFormcreatorFormAnswer::STATUS_APPROVAL,
                'formcreator_validator' => 2, // Glpi user ID
                'formcreator_field_' . $question1->getID() => (string) Ticket::INCIDENT_TYPE,
             ]),
@@ -565,7 +565,7 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
                PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
                'name' => $form1->fields['name'],
                'requester_id' => 2, // glpi user id
-               'status' => PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'status' => PluginFormcreatorFormAnswer::STATUS_APPROVAL,
                'formcreator_validator' => 2, // Glpi user ID
                'formcreator_field_' . $question1->getID() => (string) Ticket::DEMAND_TYPE,
             ]),
@@ -577,7 +577,7 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
                PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
                'name' => $form2->fields['name'],
                'requester_id' => 2, // glpi user id
-               'status' => PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'status' => PluginFormcreatorFormAnswer::STATUS_APPROVAL,
                'formcreator_validator' => 2, // Glpi user ID
                'formcreator_field_' . $question2->getID() => (string) Ticket::DEMAND_TYPE,
             ]),
@@ -589,7 +589,7 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
                PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
                'name' => $form2->fields['name'],
                'requester_id' => 2, // glpi user id
-               'status' => PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'status' => PluginFormcreatorFormAnswer::STATUS_APPROVAL,
                'formcreator_validator' => 2, // Glpi user ID
                'formcreator_field_' . $question2->getID() => (string) Ticket::INCIDENT_TYPE,
             ]),
@@ -1100,7 +1100,7 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
          PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
          'name' => $form->fields['name'],
          'requester_d' => 2, // glpi user id
-         'status' => PluginFormcreatorFormAnswer::STATUS_WAITING,
+         'status' => PluginFormcreatorFormAnswer::STATUS_APPROVAL,
          'formcreator_field_' . $question->getID() => (string) $computer->getID(),
       ]);
       $this->boolean($formAnswer->isNewItem())->isFalse();
