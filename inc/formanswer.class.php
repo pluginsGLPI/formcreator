@@ -75,7 +75,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    public static function getStatuses() {
       return [
-         self::STATUS_WAITING  => __('Waiting', 'formcreator'),
+         self::STATUS_WAITING  => __('Waiting for approval'),
          self::STATUS_REFUSED  => __('Refused', 'formcreator'),
          self::STATUS_ACCEPTED => __('Accepted', 'formcreator'),
       ];
