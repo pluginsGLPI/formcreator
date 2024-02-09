@@ -1134,7 +1134,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getPendingStatusArray() {
-      return [Ticket::WAITING, PluginFormcreatorFormAnswer::STATUS_WAITING];
+      return [Ticket::WAITING, PluginFormcreatorFormAnswer::STATUS_APPROVAL];
    }
 
    static function getProcessStatusArray() {
@@ -1147,7 +1147,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    static function getAllStatusArray($withmetaforsearch = false) {
       $ticket_status = Ticket::getAllStatusArray($withmetaforsearch);
-      $form_status = [PluginFormcreatorFormAnswer::STATUS_WAITING, PluginFormcreatorFormAnswer::STATUS_ACCEPTED, PluginFormcreatorFormAnswer::STATUS_REFUSED];
+      $form_status = [PluginFormcreatorFormAnswer::STATUS_APPROVAL, PluginFormcreatorFormAnswer::STATUS_ACCEPTED, PluginFormcreatorFormAnswer::STATUS_REFUSED];
       $form_status = array_combine($form_status, $form_status);
       $all_status = $ticket_status + $form_status;
       return $all_status;
