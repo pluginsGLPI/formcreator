@@ -621,7 +621,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       // Can the current user edit the answers ?
       $canEdit = $this->fields['status'] == self::STATUS_REFUSED
          && Session::getLoginUserID() == $this->fields['requester_id']
-         || $this->fields['status'] == self::STATUS_APPROVAL
+         || $this->fields['status'] == self::STATUS_WAITING
          && $this->canValidate() && $editMode;
 
       // form title
@@ -729,7 +729,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '</div>';
          echo '</div>';
 
-      } else if (($this->fields['status'] == self::STATUS_APPROVAL) && $this->canValidate()) {
+      } else if (($this->fields['status'] == self::STATUS_WAITING) && $this->canValidate()) {
          // Display validation form
          echo '<div class="form-group required line1">';
          echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
@@ -875,7 +875,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       $skipValidation = false;
-      $input['status'] = self::STATUS_APPROVAL;
+      $input['status'] = self::STATUS_WAITING;
       if (isset($input['refuse_formanswer']) || isset($input['accept_formanswer'])) {
          // The formanswer is being acepted or refused
 
@@ -1240,7 +1240,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
             // TODO: find a way to validate the answers
             // It the form is not being validated, nothing gives the power to anyone to validate the answers
-            $formAnswer->updateStatus(self::STATUS_APPROVAL);
+            $formAnswer->updateStatus(self::STATUS_WAITING);
             return;
          }
       }
@@ -1292,7 +1292,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
             // TODO: find a way to validate the answers
             // If the form is not being validated, nothing gives the power to anyone to validate the answers
-            $this->updateStatus(self::STATUS_APPROVAL);
+            $this->updateStatus(self::STATUS_WAITING);
             return;
          }
       }
@@ -1321,7 +1321,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       );
 
       // If the form was waiting for validation
-      if ($this->fields['status'] == self::STATUS_APPROVAL) {
+      if ($this->fields['status'] == self::STATUS_WAITING) {
          // Notify the requester
          NotificationEvent::raiseEvent('plugin_formcreator_deleted', $this);
       }
@@ -1805,7 +1805,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   // The requester is the validator. No need to validate
                   break;
                }
-               $input['status'] = self::STATUS_APPROVAL;
+               $input['status'] = self::STATUS_WAITING;
                break;
 
             case PluginFormcreatorForm::VALIDATION_GROUP:
@@ -1818,7 +1818,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   // The requester is a member of the validator group
                   break;
                }
-               $input['status'] = self::STATUS_APPROVAL;
+               $input['status'] = self::STATUS_WAITING;
                break;
          }
       }
@@ -1921,7 +1921,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return array|null
     */
    public function getCurrentApprovers(): ?array {
-      if ($this->fields['status'] != self::STATUS_APPROVAL) {
+      if ($this->fields['status'] != self::STATUS_WAITING) {
          return null;
       }
 
@@ -2005,7 +2005,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             continue;
          }
          $ticketStatus = PluginFormcreatorCommon::getTicketStatusForIssue($generatedTarget);
-         if ($ticketStatus >= PluginFormcreatorFormAnswer::STATUS_APPROVAL) {
+         if ($ticketStatus >= PluginFormcreatorFormAnswer::STATUS_WAITING) {
             // Ignore tickets refused or pending for validation
             // getTicketStatusForIssue() does not returns STATUS_ACCEPTED
             continue;
