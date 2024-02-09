@@ -1505,7 +1505,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    private function sendNotification() {
       switch ($this->input['status']) {
-         case self::STATUS_APPROVAL :
+         case self::STATUS_WAITING :
             // Notify the requester
             NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
             // Notify the validator
