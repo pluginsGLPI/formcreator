@@ -731,6 +731,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'field'              => 'name',
          'name'               => __('Technician'),
          'datatype'           => 'dropdown',
+         'forcegroupby'       => true,
          'massiveaction'      => false,
          'nodisplay'          => $hide_technician,
          'nosearch'           => $hide_technician,
