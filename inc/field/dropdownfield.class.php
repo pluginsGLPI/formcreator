@@ -754,8 +754,9 @@ class DropdownField extends PluginFormcreatorAbstractField
       if ($result->count() === 0) {
          return [];
       }
+      $a_groups = [];
       foreach ($result as $data) {
-         $a_groups                     = $dbUtil->getAncestorsOf("glpi_groups", $data["groups_id"]);
+         $a_groups                     = $a_groups + $dbUtil->getAncestorsOf("glpi_groups", $data["groups_id"]);
          $a_groups[$data["groups_id"]] = $data["groups_id"];
       }
       return $a_groups;
