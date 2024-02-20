@@ -759,7 +759,6 @@ JAVASCRIPT;
          'ORDER'    => "$reminderTable.name"
       ];
       $criteria = $criteria + Reminder::getVisibilityCriteria();
-      $criteria['WHERE']["$reminderTable.users_id"] = ['<>', Session::getLoginUserID()];
       $iterator = $DB->request($criteria);
       $hasReminder = $iterator->count() > 0;
 
