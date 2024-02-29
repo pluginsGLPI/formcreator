@@ -1404,6 +1404,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          $input[$fieldSetting['field']] = $question->getID();
       }
 
+      // Find template by name
+      $input['tickettemplates_id'] = 0;
+      if (is_string($input['_tickettemplate']) && strlen($input['_tickettemplate']) > 0) {
+         $input['tickettemplates_id'] = self::getTemplateByName($input['_tickettemplate'] ?? '');
+         if ($input['tickettemplates_id'] === 0) {
+            $typeName = strtolower(self::getTypeName());
+            throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s: It uses a non existent template', 'formceator'), $typeName, $input['name']));
+         }
+      }
+
       // Add or update
       $originalId = $input[$idKey];
       $item->skipChecks = true;
