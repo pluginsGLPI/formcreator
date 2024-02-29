@@ -505,6 +505,7 @@ class PluginFormcreatorTargetChange extends AbstractItilTargetTestCase {
          'tag_specifics' => '',
          'category_rule' => \PluginFormcreatorTargetChange::CATEGORY_RULE_NONE,
          'category_question' => '0',
+         '_changetemplate' => '',
          'uuid' => $uuid,
       ];
 

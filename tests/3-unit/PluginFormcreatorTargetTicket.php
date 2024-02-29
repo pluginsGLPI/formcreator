@@ -808,6 +808,7 @@ class PluginFormcreatorTargetTicket extends AbstractItilTargetTestCase {
          'source_question' => 0,
          'type_rule' => 1,
          'type_question' => 0,
+         '_tickettemplate' => '',
          'uuid' => $uuid,
       ];
 
