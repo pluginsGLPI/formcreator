@@ -65,17 +65,17 @@ Features
       </version>
       <version>
          <num>2.13.8</num>
-         <compatibility>~10.0</compatibility>
+         <compatibility>~10.0.10</compatibility>
          <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.8/glpi-formcreator-2.13.8.tar.bz2</download_url>
       </version>
       <version>
          <num>2.13.7</num>
-         <compatibility>~10.0</compatibility>
+         <compatibility>~10.0.9</compatibility>
          <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.7/glpi-formcreator-2.13.7.tar.bz2</download_url>
       </version>
       <version>
          <num>2.13.6</num>
-         <compatibility>~10.0</compatibility>
+         <compatibility>~10.0.7</compatibility>
          <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.6/glpi-formcreator-2.13.6.tar.bz2</download_url>
       </version>
       <version>
