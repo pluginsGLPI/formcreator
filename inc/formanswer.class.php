@@ -1184,6 +1184,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $domain = PluginFormcreatorForm::getTranslationDomain($this->fields[$formFk]);
 
+      $domain = PluginFormcreatorForm::getTranslationDomain($this->fields[$formFk]);
+
       $this->deserializeAnswers();
 
       // TODO: code very close to PluginFormcreatorAbstractTarget::parseTags() (factorizable ?)

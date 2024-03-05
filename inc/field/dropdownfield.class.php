@@ -283,7 +283,7 @@ class DropdownField extends PluginFormcreatorAbstractField
                   ],
                ]);
                $tickets_filter[] = [
-                  'id' => $requestersObserversQuery,
+                  Ticket::getTableField('id') => $requestersObserversQuery,
                ];
             }
 
