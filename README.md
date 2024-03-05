@@ -17,6 +17,7 @@ Extend GLPI with Plugins.
 
   - [Form Creator](#form-creator)
   - [Table of Contents](#table-of-contents)
+  - [End of life](#end-of-life)
   - [Synopsis](#synopsis)
   - [Features](#features)
   - [Build Status](#build-status)
@@ -27,6 +28,14 @@ Extend GLPI with Plugins.
   - [Build from source](#build-from-source)
   - [Contribute](#contribute)
   - [Copying](#copying)
+
+## End of life
+
+Forms will be implemented in GLPI soon, making Formcreator obsolete soon. Therefore, the very last release of the plugin is 2.13.8, except if a particular event requires a new one. We still fix bugs for our customers and at best effort bugfix for the community.
+
+Any feature request will be ignored. If you need a new feature, you may submit it in GLPI project after the the availability of forms in GLPI itself.
+
+Thank you very much for enjoying this plugin, for reporting bigs, submitting features and contributing (features or translations). See you later with native forms. When GLPI beta will be available, do not hesitate to downloaad and test it. 
 
 ## Synopsis
 
