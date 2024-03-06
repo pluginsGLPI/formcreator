@@ -1,5 +1,7 @@
 # Form Creator
 
+:warning: This plugin reached its end of life. [Read more here](#end-of-life)
+
 ![GLPI Banner](https://user-images.githubusercontent.com/29282308/31666160-8ad74b1a-b34b-11e7-839b-043255af4f58.png)
 
 [![License GPL 3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](https://github.com/pluginsGLPI/formcreator/blob/master/LICENSE.md)
