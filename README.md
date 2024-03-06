@@ -37,7 +37,7 @@ Forms will be implemented in GLPI soon, making Formcreator obsolete soon. Theref
 
 Any feature request will be ignored. If you need a new feature, you may submit it in GLPI project after the availability of forms in GLPI itself.
 
-Thank you very much for enjoying this plugin, for reporting bigs, submitting features and contributing (features or translations). See you later with native forms. When GLPI beta will be available, do not hesitate to download and test it. 
+Thank you very much for enjoying this plugin, for reporting bugs, submitting features and contributing (features or translations). See you later with native forms. When GLPI beta will be available, do not hesitate to download and test it. 
 
 ## Synopsis
 
