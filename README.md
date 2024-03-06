@@ -33,9 +33,9 @@ Extend GLPI with Plugins.
 
 Forms will be implemented in GLPI soon, making Formcreator obsolete soon. Therefore, the very last release of the plugin is 2.13.8, except if a particular event requires a new one. We still fix bugs for our customers and at best effort bugfix for the community.
 
-Any feature request will be ignored. If you need a new feature, you may submit it in GLPI project after the the availability of forms in GLPI itself.
+Any feature request will be ignored. If you need a new feature, you may submit it in GLPI project after the availability of forms in GLPI itself.
 
-Thank you very much for enjoying this plugin, for reporting bigs, submitting features and contributing (features or translations). See you later with native forms. When GLPI beta will be available, do not hesitate to downloaad and test it. 
+Thank you very much for enjoying this plugin, for reporting bigs, submitting features and contributing (features or translations). See you later with native forms. When GLPI beta will be available, do not hesitate to download and test it. 
 
 ## Synopsis
 
