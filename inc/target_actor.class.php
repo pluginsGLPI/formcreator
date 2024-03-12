@@ -267,41 +267,42 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
       $idToRemove = 'id';
       if ($remove_uuid) {
          $idToRemove = 'uuid';
-      } else {
-         // Convert IDs into UUIDs or names
-         switch ($target_actor['actor_type']) {
-            case self::ACTOR_TYPE_QUESTION_PERSON:
-            case self::ACTOR_TYPE_QUESTION_GROUP:
-            case self::ACTOR_TYPE_QUESTION_SUPPLIER:
-            case self::ACTOR_TYPE_QUESTION_ACTORS:
-            case self::ACTOR_TYPE_GROUP_FROM_OBJECT:
-            case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT :
-               $question = new PluginFormcreatorQuestion;
-               if ($question->getFromDB($target_actor['actor_value'])) {
-                  $target_actor['actor_value'] = $question->fields['uuid'];
-               }
-               break;
-            case self::ACTOR_TYPE_PERSON:
-            case self::ACTOR_TYPE_AUTHORS_SUPERVISOR:
-               $user = new User;
-               if ($user->getFromDB($target_actor['actor_value'])) {
-                  $target_actor['actor_value'] = $user->fields['name'];
-               }
-               break;
-            case self::ACTOR_TYPE_GROUP:
-               $group = new Group;
-               if ($group->getFromDB($target_actor['actor_value'])) {
-                  $target_actor['actor_value'] = $group->fields['completename'];
-               }
-               break;
-            case self::ACTOR_TYPE_SUPPLIER:
-               $supplier = new Supplier;
-               if ($supplier->getFromDB($target_actor['actor_value'])) {
-                  $target_actor['actor_value'] = $supplier->fields['name'];
-               }
-               break;
-         }
       }
+
+      // Convert IDs into UUIDs or names
+      switch ($target_actor['actor_type']) {
+         case self::ACTOR_TYPE_QUESTION_PERSON:
+         case self::ACTOR_TYPE_QUESTION_GROUP:
+         case self::ACTOR_TYPE_QUESTION_SUPPLIER:
+         case self::ACTOR_TYPE_QUESTION_ACTORS:
+         case self::ACTOR_TYPE_GROUP_FROM_OBJECT:
+         case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT :
+            $question = new PluginFormcreatorQuestion;
+            if ($question->getFromDB($target_actor['actor_value'])) {
+               $target_actor['actor_value'] = $question->fields['uuid'];
+            }
+            break;
+         case self::ACTOR_TYPE_PERSON:
+         case self::ACTOR_TYPE_AUTHORS_SUPERVISOR:
+            $user = new User;
+            if ($user->getFromDB($target_actor['actor_value'])) {
+               $target_actor['actor_value'] = $user->fields['name'];
+            }
+            break;
+         case self::ACTOR_TYPE_GROUP:
+            $group = new Group;
+            if ($group->getFromDB($target_actor['actor_value'])) {
+               $target_actor['actor_value'] = $group->fields['completename'];
+            }
+            break;
+         case self::ACTOR_TYPE_SUPPLIER:
+            $supplier = new Supplier;
+            if ($supplier->getFromDB($target_actor['actor_value'])) {
+               $target_actor['actor_value'] = $supplier->fields['name'];
+            }
+            break;
+      }
+
       unset($target_actor[$idToRemove]);
 
       return $target_actor;
