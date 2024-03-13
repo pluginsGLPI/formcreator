@@ -21,11 +21,6 @@
 * **textarea:** support for min/max size and regex ([09682e9b8](https://github.com/pluginsGLPI/formcreator/commit/09682e9b8))
 
 
-### Features
-
-* **glpiselectfield:** support Cluster itemtype ([e72e2603c](https://github.com/pluginsGLPI/formcreator/commit/e72e2603c))
-
-
 
 <a name="2.13.8"></a>
 ## [2.13.8](https://github.com/pluginsGLPI/formcreator/compare/2.13.7..2.13.8) (2023-111-08)
