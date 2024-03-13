@@ -1233,6 +1233,7 @@ PluginFormcreatorTranslatableInterface
             Line::class               => Line::getTypeName($plural),
             PassiveDCEquipment::class => PassiveDCEquipment::getTypeName($plural),
             PDU::class                => PDU::getTypeName($plural),
+            Cluster::class            => Cluster::getTypeName(2),
          ],
          __("Assistance") => [
             Ticket::class             => Ticket::getTypeName($plural),
