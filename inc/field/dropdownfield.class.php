@@ -383,7 +383,15 @@ class DropdownField extends PluginFormcreatorAbstractField
       $dparams = [];
       $dparams = $this->buildParams($rand);
       $dparams['display'] = false;
-      $dparams['_idor_token'] = Session::getNewIDORToken($itemtype);
+
+      $idor_params = [];
+      foreach (['condition', 'displaywith', 'entity_restrict', 'right'] as $sensitive_param) {
+         if (array_key_exists($sensitive_param, $dparams)) {
+            $idor_params[$sensitive_param] = $dparams[$sensitive_param];
+         }
+      }
+      $dparams['_idor_token'] = Session::getNewIDORToken($itemtype, $idor_params);
+
       $html .= $itemtype::dropdown($dparams);
       $html .= PHP_EOL;
       $html .= Html::scriptBlock("$(function() {
