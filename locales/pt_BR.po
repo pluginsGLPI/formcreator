@@ -18,11 +18,11 @@
 # Jean Vergaças <jvergacas@gmail.com>, 2022
 # Pedro de Oliveira Lira <pedrolira@live.com>, 2022
 # Eduardo Spinola <eduardo.spinola@gmail.com>, 2022
-# Pablo Pierre Ferreira <pablo.terdulino@gmail.com>, 2023
+# Pablo Pierri <pablo.terdulino@gmail.com>, 2023
 # Matheus Rafael, 2023
 # Eduardo Scott <edu.scott01@gmail.com>, 2023
-# Diego Nobre <diego@koruma.com.br>, 2023
 # Thierry Bugier <tbugier@teclib.com>, 2023
+# Diego Nobre <diego@koruma.com.br>, 2023
 # 
 #, fuzzy
 msgid ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-13 14:56+0100\n"
 "PO-Revision-Date: 2021-08-30 07:22+0000\n"
-"Last-Translator: Thierry Bugier <tbugier@teclib.com>, 2023\n"
+"Last-Translator: Diego Nobre <diego@koruma.com.br>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/teclib/teams/28042/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -267,7 +267,7 @@ msgstr "Diretório LDAP não encontrado!"
 
 #: inc/field/ldapselectfield.class.php:154
 msgid "LDAP attribute is required!"
-msgstr ""
+msgstr "Atributo LDAP é obrigatório!"
 
 #: inc/field/textfield.class.php:146 inc/field/floatfield.class.php:156
 #, php-format
@@ -307,15 +307,15 @@ msgstr "Seleção única"
 
 #: inc/field/radiosfield.class.php:116 inc/field/checkboxesfield.class.php:256
 msgid "The field value is required."
-msgstr ""
+msgstr "O valor do campo é obrigatório."
 
 #: inc/field/radiosfield.class.php:127
 msgid "Only one default value is allowed."
-msgstr ""
+msgstr "Somente um valor padrão é permitido."
 
 #: inc/field/radiosfield.class.php:138
 msgid "The default value is not in the list of available values."
-msgstr ""
+msgstr "O valor padrão não está na lista de valores disponíveis."
 
 #: inc/field/radiosfield.class.php:215 inc/field/selectfield.class.php:105
 #: inc/field/datetimefield.class.php:119 inc/field/actorfield.class.php:257
@@ -327,7 +327,7 @@ msgstr "Um campo obrigatório está vazio: %s"
 #: inc/field/radiosfield.class.php:234 inc/field/selectfield.class.php:123
 #, php-format
 msgid "This value %1$s is not allowed: %2$s"
-msgstr ""
+msgstr "Este valor %1$s não é permitido: %2$s"
 
 #: inc/field/integerfield.class.php:60
 #, php-format
@@ -510,12 +510,12 @@ msgstr "Caixas de Seleção"
 #: inc/field/checkboxesfield.class.php:208
 #, php-format
 msgid "Empty values are not allowed: %s"
-msgstr ""
+msgstr "Valores vazios não são permitidos: %s"
 
 #: inc/field/checkboxesfield.class.php:216
 #, php-format
 msgid "This value %1$s is not alowed: %2$s"
-msgstr ""
+msgstr "Este valor %1$s não é permitido: %2$s"
 
 #: inc/field/checkboxesfield.class.php:236
 #, php-format
@@ -529,7 +529,7 @@ msgstr "A questão a seguir não aceita mais de %drespostas: %s"
 
 #: inc/field/checkboxesfield.class.php:270
 msgid "The default values are not in the list of available values."
-msgstr ""
+msgstr "Os valores padrão não estão na lista de valores disponíveis."
 
 #: inc/field/checkboxesfield.class.php:325
 msgid "Range min"
@@ -541,7 +541,7 @@ msgstr "Intervalo máx"
 
 #: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1108
 msgid "Request type"
-msgstr "Tipo de Solicitação"
+msgstr "Tipo de requisição"
 
 #: inc/field/floatfield.class.php:141
 #, php-format
@@ -714,7 +714,7 @@ msgid "Requester"
 msgid_plural "Requesters"
 msgstr[0] "Solicitante"
 msgstr[1] "Solicitantes"
-msgstr[2] "Solicitantes"
+msgstr[2] "Requerentes"
 
 #: inc/issue.class.php:619 inc/formanswer.class.php:270
 msgid "Form approver"
@@ -748,7 +748,7 @@ msgstr "Grupo aprovador de chamados"
 
 #: inc/issue.class.php:857
 msgid "Ticket requester"
-msgstr "Solicitante do chamado"
+msgstr "Requerente do chamado"
 
 #: inc/issue.class.php:904
 msgid "Ticket observer"
@@ -1053,7 +1053,7 @@ msgstr "Impossível gerar alvos!"
 #: inc/formanswer.class.php:1434
 #, php-format
 msgid "Answer is invalid in %1$s"
-msgstr ""
+msgstr "A resposta é inválida em %1$s"
 
 #: inc/formanswer.class.php:1462
 msgid "No turing test set"
@@ -1336,7 +1336,7 @@ msgstr "Procurar assistência"
 
 #: inc/entityconfig.class.php:165
 msgid "User's assistance requests"
-msgstr "Solicitações de assistência dos usuários"
+msgstr "Requisições de assistência dos usuários"
 
 #: inc/entityconfig.class.php:261
 msgid "Helpdesk"
@@ -1500,7 +1500,7 @@ msgstr "Duplicar"
 
 #: inc/form.class.php:554 inc/form.class.php:2223
 msgid "Add a target"
-msgstr "Adicionar em alvo"
+msgstr "Adicionar um alvo"
 
 #: inc/form.class.php:575
 msgid "Preview"
@@ -1525,7 +1525,7 @@ msgstr "Nenhum formulário postado ainda"
 
 #: inc/form.class.php:964
 msgid "All my forms (requester)"
-msgstr "Todos os formulários (requerente)"
+msgstr "Todos os meus formulários (requerente)"
 
 #: inc/form.class.php:977
 #, php-format
@@ -1921,7 +1921,7 @@ msgstr "Feito."
 
 #: inc/command/cleanticketscommand.class.php:135
 msgid "Step 1: double encoded < and > signs."
-msgstr ""
+msgstr "Etapa 1: sinais < e > com codificação dupla."
 
 #: inc/command/cleanticketscommand.class.php:146
 #: inc/command/cleanticketscommand.class.php:196
@@ -1931,11 +1931,11 @@ msgstr "Nenhum item inválido encontrado."
 
 #: inc/command/cleanticketscommand.class.php:187
 msgid "Step 2: literal BR tag."
-msgstr ""
+msgstr "Etapa 2: tag BR literal."
 
 #: inc/command/cleanticketscommand.class.php:251
 msgid "Step 3: litteral > sign."
-msgstr ""
+msgstr "Etapa 3: sinal > literal"
 
 #: inc/filter/itilcategoryfilter.class.php:52
 #: inc/filter/itilcategoryfilter.class.php:54
@@ -2082,7 +2082,7 @@ msgstr "Seu formulário foi aceito pelo validador"
 
 #: inc/targetticket.class.php:1095
 msgid "Request source"
-msgstr "Origem da solicitação"
+msgstr "Origem da requisição"
 
 #: inc/targetticket.class.php:1120
 msgid "Type "

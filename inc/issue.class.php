@@ -526,6 +526,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'field'              => 'name',
          'name'               => __('Name'),
          'datatype'           => 'itemlink',
+         'searchtype'         => [
+            '0'                  => 'contains',
+            '1'                  => 'not contains',
+         ],
          'massiveaction'      => false,
          'additionalfields'   => [
             '0'                  => 'display_id'
@@ -727,6 +731,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'field'              => 'name',
          'name'               => __('Technician'),
          'datatype'           => 'dropdown',
+         'forcegroupby'       => true,
          'massiveaction'      => false,
          'nodisplay'          => $hide_technician,
          'nosearch'           => $hide_technician,

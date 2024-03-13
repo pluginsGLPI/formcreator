@@ -977,8 +977,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
                   'plugin_formcreator_questions_id'   => $this->fields['location_question']
                ]
             ])->current();
-            if (isset($location['answer']) && ctype_digit($location['answer'])) {
+            if (isset($location['answer']) && !Location::isNewID($location['answer'])) {
                $location = $location['answer'];
+            } else {
+               $location = null;
             }
             break;
          case self::LOCATION_RULE_SPECIFIC:
@@ -1400,6 +1402,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s: a question is missing and is used in a parameter of the target', 'formceator'), $typeName, $input['name']));
          }
          $input[$fieldSetting['field']] = $question->getID();
+      }
+
+      // Find template by name
+      $input['tickettemplates_id'] = 0;
+      if (is_string($input['_tickettemplate']) && strlen($input['_tickettemplate']) > 0) {
+         $input['tickettemplates_id'] = self::getTemplateByName($input['_tickettemplate'] ?? '');
+         if ($input['tickettemplates_id'] === 0) {
+            $typeName = strtolower(self::getTypeName());
+            throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s: It uses a non existent template', 'formceator'), $typeName, $input['name']));
+         }
       }
 
       // Add or update

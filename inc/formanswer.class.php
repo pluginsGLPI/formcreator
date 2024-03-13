@@ -940,11 +940,15 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return boolean true if pre_delete actions succeeded, false if not
     */
    public function pre_deleteItem() {
+      global $CFG_GLPI;
+
       $issue = new PluginFormcreatorIssue();
       $issue->deleteByCriteria([
          'items_id'    => $this->getID(),
          'itemtype'    => self::getType(),
       ]);
+
+      $CFG_GLPI['keep_tickets_on_delete'] = '1';
 
       return true;
    }
@@ -1112,6 +1116,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $fields = $this->getQuestionFields($this->fields[$formFk]);
 
+      $domain = PluginFormcreatorForm::getTranslationDomain($this->fields[$formFk]);
+
       $this->deserializeAnswers();
 
       // TODO: code very close to PluginFormcreatorAbstractTarget::parseTags() (factorizable ?)
@@ -1164,9 +1170,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                $output .= ($richText ? '<p>&nbsp;</p>' : $eol);
             }
             if ($richText) {
-               $output .= '<h2>' . $question_line['section_name'] . '</h2>';
+               $output .= '<h2>' . __($question_line['section_name'], $domain) . '</h2>';
             } else {
-               $output .= $eol . $question_line['section_name'] . $eol;
+               $output .= $eol . __($question_line['section_name'], $domain) . $eol;
                $output .= '---------------------------------' . $eol;
             }
             $last_section = $question_line[$sectionFk];

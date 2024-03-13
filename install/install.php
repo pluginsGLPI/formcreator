@@ -762,10 +762,10 @@ class PluginFormcreatorInstall {
       ];
 
       // With counters
-      $x = 2;
-      $w = 3; // Width
+      $x = 0;
+      $w = 4; // Width
       $h = 1; // Height
-      $s = 1; // space between widgets
+      $s = 0; // space between widgets
       $y = 0;
       foreach ($cards as $key => $options) {
          $item = new Dashboard_Item();

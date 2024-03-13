@@ -218,7 +218,7 @@ class CleanTicketsCommand extends Command
             ];
          }
          if ($replace === null) {
-            $message = __("Unable to determine the encoding type of item ID: %1$d", "formcreator");
+            $message = __('Unable to determine the encoding type of item ID: %1$d', "formcreator");
             $output->writeln("<error>" . sprintf($message, $item['id']) . "</error>");
             continue;
          }
@@ -282,8 +282,8 @@ class CleanTicketsCommand extends Command
             ];
          }
          if ($replace === null) {
-            $message = __("Unable to determine the encoding type of item ID: %1$d", "formcreator");
-            $output->writeln("<error>" . sprinf($message, $item['id']) . "</error>");
+            $message = __('Unable to determine the encoding type of item ID: %1$d', "formcreator");
+            $output->writeln("<error>" . sprintf($message, $item['id']) . "</error>");
             continue;
          }
          $item['content'] = str_replace($pattern, $replace, $item['content']);

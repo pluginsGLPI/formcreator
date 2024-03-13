@@ -79,6 +79,8 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
     */
    abstract protected function getTaggableFields();
 
+   abstract protected function getTemplateItemtypeName();
+
    const DESTINATION_ENTITY_CURRENT = 1;
    const DESTINATION_ENTITY_REQUESTER = 2;
    const DESTINATION_ENTITY_REQUESTER_DYN_FIRST = 3;
@@ -560,5 +562,19 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
    public function prepareInputForClone($input) {
       unset($input['uuid']);
       return $input;
+   }
+
+   protected static function getTemplateByName(string $name): int {
+      $targetTemplateType = (new static())->getTemplateItemtypeName();
+      $targetTemplate = new $targetTemplateType();
+      $targetTemplate->getFromDBByCrit([
+         'name' => $name,
+      ]);
+
+      if ($targetTemplate->isNewItem()) {
+         return 0;
+      }
+
+      return $targetTemplate->getID();
    }
 }

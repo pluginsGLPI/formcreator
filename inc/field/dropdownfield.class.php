@@ -245,7 +245,7 @@ class DropdownField extends PluginFormcreatorAbstractField
                   ],
                ]);
                $tickets_filter[] = [
-                  'id' => $requestersObserversQuery,
+                  Ticket::getTableField('id') => $requestersObserversQuery,
                ];
             }
 
@@ -383,7 +383,15 @@ class DropdownField extends PluginFormcreatorAbstractField
       $dparams = [];
       $dparams = $this->buildParams($rand);
       $dparams['display'] = false;
-      $dparams['_idor_token'] = Session::getNewIDORToken($itemtype);
+
+      $idor_params = [];
+      foreach (['condition', 'displaywith', 'entity_restrict', 'right'] as $sensitive_param) {
+         if (array_key_exists($sensitive_param, $dparams)) {
+            $idor_params[$sensitive_param] = $dparams[$sensitive_param];
+         }
+      }
+      $dparams['_idor_token'] = Session::getNewIDORToken($itemtype, $idor_params);
+
       $html .= $itemtype::dropdown($dparams);
       $html .= PHP_EOL;
       $html .= Html::scriptBlock("$(function() {
@@ -594,8 +602,9 @@ class DropdownField extends PluginFormcreatorAbstractField
       if ($result->count() === 0) {
          return [];
       }
+      $a_groups = [];
       foreach ($result as $data) {
-         $a_groups                     = $dbUtil->getAncestorsOf("glpi_groups", $data["groups_id"]);
+         $a_groups                     = $a_groups + $dbUtil->getAncestorsOf("glpi_groups", $data["groups_id"]);
          $a_groups[$data["groups_id"]] = $data["groups_id"];
       }
       return $a_groups;

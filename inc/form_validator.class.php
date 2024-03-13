@@ -192,7 +192,12 @@ PluginFormcreatorExportableInterface
          'valuesnames'     => array_values($selectedValidatorUsers),
          'condition'       => Dropdown::addNewCondition($usersCondition),
       ];
-      $params['_idor_token'] = Session::getNewIDORToken(User::getType());
+      $params['_idor_token'] = Session::getNewIDORToken(
+          User::getType(),
+          [
+              'condition' => $params['condition'],
+          ]
+      );
       echo Html::jsAjaxDropdown(
          '_validator_users[]',
          '_validator_users' . mt_rand(),
@@ -274,7 +279,12 @@ PluginFormcreatorExportableInterface
          'condition'       => Dropdown::addNewCondition($groupsCondition),
          'display_emptychoice' => false,
       ];
-      $params['_idor_token'] = Session::getNewIDORToken(Group::getType());
+      $params['_idor_token'] = Session::getNewIDORToken(
+          Group::getType(),
+          [
+              'condition' => $params['condition'],
+          ]
+      );
       echo Html::jsAjaxDropdown(
          '_validator_groups[]',
          '_validator_groups' . mt_rand(),
@@ -567,8 +577,13 @@ PluginFormcreatorExportableInterface
          'entity_restrict' => -1,
          'itemtype'        => User::getType(),
          'condition'       => Dropdown::addNewCondition($usersCondition),
-         '_idor_token'     => Session::getNewIDORToken(User::getType()),
       ];
+      $params['_idor_token'] = Session::getNewIDORToken(
+          User::getType(),
+          [
+              'condition' => $params['condition'],
+          ]
+      );
 
       return Html::jsAjaxDropdown(
          '_validator_users[]',
@@ -646,8 +661,13 @@ PluginFormcreatorExportableInterface
          'itemtype'            => Group::getType(),
          'condition'           => Dropdown::addNewCondition($groupsCondition),
          'display_emptychoice' => false,
-         '_idor_token'         => Session::getNewIDORToken(Group::getType()),
       ];
+      $params['_idor_token'] = Session::getNewIDORToken(
+          Group::getType(),
+          [
+              'condition' => $params['condition'],
+          ]
+      );
 
       return Html::jsAjaxDropdown(
          '_validator_groups[]',
