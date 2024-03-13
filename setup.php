@@ -33,14 +33,14 @@ use Glpi\Plugin\Hooks;
 
 global $CFG_GLPI;
 // Version of the plugin (major.minor.bugfix)
-define('PLUGIN_FORMCREATOR_VERSION', '2.13.8');
+define('PLUGIN_FORMCREATOR_VERSION', '2.13.9');
 // Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.13');
 // is or is not an official release of the plugin
 define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
 
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '10.0.7');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '10.0.10');
 // Maximum GLPI version, exclusive (ignored if PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE == false)
 define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '10.1');
 

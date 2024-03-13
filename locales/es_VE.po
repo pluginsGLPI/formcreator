@@ -250,7 +250,7 @@ msgstr "Directorio LDAP no encontrado!"
 
 #: inc/field/ldapselectfield.class.php:154
 msgid "LDAP attribute is required!"
-msgstr ""
+msgstr "¡Se requiere el atributo LDAP!"
 
 #: inc/field/textfield.class.php:146 inc/field/floatfield.class.php:156
 #, php-format
