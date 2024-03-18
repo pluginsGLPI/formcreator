@@ -53,6 +53,8 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->addEntityOption();
       $this->fixissues();
       $this->migrateTablesToDynamic();
+      $this->questionParameterUnicity();
+      $this->questionParameterRepair();
    }
 
    /**
@@ -556,5 +558,170 @@ class PluginFormcreatorUpgradeTo2_13 {
          }
          $DB->query("ALTER TABLE `$table` ROW_FORMAT = DYNAMIC");
       }
+   }
+
+   /**
+    * It is possible to have inconsistencies in DB where several identical parameters exist for a single question
+    * Removing all duplicates, and add unicity in the tables
+    *
+    * @return void
+    */
+   public function questionParameterUnicity() {
+      global $DB;
+
+      // Remove possible duplicates
+      $DB->queryOrDie("
+         DELETE dr FROM glpi_plugin_formcreator_questionranges dr
+         INNER JOIN  (
+            SELECT
+               count(qr.id) as cpt,
+               f.id as form_id,
+               s.id as section_id,
+               q.id as question_id,
+               q.name,
+               q.fieldtype,
+               qr.id as qrid
+            FROM
+               glpi_plugin_formcreator_questions as q
+               left join glpi_plugin_formcreator_questionranges as qr on (qr.plugin_formcreator_questions_id = q.id)
+               inner join glpi_plugin_formcreator_sections as s on (q.plugin_formcreator_sections_id = s.id)
+               inner join glpi_plugin_formcreator_forms as f on (s.plugin_formcreator_forms_id = f.id)
+            WHERE q.fieldtype IN ('checkboxes', 'radios', 'multiselect', 'integer', 'float', 'text', 'textarea')
+            GROUP BY
+               q.id
+            HAVING
+               cpt > 1
+            ) j
+            WHERE dr.plugin_formcreator_questions_id = j.question_id AND dr.id <> j.qrid
+      ");
+
+      $DB->queryOrDie("
+         DELETE dr FROM glpi_plugin_formcreator_questionregexes dr
+         INNER JOIN  (
+            SELECT
+               count(qr.id) as cpt,
+               f.id as form_id,
+               s.id as section_id,
+               q.id as question_id,
+               q.name,
+               q.fieldtype,
+               qr.id as qrid
+            FROM
+               glpi_plugin_formcreator_questions as q
+               left join glpi_plugin_formcreator_questionregexes as qr on (qr.plugin_formcreator_questions_id = q.id)
+               inner join glpi_plugin_formcreator_sections as s on (q.plugin_formcreator_sections_id = s.id)
+               inner join glpi_plugin_formcreator_forms as f on (s.plugin_formcreator_forms_id = f.id)
+            WHERE q.fieldtype IN ('checkboxes', 'radios', 'multiselect', 'integer', 'float', 'text', 'textarea')
+            GROUP BY
+               q.id
+            HAVING
+               cpt > 1
+            ) j
+            WHERE dr.plugin_formcreator_questions_id = j.question_id AND dr.id <> j.qrid
+      ");
+
+      $tables = [
+         'glpi_plugin_formcreator_questionranges',
+         'glpi_plugin_formcreator_questionregexes',
+      ];
+
+      foreach ($tables as $table) {
+         $DB->delete($table, [
+            'plugin_formcreator_questions_id' => '0'
+         ]);
+         $this->migration->addKey($table, ['plugin_formcreator_questions_id', 'fieldname'], 'unicity', 'UNIQUE');
+      }
+   }
+
+   /**
+    * It is possible to have questions using parameters, but none exist in the DB
+    * ading empty parameters where needed
+    *
+    * @return void
+    */
+   public function questionParameterRepair() {
+      global $DB;
+
+      $DB->queryOrDie("
+         INSERT INTO glpi_plugin_formcreator_questionranges
+         (id, plugin_formcreator_questions_id, range_min, range_max, fieldname, `uuid`)
+         SELECT
+            NULL,
+            question_id,
+            0,
+            0,
+            CASE
+               WHEN fieldtype IN ('radios', 'checkboxes', 'multiselect', 'integer', 'float', 'text', 'textarea') THEN 'range'
+            END,
+            UUID()
+         FROM
+            (
+               select
+                  count(qr.id) as cpt,
+                  f.id as form_id,
+                  s.id as section_id,
+                  q.id as question_id,
+                  q.name,
+                  q.fieldtype,
+                  qr.id as qrid
+               from
+                  glpi_plugin_formcreator_questions as q
+                  left join glpi_plugin_formcreator_questionranges as qr on (qr.plugin_formcreator_questions_id = q.id)
+                  inner join glpi_plugin_formcreator_sections as s on (q.plugin_formcreator_sections_id = s.id)
+                  inner join glpi_plugin_formcreator_forms as f on (s.plugin_formcreator_forms_id = f.id)
+               WHERE
+                  q.fieldtype IN (
+                     'checkboxes',
+                     'radios',
+                     'multiselect',
+                     'integer',
+                     'float',
+                     'text',
+                     'textarea'
+                  )
+               group by
+                  q.id
+               having
+                  cpt < 1
+            ) AS q_repair
+      ");
+
+      $DB->queryOrDie("
+         INSERT INTO glpi_plugin_formcreator_questionregexes
+         (id, plugin_formcreator_questions_id, regex, fieldname, `uuid`)
+         SELECT
+            NULL,
+            question_id,
+            '',
+            CASE
+               WHEN fieldtype IN ('text', 'textarea') THEN 'regex'
+            END,
+            UUID()
+         FROM
+            (
+               select
+                  count(qr.id) as cpt,
+                  f.id as form_id,
+                  s.id as section_id,
+                  q.id as question_id,
+                  q.name,
+                  q.fieldtype,
+                  qr.id as qrid
+               from
+                  glpi_plugin_formcreator_questions as q
+                  left join glpi_plugin_formcreator_questionregexes as qr on (qr.plugin_formcreator_questions_id = q.id)
+                  inner join glpi_plugin_formcreator_sections as s on (q.plugin_formcreator_sections_id = s.id)
+                  inner join glpi_plugin_formcreator_forms as f on (s.plugin_formcreator_forms_id = f.id)
+               WHERE
+                  q.fieldtype IN (
+                     'text',
+                     'textarea'
+                  )
+               group by
+                  q.id
+               having
+                  cpt < 1
+            ) AS q_repair
+      ");
    }
 }
