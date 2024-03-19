@@ -126,7 +126,7 @@ PluginFormcreatorTranslatableInterface
                                  title="' . PluginFormcreatorIssue::getTypeName(Session::getPluralNumber()) . '"></i>';
 
       $menu['links']['search']          = PluginFormcreatorFormList::getSearchURL(false);
-      $menu['links'][$validation_image] = PluginFormcreatorFormAnswer::getSearchURL(false).'?criteria[0][link]=AND&criteria[0][field]=8&criteria[0][searchtype]=equals&criteria[0][value]=' . PluginFormcreatorFormAnswer::STATUS_WAITING;
+      $menu['links'][$validation_image] = PluginFormcreatorFormAnswer::getSearchURL(false).'?criteria[0][link]=AND&criteria[0][field]=8&criteria[0][searchtype]=equals&criteria[0][value]=' . PluginFormcreatorFormAnswer::WAITING_APPROVAL;
       $menu['links'][$import_image]     = PluginFormcreatorForm::getFormURL(false)."?import_form=1";
       $menu['links'][$requests_image]   = PluginFormcreatorIssue::getSearchURL(false);
       return $menu;
