@@ -1,3 +1,32 @@
+<a name="2.13.9"></a>
+## [HEAD](https://github.com/pluginsGLPI/formcreator/compare/2.13.8..2.13.9) (2024-03-13)
+
+
+### Bug Fixes
+
+*  prevent issue when response body has blank characters ([1b141a3fa](https://github.com/pluginsGLPI/formcreator/commit/1b141a3fa))
+* **command:** typos ([2681eca61](https://github.com/pluginsGLPI/formcreator/commit/2681eca61))
+* **dropdownfield:** ambiguous column in SQL query ([3c0630554](https://github.com/pluginsGLPI/formcreator/commit/3c0630554))
+* **dropdownfield:** incomplete group restriction ([eebcc21f1](https://github.com/pluginsGLPI/formcreator/commit/eebcc21f1))
+* **formansswer:** keep tickets on delete ([b3cc8d2b9](https://github.com/pluginsGLPI/formcreator/commit/b3cc8d2b9))
+* **formanswer:** translate section name for targets ([cb9ce0fb6](https://github.com/pluginsGLPI/formcreator/commit/cb9ce0fb6))
+* **hiddenfield:** escaping problem when displaying default value in question designer ([3818383e1](https://github.com/pluginsGLPI/formcreator/commit/3818383e1))
+* **install:** dashboard setup with pre 2.13.7 appearance ([08d3871e1](https://github.com/pluginsGLPI/formcreator/commit/08d3871e1))
+* **issue:** deduplicate rows whern showing technicians in issues ([8bc96d3dc](https://github.com/pluginsGLPI/formcreator/commit/8bc96d3dc))
+* **issue:** prevent list of all issues in search engine ([55530d976](https://github.com/pluginsGLPI/formcreator/commit/55530d976))
+* **reminder:** visibility ([826881427](https://github.com/pluginsGLPI/formcreator/commit/826881427))
+* **target_actor:** duplicate failure with gours, supliers or users ([d77cde058](https://github.com/pluginsGLPI/formcreator/commit/d77cde058))
+* **target_actor:** groups duplication ([dbfcc796b](https://github.com/pluginsGLPI/formcreator/commit/dbfcc796b))
+* **targetticket:** set location may fail ([75144be06](https://github.com/pluginsGLPI/formcreator/commit/75144be06))
+* **textarea:** support for min/max size and regex ([09682e9b8](https://github.com/pluginsGLPI/formcreator/commit/09682e9b8))
+
+
+### Features
+
+* **glpiselectfield:** support Cluster itemtype ([e72e2603c](https://github.com/pluginsGLPI/formcreator/commit/e72e2603c))
+
+
+
 <a name="2.13.8"></a>
 ## [2.13.8](https://github.com/pluginsGLPI/formcreator/compare/2.13.7..2.13.8) (2023-111-08)
 

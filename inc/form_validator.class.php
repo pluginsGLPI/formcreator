@@ -441,8 +441,13 @@ PluginFormcreatorExportableInterface
          'entity_restrict' => -1,
          'itemtype'        => User::getType(),
          'condition'       => Dropdown::addNewCondition($usersCondition),
-         '_idor_token'     => Session::getNewIDORToken(User::getType()),
       ];
+      $params['_idor_token'] = Session::getNewIDORToken(
+          User::getType(),
+          [
+              'condition' => $params['condition'],
+          ]
+      );
 
       return Html::jsAjaxDropdown(
          '_validator_users[]',
@@ -520,8 +525,13 @@ PluginFormcreatorExportableInterface
          'itemtype'            => Group::getType(),
          'condition'           => Dropdown::addNewCondition($groupsCondition),
          'display_emptychoice' => false,
-         '_idor_token'         => Session::getNewIDORToken(Group::getType()),
       ];
+      $params['_idor_token'] = Session::getNewIDORToken(
+          Group::getType(),
+          [
+              'condition' => $params['condition'],
+          ]
+      );
 
       return Html::jsAjaxDropdown(
          '_validator_groups[]',

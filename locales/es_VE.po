@@ -250,6 +250,45 @@ msgstr "Directorio LDAP no definido!"
 msgid "LDAP directory not found!"
 msgstr "Directorio LDAP no encontrado!"
 
+<<<<<<< HEAD
+=======
+#: inc/field/ldapselectfield.class.php:154
+msgid "LDAP attribute is required!"
+msgstr "¡Se requiere el atributo LDAP!"
+
+#: inc/field/textfield.class.php:146 inc/field/floatfield.class.php:156
+#, php-format
+msgid "Specific format does not match: %s"
+msgstr "El formato especificado no coincide: %s"
+
+#: inc/field/textfield.class.php:155
+#, php-format
+msgid "The text is too short (minimum %d characters): %s"
+msgstr "El texto es demasiado corto (mínimo %d caracteres): %s"
+
+#: inc/field/textfield.class.php:160
+#, php-format
+msgid "The text is too long (maximum %d characters): %s"
+msgstr "El texto es demasiado largo (máximo %d caracteres): %s"
+
+#: inc/field/textfield.class.php:168
+msgid "Text"
+msgstr "Texto"
+
+#: inc/field/textfield.class.php:217 inc/field/floatfield.class.php:238
+#: inc/questionregex.class.php:62 entrée standard:42
+msgid "Regular expression"
+msgstr "Expresión regular"
+
+#: inc/field/textfield.class.php:222 inc/field/floatfield.class.php:243
+msgid "Range"
+msgstr "Rango"
+
+#: inc/field/textfield.class.php:228 inc/field/floatfield.class.php:249
+msgid "Additional validation"
+msgstr "Validación adicional"
+
+>>>>>>> support/2.13.0
 #: inc/field/radiosfield.class.php:108
 msgid "Radios"
 msgstr "Radios"

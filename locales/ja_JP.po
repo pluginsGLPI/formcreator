@@ -4,6 +4,10 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
+<<<<<<< HEAD
+=======
+# Thierry Bugier <tbugier@teclib.com>, 2023
+>>>>>>> support/2.13.0
 # INOUE Daisuke, 2023
 # 
 #, fuzzy
@@ -11,8 +15,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-31 16:21+0200\n"
 "PO-Revision-Date: 2022-06-15 12:10+0000\n"
+=======
+"POT-Creation-Date: 2023-11-13 14:56+0100\n"
+"PO-Revision-Date: 2021-08-30 07:22+0000\n"
+>>>>>>> support/2.13.0
 "Last-Translator: INOUE Daisuke, 2023\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/teclib/teams/28042/ja_JP/)\n"
 "MIME-Version: 1.0\n"
@@ -243,6 +252,45 @@ msgstr "LDAP ディレクトリが未定義です！"
 msgid "LDAP directory not found!"
 msgstr "LDAP ディレクトリーがありません！"
 
+<<<<<<< HEAD
+=======
+#: inc/field/ldapselectfield.class.php:154
+msgid "LDAP attribute is required!"
+msgstr "LDAP 属性が必要です！"
+
+#: inc/field/textfield.class.php:146 inc/field/floatfield.class.php:156
+#, php-format
+msgid "Specific format does not match: %s"
+msgstr "特定の書式がマッチしません : %s"
+
+#: inc/field/textfield.class.php:155
+#, php-format
+msgid "The text is too short (minimum %d characters): %s"
+msgstr "テキストが短すぎます（最低 %d 文字）: %s"
+
+#: inc/field/textfield.class.php:160
+#, php-format
+msgid "The text is too long (maximum %d characters): %s"
+msgstr "テキストが長すぎます（最大 %d 文字）: %s"
+
+#: inc/field/textfield.class.php:168
+msgid "Text"
+msgstr "テキスト"
+
+#: inc/field/textfield.class.php:217 inc/field/floatfield.class.php:238
+#: inc/questionregex.class.php:62 entrée standard:42
+msgid "Regular expression"
+msgstr "正規表現"
+
+#: inc/field/textfield.class.php:222 inc/field/floatfield.class.php:243
+msgid "Range"
+msgstr "範囲"
+
+#: inc/field/textfield.class.php:228 inc/field/floatfield.class.php:249
+msgid "Additional validation"
+msgstr "追加の検証"
+
+>>>>>>> support/2.13.0
 #: inc/field/radiosfield.class.php:108
 msgid "Radios"
 msgstr "ラジオボタン"
