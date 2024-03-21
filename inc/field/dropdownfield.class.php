@@ -531,13 +531,10 @@ class DropdownField extends PluginFormcreatorAbstractField
       $dparams = [];
       $dparams = $this->buildParams($rand);
       $dparams['display'] = false;
-<<<<<<< HEAD
-      $dparams['_idor_token'] = Session::getNewIDORToken($itemtype);
+
       if (version_compare(GLPI_VERSION, '10.1') >= 0 && $item->isField('states_id')) {
          $dparams['condition'] = State::getDisplayConditionForAssistance();
       }
-=======
-
       $idor_params = [];
       foreach (['condition', 'displaywith', 'entity_restrict', 'right'] as $sensitive_param) {
          if (array_key_exists($sensitive_param, $dparams)) {
@@ -546,7 +543,6 @@ class DropdownField extends PluginFormcreatorAbstractField
       }
       $dparams['_idor_token'] = Session::getNewIDORToken($itemtype, $idor_params);
 
->>>>>>> support/2.13.0
       $html .= $itemtype::dropdown($dparams);
       $html .= PHP_EOL;
       $html .= Html::scriptBlock("$(function() {
