@@ -64,7 +64,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
       return Change::class;
    }
 
-   protected static function getTemplateItemtypeName(): string {
+   protected function getTemplateItemtypeName(): string {
       return ChangeTemplate::class;
    }
 

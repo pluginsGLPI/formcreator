@@ -63,7 +63,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
       return Problem::class;
    }
 
-   protected static function getTemplateItemtypeName(): string {
+   protected function getTemplateItemtypeName(): string {
       return ProblemTemplate::class;
    }
 

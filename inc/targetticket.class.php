@@ -77,7 +77,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       return Ticket::class;
    }
 
-   protected static function getTemplateItemtypeName(): string {
+   protected function getTemplateItemtypeName(): string {
       return TicketTemplate::class;
    }
 
