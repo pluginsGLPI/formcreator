@@ -108,7 +108,7 @@ PluginFormcreatorTranslatableInterface
     *
     * @return string
     */
-   abstract static protected function getTemplateItemtypeName(): string;
+   abstract protected function getTemplateItemtypeName(): string;
 
    /**
     * Get the class name of the target itemtype's template predefined field class
