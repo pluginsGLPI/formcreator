@@ -285,20 +285,23 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
          case self::ACTOR_TYPE_PERSON:
          case self::ACTOR_TYPE_AUTHORS_SUPERVISOR:
             $user = new User;
+            $field = $idToRemove == 'uuid' ? 'id' : 'completename';
             if ($user->getFromDB($target_actor['actor_value'])) {
-               $target_actor['actor_value'] = $user->fields['name'];
+               $target_actor['actor_value'] = $user->fields[$field];
             }
             break;
          case self::ACTOR_TYPE_GROUP:
             $group = new Group;
+            $field = $idToRemove == 'uuid' ? 'id' : 'completename';
             if ($group->getFromDB($target_actor['actor_value'])) {
-               $target_actor['actor_value'] = $group->fields['completename'];
+               $target_actor['actor_value'] = $group->fields[$field];
             }
             break;
          case self::ACTOR_TYPE_SUPPLIER:
             $supplier = new Supplier;
+            $field = $idToRemove == 'uuid' ? 'id' : 'completename';
             if ($supplier->getFromDB($target_actor['actor_value'])) {
-               $target_actor['actor_value'] = $supplier->fields['name'];
+               $target_actor['actor_value'] = $supplier->fields[$field];
             }
             break;
       }
