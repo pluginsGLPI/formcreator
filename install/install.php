@@ -83,6 +83,7 @@ class PluginFormcreatorInstall {
       '2.13.4' => '2.13.5',
       '2.13.5' => '2.13.6',
       '2.13.6' => '2.13.7',
+      '2.13.7' => '2.13.10',
    ];
 
    protected bool $resyncIssues = false;
@@ -764,7 +765,7 @@ class PluginFormcreatorInstall {
       // With counters
       $x = 0;
       $w = 4; // Width
-      $h = 1; // Height
+      $h = 2; // Height
       $s = 0; // space between widgets
       $y = 0;
       foreach ($cards as $key => $options) {
