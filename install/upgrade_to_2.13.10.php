@@ -32,9 +32,8 @@
 
 use Glpi\Dashboard\Dashboard;
 use Glpi\Dashboard\Item;
-use Glpi\Toolbox\Sanitizer;
 
-class PluginFormcreatorUpgradeTo2_13_7
+class PluginFormcreatorUpgradeTo2_13_10
 {
    /** @var Migration */
    protected $migration;
@@ -50,47 +49,7 @@ class PluginFormcreatorUpgradeTo2_13_7
    public function upgrade(Migration $migration)
    {
       $this->migration = $migration;
-      $this->fixEncodingInQuestions();
       $this->resizeWidgets();
-   }
-
-   /**
-    * Select and multiseiect questions pay contain RAW ampersand (&)
-    * it must be encoded, or select / multiselect fields will not validate answers
-    * containing this character
-    *
-    * @return void
-    */
-   public function fixEncodingInQuestions()
-   {
-      global $DB;
-
-      $table = 'glpi_plugin_formcreator_questions';
-      $result = $DB->request([
-         'SELECT' => ['id', 'values'],
-         'FROM' => $table,
-         'WHERE' => [
-            'fieldtype' => ['select', 'multiselect'],
-            'values' => ['REGEXP', $DB->escape('&(?!#38;)')],
-         ],
-      ]);
-
-      foreach ($result as $row) {
-         $values = json_decode($row['values']);
-         if (!is_array($values) || $values === null) {
-            continue;
-         }
-         foreach ($values as &$value) {
-            $value = Sanitizer::encodeHtmlSpecialChars($value);
-         }
-         $values = json_encode($values, JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES);
-         $values = $DB->escape($values);
-         $DB->update(
-            $table,
-            ['values' => $values],
-            ['id' => $row['id']]
-         );
-      }
    }
 
    /**
@@ -112,19 +71,13 @@ class PluginFormcreatorUpgradeTo2_13_7
 
       $di = new Item();
       $cards = $di->find(['dashboards_dashboards_id' => $dashboard->fields['id']]);
-      $x = 0;
 
       foreach ($cards as $card) {
          $di = new Item();
          $di->update([
             'id'     => $card['id'],
-            'width'  => 4,
             'height' => 2,
-            'x'      => $x,
-            'y'      => 0,
          ]);
-
-         $x += 4;
       }
    }
 }
