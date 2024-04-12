@@ -258,7 +258,7 @@ class DropdownField extends PluginFormcreatorAbstractField
                      'groups_id' => $_SESSION['glpigroups'],
                   ],
                ]);
-               $tickets_filter[] = ['id' => $requestersObserversGroupsQuery];
+               $tickets_filter[] = [Ticket::getTableField('id') => $requestersObserversGroupsQuery];
             }
             $dparams_cond_crit['OR'] = $tickets_filter;
             break;
