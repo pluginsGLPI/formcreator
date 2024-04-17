@@ -191,8 +191,11 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
             $input['actor_value'] = $question->getID();
             break;
 
-         case self::ACTOR_TYPE_PERSON:
          case self::ACTOR_TYPE_AUTHORS_SUPERVISOR:
+            $input['actor_value'] = 0;
+            break;
+
+         case self::ACTOR_TYPE_PERSON:
             $user = new User;
             $field = $idKey == 'id' ? 'id' : 'name';
             $users_id = plugin_formcreator_getFromDBByField($user, $field, $input['actor_value']);
@@ -278,12 +281,18 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
          case self::ACTOR_TYPE_GROUP_FROM_OBJECT:
          case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT :
             $question = new PluginFormcreatorQuestion;
-            if ($question->getFromDB($target_actor['actor_value'])) {
-               $target_actor['actor_value'] = $question->fields['uuid'];
+            $field = $idToRemove == 'uuid' ? 'id' : 'uuid';
+            $question->getFromDBByCrit([
+               $field => $target_actor['actor_value']
+            ]);
+            if (!$question->isNewItem()) {
+               $target_actor['actor_value'] = $idToRemove == 'uuid' ? $question->getID() : $question->fields['uuid'];
             }
             break;
-         case self::ACTOR_TYPE_PERSON:
          case self::ACTOR_TYPE_AUTHORS_SUPERVISOR:
+            $target_actor['actor_value'] = 0;
+            break;
+         case self::ACTOR_TYPE_PERSON:
             $user = new User;
             $field = $idToRemove == 'uuid' ? 'id' : 'completename';
             if ($user->getFromDB($target_actor['actor_value'])) {
