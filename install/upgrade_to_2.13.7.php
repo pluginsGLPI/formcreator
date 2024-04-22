@@ -39,16 +39,14 @@ class PluginFormcreatorUpgradeTo2_13_7
    /** @var Migration */
    protected $migration;
 
-   public function isResyncIssuesRequired()
-   {
+   public function isResyncIssuesRequired() {
       return false;
    }
 
    /**
     * @param Migration $migration
     */
-   public function upgrade(Migration $migration)
-   {
+   public function upgrade(Migration $migration) {
       $this->migration = $migration;
       $this->fixEncodingInQuestions();
       $this->resizeWidgets();
@@ -61,8 +59,7 @@ class PluginFormcreatorUpgradeTo2_13_7
     *
     * @return void
     */
-   public function fixEncodingInQuestions()
-   {
+   public function fixEncodingInQuestions() {
       global $DB;
 
       $table = 'glpi_plugin_formcreator_questions';
@@ -99,8 +96,7 @@ class PluginFormcreatorUpgradeTo2_13_7
     *
     * @return void
     */
-   public function resizeWidgets()
-   {
+   public function resizeWidgets() {
       // Get container
       $dashboard = new Dashboard();
       $found = $dashboard->getFromDB("plugin_formcreator_issue_counters");
