@@ -38,16 +38,14 @@ class PluginFormcreatorUpgradeTo2_13_10
    /** @var Migration */
    protected $migration;
 
-   public function isResyncIssuesRequired()
-   {
+   public function isResyncIssuesRequired() {
       return false;
    }
 
    /**
     * @param Migration $migration
     */
-   public function upgrade(Migration $migration)
-   {
+   public function upgrade(Migration $migration) {
       $this->migration = $migration;
       $this->resizeWidgets();
    }
@@ -58,8 +56,7 @@ class PluginFormcreatorUpgradeTo2_13_10
     *
     * @return void
     */
-   public function resizeWidgets()
-   {
+   public function resizeWidgets() {
       // Get container
       $dashboard = new Dashboard();
       $found = $dashboard->getFromDB("plugin_formcreator_issue_counters");
