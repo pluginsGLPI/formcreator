@@ -716,8 +716,8 @@ PluginFormcreatorTranslatableInterface
 
       $table_cat      = getTableForItemType(PluginFormcreatorCategory::class);
       $table_form     = getTableForItemType(PluginFormcreatorForm::class);
-      $table_section  = getTableForItemType(PluginFormcreatorSections::class);
-      $table_question = getTableForItemType(PluginFormcreatorQuestions::class);
+      $table_section  = getTableForItemType(PluginFormcreatorSection::class);
+      $table_question = getTableForItemType(PluginFormcreatorQuestion::class);
 
       $categoryFk = PluginFormcreatorCategory::getForeignKeyField();
 
