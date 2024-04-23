@@ -227,40 +227,11 @@ class DropdownField extends PluginFormcreatorAbstractField
             if (Session::haveRight("ticket", Ticket::READALL)) {
                break;
             }
-            $currentUser = Session::getLoginUserID();
             if (!Session::haveRight(Ticket::$rightname, Ticket::READMY) && !Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
                // No right to view any ticket, then force the dropdown to be empty
                $dparams_cond_crit['OR'] = new QueryExpression('0=1');
                break;
             }
-            $tickets_filter = ['users_id_recipient' => $currentUser];
-
-            if (Session::haveRight(Ticket::$rightname, Ticket::READMY)) {
-               $requestersObserversQuery = new QuerySubQuery([
-                  'SELECT' => 'tickets_id',
-                  'FROM' => Ticket_User::getTable(),
-                  'WHERE' => [
-                     'users_id' => $currentUser,
-                     'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
-                  ],
-               ]);
-               $tickets_filter[] = [
-                  Ticket::getTableField('id') => $requestersObserversQuery,
-               ];
-            }
-
-            if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP) && count($_SESSION['glpigroups']) > '0') {
-               $requestersObserversGroupsQuery = new QuerySubQuery([
-                  'SELECT' => 'tickets_id',
-                  'FROM' => Group_Ticket::getTable(),
-                  'WHERE' => [
-                     'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER],
-                     'groups_id' => $_SESSION['glpigroups'],
-                  ],
-               ]);
-               $tickets_filter[] = [Ticket::getTableField('id') => $requestersObserversGroupsQuery];
-            }
-            $dparams_cond_crit['OR'] = $tickets_filter;
             break;
 
          default:
