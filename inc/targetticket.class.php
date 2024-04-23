@@ -885,6 +885,14 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       // Cleanup actors array
       $data = $this->cleanActors($data);
 
+      // Specific format for actors in tickets
+      // @see CommonITILObject::setTechAndGroupFromItilCategory()
+      if ($data['_users_id_assign'] === 0) {
+         $data['_users_id_assign'] = [];
+         $data['_users_id_assign_notif']['use_notification'] = [];
+         $data['_users_id_assign_notif']['alternative_email'] = [];
+      }
+
       // Create the target ticket
       $data['_auto_import'] = true;
       $data['_skip_sla_assign'] = true;

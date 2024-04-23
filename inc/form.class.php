@@ -670,8 +670,8 @@ PluginFormcreatorTranslatableInterface
 
       $table_cat      = getTableForItemType(PluginFormcreatorCategory::class);
       $table_form     = getTableForItemType(PluginFormcreatorForm::class);
-      $table_section  = getTableForItemType(PluginFormcreatorSections::class);
-      $table_question = getTableForItemType(PluginFormcreatorQuestions::class);
+      $table_section  = getTableForItemType(PluginFormcreatorSection::class);
+      $table_question = getTableForItemType(PluginFormcreatorQuestion::class);
 
       $categoryFk = PluginFormcreatorCategory::getForeignKeyField();
 
@@ -797,7 +797,7 @@ PluginFormcreatorTranslatableInterface
          foreach ($result_faqs as $faq) {
             $formList[] = [
                'id'               => $faq['id'],
-               'name'             => $faq['name'],
+               'name'             => $faq['transname'] ?? $faq['name'],
                'icon'             => '',
                'icon_color'       => '',
                'background_color' => '',

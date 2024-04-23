@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Toolbox\Sanitizer;
+
 include ('../../../inc/includes.php');
 
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
@@ -37,4 +39,5 @@ $authldap = new AuthLdap();
 $authldap->getFromDB($_POST['value']);
 $filter = "(".$authldap->getField("login_field")."=*)";
 $ldap_condition = $authldap->getField('condition');
+$ldap_condition = Sanitizer::decodeHtmlSpecialChars($ldap_condition);
 echo "(& $filter $ldap_condition)";
