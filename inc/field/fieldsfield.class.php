@@ -483,7 +483,7 @@ class FieldsField extends PluginFormcreatorAbstractField
    public function isValid(): bool {
       if (!is_null($this->getField())) {
          // If the field is required it can't be empty
-         if ($this->getField()->fields['mandatory'] && $this->value == '') {
+         if ($this->isAdditionalFieldEmpty()) {
             Session::addMessageAfterRedirect(
                __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
                false,
@@ -496,6 +496,20 @@ class FieldsField extends PluginFormcreatorAbstractField
 
       // All is OK
       return true;
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @return boolean
+    */
+   private function isAdditionalFieldEmpty(): bool {
+      switch ($this->getField()->fields['type']) {
+         case 'dropdown':
+            return $this->getField()->fields['mandatory'] && $this->value == 0;
+      }
+
+      return $this->getField()->fields['mandatory'] && $this->value == '';
    }
 
    public function moveUploads() {
