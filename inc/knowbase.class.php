@@ -222,7 +222,7 @@ class PluginFormcreatorKnowbase {
       foreach ($result_faqs as $faq) {
          $formList[] = [
             'id'           => $faq['id'],
-            'name'         => $faq['name'],
+            'name'         => $faq['transname'] ?? $faq['name'],
             'icon'         => '',
             'icon_color'   => '',
             'background_color'   => '',
