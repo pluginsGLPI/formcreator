@@ -180,7 +180,7 @@ class Config extends CommonTestCase {
    public function checkAutomaticAction() {
       $cronTask = new \CronTask();
       $cronTask->getFromDBByCrit([
-         'itemtype' => 'PluginFormcreatorISsue',
+         'itemtype' => 'PluginFormcreatorIssue',
          'name'     => 'SyncIssues'
       ]);
       $this->boolean($cronTask->isNewItem())->isFalse();
