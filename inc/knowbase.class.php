@@ -136,7 +136,7 @@ class PluginFormcreatorKnowbase {
          'FROM' => $cat_table,
          'ORDER' => [
             KnowbaseItemCategory::getTableField('level') . ' DESC',
-            KnowbaseItemCategory::getTableField('name'),
+            KnowbaseItemCategory::getTableField('name') . ' DESC',
          ]
       ]);
 
