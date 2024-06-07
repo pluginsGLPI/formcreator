@@ -69,5 +69,7 @@ $field = PluginFormcreatorFields::getFieldInstance(
 $question->fields['fieldtype'] = '';
 if ($field !== null) {
    $question->fields['fieldtype'] = $_REQUEST['fieldtype'];
+   $question->fields['_blocks_field'] = $_REQUEST['blocks_field'] ?? null;
+   $question->fields['_dropdown_fields_field'] = $_REQUEST['dropdown_fields_field'] ?? null;
 }
 $question->showForm($question->getID());
