@@ -63,7 +63,7 @@ class FieldsField extends PluginFormcreatorAbstractField
    public function getField(): ?PluginFieldsField {
       if ($this->field === null && isset($this->question->fields['values'])) {
          $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-         $field_name = $decodedValues['dropdown_fields_field'] ?? '';
+         $field_name = $decodedValues['dropdown_fields_field'] ?? ($this->question->fields['_field_name'] ?? '');
          $fieldObj = new PluginFieldsField();
          if ($fieldObj->getFromDBByCrit(['name' => $field_name])) {
             $this->field = $fieldObj;
