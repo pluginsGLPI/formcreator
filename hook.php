@@ -229,7 +229,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          $condition .= " OR `glpi_users_$complexJoinId`.`id` = '$currentUser'";
 
          // Add users_id_recipient
-         $condition .= " OR `glpi_plugin_formcreator_issues`.`users_id_recipient` = $currentUser ";
+         $condition .= " OR `glpi_plugin_formcreator_issues`.`users_id_recipient` = '$currentUser' ";
          return "($condition)";
       break;
 
