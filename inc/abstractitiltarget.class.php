@@ -1424,7 +1424,10 @@ SCRIPT;
             $period = "month";
             break;
       }
-      $str    = "+" . $this->fields['due_date_value'] . " $period";
+      $str = $this->fields['due_date_value'] . " $period";
+      if ($str[0] !== '-') {
+         $str = '+' . $str;
+      }
 
       switch ($this->fields['due_date_rule']) {
          case self::DUE_DATE_RULE_ANSWER:
