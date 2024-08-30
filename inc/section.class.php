@@ -353,8 +353,7 @@ PluginFormcreatorTranslatableInterface
       return $success;
    }
 
-   public function fixOrder(): void
-   {
+   public function fixOrder(): void {
       global $DB;
 
       $formId = $this->fields['plugin_formcreator_forms_id'];
