@@ -270,6 +270,8 @@ PluginFormcreatorTranslatableInterface
    public function moveUp() {
       global $DB;
 
+      $this->fixOrder();
+
       $order         = $this->fields['order'];
       $formId        = $this->fields['plugin_formcreator_forms_id'];
       $otherItem = new static();
@@ -313,6 +315,8 @@ PluginFormcreatorTranslatableInterface
    public function moveDown() {
       global $DB;
 
+      $this->fixOrder();
+
       $order     = $this->fields['order'];
       $formId    = $this->fields['plugin_formcreator_forms_id'];
       $otherItem = new static();
@@ -347,6 +351,34 @@ PluginFormcreatorTranslatableInterface
       }
 
       return $success;
+   }
+
+   public function fixOrder(): void
+   {
+      global $DB;
+
+      $formId = $this->fields['plugin_formcreator_forms_id'];
+
+      $iterator = $DB->request([
+         'FROM' => static::getTable(),
+         'WHERE' => [
+            'AND' => [
+               'plugin_formcreator_forms_id' => $formId,
+            ]
+         ],
+         'ORDER' => ['order ASC']
+      ]);
+      $order = 1;
+      foreach ($iterator as $row) {
+         if ($row['order'] !== $order) {
+            $DB->update(static::getTable(), [
+               'order' => $order
+            ], [
+               'id' => $row['id']
+            ]);
+         }
+         $order++;
+      }
    }
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
