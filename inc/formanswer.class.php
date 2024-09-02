@@ -57,8 +57,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    // Values choosen to not conflict with status of ticket constants
    // @see PluginFormcreatorIssue::getNewStatusArray
-   const STATUS_APPROVAL = 100;
-   const STATUS_WAITING = 101;
+   const STATUS_WAITING = 100;
+   const STATUS_APPROVAL = 101;
    const STATUS_REFUSED = 102;
    const STATUS_ACCEPTED = 103;
 
