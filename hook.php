@@ -205,6 +205,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
             $groupList[] = $group['id'];
          }
          if (count($groupList) > 0) {
+            $groupList = array_filter($groupList);
             $groupList = implode("', '", $groupList);
             // Search option ID 16 is either from Formcreator, either from AdvForms
             $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[16]['joinparams']);
