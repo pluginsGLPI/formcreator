@@ -246,6 +246,7 @@ class DropdownField extends PluginFormcreatorAbstractField
                $canViewAllHardware = Session::haveRight('helpdesk_hardware', pow(2, Ticket::HELPDESK_ALL_HARDWARE));
                $canViewMyHardware = Session::haveRight('helpdesk_hardware', pow(2, Ticket::HELPDESK_MY_HARDWARE));
                $canViewGroupHardware = Session::haveRight('show_group_hardware', '1');
+               $target_ticket = (new \PluginFormcreatorTargetTicket())->getTargetsForForm($form->getID());
                $groups = [];
                if ($canViewGroupHardware) {
                   $groups = $this->getMyGroups(Session::getLoginUserID());
@@ -266,7 +267,7 @@ class DropdownField extends PluginFormcreatorAbstractField
                   ];
                }
                // Check if helpdesk availability is fine tunable on a per item basis
-               if (Session::getCurrentInterface() == "helpdesk" && $DB->fieldExists($itemtype::getTable(), 'is_helpdesk_visible')) {
+               if ($DB->fieldExists($itemtype::getTable(), 'is_helpdesk_visible') && count($target_ticket) > 0) {
                   $dparams_cond_crit[] = [
                      'is_helpdesk_visible' => '1',
                   ];
