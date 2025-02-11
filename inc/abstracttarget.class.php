@@ -253,6 +253,15 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
          $field_name = $decodedValues['dropdown_fields_field'] ?? '';
          $blocks_field = $decodedValues['blocks_field'] ?? '';
 
+         //load container field
+         $container = new PluginFieldsContainer();
+         $container->getFromDB($blocks_field);
+         $related_itemtype = json_decode($container->fields['itemtypes'], true);
+
+         if (!in_array(get_called_class()::getTargetItemtypeName(), $related_itemtype)) {
+            continue;
+         }
+
          $field = new PluginFieldsField();
          $field->getFromDbByCrit(['name' => $field_name]);
 
