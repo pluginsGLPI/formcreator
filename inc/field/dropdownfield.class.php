@@ -266,7 +266,7 @@ class DropdownField extends PluginFormcreatorAbstractField
                      ] + $dparams_cond_crit
                   ];
                }
-               // Check if helpdesk availability is fine tunable on a per item basis
+               // Check if helpdesk availability is fine tunable on a per item basis only if the form has as objective to create a ticket
                if ($DB->fieldExists($itemtype::getTable(), 'is_helpdesk_visible') && count($target_ticket) > 0) {
                   $dparams_cond_crit[] = [
                      'is_helpdesk_visible' => '1',
