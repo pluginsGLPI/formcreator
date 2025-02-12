@@ -248,7 +248,7 @@ class DropdownField extends PluginFormcreatorAbstractField
                $canViewGroupHardware = Session::haveRight('show_group_hardware', '1');
                $groups = [];
                if ($canViewGroupHardware) {
-                  $groups = $this->getMyGroups(Session::getLoginUserID());
+                  $groups = $_SESSION['glpigroups'];
                }
                if ($DB->fieldExists($itemtype::getTable(), $userFk)
                   && !$canViewAllHardware && $canViewMyHardware
