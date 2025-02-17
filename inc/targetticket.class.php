@@ -834,7 +834,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 
       $this->prepareActors($form, $formanswer);
 
-      if (count($this->requesters['_users_id_requester']) == 0) {
+      if (count($this->requesters['_users_id_requester']) == 0 && count($this->requesterGroups['_groups_id_requester']) == 0) {
          $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $formanswer->fields['requester_id'], true);
          $requesters_id = $formanswer->fields['requester_id'];
       } else {
