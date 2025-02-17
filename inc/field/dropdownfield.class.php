@@ -266,7 +266,7 @@ class DropdownField extends PluginFormcreatorAbstractField
                   ];
                }
                // Check if helpdesk availability is fine tunable on a per item basis
-               if (Session::getCurrentInterface() == "helpdesk" && $DB->fieldExists($itemtype::getTable(), 'is_helpdesk_visible')) {
+               if ($DB->fieldExists($itemtype::getTable(), 'is_helpdesk_visible')) {
                   $dparams_cond_crit[] = [
                      'is_helpdesk_visible' => '1',
                   ];
