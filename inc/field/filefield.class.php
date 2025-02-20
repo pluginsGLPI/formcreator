@@ -238,9 +238,20 @@ class FileField extends PluginFormcreatorAbstractField
          return;
       }
 
+      $entities_id = $form->getField('entities_id');
+      if ($form->getField('is_recursive')) {
+         $entities_sons = getSonsOf('glpi_entities', $entities_id);
+         if (isset($_SESSION['glpiactive_entity'])
+            && $_SESSION['glpiactive_entity'] != $entities_id
+            && in_array($_SESSION['glpiactive_entity'], $entities_sons)
+         ) {
+            $entities_id = $_SESSION['glpiactive_entity'];
+         }
+      }
+
       $file_data = [
          'name'             => Toolbox::addslashes_deep($form->fields['name'] . ' - ' . $this->question->fields['name']),
-         'entities_id'      => $_SESSION['glpiactive_entity'] ?? $form->getField('entities_id'),
+         'entities_id'      => $entities_id,
          'is_recursive'     => $form->getField('is_recursive'),
          '_filename'        => [$file],
          '_prefix_filename' => [$prefix],
