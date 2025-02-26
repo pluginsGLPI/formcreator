@@ -5,8 +5,8 @@
 # 
 # Translators:
 # Pavel Borecki <pavel.borecki@gmail.com>, 2022
-# David Stepan <stepand@tiscali.cz>, 2023
 # Thierry Bugier <tbugier@teclib.com>, 2023
+# David Stepan <stepand@tiscali.cz>, 2024
 # 
 #, fuzzy
 msgid ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-13 14:56+0100\n"
 "PO-Revision-Date: 2021-08-30 07:22+0000\n"
-"Last-Translator: Thierry Bugier <tbugier@teclib.com>, 2023\n"
+"Last-Translator: David Stepan <stepand@tiscali.cz>, 2024\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/teclib/teams/28042/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -254,7 +254,7 @@ msgstr "LDAP adresář nenalezen!"
 
 #: inc/field/ldapselectfield.class.php:154
 msgid "LDAP attribute is required!"
-msgstr ""
+msgstr "Atribut LDAP je povinný!"
 
 #: inc/field/textfield.class.php:146 inc/field/floatfield.class.php:156
 #, php-format
@@ -294,15 +294,15 @@ msgstr "Přepínač"
 
 #: inc/field/radiosfield.class.php:116 inc/field/checkboxesfield.class.php:256
 msgid "The field value is required."
-msgstr ""
+msgstr "Hodnota pole je povinná."
 
 #: inc/field/radiosfield.class.php:127
 msgid "Only one default value is allowed."
-msgstr ""
+msgstr "Je povolena pouze jedna výchozí hodnota."
 
 #: inc/field/radiosfield.class.php:138
 msgid "The default value is not in the list of available values."
-msgstr ""
+msgstr "Výchozí hodnota není v seznamu dostupných hodnot."
 
 #: inc/field/radiosfield.class.php:215 inc/field/selectfield.class.php:105
 #: inc/field/datetimefield.class.php:119 inc/field/actorfield.class.php:257
@@ -314,7 +314,7 @@ msgstr "Povinné pole je prázdné: %s"
 #: inc/field/radiosfield.class.php:234 inc/field/selectfield.class.php:123
 #, php-format
 msgid "This value %1$s is not allowed: %2$s"
-msgstr ""
+msgstr "Tato hodnota %1$s není povolena: %2$s"
 
 #: inc/field/integerfield.class.php:60
 #, php-format
@@ -503,26 +503,26 @@ msgstr "Zaškrtávací kolonka"
 #: inc/field/checkboxesfield.class.php:208
 #, php-format
 msgid "Empty values are not allowed: %s"
-msgstr ""
+msgstr "Prázdné hodnoty nejsou povoleny: %s"
 
 #: inc/field/checkboxesfield.class.php:216
 #, php-format
 msgid "This value %1$s is not alowed: %2$s"
-msgstr ""
+msgstr "Tato hodnota %1$s není povolena: %2$s"
 
 #: inc/field/checkboxesfield.class.php:236
 #, php-format
 msgid "The following question needs at least %d answers: %s"
-msgstr ""
+msgstr "Následující otázka vyžaduje alespoň %d odpovědi: %s"
 
 #: inc/field/checkboxesfield.class.php:242
 #, php-format
 msgid "The following question does not accept more than %d answers: %s"
-msgstr ""
+msgstr "Následující dotaz nepřijímá více než %d odpovědí: %s"
 
 #: inc/field/checkboxesfield.class.php:270
 msgid "The default values are not in the list of available values."
-msgstr ""
+msgstr "Výchozí hodnoty nejsou v seznamu dostupných hodnot."
 
 #: inc/field/checkboxesfield.class.php:325
 msgid "Range min"
@@ -743,19 +743,19 @@ msgstr "Skupina schvalovatele formuláře"
 
 #: inc/issue.class.php:817
 msgid "Ticket approver group"
-msgstr ""
+msgstr "Skupina schvalovatelů požadavku"
 
 #: inc/issue.class.php:857
 msgid "Ticket requester"
-msgstr ""
+msgstr "Žadatel požadavku"
 
 #: inc/issue.class.php:904
 msgid "Ticket observer"
-msgstr ""
+msgstr "Pozorovatel požadavku"
 
 #: inc/issue.class.php:952
 msgid "Ticket technician"
-msgstr ""
+msgstr "Technik požadavku"
 
 #: inc/issue.class.php:1099
 #, php-format
@@ -830,7 +830,7 @@ msgstr "Formulář byl smazán"
 
 #: inc/notificationtargetformanswer.class.php:74
 msgid "Form ID"
-msgstr ""
+msgstr "ID Formuláře"
 
 #: inc/notificationtargetformanswer.class.php:75
 #: inc/notificationtargetformanswer.class.php:95
@@ -850,7 +850,7 @@ msgstr "Úplné odpovědi formuláře"
 
 #: inc/notificationtargetformanswer.class.php:80
 msgid "Validation comment"
-msgstr ""
+msgstr "Komentář ověřovatele"
 
 #: inc/notificationtargetformanswer.class.php:81
 #: inc/notificationtargetformanswer.class.php:101
@@ -859,7 +859,7 @@ msgstr "Odkaz ověření"
 
 #: inc/notificationtargetformanswer.class.php:82
 msgid "Request ID"
-msgstr ""
+msgstr "ID žádosti"
 
 #: inc/notificationtargetformanswer.class.php:94
 msgid "Form #"
@@ -1032,6 +1032,8 @@ msgid ""
 "An internal error occured when verifying your answers. Please report it to "
 "your administrator."
 msgstr ""
+"Při ověřování vašich odpovědí došlo k interní chybě. Nahlaste to prosím "
+"svému správci."
 
 #: inc/formanswer.class.php:882
 msgid "You are not the validator of these answers"
@@ -1040,7 +1042,7 @@ msgstr "Nejste ověřovatelem těchto odpovědí"
 #: inc/formanswer.class.php:1021
 #, php-format
 msgid "Item sucessfully added: %1$s (%2$s: %3$s)"
-msgstr ""
+msgstr "Položka byla úspěšně přidána: %1$s (%2$s: %3$s)"
 
 #: inc/formanswer.class.php:1104 inc/formanswer.class.php:1106
 msgid "Form data"
@@ -1053,7 +1055,7 @@ msgstr "Není možné vytvářet cíle!"
 #: inc/formanswer.class.php:1434
 #, php-format
 msgid "Answer is invalid in %1$s"
-msgstr ""
+msgstr "Odpověď je neplatná v %1$s"
 
 #: inc/formanswer.class.php:1462
 msgid "No turing test set"
@@ -1085,7 +1087,7 @@ msgstr "Mé žádosti o pomoc"
 
 #: inc/common.class.php:829
 msgid "Consult reminders"
-msgstr ""
+msgstr "Konzultovat upomínky"
 
 #: inc/common.class.php:849
 msgid "Consult feeds"
@@ -1133,15 +1135,15 @@ msgstr[3] "Překlady"
 
 #: inc/form_language.class.php:122
 msgid "The name cannot be empty."
-msgstr ""
+msgstr "Jméno nemůže být prázdné."
 
 #: inc/form_language.class.php:130
 msgid "The language must be associated to a form."
-msgstr ""
+msgstr "Jazyk musí být přiřazen k formuláři."
 
 #: inc/form_language.class.php:138
 msgid "The specified language is not available."
-msgstr ""
+msgstr "Zadaný jazyk není k dispozici."
 
 #: inc/form_language.class.php:268
 msgid "Add a translation"
@@ -1337,11 +1339,11 @@ msgstr "Jednotná výška"
 
 #: inc/entityconfig.class.php:164
 msgid "Search for assistance"
-msgstr ""
+msgstr "Vyhledat pomoc"
 
 #: inc/entityconfig.class.php:165
 msgid "User's assistance requests"
-msgstr ""
+msgstr "Žádosti uživatele o pomoc"
 
 #: inc/entityconfig.class.php:261
 msgid "Helpdesk"
@@ -1382,7 +1384,7 @@ msgstr "Problém s hledáním"
 
 #: inc/entityconfig.class.php:393 inc/entityconfig.class.php:509
 msgid "Service catalog home page"
-msgstr ""
+msgstr "Domovská stránka katalogu služeb"
 
 #: inc/entityconfig.class.php:409 inc/entityconfig.class.php:549
 msgid "Tile design"
@@ -1516,7 +1518,7 @@ msgstr "Náhled"
 
 #: inc/form.class.php:576
 msgid "Form answer properties"
-msgstr ""
+msgstr "Vlastnosti odpovědi formuláře"
 
 #: inc/form.class.php:900
 msgid "What are you looking for?"
@@ -1590,7 +1592,7 @@ msgstr "Zpět"
 #: inc/form.class.php:1568
 #, php-format
 msgid "Form updated: %s"
-msgstr ""
+msgstr "Formulář aktualizován: %s"
 
 #: inc/form.class.php:1668
 msgid "Upload of JSON files not allowed."
@@ -1925,29 +1927,29 @@ msgstr "Typ entity dle otázky"
 
 #: inc/command/cleanticketscommand.class.php:53
 msgid "Searching for invalid items..."
-msgstr ""
+msgstr "Vyhledávání neplatných položek..."
 
 #: inc/command/cleanticketscommand.class.php:61
 msgid "Done."
-msgstr ""
+msgstr "Hotovo."
 
 #: inc/command/cleanticketscommand.class.php:135
 msgid "Step 1: double encoded < and > signs."
-msgstr ""
+msgstr "Krok 1: dvojitě zakódované znaky < a >."
 
 #: inc/command/cleanticketscommand.class.php:146
 #: inc/command/cleanticketscommand.class.php:196
 #: inc/command/cleanticketscommand.class.php:260
 msgid "No invalid items found."
-msgstr ""
+msgstr "Nebyly nalezeny žádné neplatné položky."
 
 #: inc/command/cleanticketscommand.class.php:187
 msgid "Step 2: literal BR tag."
-msgstr ""
+msgstr "Krok 2: znak BR."
 
 #: inc/command/cleanticketscommand.class.php:251
 msgid "Step 3: litteral > sign."
-msgstr ""
+msgstr "Krok 3: znak >."
 
 #: inc/filter/itilcategoryfilter.class.php:52
 #: inc/filter/itilcategoryfilter.class.php:54
@@ -2118,7 +2120,7 @@ msgstr "Žádný další řetězec k překladu"
 
 #: inc/translation.class.php:164
 msgid "Internal error: translatable string not found."
-msgstr ""
+msgstr "Interní chyba: Přeložitelný řetězec nebyl nalezen."
 
 #: inc/translation.class.php:216
 msgid "Language not found."
@@ -2332,7 +2334,7 @@ msgstr "Ano"
 #: install/install.php:135
 #, php-format
 msgid "Upgrade tables to innoDB; run %s"
-msgstr ""
+msgstr "Upgradujte tabulky na innoDB; běh %s"
 
 #: install/install.php:172
 #, php-format
@@ -2340,11 +2342,13 @@ msgid ""
 "The database schema is not consistent with the previous version of "
 "Formcreator %s. To see the logs run the command %s"
 msgstr ""
+"Schéma databáze není konzistentní s předchozí verzí Formcreator %s. Chcete-"
+"li zobrazit protokoly, spusťte příkaz %s"
 
 #: install/install.php:181
 #, php-format
 msgid "To ignore the inconsistencies and upgrade anyway run %s"
-msgstr ""
+msgstr "Chcete-li ignorovat nesrovnalosti a provést upgrade, spusťte %s"
 
 #: install/install.php:198
 msgid ""
@@ -2352,6 +2356,9 @@ msgid ""
 " to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to"
 " GLPI 10 or later and Formcreator 2.13 or later."
 msgstr ""
+"Upgrade z verze starší než 2.5.0 již není podporován. Upgradujte prosím na "
+"GLPI 9.5.7, upgradujte Formcreator na verzi 2.12.5 a poté znovu upgradujte "
+"na GLPI 10 nebo novější a Formcreator 2.13 nebo novější."
 
 #: install/install.php:250
 #, php-format
@@ -2359,10 +2366,12 @@ msgid ""
 "The database schema is not consistent with the current version of "
 "Formcreator %s. To see the logs enable the plugin and run the command %s"
 msgstr ""
+"Schéma databáze není konzistentní s aktuální verzí Formcreator %s. Chcete-li"
+" zobrazit protokoly, povolte zásuvný modul a spusťte příkaz %s"
 
 #: install/install.php:261
 msgid "The tables of the plugin passed the schema integrity check."
-msgstr ""
+msgstr "Tabulky pluginu prošly kontrolou integrity schématu."
 
 #: install/install.php:413
 msgid "A form has been created"
@@ -2435,22 +2444,22 @@ msgstr "Vytváření formulářů – problémy katalogu synchronizační služb
 
 #: install/install.php:853
 msgid "Failed to check the sanity of the tables!"
-msgstr ""
+msgstr "Nepodařilo se zkontrolovat správnost tabulek!"
 
 #: install/install.php:867
 #, php-format
 msgid "Table schema differs for table \"%s\"."
-msgstr ""
+msgstr "Schéma tabulky se liší pro tabulku \"%s\"."
 
 #: install/install.php:870
 #, php-format
 msgid "Table \"%s\" is missing."
-msgstr ""
+msgstr "Tabulka \"%s“ chybí."
 
 #: install/install.php:873
 #, php-format
 msgid "Unknown table \"%s\" has been found in database."
-msgstr ""
+msgstr "V databázi byla nalezena neznámá tabulka \"%s\"."
 
 #: hook.php:378
 msgctxt "button"
@@ -2469,7 +2478,7 @@ msgstr "Export"
 #: hook.php:381
 msgctxt "button"
 msgid "Access rights"
-msgstr ""
+msgstr "Přístupová práva"
 
 #: hook.php:693
 msgid "Cancel my ticket"
@@ -2530,15 +2539,15 @@ msgstr "Odeslat"
 
 #: js/scripts.js:1381
 msgid "An internal error occurred. Please report it to administrator."
-msgstr ""
+msgstr "Objevila se interní chyba. Nahlaste to prosím administrátorovi."
 
 #: js/scripts.js:1449
 msgid "Are you sure you want to duplicate this target?"
-msgstr ""
+msgstr "Opravdu chcete duplikovat tento cíl?"
 
 #: js/scripts.js:1466
 msgid "Are you sure you want to delete this target?"
-msgstr ""
+msgstr "Opravdu chcete tento cíl smazat?"
 
 #: entrée standard:43 standard:50 standard:44 standard:82 standard:49
 #: standard:78
@@ -2632,12 +2641,12 @@ msgstr "Podmínka pro zobrazení tlačítka Odeslat"
 
 #: entrée standard:33
 msgid "No form answer yet"
-msgstr ""
+msgstr "Zatím žádná odpověď z formuláře"
 
 #: entrée standard:38
 #, php-format
 msgid "%s latest items"
-msgstr ""
+msgstr "%s nejnovější položky"
 
 #: entrée standard:83
 msgid "Add a question"
