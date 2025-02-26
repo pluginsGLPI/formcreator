@@ -6,10 +6,10 @@
 # Translators:
 # Kirill Smyshkov <rzd10let@gmail.com>, 2021
 # Ilya Pavlov <spirkaa@gmail.com>, 2022
-# Alexander Sokolov <a.sokolov@outlook.com>, 2022
 # Nikolai Petrov <techobsl@yandex.ru>, 2022
 # Alexey Petukhov <lexx015@gmail.com>, 2023
 # Thierry Bugier <tbugier@teclib.com>, 2023
+# Alexander Sokolov <a.sokolov@outlook.com>, 2024
 # 
 #, fuzzy
 msgid ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-13 14:56+0100\n"
 "PO-Revision-Date: 2021-08-30 07:22+0000\n"
-"Last-Translator: Thierry Bugier <tbugier@teclib.com>, 2023\n"
+"Last-Translator: Alexander Sokolov <a.sokolov@outlook.com>, 2024\n"
 "Language-Team: Russian (Russia) (https://app.transifex.com/teclib/teams/28042/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -257,7 +257,7 @@ msgstr "LDAP каталог не найден!"
 
 #: inc/field/ldapselectfield.class.php:154
 msgid "LDAP attribute is required!"
-msgstr ""
+msgstr "Необходим LDAP атрибут!"
 
 #: inc/field/textfield.class.php:146 inc/field/floatfield.class.php:156
 #, php-format
@@ -297,15 +297,15 @@ msgstr "Переключатели"
 
 #: inc/field/radiosfield.class.php:116 inc/field/checkboxesfield.class.php:256
 msgid "The field value is required."
-msgstr ""
+msgstr "Необходимо значение поля."
 
 #: inc/field/radiosfield.class.php:127
 msgid "Only one default value is allowed."
-msgstr ""
+msgstr "Допускается только одно значение по умолчанию."
 
 #: inc/field/radiosfield.class.php:138
 msgid "The default value is not in the list of available values."
-msgstr ""
+msgstr "Значение по умолчанию не входит в список доступных значений."
 
 #: inc/field/radiosfield.class.php:215 inc/field/selectfield.class.php:105
 #: inc/field/datetimefield.class.php:119 inc/field/actorfield.class.php:257
@@ -317,7 +317,7 @@ msgstr "Обязательное поле пустое: %s"
 #: inc/field/radiosfield.class.php:234 inc/field/selectfield.class.php:123
 #, php-format
 msgid "This value %1$s is not allowed: %2$s"
-msgstr ""
+msgstr "Это значение %1$s недопустимо: %2$s"
 
 #: inc/field/integerfield.class.php:60
 #, php-format
@@ -507,26 +507,26 @@ msgstr "Галочки"
 #: inc/field/checkboxesfield.class.php:208
 #, php-format
 msgid "Empty values are not allowed: %s"
-msgstr ""
+msgstr "Пустые значения недопустимы: %s"
 
 #: inc/field/checkboxesfield.class.php:216
 #, php-format
 msgid "This value %1$s is not alowed: %2$s"
-msgstr ""
+msgstr "Это значение %1$s недопустимо: %2$s"
 
 #: inc/field/checkboxesfield.class.php:236
 #, php-format
 msgid "The following question needs at least %d answers: %s"
-msgstr ""
+msgstr "Следующий вопрос требует как минимум %d ответ: %s"
 
 #: inc/field/checkboxesfield.class.php:242
 #, php-format
 msgid "The following question does not accept more than %d answers: %s"
-msgstr ""
+msgstr "Следующий вопрос не принимает больше %d ответов: %s"
 
 #: inc/field/checkboxesfield.class.php:270
 msgid "The default values are not in the list of available values."
-msgstr ""
+msgstr "Значение по умолчанию не входит в список доступных значений."
 
 #: inc/field/checkboxesfield.class.php:325
 msgid "Range min"
@@ -747,19 +747,19 @@ msgstr "Группа, согласующая форму"
 
 #: inc/issue.class.php:817
 msgid "Ticket approver group"
-msgstr ""
+msgstr "Группа согласующих заявку"
 
 #: inc/issue.class.php:857
 msgid "Ticket requester"
-msgstr ""
+msgstr "Инициатор заявки"
 
 #: inc/issue.class.php:904
 msgid "Ticket observer"
-msgstr ""
+msgstr "Наблюдатель заявки"
 
 #: inc/issue.class.php:952
 msgid "Ticket technician"
-msgstr ""
+msgstr "Исполнитель заявки"
 
 #: inc/issue.class.php:1099
 #, php-format
@@ -834,7 +834,7 @@ msgstr "Форма удалена"
 
 #: inc/notificationtargetformanswer.class.php:74
 msgid "Form ID"
-msgstr ""
+msgstr "ID формы"
 
 #: inc/notificationtargetformanswer.class.php:75
 #: inc/notificationtargetformanswer.class.php:95
@@ -854,7 +854,7 @@ msgstr "Ответы формы"
 
 #: inc/notificationtargetformanswer.class.php:80
 msgid "Validation comment"
-msgstr ""
+msgstr "Комментарий о проверке"
 
 #: inc/notificationtargetformanswer.class.php:81
 #: inc/notificationtargetformanswer.class.php:101
@@ -863,7 +863,7 @@ msgstr "Ссылка на согласование"
 
 #: inc/notificationtargetformanswer.class.php:82
 msgid "Request ID"
-msgstr ""
+msgstr "ID запроса"
 
 #: inc/notificationtargetformanswer.class.php:94
 msgid "Form #"
@@ -1036,6 +1036,8 @@ msgid ""
 "An internal error occured when verifying your answers. Please report it to "
 "your administrator."
 msgstr ""
+"При проверке ваших ответов произошла внутренняя ошибка. Пожалуйста, сообщите"
+" об этом своему администратору."
 
 #: inc/formanswer.class.php:882
 msgid "You are not the validator of these answers"
@@ -1044,7 +1046,7 @@ msgstr "Вы не согласующий этих ответов"
 #: inc/formanswer.class.php:1021
 #, php-format
 msgid "Item sucessfully added: %1$s (%2$s: %3$s)"
-msgstr ""
+msgstr "Элемент успешно добавлен: %1$s (%2$s: %3$s)"
 
 #: inc/formanswer.class.php:1104 inc/formanswer.class.php:1106
 msgid "Form data"
@@ -1057,7 +1059,7 @@ msgstr "Не удалось создать цели!"
 #: inc/formanswer.class.php:1434
 #, php-format
 msgid "Answer is invalid in %1$s"
-msgstr ""
+msgstr "Ответ некорректен в %1$s"
 
 #: inc/formanswer.class.php:1462
 msgid "No turing test set"
@@ -1089,7 +1091,7 @@ msgstr "Мои обращения"
 
 #: inc/common.class.php:829
 msgid "Consult reminders"
-msgstr ""
+msgstr "Просмотр напоминаний"
 
 #: inc/common.class.php:849
 msgid "Consult feeds"
@@ -1137,15 +1139,15 @@ msgstr[3] "Переводы"
 
 #: inc/form_language.class.php:122
 msgid "The name cannot be empty."
-msgstr ""
+msgstr "Имя не может быть пустым."
 
 #: inc/form_language.class.php:130
 msgid "The language must be associated to a form."
-msgstr ""
+msgstr "Язык должен быть сопоставлен с формой."
 
 #: inc/form_language.class.php:138
 msgid "The specified language is not available."
-msgstr ""
+msgstr "Указанный язык недоступен."
 
 #: inc/form_language.class.php:268
 msgid "Add a translation"
@@ -1341,11 +1343,11 @@ msgstr "Единая высота"
 
 #: inc/entityconfig.class.php:164
 msgid "Search for assistance"
-msgstr ""
+msgstr "Поиск помощи"
 
 #: inc/entityconfig.class.php:165
 msgid "User's assistance requests"
-msgstr ""
+msgstr "Запросы помощи пользователя"
 
 #: inc/entityconfig.class.php:261
 msgid "Helpdesk"
@@ -1386,7 +1388,7 @@ msgstr "Проблема с поиском"
 
 #: inc/entityconfig.class.php:393 inc/entityconfig.class.php:509
 msgid "Service catalog home page"
-msgstr ""
+msgstr "Домашняя страница каталога услуг"
 
 #: inc/entityconfig.class.php:409 inc/entityconfig.class.php:549
 msgid "Tile design"
@@ -1520,7 +1522,7 @@ msgstr "Предпросмотр"
 
 #: inc/form.class.php:576
 msgid "Form answer properties"
-msgstr ""
+msgstr "Свойства ответа формы"
 
 #: inc/form.class.php:900
 msgid "What are you looking for?"
@@ -1594,7 +1596,7 @@ msgstr "Назад"
 #: inc/form.class.php:1568
 #, php-format
 msgid "Form updated: %s"
-msgstr ""
+msgstr "Форм обновлено: %s"
 
 #: inc/form.class.php:1668
 msgid "Upload of JSON files not allowed."
@@ -1931,29 +1933,29 @@ msgstr "Организация из вопроса"
 
 #: inc/command/cleanticketscommand.class.php:53
 msgid "Searching for invalid items..."
-msgstr ""
+msgstr "Поиск недействительных элементов..."
 
 #: inc/command/cleanticketscommand.class.php:61
 msgid "Done."
-msgstr ""
+msgstr "Готово."
 
 #: inc/command/cleanticketscommand.class.php:135
 msgid "Step 1: double encoded < and > signs."
-msgstr ""
+msgstr "Шаг 1: двойное кодирование знаков < и >."
 
 #: inc/command/cleanticketscommand.class.php:146
 #: inc/command/cleanticketscommand.class.php:196
 #: inc/command/cleanticketscommand.class.php:260
 msgid "No invalid items found."
-msgstr ""
+msgstr "Недействительные элементы не найдены."
 
 #: inc/command/cleanticketscommand.class.php:187
 msgid "Step 2: literal BR tag."
-msgstr ""
+msgstr "Шаг 2: буквальный тег BR."
 
 #: inc/command/cleanticketscommand.class.php:251
 msgid "Step 3: litteral > sign."
-msgstr ""
+msgstr "Шаг 3: буквальный > знак."
 
 #: inc/filter/itilcategoryfilter.class.php:52
 #: inc/filter/itilcategoryfilter.class.php:54
@@ -2125,7 +2127,7 @@ msgstr "Больше нет строк для перевода"
 
 #: inc/translation.class.php:164
 msgid "Internal error: translatable string not found."
-msgstr ""
+msgstr "Внутренняя ошибка: переводимая строка не найдена."
 
 #: inc/translation.class.php:216
 msgid "Language not found."
@@ -2339,7 +2341,7 @@ msgstr "Да"
 #: install/install.php:135
 #, php-format
 msgid "Upgrade tables to innoDB; run %s"
-msgstr ""
+msgstr "Для обновления таблиц в innoDB запустите %s"
 
 #: install/install.php:172
 #, php-format
@@ -2347,11 +2349,15 @@ msgid ""
 "The database schema is not consistent with the previous version of "
 "Formcreator %s. To see the logs run the command %s"
 msgstr ""
+"Схема базы данных не соответствует предыдущей версии Formcreator %s. Чтобы "
+"просмотреть журнал, выполните команду %s"
 
 #: install/install.php:181
 #, php-format
 msgid "To ignore the inconsistencies and upgrade anyway run %s"
 msgstr ""
+"Чтобы игнорировать несоответствия и все равно выполнить обновление, "
+"запустите %s"
 
 #: install/install.php:198
 msgid ""
@@ -2359,6 +2365,9 @@ msgid ""
 " to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to"
 " GLPI 10 or later and Formcreator 2.13 or later."
 msgstr ""
+"Обновление с версии старше 2.5.0 больше не поддерживается. Пожалуйста, "
+"обновите GLPI 9.5.7, обновите Formcreator до версии 2.12.5, затем обновите "
+"снова до GLPI 10 или новее и Formcreator 2.13 или новее."
 
 #: install/install.php:250
 #, php-format
@@ -2366,10 +2375,12 @@ msgid ""
 "The database schema is not consistent with the current version of "
 "Formcreator %s. To see the logs enable the plugin and run the command %s"
 msgstr ""
+"Схема базы данных не соответствует текущей версии Formcreator %s. Чтобы "
+"просмотреть журнал, включите плагин и выполните команду %s"
 
 #: install/install.php:261
 msgid "The tables of the plugin passed the schema integrity check."
-msgstr ""
+msgstr "Таблицы плагина прошли проверку целостности схемы."
 
 #: install/install.php:413
 msgid "A form has been created"
@@ -2443,22 +2454,22 @@ msgstr "Formcreator - Проблемы каталога службы синхр�
 
 #: install/install.php:853
 msgid "Failed to check the sanity of the tables!"
-msgstr ""
+msgstr "Не удалось проверить работоспособность таблиц!"
 
 #: install/install.php:867
 #, php-format
 msgid "Table schema differs for table \"%s\"."
-msgstr ""
+msgstr "Схема отличается для таблицы \"%s\"."
 
 #: install/install.php:870
 #, php-format
 msgid "Table \"%s\" is missing."
-msgstr ""
+msgstr "Таблица \"%s\" утеряна."
 
 #: install/install.php:873
 #, php-format
 msgid "Unknown table \"%s\" has been found in database."
-msgstr ""
+msgstr "В базе данных найдена неизвестная таблица \"%s\""
 
 #: hook.php:378
 msgctxt "button"
@@ -2477,7 +2488,7 @@ msgstr "Экспорт"
 #: hook.php:381
 msgctxt "button"
 msgid "Access rights"
-msgstr ""
+msgstr "Права доступа"
 
 #: hook.php:693
 msgid "Cancel my ticket"
@@ -2539,14 +2550,15 @@ msgstr "Отправить"
 #: js/scripts.js:1381
 msgid "An internal error occurred. Please report it to administrator."
 msgstr ""
+"Возникла внутренняя ошибка. Пожалуйста, сообщите об этом администратору."
 
 #: js/scripts.js:1449
 msgid "Are you sure you want to duplicate this target?"
-msgstr ""
+msgstr "Вы уверены, что хотите дублировать эту цель?"
 
 #: js/scripts.js:1466
 msgid "Are you sure you want to delete this target?"
-msgstr ""
+msgstr "Вы уверены, что хотите удалить эту цель?"
 
 #: entrée standard:43 standard:50 standard:44 standard:82 standard:49
 #: standard:78
@@ -2640,12 +2652,12 @@ msgstr "Условие для отображения кнопки отправк
 
 #: entrée standard:33
 msgid "No form answer yet"
-msgstr ""
+msgstr "Ответы форм пока отсутствуют"
 
 #: entrée standard:38
 #, php-format
 msgid "%s latest items"
-msgstr ""
+msgstr "%s последних элементов"
 
 #: entrée standard:83
 msgid "Add a question"
