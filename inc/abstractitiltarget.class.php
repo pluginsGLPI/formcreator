@@ -1999,7 +1999,7 @@ SCRIPT;
       );
       echo '</div>';
 
-      if ($actorType == CommonITILActor::ASSIGN) {
+      if ($actorType == CommonITILActor::ASSIGN || $actorType == CommonITILActor::OBSERVER) {
          echo '<div style="display:none" data-actor-type="' . $type . "_" . PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER . '">';
          // find already used items
          $request = $DB->request([
