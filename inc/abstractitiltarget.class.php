@@ -1807,6 +1807,8 @@ SCRIPT;
             break;
          case CommonITILActor::OBSERVER:
             $type = 'watcher';
+            unset($dropdownItems[PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER]);
+            unset($dropdownItems[PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER]);
             $changeActorJSFunction = 'plugin_formcreator.changeActor("watcher", this.value)';
             $actorRole = PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER;
             break;
@@ -1999,7 +2001,7 @@ SCRIPT;
       );
       echo '</div>';
 
-      if ($actorType == CommonITILActor::ASSIGN || $actorType == CommonITILActor::OBSERVER) {
+      if ($actorType == CommonITILActor::ASSIGN) {
          echo '<div style="display:none" data-actor-type="' . $type . "_" . PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER . '">';
          // find already used items
          $request = $DB->request([
