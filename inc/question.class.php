@@ -402,20 +402,13 @@ PluginFormcreatorTranslatableInterface
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
-      if (
-         (
-            isset($input['fieldtype'])
-            && $input['fieldtype'] === 'textarea'
-         ) || (
-            isset($this->fields['fieldtype'])
-            && $this->fields['fieldtype'] === 'textarea'
-         ) && !empty($input['default_values'])
-      ) {
-         $input['default_values'] = str_replace('\r\n', '', $input['default_values']);
-      }
 
       if (!$this->skipChecks) {
          $input = $this->checkBeforeSave($input);
+
+         if (!empty($input['default_values'] && $input['fieldtype'] === 'textarea')) {
+            $input['default_values'] = str_replace('\r\n', '', $input['default_values']);
+         }
 
          if (!$this->checkConditionSettings($input)) {
             $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
@@ -464,23 +457,22 @@ PluginFormcreatorTranslatableInterface
    public function prepareInputForUpdate($input) {
       // global $DB;
 
-      if (
-         (
-            isset($input['fieldtype'])
-            && $input['fieldtype'] === 'textarea'
-         ) || (
-            isset($this->fields['fieldtype'])
-            && $this->fields['fieldtype'] === 'textarea'
-         ) && !empty($input['default_values'])
-      ) {
-         $input['default_values'] = str_replace('\r\n', '', $input['default_values']);
-      }
       if (!$this->skipChecks) {
          if (!isset($input['plugin_formcreator_sections_id'])) {
             $input['plugin_formcreator_sections_id'] = $this->fields['plugin_formcreator_sections_id'];
          }
 
          $input = $this->checkBeforeSave($input);
+
+         if (
+            !empty($input['default_values'])
+            && (
+               $input['fieldtype'] === 'textarea'
+               || $this->fields['fieldtype'] === 'textarea'
+            )
+         ) {
+            $input['default_values'] = str_replace('\r\n', '', $input['default_values']);
+         }
 
          if (!$this->checkConditionSettings($input)) {
             $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
