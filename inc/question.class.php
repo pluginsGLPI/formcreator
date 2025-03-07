@@ -402,6 +402,8 @@ PluginFormcreatorTranslatableInterface
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
+      $input['default_values'] = str_replace('\r\n', '', $input['default_values']);
+
       if (!$this->skipChecks) {
          $input = $this->checkBeforeSave($input);
 
@@ -452,6 +454,7 @@ PluginFormcreatorTranslatableInterface
    public function prepareInputForUpdate($input) {
       // global $DB;
 
+      $input['default_values'] = str_replace('\r\n', '', $input['default_values']);
       if (!$this->skipChecks) {
          if (!isset($input['plugin_formcreator_sections_id'])) {
             $input['plugin_formcreator_sections_id'] = $this->fields['plugin_formcreator_sections_id'];

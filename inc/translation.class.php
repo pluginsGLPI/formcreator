@@ -211,6 +211,7 @@ class PluginFormcreatorTranslation
    public function add(array $input) : bool {
       global $TRANSLATE;
 
+      $input['value'] = str_replace('\r\n', '', $input['value']);
       $formLanguage = new PluginFormcreatorForm_Language();
       if (!$formLanguage->getFromDB($input['plugin_formcreator_forms_languages_id'])) {
          Session::addMessageAfterRedirect(__('Language not found.', 'formcreator'), false, ERROR);
@@ -229,7 +230,6 @@ class PluginFormcreatorTranslation
       $original = $translatableStrings[$type][$input['id']];
 
       $input['value'] = Sanitizer::unsanitize($input['value']);
-      $input['value'] = str_replace('\r\n', '', $input['value']);
       $translations[$original] = Sanitizer::sanitize($input['value'], false);
 
       if (!$form->setTranslations($formLanguage->fields['name'], $translations)) {
