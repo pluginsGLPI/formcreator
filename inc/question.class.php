@@ -402,7 +402,7 @@ PluginFormcreatorTranslatableInterface
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
-      if (!in_array($input['fieldtype'], ['checkboxes', 'multiselect'])) {
+      if (isset($input['fieldtype']) && isset($input['default_values']) && !in_array($input['fieldtype'], ['checkboxes', 'multiselect'])) {
          $input['default_values'] = str_replace('\r\n', '', $input['default_values']);
       }
 
@@ -456,7 +456,7 @@ PluginFormcreatorTranslatableInterface
    public function prepareInputForUpdate($input) {
       // global $DB;
 
-      if (!in_array($input['fieldtype'], ['checkboxes', 'multiselect'])) {
+      if (isset($input['fieldtype']) && isset($input['default_values']) && !in_array($input['fieldtype'], ['checkboxes', 'multiselect'])) {
          $input['default_values'] = str_replace('\r\n', '', $input['default_values']);
       }
       if (!$this->skipChecks) {
