@@ -405,6 +405,10 @@ PluginFormcreatorTranslatableInterface
       if (!$this->skipChecks) {
          $input = $this->checkBeforeSave($input);
 
+         if (!empty($input['default_values'] && $input['fieldtype'] === 'textarea')) {
+            $input['default_values'] = str_replace('\r\n', '', $input['default_values']);
+         }
+
          if (!$this->checkConditionSettings($input)) {
             $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
          }
@@ -458,6 +462,12 @@ PluginFormcreatorTranslatableInterface
          }
 
          $input = $this->checkBeforeSave($input);
+
+         if (!empty($input['default_values']) &&
+            ($input['fieldtype'] === 'textarea' || $this->fields['fieldtype'] === 'textarea')
+         ) {
+            $input['default_values'] = str_replace('\r\n', '', $input['default_values']);
+         }
 
          if (!$this->checkConditionSettings($input)) {
             $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
