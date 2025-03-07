@@ -402,7 +402,6 @@ PluginFormcreatorTranslatableInterface
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
-
       if (!$this->skipChecks) {
          $input = $this->checkBeforeSave($input);
 
