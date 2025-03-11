@@ -280,7 +280,7 @@ PluginFormcreatorTranslatableInterface
       }
 
       $field = $this->getSubField();
-      if (!$field->isPrerequisites()) {
+      if ($field == null || !$field->isPrerequisites()) {
          return '';
       }
 
