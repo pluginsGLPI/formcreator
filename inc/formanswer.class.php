@@ -776,6 +776,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
       $options['canedit'] = true;
       $options['candel'] = false;
+      $options['withtemplate'] = 1;
 
       echo Html::hidden('plugin_formcreator_forms_id', ['value' => $form->getID()]);
       echo Html::hidden('id', ['value' => $this->getID()]);
