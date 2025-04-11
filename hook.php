@@ -309,6 +309,10 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
                   $tocheck = $item->getPendingStatusArray();
                   break;
 
+               case PluginFormcreatorFormAnswer::STATUS_WAITING:
+                  $tocheck = $item->getPendingValidationStatusArray();
+                  break;
+
                case Ticket::CLOSED:
                   $tocheck = $item->getClosedStatusArray();
                   break;
