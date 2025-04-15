@@ -1135,7 +1135,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getPendingStatusArray() {
-      return [Ticket::WAITING, PluginFormcreatorFormAnswer::STATUS_WAITING];
+      return [Ticket::WAITING];
+   }
+
+   static function getPendingValidationStatusArray() {
+      return [PluginFormcreatorFormAnswer::STATUS_WAITING];
    }
 
    static function getProcessStatusArray() {
