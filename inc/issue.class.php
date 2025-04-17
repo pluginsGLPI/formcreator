@@ -998,6 +998,16 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ],
       ];
 
+      $tab[] = [
+         'id'                 => '127',
+         'table'              => self::getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'nodisplay'          => true,
+         'datatype'           => 'string',
+         'massiveaction'      => false
+      ];
+
       return $tab;
    }
 
@@ -1322,6 +1332,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             $searchCriteria = PluginFormcreatorIssue::getOldCriteria();
             break;
       }
+      $searchCriteria['sort'] = 127;
       $searchWaiting = Search::getDatas(
          PluginFormcreatorIssue::class,
          $searchCriteria
