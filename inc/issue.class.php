@@ -1274,8 +1274,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public static function nbIssues(array $params): array {
-      global $DB;
-
       $default_params = [
          'label'                 => "",
          'icon'                  => Ticket::getIcon(),
@@ -1329,15 +1327,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
          PluginFormcreatorIssue::class,
          $searchCriteria
       );
-      $searchWaiting['search']['no_search'] = true;
       Search::constructSQL($searchWaiting);
-      $result = $DB->doQuery($searchWaiting['sql']['count'][0]);
-      $count = 'N/A';
-      if ($result) {
-         $count = $DB->fetchAssoc($result);
-         $count = array_shift($count);
-      }
-
+      // Really, really HACKY !
+      $query = $searchWaiting['sql']['search'];
+      $query = preg_replace('#ORDER BY `ITEM_PluginFormcreatorIssue_1` ASC $#', '', $query);
+      $searchWaiting['sql']['search'] = $query;
+      Search::constructData($searchWaiting);
+      $count = 0;
       if (isset($searchWaiting['data']['totalcount'])) {
          $count = $searchWaiting['data']['totalcount'];
       }
