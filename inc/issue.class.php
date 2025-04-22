@@ -998,16 +998,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ],
       ];
 
-      $tab[] = [
-         'id'                 => '127',
-         'table'              => self::getTable(),
-         'field'              => 'id',
-         'name'               => __('ID'),
-         'nodisplay'          => true,
-         'datatype'           => 'string',
-         'massiveaction'      => false
-      ];
-
       return $tab;
    }
 
@@ -1284,6 +1274,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public static function nbIssues(array $params): array {
+      global $DB;
+
       $default_params = [
          'label'                 => "",
          'icon'                  => Ticket::getIcon(),
@@ -1332,12 +1324,19 @@ class PluginFormcreatorIssue extends CommonDBTM {
             $searchCriteria = PluginFormcreatorIssue::getOldCriteria();
             break;
       }
-      $searchCriteria['sort'] = 127;
-      $searchWaiting = Search::getDatas(
+
+      $searchWaiting = Search::prepareDatasForSearch(
          PluginFormcreatorIssue::class,
          $searchCriteria
       );
-      $count = 0;
+      $searchWaiting['search']['no_search'] = true;
+      Search::constructSQL($searchWaiting);
+      $result = $DB->doQuery($searchWaiting['sql']['count'][0]);
+      $count = 'N/A';
+      if ($result) {
+         $count = $DB->numrows($result);
+      }
+
       if (isset($searchWaiting['data']['totalcount'])) {
          $count = $searchWaiting['data']['totalcount'];
       }
