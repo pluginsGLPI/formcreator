@@ -1334,7 +1334,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $result = $DB->doQuery($searchWaiting['sql']['count'][0]);
       $count = 'N/A';
       if ($result) {
-         $count = $DB->numrows($result);
+         $count = $DB->fetchAssoc($result);
+         $count = array_shift($count);
       }
 
       if (isset($searchWaiting['data']['totalcount'])) {
