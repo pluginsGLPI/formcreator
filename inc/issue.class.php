@@ -1274,6 +1274,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public static function nbIssues(array $params): array {
+      global $DB;
+
       $default_params = [
          'label'                 => "",
          'icon'                  => Ticket::getIcon(),
@@ -1330,12 +1332,23 @@ class PluginFormcreatorIssue extends CommonDBTM {
       Search::constructSQL($searchWaiting);
       // Really, really HACKY !
       $query = $searchWaiting['sql']['search'];
+      $query_select = <<<EOL
+SELECT DISTINCT `glpi_plugin_formcreator_issues`.`id` AS id, 'post-only' AS currentuser,
+                        `glpi_plugin_formcreator_issues`.`itemtype`, `glpi_plugin_formcreator_issues`.`entities_id`, `glpi_plugin_formcreator_issues`.`is_recursive`,  `glpi_plugin_formcreator_issues`.`name` AS `ITEM_PluginFormcreatorIssue_1`,
+                        `glpi_plugin_formcreator_issues`.`id` AS `ITEM_PluginFormcreatorIssue_1_id`,
+                        `glpi_plugin_formcreator_issues`.`display_id` AS `ITEM_PluginFormcreatorIssue_1_display_id`, `glpi_plugin_formcreator_issues`.`display_id` AS `ITEM_PluginFormcreatorIssue_2`,  `glpi_plugin_formcreator_issues`.`status` AS `ITEM_PluginFormcreatorIssue_4`,  `glpi_plugin_formcreator_issues`.`date_creation` AS `ITEM_PluginFormcreatorIssue_5`,  `glpi_plugin_formcreator_issues`.`date_mod` AS `ITEM_PluginFormcreatorIssue_6`,  `glpi_entities`.`completename` AS `ITEM_PluginFormcreatorIssue_7`,   `glpi_users_requester_id`.`name` AS `ITEM_PluginFormcreatorIssue_8`,
+                        `glpi_users_requester_id`.`realname` AS `ITEM_PluginFormcreatorIssue_8_realname`,
+                        `glpi_users_requester_id`.`id`  AS `ITEM_PluginFormcreatorIssue_8_id`,
+                        `glpi_users_requester_id`.`firstname` AS `ITEM_PluginFormcreatorIssue_8_firstname` FROM `glpi_plugin_formcreator_issues`
+EOL;
+      $query = preg_replace("#^$query_select#", 'SELECT COUNT(DISTINCT `glpi_plugin_formcreator_issues`.`id`) FROM `glpi_plugin_formcreator_issues`', $query);
       $query = preg_replace('#ORDER BY `ITEM_PluginFormcreatorIssue_1` ASC $#', '', $query);
       $searchWaiting['sql']['search'] = $query;
-      Search::constructData($searchWaiting);
       $count = 0;
-      if (isset($searchWaiting['data']['totalcount'])) {
-         $count = $searchWaiting['data']['totalcount'];
+      $result = $DB->doQuery($query);
+      if ($result) {
+         $count = $DB->fetchAssoc($result);
+         $count = array_shift($count);
       }
 
       $url = self::getSearchURL();
