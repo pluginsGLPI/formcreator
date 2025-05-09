@@ -49,7 +49,8 @@ if (Session::getCurrentInterface() == 'helpdesk') {
       __('Form Creator', 'formcreator'),
       '',
       'admin',
-      PluginFormcreatorForm::class
+      PluginFormcreatorForm::class,
+      'answer'
    );
 }
 

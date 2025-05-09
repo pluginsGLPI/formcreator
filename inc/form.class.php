@@ -129,6 +129,15 @@ PluginFormcreatorTranslatableInterface
       $menu['links'][$validation_image] = PluginFormcreatorFormAnswer::getSearchURL(false).'?criteria[0][link]=AND&criteria[0][field]=8&criteria[0][searchtype]=equals&criteria[0][value]=' . PluginFormcreatorFormAnswer::STATUS_WAITING;
       $menu['links'][$import_image]     = PluginFormcreatorForm::getFormURL(false)."?import_form=1";
       $menu['links'][$requests_image]   = PluginFormcreatorIssue::getSearchURL(false);
+
+      $menu['options']['answer'] = [
+         'title' => PluginFormcreatorFormAnswer::getTypeName(Session::getPluralNumber()),
+         'page'  => PluginFormcreatorFormAnswer::getSearchURL(false),
+         'icon'  => PluginFormcreatorFormAnswer::getIcon(),
+         'links' => [
+            'search' => PluginFormcreatorFormAnswer::getSearchURL(false),
+         ],
+      ];
       return $menu;
    }
 
