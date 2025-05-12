@@ -2539,4 +2539,20 @@ SCRIPT;
       $input['_skip_create_actors'] = true;
       return $input;
    }
+
+   protected static function getTemplateByName(string $name): int {
+      global $DB;
+
+      $targetTemplateType = (new static())->getTemplateItemtypeName();
+      $targetTemplate = new $targetTemplateType();
+      $targetTemplate->getFromDBByCrit([
+         'name' => $DB->escape($name),
+      ]);
+
+      if ($targetTemplate->isNewItem()) {
+         return 0;
+      }
+
+      return $targetTemplate->getID();
+   }
 }
