@@ -2006,9 +2006,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
          $ticketStatus = PluginFormcreatorCommon::getTicketStatusForIssue($generatedTarget);
          if ($ticketStatus >= PluginFormcreatorFormAnswer::STATUS_WAITING) {
-            // Ignore tickets refused or pending for validation
-            // getTicketStatusForIssue() does not returns STATUS_ACCEPTED
-            continue;
+            // force pending approval status to be seen from to_validate dashboard
+            if ($ticketStatus == PluginFormcreatorFormAnswer::STATUS_WAITING) {
+               return PluginFormcreatorFormAnswer::STATUS_WAITING;
+            } else {
+               continue;
+            }
          }
 
          if ($ticketStatus == CommonITILObject::WAITING) {
