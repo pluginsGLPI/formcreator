@@ -2005,13 +2005,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             continue;
          }
          $ticketStatus = PluginFormcreatorCommon::getTicketStatusForIssue($generatedTarget);
-         if ($ticketStatus >= PluginFormcreatorFormAnswer::STATUS_WAITING) {
-            // force pending approval status to be seen from to_validate dashboard
-            if ($ticketStatus == PluginFormcreatorFormAnswer::STATUS_WAITING) {
-               return PluginFormcreatorFormAnswer::STATUS_WAITING;
-            } else {
-               continue;
-            }
+         if ($ticketStatus > PluginFormcreatorFormAnswer::STATUS_WAITING) {
+            continue;
+         }
+
+         // force pending approval status to be seen from to_validate dashboard
+         if ($ticketStatus == PluginFormcreatorFormAnswer::STATUS_WAITING) {
+            return PluginFormcreatorFormAnswer::STATUS_WAITING;
          }
 
          if ($ticketStatus == CommonITILObject::WAITING) {
