@@ -5,48 +5,43 @@
    <logo>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/icon.png</logo>
    <description>
       <short>
-         <fr>Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets ou changements.</fr>
-         <en>Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more tickets or changes.</en>
+         <en>Formcreator v3.0.0 is a migration-only plugin that migrates existing form data to GLPI 11's native forms. After migration, this plugin becomes End-of-Life (EOL).</en>
       </short>
       <long>
-         <fr>
-Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets ou changements.
-
-Fonctionnalités
----------------
-
-1. Accès par menu direct en interface self-service
-2. Mise en avant de formulaires en pages d'accueil
-3. Accès des formulaires contrôlés : accès public, accès utilisateurs identifiés, accès restreint à certains profils
-4. Des formulaires simples et personnalisables
-5. Des formulaires organisés par catégories, par entités et par langues.
-6. Des questions ouvertes ou fermées, de tout type de présentation : Champs textes, listes, LDAP, fichiers, etc.
-7. Organisation des questions par sections. Choix de l'ordre d'affichage.
-8. Possibilité de n'afficher une question que selon certains critères (réponse à une autre question)
-9. Un contrôle pointu sur les réponses de formulaires : Texte, nombres, taille des champs, e-mail, champs obligatoires, expressions réguliaires, etc.
-10. Création d'un ou plusieurs tickets ou changements à partir des réponses aux formulaires
-11. Ajout de description par champs, par section de questions, par formulaires, par entités et langues.
-12. Formatage du/des ticket(s) créé(s) : réponses aux questions à afficher, gabarits de tickets.
-13. Prévisualisation du formulaire créé directement dans la configuration.
-         </fr>
          <en>
-Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more tickets or changes.
+Formcreator v3.0.0 - Migration Only Plugin (End of Life)
 
-Features
---------
-1. Direct access to forms self-service interface in main menu
-2. Highlighting forms in homepages
-3. Access to forms controlled: public access, identified user access, restricted access to some profiles
-4. Simple and customizable forms
-5. Forms organized by categories, entities and languages.
-6. Questions of any type of presentation: Textareas, lists, LDAP, files, etc.
-7. Questions organised in sections. Choice of the display order.
-8. Possibility to display a question based on certain criteria (response to a further question)
-9. A sharp control on responses from forms: text, numbers, size of fields, email, mandatory fields, regular expressions, etc.
-10. Creation of one or more tickets or changes from form answers
-11. Adding a description per fields, per sections, per forms, entities or languages.
-12. Formatting the ticket set: answers to questions displayed, tickets templates.
-13. Preview form created directly in the configuration.
+IMPORTANT NOTICE: This version (3.0.0) is a migration-only plugin designed exclusively for GLPI 11.0+.
+
+Purpose
+-------
+- Migrate existing Formcreator data (forms, answers, issues) from versions up to 2.13.10 to GLPI 11's native form system
+- Preserve migration scripts for all previous versions (2.5.0 to 2.13.10)
+- Provide a clear End-of-Life (EOL) status after migration completion
+
+Features Removed in 3.0.0
+--------------------------
+- Form creation and editing UI (now native in GLPI 11)
+- Public form interface (replaced by GLPI 11 native interface)
+- AJAX endpoints and frontend controllers
+- Custom templates and assets
+- Runtime form processing (handled by GLPI 11 core)
+
+Migration Process
+-----------------
+1. Install/upgrade to Formcreator 3.0.0 on GLPI 11+
+2. Run the migration process via the admin interface
+3. Verify data migration completion
+4. The plugin will display EOL status with migration logs
+5. Consider uninstalling the plugin after successful migration
+
+Documentation
+-------------
+For GLPI 11 native forms documentation, see: https://glpi-project.org/documentation/
+
+Support
+-------
+This version only provides migration support. For form functionality, use GLPI 11's native forms.
          </en>
       </long>
    </description>

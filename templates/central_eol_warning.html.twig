@@ -1,0 +1,41 @@
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div class="d-flex align-items-start">
+        {# Icon section #}
+        <div class="flex-shrink-0 me-3">
+            <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+        </div>
+        
+        {# Content section #}
+        <div class="flex-grow-1">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h4 class="alert-heading mb-2">
+                        {{ __('Formcreator End of Life Notice', 'formcreator') }}
+                    </h4>
+                    <p class="mb-0">
+                        {{ __('Formcreator v%s has reached End of Life. Please migrate to GLPI 11 native forms.', 'formcreator')|format(plugin_version) }}
+                    </p>
+                </div>
+                
+                {# Actions section #}
+                <div class="col-md-4 text-md-end text-start">
+                    <div class="d-flex flex-column flex-md-row gap-2 justify-content-md-end">
+                        <a href="{{ root_doc }}/plugins/formcreator/front/eol_info.php" 
+                           class="btn btn-sm btn-outline-dark">
+                            <i class="fas fa-info-circle me-1"></i>
+                            {{ __('Learn More', 'formcreator') }}
+                        </a>
+                        <a href="{{ root_doc }}/plugins/formcreator/front/migration_status.php" 
+                           class="btn btn-sm btn-primary">
+                            <i class="fas fa-exchange-alt me-1"></i>
+                            {{ __('Migration Status', 'formcreator') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {# Close button #}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('Close', 'formcreator') }}"></button>
+</div>
