@@ -1,7 +1,23 @@
 parameters:
-  level: 3
-  scanDirectories:
-    - ../../src
-    - ../../inc
-  paths:
-    - inc
+    parallel:
+        maximumNumberOfProcesses: 2
+    level: 5
+    treatPhpDocTypesAsCertain: false
+    bootstrapFiles:
+        - ../../stubs/glpi_constants.php
+        - ../../vendor/autoload.php
+    paths:
+        - inc
+        - front
+        - hook.php
+        - setup.php
+    excludePaths:
+        - install/upgrade_to_*.php
+    scanDirectories:
+        - ../../inc
+        - ../../src
+    stubFiles:
+        - ../../stubs/glpi_constants.php
+
+rules:
+    - GlpiProject\Tools\PHPStan\Rules\GlobalVarTypeRule

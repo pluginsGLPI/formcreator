@@ -226,6 +226,12 @@ class PluginFormcreatorInstall {
       $this->createCronTasks();
       $this->createMiniDashboard();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
+      
+      // FORMCREATOR v3.0.0 - Trigger migration to GLPI 11 native forms
+      if (version_compare(GLPI_VERSION, '11.0.0', '>=')) {
+         $this->migrateToGlpi11NativeForms($args);
+      }
+      
       ob_get_flush();
 
       if ($this->resyncIssues) {
@@ -1026,7 +1032,125 @@ class PluginFormcreatorInstall {
          }
          $this->migration->changeField($table, 'id', 'id', 'int ' . DBConnection::getDefaultPrimaryKeySignOption() . ' not null auto_increment');
       }
+   }
 
-      $this->migration->executeMigration();
+   /**
+    * Migrate Formcreator data to GLPI 11 native forms
+    * @param array $args CLI arguments
+    * @return bool
+    */
+   private function migrateToGlpi11NativeForms(array $args = []): bool {
+      global $DB;
+
+      // Check if GLPI 11 migration class is available
+      if (!class_exists('\Glpi\Form\Migration\FormMigration')) {
+         $message = __('GLPI 11 Form Migration class not found. Make sure you are running GLPI 11.0.0 or higher.', 'formcreator');
+         if (isCommandLine()) {
+            echo "ERROR: " . $message . PHP_EOL;
+         } else {
+            Session::addMessageAfterRedirect($message, true, ERROR);
+         }
+         return false;
+      }
+
+      try {
+         // Check if migration is needed
+         $migrationNeeded = $this->isGlpi11MigrationNeeded();
+         if (!$migrationNeeded) {
+            $message = __('Formcreator data has already been migrated to GLPI 11 native forms.', 'formcreator');
+            if (isCommandLine()) {
+               echo "INFO: " . $message . PHP_EOL;
+            } else {
+               Session::addMessageAfterRedirect($message, true, INFO);
+            }
+            Config::setConfigurationValues('formcreator', ['migration_completed' => true]);
+            return true;
+         }
+
+         // Show migration start message
+         $message = __('Starting migration of Formcreator data to GLPI 11 native forms...', 'formcreator');
+         if (isCommandLine()) {
+            echo "INFO: " . $message . PHP_EOL;
+         } else {
+            Session::addMessageAfterRedirect($message, true, INFO);
+         }
+
+         // Initialize GLPI 11 migration
+         $migration = new \Glpi\Form\Migration\FormMigration($DB, \Glpi\Form\AccessControl\FormAccessControlManager::getInstance());
+         
+         // Run the migration
+         $result = $migration->execute();
+
+         if ($result) {
+            // Mark migration as completed
+            Config::setConfigurationValues('formcreator', [
+               'migration_completed' => true,
+               'migration_date' => date('Y-m-d H:i:s'),
+               'migration_version' => PLUGIN_FORMCREATOR_VERSION
+            ]);
+
+            $message = __('Formcreator data has been successfully migrated to GLPI 11 native forms!', 'formcreator');
+            if (isCommandLine()) {
+               echo "SUCCESS: " . $message . PHP_EOL;
+               echo "INFO: " . __('You can now use GLPI 11 native forms. Consider uninstalling Formcreator after verification.', 'formcreator') . PHP_EOL;
+            } else {
+               Session::addMessageAfterRedirect($message, true, INFO);
+               Session::addMessageAfterRedirect(
+                  __('You can now use GLPI 11 native forms. Consider uninstalling Formcreator after verification.', 'formcreator'),
+                  true,
+                  INFO
+               );
+            }
+
+            return true;
+         } else {
+            $message = __('Migration to GLPI 11 native forms failed. Check GLPI logs for details.', 'formcreator');
+            if (isCommandLine()) {
+               echo "ERROR: " . $message . PHP_EOL;
+            } else {
+               Session::addMessageAfterRedirect($message, true, ERROR);
+            }
+            return false;
+         }
+
+      } catch (Exception $e) {
+         $message = sprintf(__('Migration failed with error: %s', 'formcreator'), $e->getMessage());
+         if (isCommandLine()) {
+            echo "ERROR: " . $message . PHP_EOL;
+         } else {
+            Session::addMessageAfterRedirect($message, true, ERROR);
+         }
+         
+         // Log the full exception
+         Toolbox::logInFile('formcreator_migration', $e->getMessage() . PHP_EOL . $e->getTraceAsString());
+         
+         return false;
+      }
+   }
+
+   /**
+    * Check if migration to GLPI 11 is needed
+    * @return bool
+    */
+   private function isGlpi11MigrationNeeded(): bool {
+      global $DB;
+
+      // Check if migration was already completed
+      $migrationCompleted = Config::getConfigurationValue('formcreator', 'migration_completed');
+      if ($migrationCompleted) {
+         return false;
+      }
+
+      // Check if there are Formcreator forms to migrate
+      $formCount = 0;
+      if ($DB->tableExists('glpi_plugin_formcreator_forms')) {
+         $result = $DB->request([
+            'COUNT' => 'total',
+            'FROM' => 'glpi_plugin_formcreator_forms'
+         ]);
+         $formCount = $result->current()['total'];
+      }
+
+      return $formCount > 0;
    }
 }

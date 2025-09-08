@@ -7,15 +7,22 @@
 [![IRC Chat](https://img.shields.io/badge/IRC-%23GLPI-green.svg)](http://webchat.freenode.net/?channels=GLPI)
 [![Follow Twitter](https://img.shields.io/badge/Twitter-GLPI%20Project-26A2FA.svg)](https://twitter.com/GLPI_PROJECT)
 [![Join the chat at https://gitter.im/TECLIB/formcreator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TECLIB/formcreator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Project Status: Active](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![Project Status: End Of Life](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 [![GitHub All Releases](https://img.shields.io/github/downloads/PluginsGLPI/formcreator/total)](https://github.com/pluginsGLPI/formcreator/releases)
 
 Extend GLPI with Plugins.
 
+## ⚠️ IMPORTANT NOTICE - END OF LIFE
+
+**Formcreator v3.0.0 is a migration-only plugin designed exclusively for GLPI 11.0+**
+
+This version serves only to migrate existing Formcreator data to GLPI 11's native form system. After migration, this plugin becomes End-of-Life (EOL).
+
 ## Table of Contents
 
-  - [Form Creator](#form-creator)
+- [Form Creator](#form-creator)
+  - [⚠️ IMPORTANT NOTICE - END OF LIFE](#️-important-notice---end-of-life)
   - [Table of Contents](#table-of-contents)
   - [Synopsis](#synopsis)
   - [Features](#features)
