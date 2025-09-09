@@ -18,7 +18,7 @@ Session::checkRight('config', UPDATE);
 /** @var \DBmysql $DB */
 global $DB;
 
-// Collect migration data
+// Collect basic statistics - simple and reliable
 $formCount = 0;
 if ($DB->tableExists('glpi_plugin_formcreator_forms')) {
     $formCount = countElementsInTable('glpi_plugin_formcreator_forms');
@@ -29,27 +29,9 @@ if ($DB->tableExists('glpi_plugin_formcreator_formanswers')) {
     $answerCount = countElementsInTable('glpi_plugin_formcreator_formanswers');
 }
 
-$migrationCompleted = Config::getConfigurationValue('formcreator', 'migration_completed');
-$showMigrationProgress = false;
-$migrationError = null;
-
-// Handle migration request
-if (isset($_POST['start_migration'])) {
-    Session::checkRight('config', UPDATE);
-    Session::checkCSRF($_POST);
-    
-    $showMigrationProgress = true;
-    
-    try {
-        $migration = new Migration(PLUGIN_FORMCREATOR_VERSION);
-        
-        // Simple migration status update for now
-        Config::setConfigurationValues('formcreator', ['migration_completed' => true]);
-        $migrationCompleted = true;
-        
-    } catch (Exception $e) {
-        $migrationError = __('Migration error: ', 'formcreator') . $e->getMessage();
-    }
+$nativeFormCount = 0;
+if ($DB->tableExists('glpi_forms_forms')) {
+    $nativeFormCount = countElementsInTable('glpi_forms_forms');
 }
 
 // Display GLPI header
@@ -59,11 +41,7 @@ Html::header(__('Formcreator Migration Status', 'formcreator'), '', "tools", "mi
 TemplateRenderer::getInstance()->display('@formcreator/migration_status.html.twig', [
     'form_count' => $formCount,
     'answer_count' => $answerCount,
-    'migration_completed' => $migrationCompleted,
-    'show_migration_progress' => $showMigrationProgress,
-    'migration_error' => $migrationError,
-    'current_url' => $_SERVER['PHP_SELF'],
-    'csrf_token' => Session::getNewCSRFToken(),
+    'native_form_count' => $nativeFormCount,
 ]);
 
 // Display GLPI footer

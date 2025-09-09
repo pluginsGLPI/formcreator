@@ -6,15 +6,15 @@
                 <div class="card-header bg-warning text-dark border-0">
                     <div class="d-flex align-items-center">
                         <div class="me-3">
-                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                            <i class="ti ti-alert-triangle fa-2x"></i>
                         </div>
-                        <div>
-                            <h2 class="mb-0 h4">
+                        <div class="d-flex align-items-center flex-column">
+                            <p class="mb-0 h3">
                                 {{ __('Formcreator End of Life Notice', 'formcreator') }}
-                            </h2>
-                            <small class="text-muted">
+                            </p>
+                            <p class="mb-0 text-light">
                                 {{ __('Migration guidance and information', 'formcreator') }}
-                            </small>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -22,9 +22,9 @@
                 {# Body #}
                 <div class="card-body">
                     {# EOL Notice Banner #}
-                    <div class="alert alert-info border-start border-info border-4 mb-4">
+                    <div class="alert alert-info border-start border-info border-2 mb-4">
                         <div class="d-flex align-items-start">
-                            <i class="fas fa-info-circle text-info me-2 mt-1"></i>
+                            <i class="ti ti-info-circle text-info me-2 mt-1"></i>
                             <div>
                                 <h5 class="alert-heading mb-2">{{ __('Important Notice', 'formcreator') }}</h5>
                                 <p class="mb-0">
@@ -40,26 +40,26 @@
                             <div class="card border-success h-100">
                                 <div class="card-header bg-light border-success">
                                     <h5 class="card-title mb-0 text-success">
-                                        <i class="fas fa-arrow-up me-2"></i>
+                                        <i class="ti ti-arrow-up me-2"></i>
                                         {{ __('What changed?', 'formcreator') }}
                                     </h5>
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-unstyled mb-0">
                                         <li class="mb-2">
-                                            <i class="fas fa-check text-success me-2"></i>
+                                            <i class="ti ti-check text-success me-2"></i>
                                             {{ __('GLPI 11 now has native form creation capabilities', 'formcreator') }}
                                         </li>
                                         <li class="mb-2">
-                                            <i class="fas fa-check text-success me-2"></i>
+                                            <i class="ti ti-check text-success me-2"></i>
                                             {{ __('All Formcreator features are available in GLPI core', 'formcreator') }}
                                         </li>
                                         <li class="mb-2">
-                                            <i class="fas fa-check text-success me-2"></i>
+                                            <i class="ti ti-check text-success me-2"></i>
                                             {{ __('Better integration with GLPI workflows', 'formcreator') }}
                                         </li>
                                         <li class="mb-0">
-                                            <i class="fas fa-check text-success me-2"></i>
+                                            <i class="ti ti-check text-success me-2"></i>
                                             {{ __('Improved performance and security', 'formcreator') }}
                                         </li>
                                     </ul>
@@ -71,26 +71,26 @@
                             <div class="card border-primary h-100">
                                 <div class="card-header bg-light border-primary">
                                     <h5 class="card-title mb-0 text-primary">
-                                        <i class="fas fa-tasks me-2"></i>
+                                        <i class="ti ti-checklist me-2"></i>
                                         {{ __('Next steps', 'formcreator') }}
                                     </h5>
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-unstyled mb-0">
                                         <li class="mb-2">
-                                            <i class="fas fa-chevron-right text-primary me-2"></i>
+                                            <i class="ti ti-chevron-right text-primary me-2"></i>
                                             {{ __('Review your existing forms', 'formcreator') }}
                                         </li>
                                         <li class="mb-2">
-                                            <i class="fas fa-chevron-right text-primary me-2"></i>
+                                            <i class="ti ti-chevron-right text-primary me-2"></i>
                                             {{ __('Migrate to GLPI 11 native forms', 'formcreator') }}
                                         </li>
                                         <li class="mb-2">
-                                            <i class="fas fa-chevron-right text-primary me-2"></i>
+                                            <i class="ti ti-chevron-right text-primary me-2"></i>
                                             {{ __('Test the new form system', 'formcreator') }}
                                         </li>
                                         <li class="mb-0">
-                                            <i class="fas fa-chevron-right text-primary me-2"></i>
+                                            <i class="ti ti-chevron-right text-primary me-2"></i>
                                             {{ __('Uninstall Formcreator plugin when ready', 'formcreator') }}
                                         </li>
                                     </ul>
@@ -104,7 +104,7 @@
                         <div class="d-flex flex-wrap justify-content-center gap-3">
                             <a href="{{ plugin_web_dir }}/front/migration_status.php" 
                                class="btn btn-primary px-4">
-                                <i class="fas fa-exchange-alt me-2"></i>
+                                <i class="ti ti-arrows-exchange me-2"></i>
                                 {{ __('View Migration Status', 'formcreator') }}
                             </a>
                         </div>

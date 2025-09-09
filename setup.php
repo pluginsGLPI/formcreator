@@ -57,14 +57,14 @@ define('PLUGIN_FORMCREATOR_ADVANCED_VALIDATION', 'advform');
 /**
  * Define the plugin's version and informations
  *
- * @return array|false [name, version, author, homepage, license, minGlpiVersion]
+ * @return array [name, version, author, homepage, license, minGlpiVersion]
  */
 function plugin_version_formcreator() {
    plugin_formcreator_savePreviousVersion();
 
    // Use constant instead of deprecated method
    $webDir = FORMCREATOR_ROOTDOC;
-   
+
    return [
       'name'           => 'Form Creator (Migration Only)',
       'version'        => PLUGIN_FORMCREATOR_VERSION,
