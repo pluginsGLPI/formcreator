@@ -6,7 +6,7 @@ on:
 env:
   GLPI_SOURCE: "https://github.com/glpi-project/glpi"
   GLPI_PACKAGE_URL_BASE: "https://nightly.glpi-project.org/glpi"
-  CS: 7.4
+  CS: 8.2
   DB_HOST: 127.0.0.1
   MYSQL_ROOT_USER: root
   DB_USER: glpi
@@ -14,8 +14,6 @@ env:
   DB_NAME: glpitest
   OLD_DB_NAME: glpiupgradetest
   PLUGINNAME: formcreator
-  PLUGIN_FIELDS_REF: 1.17.3
-  PLUGIIN_TAG_REF: 2.9.2
   AFTER_SUCCESS_BRANCH: master
   ATOUM_ARG: --force-terminal --use-dot-report
   NOCOVERAGE: -ncc
@@ -114,20 +112,19 @@ jobs:
           $SKIP_FUNCTIONAL_TESTS || plugin_test_functional
           $SKIP_UNINSTALL_TESTS || plugin_test_uninstall
 
-  style:
-    strategy:
-      matrix:
-        php-versions: [8.1]
-        env:
-          - { GLPI_BRANCH: 10.0/bugfixes }
+  code-quality:
     name: "Code quality"
     runs-on: "ubuntu-latest"
+    needs: "generate-ci-matrix"
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.generate-ci-matrix.outputs.matrix) }}
     steps:
       - name: Setup PHP with composer and extensions
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          coverage: xdebug
+          extensions: curl, fileinfo, gd, json, mbstring, mysqli, zlib, simplexml, xml, intl, bz2
       - name: "Checkout"
         uses: actions/checkout@v3
       - name: "Code quality tests"
