@@ -17,7 +17,9 @@ Extend GLPI with Plugins.
 
 **Formcreator v3.0.0 is a migration-only plugin designed exclusively for GLPI 11.0+**
 
-This version serves only to migrate existing Formcreator data to GLPI 11's native form system. After migration, this plugin becomes End-of-Life (EOL).
+Transition plugin marking the end of life of Formcreator.
+It updates database tables and data to the final version, required before the automatic migration of forms into GLPI 11 core.
+⚠️ This plugin must be installed in production only to perform the update, and then uninstalled once the operation is complete.
 
 ## Table of Contents
 

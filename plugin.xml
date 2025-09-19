@@ -5,7 +5,11 @@
    <logo>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/icon.png</logo>
    <description>
       <short>
-         <en>Formcreator v3.0.0 is a migration-only plugin that migrates existing form data to GLPI 11's native forms. After migration, this plugin becomes End-of-Life (EOL).</en>
+         <en>
+            Transition plugin marking the end of life of Formcreator.
+            It updates database tables and data to the final version, required before the automatic migration of forms into GLPI 11 core.
+            ⚠️ This plugin must be installed in production only to perform the update, and then uninstalled once the operation is complete.
+         </en>
       </short>
       <long>
          <en>
