@@ -66,7 +66,7 @@ function plugin_version_formcreator() {
    $webDir = FORMCREATOR_ROOTDOC;
 
    return [
-      'name'           => 'Form Creator (Migration Only)',
+      'name'           => 'Formcreator End-of-Life Updater',
       'version'        => PLUGIN_FORMCREATOR_VERSION,
       'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
       'homepage'       => 'https://github.com/pluginsGLPI/formcreator',
