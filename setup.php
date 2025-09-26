@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Plugin\Formcreator\EOLInfo;
+use Glpi\Plugin\Formcreator\Install;
 use Glpi\Plugin\Hooks;
 
 /** @var array $CFG_GLPI */
@@ -119,7 +121,7 @@ function plugin_formcreator_init_migration_only() {
    }
 
    // Register minimal classes needed for migration
-   Plugin::registerClass(PluginFormcreatorInstall::class);
+   Plugin::registerClass(Install::class);
    
    // Add admin menu for migration status only
    if (Session::haveRight('config', UPDATE)) {
@@ -213,10 +215,21 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = '', $val
 }
 
 /**
- * Autoloader
+ * Autoloader for Formcreator classes
  * @param string $classname
  */
 function plugin_formcreator_autoload($classname) {
+   // Handle new namespace classes: Glpi\Plugin\Formcreator\*
+   if (strpos($classname, 'Glpi\\Plugin\\Formcreator\\') === 0) {
+      $class_name = str_replace('Glpi\\Plugin\\Formcreator\\', '', $classname);
+      $filename = __DIR__ . '/src/' . $class_name . '.php';
+      if (is_readable($filename) && is_file($filename)) {
+         include_once($filename);
+         return true;
+      }
+   }
+   
+   // Legacy compatibility for old PluginFormcreator classes (if any still exist)
    if (strpos($classname, 'PluginFormcreator') === 0) {
       // useful only for installer GLPi autoloader already handles inc/ folder
       $filename = __DIR__ . '/inc/' . strtolower(str_replace('PluginFormcreator', '', $classname)). '.class.php';
@@ -297,13 +310,13 @@ function plugin_formcreator_hook(): void {
       $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/migration_status.php';
       
       // Add EOL information button to plugin tile
-      $PLUGIN_HOOKS['menu_toadd']['formcreator']['tools'] = 'PluginFormcreatorEOLInfo';
+      $PLUGIN_HOOKS['menu_toadd']['formcreator']['tools'] = EOLInfo::class;
       
       // Alternative: Add a direct link to EOL documentation
       $PLUGIN_HOOKS['plugin_info_display']['formcreator'] = 'front/eol_info.php';
       
       // Display EOL warning on central dashboard
-      $PLUGIN_HOOKS['display_central']['formcreator'] = ['PluginFormcreatorEOLInfo', 'displayCentralEOLWarning'];
+      $PLUGIN_HOOKS['display_central']['formcreator'] = [EOLInfo::class, 'displayCentralEOLWarning'];
    }
 }
 
@@ -311,10 +324,10 @@ function plugin_formcreator_registerClasses() {
    // EOL version - minimal class registration for migration only
    
    // Only register core classes needed for migration
-   Plugin::registerClass(PluginFormcreatorInstall::class);
+   Plugin::registerClass(Install::class);
    
    // Register EOL information class for admin menu
-   Plugin::registerClass(PluginFormcreatorEOLInfo::class);
+   Plugin::registerClass(EOLInfo::class);
    
    // No entity configuration or form classes in EOL version
    // No field classes in EOL version
@@ -350,6 +363,8 @@ function plugin_formcreator_getSchemaPath(string $version = ''): string {
 
    return Plugin::getPhpDir('formcreator') . "/install/mysql/plugin_formcreator_{$version}_empty.sql";
 }
+
+// Installation functions are defined in hook.php
 
 /**
  * Detect a versin change and save the previous version in the DB
