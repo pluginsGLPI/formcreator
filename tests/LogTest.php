@@ -29,41 +29,34 @@
  * -------------------------------------------------------------------------
  */
 
-use Glpi\Application\Environment;
-use Glpi\Kernel\Kernel;
+use PHPUnit\Framework\TestCase;
 
-/** @var array $CFG_GLPI */
-/** @var array $PLUGIN_HOOKS */
-global $CFG_GLPI, $PLUGIN_HOOKS;
+class GLPIlogs extends TestCase
+{
+    public function testSQLlogs()
+    {
+        $filecontent = file_get_contents("../../files/_log/sql-errors.log");
 
-define('TU_USER', 'glpi');
-define('TU_PASS', 'glpi');
-
-require_once __DIR__ . '/../../../vendor/autoload.php';
-
-$kernel = new Kernel(Environment::TESTING->value);
-$kernel->boot();
-
-// Load plugin classes
-$plugin_root = dirname(__DIR__);
-$plugin_name = basename($plugin_root);
-
-// Plugin is expected in inc/ directory
-$inc_dir = $plugin_root . DIRECTORY_SEPARATOR . 'inc';
-if (is_dir($inc_dir)) {
-    foreach (glob($inc_dir . '/*.class.php') as $class_file) {
-        require_once $class_file;
+        $this->assertEmpty($filecontent, 'sql-errors.log not empty: ' . $filecontent);
+        // Reinitialize file
+        file_put_contents("../../files/_log/sql-errors.log", '');
     }
-}
 
-// Plugin hook file
-$hook_file = $plugin_root . DIRECTORY_SEPARATOR . 'hook.php';
-if (file_exists($hook_file)) {
-    require_once $hook_file;
-}
-
-// Plugin setup file
-$setup_file = $plugin_root . DIRECTORY_SEPARATOR . 'setup.php';
-if (file_exists($setup_file)) {
-    require_once $setup_file;
+    public function testPHPlogs()
+    {
+        $filecontent = file("../../files/_log/php-errors.log");
+        $lines = [];
+        foreach ($filecontent as $line) {
+            if (
+                !strstr($line, 'apc.')
+                && !strstr($line, 'glpiphplog.DEBUG: Config::getCache()')
+                && !strstr($line, 'Test logger')
+            ) {
+                $lines[] = $line;
+            }
+        }
+        $this->assertEmpty(implode("", $lines), 'php-errors.log not empty: ' . implode("", $lines));
+        // Reinitialize file
+        file_put_contents("../../files/_log/php-errors.log", '');
+    }
 }

@@ -29,41 +29,34 @@
  * -------------------------------------------------------------------------
  */
 
-use Glpi\Application\Environment;
-use Glpi\Kernel\Kernel;
+use Glpi\Plugin\Formcreator\EOLInfo;
+use PHPUnit\Framework\TestCase;
 
-/** @var array $CFG_GLPI */
-/** @var array $PLUGIN_HOOKS */
-global $CFG_GLPI, $PLUGIN_HOOKS;
-
-define('TU_USER', 'glpi');
-define('TU_PASS', 'glpi');
-
-require_once __DIR__ . '/../../../vendor/autoload.php';
-
-$kernel = new Kernel(Environment::TESTING->value);
-$kernel->boot();
-
-// Load plugin classes
-$plugin_root = dirname(__DIR__);
-$plugin_name = basename($plugin_root);
-
-// Plugin is expected in inc/ directory
-$inc_dir = $plugin_root . DIRECTORY_SEPARATOR . 'inc';
-if (is_dir($inc_dir)) {
-    foreach (glob($inc_dir . '/*.class.php') as $class_file) {
-        require_once $class_file;
+class FormcreatorEOLTest extends TestCase
+{
+    public function testEOLClassExists()
+    {
+        // Test that the EOL info class exists
+        $this->assertTrue(class_exists(EOLInfo::class));
     }
-}
 
-// Plugin hook file
-$hook_file = $plugin_root . DIRECTORY_SEPARATOR . 'hook.php';
-if (file_exists($hook_file)) {
-    require_once $hook_file;
-}
+    public function testEOLTemplatesExist()
+    {
+        // Test that EOL templates exist
+        $templatesDir = __DIR__ . '/../../templates';
+        $this->assertFileExists($templatesDir . '/eol_info.html.twig');
+        $this->assertFileExists($templatesDir . '/migration_status.html.twig');
+        $this->assertFileExists($templatesDir . '/central_eol_warning.html.twig');
+    }
 
-// Plugin setup file
-$setup_file = $plugin_root . DIRECTORY_SEPARATOR . 'setup.php';
-if (file_exists($setup_file)) {
-    require_once $setup_file;
+    public function testEOLInfoMethods()
+    {
+        // Test EOL info class methods
+        $eolInfo = new EOLInfo();
+        $this->assertTrue(method_exists($eolInfo, 'showForm'));
+        $this->assertTrue(method_exists(EOLInfo::class, 'displayCentralEOLWarning'));
+        $this->assertTrue(method_exists(EOLInfo::class, 'canView'));
+        $this->assertTrue(method_exists(EOLInfo::class, 'getMenuName'));
+        $this->assertTrue(method_exists(EOLInfo::class, 'getMenuContent'));
+    }
 }

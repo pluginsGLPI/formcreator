@@ -7,6 +7,8 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Plugin\Formcreator\EOLInfo;
+
 include('../../../inc/includes.php');
 
 // Check if user has admin rights
@@ -19,10 +21,10 @@ Html::header(
    __('Formcreator End of Life Information', 'formcreator'), 
    $_SERVER['PHP_SELF'], 
    'tools', 
-   'PluginFormcreatorEOLInfo'
+   EOLInfo::class
 );
 
-$eolInfo = new PluginFormcreatorEOLInfo();
+$eolInfo = new EOLInfo();
 $eolInfo->showForm();
 
 Html::footer();

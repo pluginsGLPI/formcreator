@@ -7,7 +7,7 @@ parameters:
         - ../../stubs/glpi_constants.php
         - ../../vendor/autoload.php
     paths:
-        - inc
+        - src
         - front
         - hook.php
         - setup.php

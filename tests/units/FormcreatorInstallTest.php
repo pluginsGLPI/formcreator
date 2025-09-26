@@ -29,41 +29,35 @@
  * -------------------------------------------------------------------------
  */
 
-use Glpi\Application\Environment;
-use Glpi\Kernel\Kernel;
+use PHPUnit\Framework\TestCase;
 
-/** @var array $CFG_GLPI */
-/** @var array $PLUGIN_HOOKS */
-global $CFG_GLPI, $PLUGIN_HOOKS;
-
-define('TU_USER', 'glpi');
-define('TU_PASS', 'glpi');
-
-require_once __DIR__ . '/../../../vendor/autoload.php';
-
-$kernel = new Kernel(Environment::TESTING->value);
-$kernel->boot();
-
-// Load plugin classes
-$plugin_root = dirname(__DIR__);
-$plugin_name = basename($plugin_root);
-
-// Plugin is expected in inc/ directory
-$inc_dir = $plugin_root . DIRECTORY_SEPARATOR . 'inc';
-if (is_dir($inc_dir)) {
-    foreach (glob($inc_dir . '/*.class.php') as $class_file) {
-        require_once $class_file;
+class FormcreatorInstallTest extends TestCase
+{
+    public function testPluginCanLoad()
+    {
+        // Test that the plugin setup file can be loaded
+        $setupFile = __DIR__ . '/../../setup.php';
+        $this->assertFileExists($setupFile);
+        
+        // Include setup and test basic functionality
+        include_once $setupFile;
+        $this->assertTrue(function_exists('plugin_version_formcreator'));
     }
-}
 
-// Plugin hook file
-$hook_file = $plugin_root . DIRECTORY_SEPARATOR . 'hook.php';
-if (file_exists($hook_file)) {
-    require_once $hook_file;
-}
+    public function testPluginVersion()
+    {
+        // Test that the plugin version is defined correctly
+        include_once __DIR__ . '/../../setup.php';
+        $version = plugin_version_formcreator();
+        $this->assertEquals('3.0.0', $version['version']);
+    }
 
-// Plugin setup file
-$setup_file = $plugin_root . DIRECTORY_SEPARATOR . 'setup.php';
-if (file_exists($setup_file)) {
-    require_once $setup_file;
+    public function testEOLStatus()
+    {
+        // Test EOL status is properly set
+        include_once __DIR__ . '/../../setup.php';
+        $version = plugin_version_formcreator();
+        $this->assertArrayHasKey('state', $version);
+        $this->assertEquals('stable', $version['state']);
+    }
 }

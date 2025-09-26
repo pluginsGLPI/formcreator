@@ -29,19 +29,29 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Plugin\Formcreator\Install;
+
+// Include setup.php to ensure autoloader function is available
+if (!function_exists('plugin_formcreator_autoload')) {
+   require_once __DIR__ . '/setup.php';
+}
+
 /**
  * Plugin install process for Formcreator v3.0.0 (End-of-Life)
  *
  * @return boolean
  */
 function plugin_formcreator_install() {
-   $migration = new Migration(PLUGIN_FORMCREATOR_VERSION);
+   // Ensure autoloader is registered for installation
+   spl_autoload_register('plugin_formcreator_autoload');
+   
+   $migration = new Migration(PLUGIN_FORMCREATOR_SCHEMA_VERSION);
    
    // Display EOL installation message
    $migration->displayMessage("Installing Formcreator v3.0.0 (End-of-Life - Migration Only)");
    
-   // Use the stub class instead of the old install file
-   $install = new PluginFormcreatorInstall();
+   // Use the unified Install class
+   $install = new Install();
    
    if (!$install->install($migration)) {
       $migration->displayMessage("ERROR: Formcreator installation failed");
@@ -61,15 +71,15 @@ function plugin_formcreator_install() {
  * @return boolean
  */
 function plugin_formcreator_uninstall() {
-   $migration = new Migration(PLUGIN_FORMCREATOR_VERSION);
+   $migration = new Migration(PLUGIN_FORMCREATOR_SCHEMA_VERSION);
    
    // Display EOL uninstall message
    $migration->displayMessage("Uninstalling Formcreator v3.0.0 (End-of-Life)");
    
-   // Use the stub class instead of the old install file
-   $install = new PluginFormcreatorInstall();
+   // Use the unified Install class
+   $install = new Install();
    
-   if (!$install->uninstall($migration)) {
+   if (!$install->uninstall()) {
       $migration->displayMessage("ERROR: Formcreator uninstallation failed");
       return false;
    }
