@@ -1,5 +1,7 @@
 <?php
+
 /**
+ *
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
  * easy access.
@@ -21,7 +23,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2021 Teclib'
+ * @copyright Copyright © 2011 - 2018-2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -97,10 +99,10 @@ function plugin_init_formcreator() {
 
    // This version is always EOL, so always load migration-only functionality
    plugin_formcreator_init_migration_only();
-   
+
    // Register plugin classes
    plugin_formcreator_registerClasses();
-   
+
    // Load plugin hooks for menu and interface elements
    plugin_formcreator_hook();
 }
@@ -111,7 +113,7 @@ function plugin_init_formcreator() {
 function plugin_formcreator_init_migration_only() {
    // Load only essential classes for migration
    spl_autoload_register('plugin_formcreator_autoload');
-   
+
    // Display EOL warning in admin interface
    if (Session::haveRight('config', UPDATE)) {
       plugin_formcreator_show_eol_warning();
@@ -119,7 +121,7 @@ function plugin_formcreator_init_migration_only() {
 
    // Register minimal classes needed for migration
    Plugin::registerClass(Install::class);
-   
+
    // Add admin menu for migration status only
    if (Session::haveRight('config', UPDATE)) {
       /** @var array $PLUGIN_HOOKS */
@@ -140,7 +142,7 @@ function plugin_formcreator_show_eol_warning() {
       __('Formcreator v%s is now End-of-Life (EOL). This version only provides migration to GLPI 11 native forms. After successful migration, consider uninstalling this plugin and use GLPI\'s native form system.', 'formcreator'),
       PLUGIN_FORMCREATOR_VERSION
    );
-   
+
    Session::addMessageAfterRedirect($message, true, WARNING);
    $_SESSION['formcreator_eol_warning_shown'] = true;
 }
@@ -225,7 +227,7 @@ function plugin_formcreator_autoload($classname) {
          return true;
       }
    }
-   
+
    // Legacy compatibility for old PluginFormcreator classes (if any still exist)
    if (strpos($classname, 'PluginFormcreator') === 0) {
       // useful only for installer GLPi autoloader already handles inc/ folder
@@ -298,20 +300,20 @@ function plugin_formcreator_hook(): void {
 
    // No helpdesk menu in EOL version
    // No assistance requests menu in EOL version
-   
+
    // Minimal hooks for EOL version
    $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 0;
-   
+
    // Basic menu entry for migration status only
    if (Session::haveRight('config', UPDATE)) {
       $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/migration_status.php';
-      
+
       // Add EOL information button to plugin tile
       $PLUGIN_HOOKS['menu_toadd']['formcreator']['tools'] = EOLInfo::class;
-      
+
       // Alternative: Add a direct link to EOL documentation
       $PLUGIN_HOOKS['plugin_info_display']['formcreator'] = 'front/eol_info.php';
-      
+
       // Display EOL warning on central dashboard
       $PLUGIN_HOOKS['display_central']['formcreator'] = [EOLInfo::class, 'displayCentralEOLWarning'];
    }
@@ -319,13 +321,13 @@ function plugin_formcreator_hook(): void {
 
 function plugin_formcreator_registerClasses() {
    // EOL version - minimal class registration for migration only
-   
+
    // Only register core classes needed for migration
    Plugin::registerClass(Install::class);
-   
+
    // Register EOL information class for admin menu
    Plugin::registerClass(EOLInfo::class);
-   
+
    // No entity configuration or form classes in EOL version
    // No field classes in EOL version
    // No notification classes in EOL version

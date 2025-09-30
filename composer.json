@@ -25,11 +25,14 @@
       "phpstan/phpstan-deprecation-rules": "^2.0",
       "phpstan/extension-installer": "^1.4",
       "glpi-project/tools": "^0.8",
+      "glpi-project/coding-standard": "^0.7.1",
       "php-parallel-lint/php-parallel-lint": "^1.0",
-      "phpunit/phpunit": "^11"
+      "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0"
    },
    "scripts": {
-      "lint": "vendor/bin/parallel-lint --exclude vendor --exclude archived_v2 .",
-      "stan": "vendor/bin/phpstan analyze"
+      "cs": "vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ src/ front/ tests/ RoboFile.php",
+      "cbf": "vendor/bin/phpcbf -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ src/ front/ tests/ RoboFile.php",
+      "lint": "vendor/bin/parallel-lint --exclude vendor .",
+      "stan": "vendor/bin/phpstan analyze -c phpstan.neon"
    }
 }
