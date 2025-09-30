@@ -16,7 +16,7 @@
 	      <fr>
 FormCreator 3.0.0 - Plugin de migration uniquement (Fin de vie)
 
-Si vous prévoyez de migrer votre instance GLPI vers la version 11 et que vous n'avez pas installé la version 2.14.14 sur votre instance GLPI 10.0.x, une version spécifique compatible avec GLPI 11 est disponible.
+Si vous prévoyez de migrer votre instance GLPI vers la version 11 et que vous n'avez pas installé la version 2.13.10 sur votre instance GLPI 10.0.x, une version spécifique compatible avec GLPI 11 est disponible.
 
 ⚠️ Attention : la version finale 3.0.0 est une version EOL (fin de vie). Elle ne bénéficie plus de mises à jour fonctionnelles ni de correctifs de sécurité.
 
@@ -32,7 +32,7 @@ Cette version ne fournit qu’un support de migration. Pour les fonctionnalités
          <en>
 FormCreator 3.0.0 - Migration Plugin Only (End of Life)
 
-If you plan to migrate your GLPI instance to version 11 and have not installed version 2.14.14 on your GLPI 10.0.x instance, a specific version compatible with GLPI 11 is available.
+If you plan to migrate your GLPI instance to version 11 and have not installed version 2.13.10 on your GLPI 10.0.x instance, a specific version compatible with GLPI 11 is available.
 
 ⚠️ Warning: the final version 3.0.0 is an EOL (End of Life) release. It no longer receives functional updates or security patches.
 
