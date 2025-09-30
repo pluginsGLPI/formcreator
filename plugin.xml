@@ -1,52 +1,49 @@
 <root>
-   <name>FormCreator</name>
+   <name>Formcreator End-of-Life Updater</name>
    <key>formcreator</key>
    <state>stable</state>
    <logo>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/icon.png</logo>
    <description>
       <short>
-         <fr>Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets ou changements.</fr>
-         <en>Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more tickets or changes.</en>
+         <fr>Plugin marquant la fin de vie du plugin FormCreator.
+             Il met à jour les tables et les données de la base vers la version finale, prérequis avant la migration automatique des formulaires vers les assets personnalisés de GLPI 11.
+             ⚠️ Ce plugin doit être installé uniquement en production pour effectuer la mise à jour, puis désinstallé une fois l’opération terminée.</fr>
+         <en>Plugin marking the end of life of FormCreator plugin.
+             It updates database tables and data to the final version, prerequisites before the automatic migration of forms into GLPI 11 custom assets.
+             ⚠️ This plugin must be installed in production only to perform the update, and then uninstalled once the operation is complete.</en>
       </short>
       <long>
-         <fr>
-Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets ou changements.
+	      <fr>
+FormCreator 3.0.0 - Plugin de migration uniquement (Fin de vie)
 
-Fonctionnalités
----------------
+Si vous prévoyez de migrer votre instance GLPI vers la version 11 et que vous n'avez pas installé la version 2.13.10 sur votre instance GLPI 10.0.x, une version spécifique compatible avec GLPI 11 est disponible.
 
-1. Accès par menu direct en interface self-service
-2. Mise en avant de formulaires en pages d'accueil
-3. Accès des formulaires contrôlés : accès public, accès utilisateurs identifiés, accès restreint à certains profils
-4. Des formulaires simples et personnalisables
-5. Des formulaires organisés par catégories, par entités et par langues.
-6. Des questions ouvertes ou fermées, de tout type de présentation : Champs textes, listes, LDAP, fichiers, etc.
-7. Organisation des questions par sections. Choix de l'ordre d'affichage.
-8. Possibilité de n'afficher une question que selon certains critères (réponse à une autre question)
-9. Un contrôle pointu sur les réponses de formulaires : Texte, nombres, taille des champs, e-mail, champs obligatoires, expressions réguliaires, etc.
-10. Création d'un ou plusieurs tickets ou changements à partir des réponses aux formulaires
-11. Ajout de description par champs, par section de questions, par formulaires, par entités et langues.
-12. Formatage du/des ticket(s) créé(s) : réponses aux questions à afficher, gabarits de tickets.
-13. Prévisualisation du formulaire créé directement dans la configuration.
+⚠️ Attention : la version finale 3.0.0 est une version EOL (fin de vie). Elle ne bénéficie plus de mises à jour fonctionnelles ni de correctifs de sécurité.
+
+Instructions d'utilisation :
+--------------------------
+1. Après la migration vers GLPI 11, installez cette version finale (3.0.0).
+2. Lancez l'opération de migration des données à l'aide de la commande suivante :
+    - `php bin/console migration:formcreator_plugin_to_core`.
+3. Désinstallez le plugin FormCreator une fois que toutes les données ont été intégrées et vérifiées dans le cœur de GLPI 11.
+
+Cette version ne fournit qu’un support de migration. Pour les fonctionnalités de formulaire, utilisez les formulaires natifs de GLPI 11.
          </fr>
          <en>
-Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more tickets or changes.
+FormCreator 3.0.0 - Migration Plugin Only (End of Life)
 
-Features
---------
-1. Direct access to forms self-service interface in main menu
-2. Highlighting forms in homepages
-3. Access to forms controlled: public access, identified user access, restricted access to some profiles
-4. Simple and customizable forms
-5. Forms organized by categories, entities and languages.
-6. Questions of any type of presentation: Textareas, lists, LDAP, files, etc.
-7. Questions organised in sections. Choice of the display order.
-8. Possibility to display a question based on certain criteria (response to a further question)
-9. A sharp control on responses from forms: text, numbers, size of fields, email, mandatory fields, regular expressions, etc.
-10. Creation of one or more tickets or changes from form answers
-11. Adding a description per fields, per sections, per forms, entities or languages.
-12. Formatting the ticket set: answers to questions displayed, tickets templates.
-13. Preview form created directly in the configuration.
+If you plan to migrate your GLPI instance to version 11 and have not installed version 2.13.10 on your GLPI 10.0.x instance, a specific version compatible with GLPI 11 is available.
+
+⚠️ Warning: the final version 3.0.0 is an EOL (End of Life) release. It no longer receives functional updates or security patches.
+
+Usage Instructions:
+--------------------------
+1. After migrating to GLPI 11, install this final version (3.0.0).
+2. Run the data migration operation using the following command:
+    - `php bin/console migration:formcreator_plugin_to_core`.
+3. Uninstall the FormCreator plugin once all data has been integrated and verified within the core of GLPI 11.
+
+This version only provides migration support. For form functionality, use GLPI 11's native forms.
          </en>
       </long>
    </description>
@@ -58,6 +55,11 @@ Features
       <author>Teclib'</author>
    </authors>
    <versions>
+      <version>
+         <num>3.0.0</num>
+         <compatibility>~11.0</compatibility>
+         <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/3.0.0/glpi-formcreator-3.0.0.tar.bz2</download_url>
+      </version>
       <version>
          <num>2.13.10</num>
          <compatibility>~10.0.10</compatibility>
