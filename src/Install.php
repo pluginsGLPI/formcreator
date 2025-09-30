@@ -161,7 +161,7 @@ class Install {
       $oldVersion = Config::getConfigurationValue('formcreator', 'previous_version');
       // Force fix of signed columns to reduce upgrade errors frequency
       // This assumes that all modified columns exist in the database
-      if (version_compare($oldVersion, '2.13.0') >= 0) {
+      if ($oldVersion !== null && version_compare($oldVersion, '2.13.0') >= 0) {
          $this->migrateFkToUnsignedInt();
       }
 
@@ -207,7 +207,7 @@ class Install {
          $fromSchemaVersion = $this->getSchemaVersion();
       }
 
-      if (version_compare($fromSchemaVersion, '2.5') < 0) {
+      if (version_compare($fromSchemaVersion ?? '0.0', '2.5') < 0) {
          $message = __('Upgrade from version older than 2.5.0 is no longer supported. Please upgrade to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to GLPI 10 or later and Formcreator 2.13 or later.', 'formcreator');
          if (isCommandLine()) {
             echo $message;
@@ -593,26 +593,26 @@ class Install {
       global $DB;
 
       $table = 'glpi_plugin_formcreator_formanswers';
-      if ($DB->fieldExists($table, 'requester_id')) {
+      if ($DB->tableExists($table) && $DB->fieldExists($table, 'requester_id')) {
          $DB->doQuery("UPDATE `$table` SET `requester_id` = 0 WHERE `requester_id` IS NULL");
       }
 
       $table = 'glpi_plugin_formcreator_targetchanges';
-      if ($DB->fieldExists($table, 'due_date_question')) {
+      if ($DB->tableExists($table) && $DB->fieldExists($table, 'due_date_question')) {
          $DB->doQuery("UPDATE `$table` SET `due_date_question` = 0 WHERE `due_date_question` IS NULL");
       }
-      if ($DB->fieldExists($table, 'destination_entity_value')) {
+      if ($DB->tableExists($table) && $DB->fieldExists($table, 'destination_entity_value')) {
          $DB->doQuery("UPDATE `$table` SET `destination_entity_value` = 0 WHERE `destination_entity_value` IS NULL");
       }
       $table = 'glpi_plugin_formcreator_targettickets';
-      if ($DB->fieldExists($table, 'due_date_question')) {
+      if ($DB->tableExists($table) && $DB->fieldExists($table, 'due_date_question')) {
          $DB->doQuery("UPDATE `$table` SET `due_date_question` = 0 WHERE `due_date_question` IS NULL");
       }
-      if ($DB->fieldExists($table, 'destination_entity_value')) {
+      if ($DB->tableExists($table) && $DB->fieldExists($table, 'destination_entity_value')) {
          $DB->doQuery("UPDATE `$table` SET `destination_entity_value` = 0 WHERE `destination_entity_value` IS NULL");
       }
       $table = 'glpi_plugin_formcreator_targets_actors';
-      if ($DB->fieldExists($table, 'actor_value')) {
+      if ($DB->tableExists($table) && $DB->fieldExists($table, 'actor_value')) {
          $DB->doQuery("UPDATE `$table` SET `actor_value` = 0 WHERE `actor_value` IS NULL");
       }
 
