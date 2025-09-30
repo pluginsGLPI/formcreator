@@ -1,6 +1,6 @@
 # Formcreator Changelog
 
-## [3.0.0](https://github.com/pluginsGLPI/formcreator/compare/2.13.10...3.0.0) (Unreleased)
+## [3.0.0 (Migration Only)](https://github.com/pluginsGLPI/formcreator/compare/2.13.10...3.0.0) (Unreleased)
 
 ### 🚨 BREAKING CHANGES - END OF LIFE VERSION
 
