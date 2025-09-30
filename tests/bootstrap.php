@@ -39,7 +39,12 @@ global $CFG_GLPI, $PLUGIN_HOOKS;
 define('TU_USER', 'glpi');
 define('TU_PASS', 'glpi');
 
-require_once __DIR__ . '/../../../vendor/autoload.php';
+// Fix path to vendor/autoload.php
+require_once dirname(__DIR__, 3) . '/vendor/autoload.php';
+
+// Fix paths to GLPI test classes
+include_once dirname(__DIR__, 3) . '/phpunit/GLPITestCase.php';
+include_once dirname(__DIR__, 3) . '/phpunit/DbTestCase.php';
 
 $kernel = new Kernel(Environment::TESTING->value);
 $kernel->boot();
@@ -66,4 +71,9 @@ if (file_exists($hook_file)) {
 $setup_file = $plugin_root . DIRECTORY_SEPARATOR . 'setup.php';
 if (file_exists($setup_file)) {
     require_once $setup_file;
+}
+
+// The autoloader is already defined in setup.php, just make sure it's registered
+if (function_exists('plugin_formcreator_autoload')) {
+    spl_autoload_register('plugin_formcreator_autoload');
 }

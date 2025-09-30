@@ -31,20 +31,12 @@
 
 use Glpi\Plugin\Formcreator\Install;
 
-// Include setup.php to ensure autoloader function is available
-if (!function_exists('plugin_formcreator_autoload')) {
-   require_once __DIR__ . '/setup.php';
-}
-
 /**
  * Plugin install process for Formcreator v3.0.0 (End-of-Life)
  *
  * @return boolean
  */
 function plugin_formcreator_install() {
-   // Ensure autoloader is registered for installation
-   spl_autoload_register('plugin_formcreator_autoload');
-   
    $migration = new Migration(PLUGIN_FORMCREATOR_SCHEMA_VERSION);
    
    // Display EOL installation message

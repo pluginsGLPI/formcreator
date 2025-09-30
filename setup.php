@@ -64,15 +64,12 @@ define('PLUGIN_FORMCREATOR_ADVANCED_VALIDATION', 'advform');
 function plugin_version_formcreator() {
    plugin_formcreator_savePreviousVersion();
 
-   // Use constant instead of deprecated method
-   $webDir = FORMCREATOR_ROOTDOC;
-
    return [
       'name'           => 'Formcreator End-of-Life Updater',
       'version'        => PLUGIN_FORMCREATOR_VERSION,
-      'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
+      'author'         => 'Teclib\'',
       'homepage'       => 'https://github.com/pluginsGLPI/formcreator',
-      'license'        => '<a href="' . $webDir . '/LICENSE.md" target="_blank">GPLv2</a>',
+      'license'        => 'GPLv2',
       'requirements'   => [
          'glpi'           => [
             'min'            => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION,
