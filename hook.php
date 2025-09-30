@@ -39,6 +39,8 @@ use Glpi\Plugin\Formcreator\Install;
  * @return boolean
  */
 function plugin_formcreator_install() {
+   spl_autoload_register('plugin_formcreator_autoload');
+
    $migration = new Migration(PLUGIN_FORMCREATOR_SCHEMA_VERSION);
 
    // Display EOL installation message
