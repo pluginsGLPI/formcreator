@@ -1,5 +1,7 @@
 <?php
+
 /**
+ *
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
  * easy access.
@@ -21,7 +23,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2021 Teclib'
+ * @copyright Copyright © 2011 - 2018 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -29,34 +31,20 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
-Session::checkLoginUser();
+/** @var array $CFG_GLPI */
+global $CFG_GLPI;
 
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
-}
+// Check if user has admin rights
+Session::checkRight('config', UPDATE);
 
-if (Session::getCurrentInterface() == 'helpdesk') {
-   if (plugin_formcreator_replaceHelpdesk()) {
-      Html::redirect('issue.php');
-   } else {
-      Html::helpHeader(
-         __('Form list', 'formcreator'),
-         'seek_assistance',
-         PluginFormcreatorForm::class
-      );
-   }
-} else {
-   Html::header(__('Form list', 'formcreator'));
-}
+// Show EOL message
+$message = sprintf(
+   __('Formcreator v%s is End-of-Life. This page has been disabled. Use GLPI 11 native forms instead.', 'formcreator'),
+   PLUGIN_FORMCREATOR_VERSION
+);
+Session::addMessageAfterRedirect($message, true, WARNING);
 
-$form = PluginFormcreatorCommon::getForm();
-$form->showList();
-
-if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpFooter();
-} else {
-   Html::footer();
-}
+// Redirect to migration status page
+Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/migration_status.php');

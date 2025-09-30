@@ -1,5 +1,7 @@
 <?php
+
 /**
+ *
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
  * easy access.
@@ -21,7 +23,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2021 Teclib'
+ * @copyright Copyright © 2011 - 2018-2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -151,7 +153,7 @@ class RoboFile extends RoboFilePlugin
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
       if ($release == 'release') {
-         $this->updateChangelog();
+         // $this->updateChangelog();
       }
 
       $diff = $this->gitDiff(['package.json']);
@@ -195,12 +197,12 @@ class RoboFile extends RoboFilePlugin
       $this->_exec("git archive --prefix=$pluginName/ $rev $filesToArchive | tar x -C '$archiveWorkdir'");
 
       // Copy SCSS
-      $srcFile = __DIR__ . '/css_compiled/styles.min.css';
-      $dstFile = "$archiveWorkdir/$pluginName/css_compiled/styles.min.css";
-      $success = copy($srcFile, $dstFile);
-      if (!$success) {
-         throw new RuntimeException("failed to generate CSS resources");
-      }
+      // $srcFile = __DIR__ . '/css_compiled/styles.min.css';
+      // $dstFile = "$archiveWorkdir/$pluginName/css_compiled/styles.min.css";
+      // $success = copy($srcFile, $dstFile);
+      // if (!$success) {
+      //    throw new RuntimeException("failed to generate CSS resources");
+      // }
 
       // Add composer dependencies
       $success = $this->taskExec('composer')
@@ -213,15 +215,15 @@ class RoboFile extends RoboFilePlugin
       }
 
       // Add JS dependencies
-      $success = $this->taskExec('yarn')
-         ->arg('--cwd')
-         ->arg("$archiveWorkdir/$pluginName")
-         ->arg('install')
-         ->arg('--prod')
-         ->run();
-      if ($success->getExitCode() != 0) {
-         throw new RuntimeException("failed to generate JS resources");
-      }
+      // $success = $this->taskExec('yarn')
+      //    ->arg('--cwd')
+      //    ->arg("$archiveWorkdir/$pluginName")
+      //    ->arg('install')
+      //    ->arg('--prod')
+      //    ->run();
+      // if ($success->getExitCode() != 0) {
+      //    throw new RuntimeException("failed to generate JS resources");
+      // }
 
       // Create the final archive
       $this->taskPack($archiveFile)

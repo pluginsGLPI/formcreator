@@ -1,5 +1,7 @@
 <?php
+
 /**
+ *
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
  * easy access.
@@ -21,13 +23,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2021 Teclib'
+ * @copyright Copyright © 2011 - 2018-2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
 class PluginFormcreatorUpgradeTo2_13_4 {
    /** @var Migration */
    protected $migration;

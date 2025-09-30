@@ -1,5 +1,7 @@
 <?php
+
 /**
+ *
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
  * easy access.
@@ -21,12 +23,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2021 Teclib'
+ * @copyright Copyright © 2011 - 2018 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
+include('../../inc/includes.php');
+
+// Check if user has admin rights
+Session::checkRight('config', UPDATE);
+
+// Show EOL message
+$message = sprintf(
+   __('Formcreator v%s is End-of-Life. All form functionality is now available in GLPI 11 core. Check migration status or use native forms.', 'formcreator'),
+   PLUGIN_FORMCREATOR_VERSION
+);
+Session::addMessageAfterRedirect($message, true, WARNING);
+
+// Redirect to migration status page
+Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/migration_status.php');
 
 header('Location: front/form.php');

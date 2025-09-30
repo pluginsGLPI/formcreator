@@ -1,61 +1,81 @@
 <?php
-// fix empty CFG_GLPI on boostrap; see https://github.com/sebastianbergmann/phpunit/issues/325
-global $CFG_GLPI, $GLPI_CACHE, $CHROME_CLIENT;
 
-//disable session cookies
-ini_set('session.use_cookies', 0);
-ini_set("memory_limit", "-1");
-ini_set("max_execution_time", "0");
+/**
+ *
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+use Glpi\Application\Environment;
+use Glpi\Kernel\Kernel;
 
-define('TEST_PLUGIN_NAME', 'formcreator');
-define('TEST_SCREENSHOTS_DIR', __DIR__ . '/logs/screenshots');
+/** @var array $CFG_GLPI */
+/** @var array $PLUGIN_HOOKS */
+global $CFG_GLPI, $PLUGIN_HOOKS;
 
-// glpi/inc/oolbox.class.php tests TU_USER to decide if it warns or not about mcrypt extension
-define('TU_USER', '_test_user');
+define('TU_USER', 'glpi');
+define('TU_PASS', 'glpi');
 
-if (!$glpiConfigDir = getenv('TEST_GLPI_CONFIG_DIR')) {
-   echo "Environment var TEST_GLPI_CONFIG_DIR is not set" . PHP_EOL;
-   exit(1);
-}
+// Fix path to vendor/autoload.php
+require_once dirname(__DIR__, 3) . '/vendor/autoload.php';
 
-define('GLPI_ROOT', realpath(__DIR__ . '/../../../'));
-define("GLPI_CONFIG_DIR", GLPI_ROOT . "/$glpiConfigDir");
-if (!file_exists(GLPI_CONFIG_DIR . '/config_db.php')) {
-   echo GLPI_ROOT . "/$glpiConfigDir/config_db.php missing. Did GLPI successfully initialized ?\n";
-   exit(1);
-}
-unset($glpiConfigDir);
+// Fix paths to GLPI test classes
+include_once dirname(__DIR__, 3) . '/phpunit/GLPITestCase.php';
+include_once dirname(__DIR__, 3) . '/phpunit/DbTestCase.php';
 
-define('GLPI_LOG_DIR', __DIR__ . '/logs');
-@mkdir(GLPI_LOG_DIR);
-// if (!defined('STDERR')) {
-//    define('STDERR', fopen(GLPI_LOG_DIR . '/stderr.log', 'w'));
-// }
+$kernel = new Kernel(Environment::TESTING->value);
+$kernel->boot();
 
-// Terminate the webdriver on fatal error or it will continue to run and prevent
-// subsequent execution because the listening port is still in use
-register_shutdown_function(function() {
-   global $CHROME_CLIENT;
+// Load plugin classes
+$plugin_root = dirname(__DIR__);
+$plugin_name = basename($plugin_root);
 
-   if ($CHROME_CLIENT) {
-      $CHROME_CLIENT->quit();
+// Plugin is expected in inc/ directory
+$inc_dir = $plugin_root . DIRECTORY_SEPARATOR . 'inc';
+if (is_dir($inc_dir)) {
+   foreach (glob($inc_dir . '/*.class.php') as $class_file) {
+       require_once $class_file;
    }
-});
+}
 
-// Giving --debug argument to atoum will be detected by GLPI too
-// the error handler in Toolbox may output to stdout a message and break process communication
-// in atoum
-//$key = array_search('--debug', $_SERVER['argv']);
-// if ($key) {
-   //unset($_SERVER['argv'][$key]);
-// }
+// Plugin hook file
+$hook_file = $plugin_root . DIRECTORY_SEPARATOR . 'hook.php';
+if (file_exists($hook_file)) {
+    require_once $hook_file;
+}
 
-include (GLPI_ROOT . "/inc/includes.php");
+// Plugin setup file
+$setup_file = $plugin_root . DIRECTORY_SEPARATOR . 'setup.php';
+if (file_exists($setup_file)) {
+    require_once $setup_file;
+}
 
-//init cache
-//$GLPI_CACHE = Config::getCache('cache_db');
-
-// If GLPI debug mode is disabled, atoum cannot produce backtaces
-//\Toolbox::setDebugMode(Session::DEBUG_MODE);
+// The autoloader is already defined in setup.php, just make sure it's registered
+if (function_exists('plugin_formcreator_autoload')) {
+    spl_autoload_register('plugin_formcreator_autoload');
+}

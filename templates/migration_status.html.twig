@@ -1,0 +1,255 @@
+{#
+ #
+ # ---------------------------------------------------------------------
+ # Formcreator is a plugin which allows creation of custom forms of
+ # easy access.
+ # ---------------------------------------------------------------------
+ # LICENSE
+ #
+ # This file is part of Formcreator.
+ #
+ # Formcreator is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # Formcreator is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ # ---------------------------------------------------------------------
+ # @copyright Copyright © 2011 - 2018 Teclib'
+ # @copyright 2015-2025 Teclib' and contributors.
+ # @licence   https://www.gnu.org/licenses/gpl-3.0.html
+ # @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ # @link      https://github.com/pluginsGLPI/formcreator/
+ # @link      https://pluginsglpi.github.io/formcreator/
+ # @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ # ---------------------------------------------------------------------
+ #}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{# Page Header #}
+<div class="d-flex align-items-center mb-4">
+    <div class="me-3">
+        <i class="ti ti-arrows-exchange fa-2x text-primary"></i>
+    </div>
+    <div>
+        <h1 class="mb-0">{{ __('Formcreator Migration Status', 'formcreator') }}</h1>
+        <p class="text-muted mb-0">{{ __('End of Life migration tool for GLPI 11', 'formcreator') }}</p>
+    </div>
+</div>
+<div class="row">
+    <div
+        class="col-12">
+        {# EOL Warning Banner #}
+        <div class="alert alert-warning border-start border-warning border-2 mb-4">
+            <div class="d-flex align-items-start">
+                <i class="ti ti-alert-triangle text-warning me-3 mt-1 fa-lg"></i>
+                <div>
+                    <h5 class="alert-heading mb-2">{{ __('End of Life Notice', 'formcreator') }}</h5>
+                    <p class="mb-0">
+                        {{ __('Formcreator v3.0.0 is an End-of-Life version. All form creation functionality has been moved to GLPI 11 native forms.', 'formcreator') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {# Migration Status Card #}
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h3 class="card-title mb-0">
+                    <i class="ti ti-chart-line me-2"></i>
+                    {{ __('Migration Status', 'formcreator') }}
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <tbody>
+                            <tr>
+                                <td class="fw-bold">
+                                    <i class="ti ti-forms me-2 text-primary"></i>
+                                    {{ __('Legacy Forms Found', 'formcreator') }}
+                                </td>
+                                <td>
+                                    <span class="badge glpi-badge">
+                                        {{ form_count }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">
+                                    <i class="ti ti-file-description me-2 text-info"></i>
+                                    {{ __('Legacy Form Submissions', 'formcreator') }}
+                                </td>
+                                <td>
+                                    <span class="badge glpi-badge">
+                                        {{ answer_count }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">
+                                    <i class="ti ti-layout-2 me-2 text-success"></i>
+                                    {{ __('GLPI 11 Native Forms', 'formcreator') }}
+                                </td>
+                                <td>
+                                    <span class="badge glpi-badge">
+                                        {{ native_form_count }}
+                                    </span>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {# Migration Instructions Card #}
+        <div class="card shadow-sm mb-4 border-primary">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    <i class="ti ti-terminal-2 me-2"></i>
+                    {{ __('How to Migrate', 'formcreator') }}
+                </h3>
+            </div>
+                <div class="card-body">
+                    <div class="alert alert-warning border-start border-warning border-2 mb-4">
+                        <div class="d-flex align-items-start">
+                            <i class="ti ti-terminal-2 text-warning me-3 mt-1"></i>
+                            <div>
+                                <p class="alert-heading mb-2">{{ __('Command Line Migration Required', 'formcreator') }}</p>
+                                <p class="mb-2">
+                                    {{ __('For optimal performance and reliability, the migration must be performed using the command line:', 'formcreator') }}
+                                </p>
+                                <div class="bg-light border border-secondary rounded p-3 position-relative mt-3">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <code id="codeBlock" class="mb-0 flex-grow-1 bg-transparent">php bin/console migration:formcreator_plugin_to_core</code>
+                                        <button class="btn btn-sm btn-outline-secondary ms-3 copy-btn" onclick="copyCode()" title="{{ __('Copy command', 'formcreator') }}">
+                                            <i class="ti ti-clipboard"></i>
+                                            {{ __('Copy') }}
+                                        </button>
+                                    </div>
+                                </div>
+                                <small class="text-muted mt-2 d-block">
+                                    {{ __('Run this command from your GLPI root directory', 'formcreator') }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info border-start border-info border-2">
+                        <div class="d-flex align-items-start">
+                            <i class="ti ti-info-circle me-3 mt-1"></i>
+                            <div>
+                                <p class="alert-heading mb-2">{{ __('Migration Process', 'formcreator') }}</p>
+                                <ul class="mb-2 ps-3">
+                                    <li>{{ __('Form structure and fields will be converted', 'formcreator') }}</li>
+                                    <li>{{ __('Form categories will be preserved', 'formcreator') }}</li>
+                                    <li>{{ __('Access control rules will be migrated', 'formcreator') }}</li>
+                                    <li>{{ __('Form submissions will be preserved', 'formcreator') }}</li>
+                                    <li>{{ __('Complex validations may need manual recreation', 'formcreator') }}</li>
+                                </ul>
+                                <div class="border-top pt-2 mt-2">
+                                    <small class="text-muted">
+                                        <i class="ti ti-alert-circle me-1"></i>
+                                        {{ __('Note: Migration status detection is based on data presence and may not be 100% accurate. Please verify manually after running the migration command.', 'formcreator') }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        {# Next Steps Card #}
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h3 class="card-title mb-0">
+                    <i class="ti ti-list-check me-2"></i>
+                    {{ __('Next Steps', 'formcreator') }}
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="d-flex align-items-start col-md-6">
+                        <i class="ti ti-arrow-right text-primary me-2"></i>
+                        <div>
+                            <p class="fw-bold mb-2">{{ __('After Migration', 'formcreator') }}</p>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="ti ti-chevron-right text-primary me-2"></i>
+                                    {{ __('Review converted forms in GLPI 11', 'formcreator') }}
+                                </li>
+                                <li class="mb-2">
+                                    <i class="ti ti-chevron-right text-primary me-2"></i>
+                                    {{ __('Test form access permissions', 'formcreator') }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start col-md-6">
+                        <i class="ti ti-arrow-right text-success me-2"></i>
+                        <div>
+                            <p class="fw-bold mb-2">{{ __('Recommendations', 'formcreator') }}</p>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="ti ti-chevron-right text-success me-2"></i>
+                                    {{ __('Train users on GLPI 11 native forms', 'formcreator') }}
+                                </li>
+                                <li class="mb-2">
+                                    <i class="ti ti-chevron-right text-success me-2"></i>
+                                    {{ __('Update internal documentation', 'formcreator') }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    pre {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 0.25rem;
+        padding: 1rem;
+        position: relative;
+    }
+
+    .copy-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+</style>
+<script>
+    function copyCode() {
+        const codeBlock = document.getElementById('codeBlock');
+        const textArea = document.createElement('textarea');
+        textArea.value = codeBlock.textContent;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+
+        const copyBtn = document.querySelector('.copy-btn');
+        copyBtn.innerHTML = '<i class="ti ti-check"></i> {{ __("Copied") }} !';
+        copyBtn.classList.remove('btn-outline-secondary');
+        copyBtn.classList.add('btn-success');
+
+        setTimeout(() => {
+            copyBtn.innerHTML = '<i class="ti ti-clipboard"></i> {{ __("Copy") }}';
+            copyBtn.classList.remove('btn-success');
+            copyBtn.classList.add('btn-outline-secondary');
+        }, 2000);
+    }
+</script>

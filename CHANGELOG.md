@@ -1,3 +1,26 @@
+# Formcreator Changelog
+
+## [3.0.0 (Migration Only)](https://github.com/pluginsGLPI/formcreator/compare/2.13.10...3.0.0) (Unreleased)
+
+### 🚨 BREAKING CHANGES - END OF LIFE VERSION
+
+This version (3.0.0) is a **migration-only plugin** designed exclusively for GLPI 11.0+. After migration, Formcreator becomes End-of-Life (EOL).
+
+### ✅ Added for Migration
+* **Migration Only**: Complete refactoring to migration-only plugin for GLPI 11+
+* **EOL Status**: Plugin shows End-of-Life status after migration completion
+* **Migration Preservation**: All migration scripts from 2.5.0 to 2.13.10 preserved
+* **GLPI 11 Support**: Native integration with GLPI 11 form migration system
+* **Migration Logging**: Enhanced logging and verification for migration process
+
+### ❌ Removed
+* **All features**: GLPI 11 now includes the new Forms system
+
+
+## Previous Versions (Functional Releases)
+
+**Note**: Versions below are the last functional releases of Formcreator. Version 3.0.0+ is migration-only.
+
 ## [2.13.10](https://github.com/pluginsGLPI/formcreator/compare/2.13.9...2.13.10) (2025-02-26)
 
 

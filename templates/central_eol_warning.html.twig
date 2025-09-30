@@ -1,0 +1,72 @@
+{#
+ #
+ # ---------------------------------------------------------------------
+ # Formcreator is a plugin which allows creation of custom forms of
+ # easy access.
+ # ---------------------------------------------------------------------
+ # LICENSE
+ #
+ # This file is part of Formcreator.
+ #
+ # Formcreator is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # Formcreator is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ # ---------------------------------------------------------------------
+ # @copyright Copyright © 2011 - 2018 Teclib'
+ # @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ # @link      https://github.com/pluginsGLPI/formcreator/
+ # @link      https://pluginsglpi.github.io/formcreator/
+ # @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ # ---------------------------------------------------------------------
+ #}
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div class="d-flex align-items-start">
+        {# Icon section #}
+        <div class="flex-shrink-0 me-3">
+            <i class="ti ti-alert-triangle fa-2x text-warning"></i>
+        </div>
+        
+        {# Content section #}
+        <div class="flex-grow-1">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h4 class="alert-heading mb-2">
+                        {{ __('Formcreator End of Life Notice', 'formcreator') }}
+                    </h4>
+                    <p class="mb-0">
+                        {{ __('Formcreator v%s has reached End of Life. Please migrate to GLPI 11 native forms.', 'formcreator')|format(plugin_version) }}
+                    </p>
+                </div>
+                
+                {# Actions section #}
+                <div class="col-md-4 text-md-end text-start">
+                    <div class="d-flex flex-column flex-md-row gap-2 justify-content-md-end">
+                        <a href="{{ root_doc }}/plugins/formcreator/front/eol_info.php" 
+                           class="btn btn-sm btn-outline-dark">
+                            <i class="ti ti-info-circle me-1"></i>
+                            {{ __('Learn More', 'formcreator') }}
+                        </a>
+                        <a href="{{ root_doc }}/plugins/formcreator/front/migration_status.php" 
+                           class="btn btn-sm btn-primary">
+                            <i class="ti ti-arrows-exchange me-1"></i>
+                            {{ __('Migration Status', 'formcreator') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {# Close button #}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('Close', 'formcreator') }}"></button>
+</div>

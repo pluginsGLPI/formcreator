@@ -7,15 +7,37 @@
 [![IRC Chat](https://img.shields.io/badge/IRC-%23GLPI-green.svg)](http://webchat.freenode.net/?channels=GLPI)
 [![Follow Twitter](https://img.shields.io/badge/Twitter-GLPI%20Project-26A2FA.svg)](https://twitter.com/GLPI_PROJECT)
 [![Join the chat at https://gitter.im/TECLIB/formcreator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TECLIB/formcreator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Project Status: Inactive](http://www.repostatus.org/badges/latest/inactive.svg)](http://www.repostatus.org/#inactive)
+[![Project Status: End Of Life](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 [![GitHub All Releases](https://img.shields.io/github/downloads/PluginsGLPI/formcreator/total)](https://github.com/pluginsGLPI/formcreator/releases)
 
-Extend GLPI with Plugins.
+## ⚠️ IMPORTANT NOTICE - END OF LIFE
+
+**FormCreator 3.0.0 is a migration-only plugin designed exclusively for GLPI 11.0+**
+
+Plugin marking the end of life of `formcreator`.
+It updates database tables and data to the final version, required before the automatic migration of forms into GLPI 11 core.
+⚠️ This plugin must be installed in production only to perform the update, and then uninstalled once the operation is complete.
+
+### Purpose of this version
+
+This version serves as a migration facilitator. Its main objectives are:
+Update database tables and data to prepare their final state for GLPI 11.
+Ensure the necessary compatibility for the automatic migration of objects and forms to the GLPI 11 core.
+
+Usage Instructions:
+--------------------------
+1. After migrating to GLPI 11, install this final version (3.0.0).
+2. Run the data migration operation using the following command:
+    - `php bin/console migration:formcreator_plugin_to_core`.
+3. Uninstall the `FormCreator` plugin once all data has been integrated and verified within the core of GLPI 11.
+
+This version provides support for migration only. For features related to custom assets, use GLPI 11's native custom assets.
 
 ## Table of Contents
 
-  - [Form Creator](#form-creator)
+- [Form Creator](#form-creator)
+  - [⚠️ IMPORTANT NOTICE - END OF LIFE](#️-important-notice---end-of-life)
   - [Table of Contents](#table-of-contents)
   - [Synopsis](#synopsis)
   - [Features](#features)

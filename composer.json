@@ -1,50 +1,39 @@
 {
    "name": "glpi-plugin/formcreator",
-   "description": "Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more GLPI tickets.",
+   "description": "Formcreator v3.0.0 - End-of-Life migration plugin for GLPI 11.0.0+. Provides migration tools to convert Formcreator forms to GLPI native forms.",
    "license": "GPL-2.0-or-later",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "config": {
+   "type": "glpi-plugin",
+   "keywords": ["glpi", "migration", "forms", "eol"],
+   "minimum-stability": "dev",
+   "prefer-stable": true,
+   "config": {
       "platform": {
-          "php": "7.4"
+          "php": "8.2"
       },
       "allow-plugins": {
-         "allow-plugins.dealerdirect/phpcod": true,
-         "dealerdirect/phpcodesniffer-composer-installer": true
+         "dealerdirect/phpcodesniffer-composer-installer": true,
+         "phpstan/extension-installer": true
       },
       "optimize-autoloader": true,
       "apcu-autoloader": true
-  },
-  "require": {
-      "php": ">= 7.2",
-      "ext-xml": "*",
-      "gregwar/captcha": "^1.1",
-      "xylemical/php-expressions": "^1.0.3",
-      "laminas/laminas-eventmanager": "^3.2"
-    },
-    "require-dev": {
-      "ext-bz2": "*",
-      "pear/archive_tar": "^1.4",
-      "atoum/atoum": "^4.0",
-      "atoum/stubs": "^2.5",
-      "glpi-project/tools": "^0.1.0",
+   },
+   "require": {
+      "php": ">= 8.2"
+   },
+   "require-dev": {
+      "phpstan/phpstan": "^2.1",
+      "phpstan/phpstan-deprecation-rules": "^2.0",
+      "phpstan/extension-installer": "^1.4",
+      "glpi-project/tools": "^0.8",
       "glpi-project/coding-standard": "^0.7.1",
       "php-parallel-lint/php-parallel-lint": "^1.0",
       "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-      "phpcsstandards/phpcsutils": "^1.0@alpha",
-      "scssphp/scssphp": "^1.5",
-      "symfony/panther": "^1.1",
-      "phpstan/phpstan": "^1.8"
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "GlpiPlugin\\Formcreator\\Tests\\": "tests/src/"
-        }
-    },
-    "scripts": {
-        "cs": "vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ inc/ front/ ajax/ tests/ RoboFile.php",
-        "cbf": "vendor/bin/phpcbf -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ inc/ front/ ajax/ tests/ RoboFile.php",
-        "lint": "vendor/bin/parallel-lint --exclude vendor .",
-        "stan": "vendor/bin/phpstan analyze -c phpstan.neon"
-    }
+      "consolidation/robo": "^5.1"
+   },
+   "scripts": {
+      "cs": "vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ src/ front/ tests/ RoboFile.php",
+      "cbf": "vendor/bin/phpcbf -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ src/ front/ tests/ RoboFile.php",
+      "lint": "vendor/bin/parallel-lint --exclude vendor .",
+      "stan": "vendor/bin/phpstan analyze -c phpstan.neon"
+   }
 }
