@@ -27,7 +27,8 @@
       "glpi-project/tools": "^0.8",
       "glpi-project/coding-standard": "^0.7.1",
       "php-parallel-lint/php-parallel-lint": "^1.0",
-      "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0"
+      "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+      "consolidation/robo": "^5.1"
    },
    "scripts": {
       "cs": "vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ src/ front/ tests/ RoboFile.php",
