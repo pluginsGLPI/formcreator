@@ -11,15 +11,28 @@
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 [![GitHub All Releases](https://img.shields.io/github/downloads/PluginsGLPI/formcreator/total)](https://github.com/pluginsGLPI/formcreator/releases)
 
-Extend GLPI with Plugins.
-
 ## ⚠️ IMPORTANT NOTICE - END OF LIFE
 
-**Formcreator v3.0.0 is a migration-only plugin designed exclusively for GLPI 11.0+**
+**FormCreator 3.0.0 is a migration-only plugin designed exclusively for GLPI 11.0+**
 
-Transition plugin marking the end of life of Formcreator.
+Plugin marking the end of life of `formcreator`.
 It updates database tables and data to the final version, required before the automatic migration of forms into GLPI 11 core.
 ⚠️ This plugin must be installed in production only to perform the update, and then uninstalled once the operation is complete.
+
+### Purpose of this version
+
+This version serves as a migration facilitator. Its main objectives are:
+Update database tables and data to prepare their final state for GLPI 11.
+Ensure the necessary compatibility for the automatic migration of objects and forms to the GLPI 11 core.
+
+Usage Instructions:
+--------------------------
+1. After migrating to GLPI 11, install this final version (3.0.0).
+2. Run the data migration operation using the following command:
+    - `php bin/console migration:formcreator_plugin_to_core`.
+3. Uninstall the `FormCreator` plugin once all data has been integrated and verified within the core of GLPI 11.
+
+This version provides support for migration only. For features related to custom assets, use GLPI 11's native custom assets.
 
 ## Table of Contents
 
