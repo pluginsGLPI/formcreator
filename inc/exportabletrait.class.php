@@ -63,7 +63,6 @@ trait PluginFormcreatorExportableTrait
             if ($subItem->isField('order')) {
                $criteria['ORDER'] = ['order ASC'];
             }
-            
             $allSubItems = $DB->request($criteria);
             $list = [];
             foreach ($allSubItems as $row) {
