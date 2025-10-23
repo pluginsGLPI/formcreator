@@ -294,7 +294,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
             break;
          case self::ACTOR_TYPE_PERSON:
             $user = new User;
-            $field = $idToRemove == 'uuid' ? 'id' : 'completename';
+            $field = $idToRemove == 'uuid' ? 'id' : 'name';
             if ($user->getFromDB($target_actor['actor_value'])) {
                $target_actor['actor_value'] = $user->fields[$field];
             }
@@ -308,7 +308,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
             break;
          case self::ACTOR_TYPE_SUPPLIER:
             $supplier = new Supplier;
-            $field = $idToRemove == 'uuid' ? 'id' : 'completename';
+            $field = $idToRemove == 'uuid' ? 'id' : 'name';
             if ($supplier->getFromDB($target_actor['actor_value'])) {
                $target_actor['actor_value'] = $supplier->fields[$field];
             }
