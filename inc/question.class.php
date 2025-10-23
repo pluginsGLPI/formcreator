@@ -405,7 +405,7 @@ PluginFormcreatorTranslatableInterface
       if (!$this->skipChecks) {
          $input = $this->checkBeforeSave($input);
 
-         if (!empty($input['default_values'] && $input['fieldtype'] === 'textarea')) {
+         if (!empty($input['default_values']) && $input['fieldtype'] === 'textarea') {
             $input['default_values'] = str_replace('\r\n', '', $input['default_values']);
          }
 
