@@ -5,12 +5,10 @@
    <logo>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/icon.png</logo>
    <description>
       <short>
-         <fr>Plugin marquant la fin de vie du plugin FormCreator.
-             Il met à jour les tables et les données de la base vers la version finale, prérequis avant la migration automatique des formulaires vers les assets personnalisés de GLPI 11.
-             ⚠️ Ce plugin doit être installé uniquement en production pour effectuer la mise à jour, puis désinstallé une fois l’opération terminée.</fr>
-         <en>Plugin marking the end of life of FormCreator plugin.
-             It updates database tables and data to the final version, prerequisites before the automatic migration of forms into GLPI 11 custom assets.
-             ⚠️ This plugin must be installed in production only to perform the update, and then uninstalled once the operation is complete.</en>
+         <fr>Formcreator est un plugin permettant de créer des formulaires personnalisés générant des tickets ou des changements.
+            ⚠️ À partir de GLPI 11 : il prépare la migration des formulaires vers le cœur de GLPI, une fois cette migration effectuée, il peut-être désinstallé.</fr>
+         <en>Formcreator is a plugin that allows you to create custom forms that generate tickets or changes.
+            ⚠️ Starting with GLPI 11: it prepares the migration of forms to the GLPI core; once this migration is complete, it can be uninstalled.</en>
       </short>
       <long>
 	      <fr>
