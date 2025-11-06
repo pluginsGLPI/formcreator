@@ -494,22 +494,9 @@ class Install {
    protected function deleteMiniDashboard(): bool {
       $dashboard = new Dashboard();
 
-      $res = true;
-
-      if (!$dashboard->getFromDB('plugin_formcreator_issue_counters')) {
-         // The dashboard does not exists, nothing to delete
-         $res = true;
-      }
-
-      $dashboard->delete([
+      return $dashboard->deleteByCriteria([
          'key' => 'plugin_formcreator_issue_counters'
       ]);
-      if ($dashboard->getFromDB('plugin_formcreator_issue_counters')) {
-         // Failed to delete the dashboard
-         $res = false;
-      }
-
-      return $res;
    }
 
    /**
