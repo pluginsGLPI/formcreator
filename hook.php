@@ -67,6 +67,8 @@ function plugin_formcreator_install() {
  * @return boolean
  */
 function plugin_formcreator_uninstall() {
+   spl_autoload_register('plugin_formcreator_autoload');
+
    $migration = new Migration(PLUGIN_FORMCREATOR_SCHEMA_VERSION);
 
    // Display EOL uninstall message
