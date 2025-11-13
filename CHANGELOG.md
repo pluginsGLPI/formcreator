@@ -1,6 +1,6 @@
 # Formcreator Changelog
 
-## [3.0.1] - 2025-11-10
+## [3.0.1 (Migration Only)] - 2025-11-10
 
 ### Fixed
 
