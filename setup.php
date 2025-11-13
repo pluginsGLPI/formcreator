@@ -38,7 +38,7 @@ use Glpi\Plugin\Hooks;
 /** @var array $CFG_GLPI */
 global $CFG_GLPI;
 // Version of the plugin (major.minor.bugfix)
-define('PLUGIN_FORMCREATOR_VERSION', '3.0.0');
+define('PLUGIN_FORMCREATOR_VERSION', '3.0.1');
 // Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '3.0');
 // is or is not an official release of the plugin
