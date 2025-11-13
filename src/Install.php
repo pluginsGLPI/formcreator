@@ -474,6 +474,7 @@ class Install {
       ];
 
       foreach ($itemtypes as $itemtype) {
+         // @phpstan-ignore-next-line argument.type
          $table = getTableForItemType($itemtype);
          $log = new Log();
          $log->deleteByCriteria(['itemtype' => $itemtype]);
@@ -489,6 +490,14 @@ class Install {
 
       $displayPreference = new DisplayPreference();
       $displayPreference->deleteByCriteria(['itemtype' => 'PluginFormcreatorIssue']);
+   }
+
+   protected function deleteMiniDashboard(): bool {
+      $dashboard = new Dashboard();
+
+      return $dashboard->deleteByCriteria([
+         'key' => 'plugin_formcreator_issue_counters'
+      ]);
    }
 
    /**
@@ -508,6 +517,7 @@ class Install {
       $this->deleteTicketRelation();
       $this->deleteTables();
       $this->deleteNotifications();
+      $this->deleteMiniDashboard();
 
       $config = new Config();
       $config->deleteByCriteria(['context' => 'formcreator']);
