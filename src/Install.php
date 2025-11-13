@@ -474,6 +474,7 @@ class Install {
       ];
 
       foreach ($itemtypes as $itemtype) {
+         // @phpstan-ignore-next-line argument.type
          $table = getTableForItemType($itemtype);
          $log = new Log();
          $log->deleteByCriteria(['itemtype' => $itemtype]);

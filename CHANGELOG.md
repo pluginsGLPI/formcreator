@@ -1,6 +1,13 @@
 # Formcreator Changelog
 
-## [3.0.0 (Migration Only)](https://github.com/pluginsGLPI/formcreator/compare/2.13.10...3.0.0) (Unreleased)
+## [3.0.1 (Migration Only)] - 2025-11-13
+
+### Fixed
+
+- Fixed the removal of the mini dashboard when uninstalling the plugin
+- Fixed the `class not found` error during uninstallation
+
+## [3.0.0 (Migration Only)](https://github.com/pluginsGLPI/formcreator/compare/2.13.10...3.0.0) 2025-09-30
 
 ### 🚨 BREAKING CHANGES - END OF LIFE VERSION
 
