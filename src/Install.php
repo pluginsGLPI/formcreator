@@ -492,6 +492,14 @@ class Install {
       $displayPreference->deleteByCriteria(['itemtype' => 'PluginFormcreatorIssue']);
    }
 
+   protected function deleteMiniDashboard(): bool {
+      $dashboard = new Dashboard();
+
+      return $dashboard->deleteByCriteria([
+         'key' => 'plugin_formcreator_issue_counters'
+      ]);
+   }
+
    /**
     * http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php
     * @param string $haystack
@@ -509,6 +517,7 @@ class Install {
       $this->deleteTicketRelation();
       $this->deleteTables();
       $this->deleteNotifications();
+      $this->deleteMiniDashboard();
 
       $config = new Config();
       $config->deleteByCriteria(['context' => 'formcreator']);
