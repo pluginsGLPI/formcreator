@@ -2290,6 +2290,8 @@ SCRIPT;
 
       $data = $targetItemtype::getDefaultValues();
 
+      $data = $this->setTargetCategory($data, $formanswer);
+
       $this->fields[$targetTemplateFk] = $this->getTargetTemplate($data);
 
       // Get predefined Fields
@@ -2323,14 +2325,17 @@ SCRIPT;
          unset($predefined_fields['_groups_id_assign']);
       }
 
+      if (isset($predefined_fields['itilcategories_id'])) {
+         $data['itilcategories_id'] = $predefined_fields['itilcategories_id'];
+         unset($predefined_fields['itilcategories_id']);
+      }
+
       // Manage special values
       if (!isset($predefined_fields['date']) || isset($predefined_fields['date']) && $predefined_fields['date'] == 'NOW') {
          $predefined_fields['date'] = $_SESSION['glpi_currenttime'];
       }
 
       $data = array_merge($data, $predefined_fields);
-
-      $data = $this->setTargetCategory($data, $formanswer);
 
       if (($data['requesttypes_id'] ?? 0) == 0) {
          unset($data['requesttypes_id']);
