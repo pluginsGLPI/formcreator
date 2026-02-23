@@ -2290,7 +2290,6 @@ SCRIPT;
 
       $data = $targetItemtype::getDefaultValues();
 
-
       $data = $this->setTargetCategory($data, $formanswer);
 
       $this->fields[$targetTemplateFk] = $this->getTargetTemplate($data);
@@ -2338,11 +2337,9 @@ SCRIPT;
 
       $data = array_merge($data, $predefined_fields);
 
-
       if (($data['requesttypes_id'] ?? 0) == 0) {
          unset($data['requesttypes_id']);
       }
-
 
       return $data;
    }
