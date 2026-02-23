@@ -2326,11 +2326,6 @@ SCRIPT;
          unset($predefined_fields['_groups_id_assign']);
       }
 
-      if (isset($predefined_fields['_groups_id_assign'])) {
-         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED, $predefined_fields['_groups_id_assign']);
-         unset($predefined_fields['_groups_id_assign']);
-      }
-
       if (isset($predefined_fields['itilcategories_id'])) {
          $data['itilcategories_id'] = $predefined_fields['itilcategories_id'];
          unset($predefined_fields['itilcategories_id']);
