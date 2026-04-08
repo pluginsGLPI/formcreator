@@ -48,7 +48,7 @@ This version only provides migration support. For form functionality, use GLPI 1
    <homepage>https://pluginsglpi.github.io/formcreator/</homepage>
    <download>https://github.com/pluginsGLPI/formcreator/releases</download>
    <issues>https://github.com/pluginsGLPI/formcreator/issues</issues>
-   <readme>https://glpi-plugins.readthedocs.io/en/latest/formcreator/index.html</readme>
+   <readme>https://help.glpi-project.org/doc-plugins/formcreator</readme>
    <authors>
       <author>Teclib'</author>
    </authors>
