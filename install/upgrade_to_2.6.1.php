@@ -53,7 +53,7 @@ class PluginFormcreatorUpgradeTo2_6_1 {
       foreach ($DB->request($request) as $row) {
          $answer = Toolbox::addslashes_deep(html_entity_decode($row['answer'], ENT_QUOTES|ENT_HTML5));
          $id = $row['id'];
-         $DB->query("UPDATE `glpi_plugin_formcreator_answers` SET `answer`='$answer' WHERE `id` = '$id'");
+         $DB->doQuery("UPDATE `glpi_plugin_formcreator_answers` SET `answer`='$answer' WHERE `id` = '$id'");
       }
 
       $request = [
@@ -63,7 +63,7 @@ class PluginFormcreatorUpgradeTo2_6_1 {
          $id = $row['id'];
          $name = Toolbox::addslashes_deep(html_entity_decode($row['name'], ENT_QUOTES|ENT_HTML5));
          $id = $row['id'];
-         $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `name`='$name' WHERE `id` = '$id'");
+         $DB->doQuery("UPDATE `glpi_plugin_formcreator_questions` SET `name`='$name' WHERE `id` = '$id'");
       }
    }
 

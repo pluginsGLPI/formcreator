@@ -23,7 +23,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2018-2021 Teclib'
+ * @copyright Copyright © 2011 - 2018 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -31,19 +31,19 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorUpgradeTo2_8_1 {
-   /**
-    * @param Migration $migration
-    */
-   public function upgrade(Migration $migration) {
-      global $DB;
+declare(strict_types=1);
 
-      $table = 'glpi_plugin_formcreator_issues';
-      $DB->doQuery("UPDATE `$table` SET `name`='' WHERE `name` IS NULL");
-      $migration->changeField($table, 'name', 'name', 'string', ['after' => 'id', 'value' => '']);
-   }
+use Rector\Config\RectorConfig;
 
-   public function isResyncIssuesRequired() {
-      return true;
-   }
-}
+return RectorConfig::configure()
+    ->withPaths([
+        __DIR__ . '/front',
+        __DIR__ . '/install',
+        __DIR__ . '/src',
+        __DIR__ . '/tests',
+    ])
+    // uncomment to reach your current PHP version
+    // ->withPhpSets()
+    ->withTypeCoverageLevel(0)
+    ->withDeadCodeLevel(0)
+    ->withCodeQualityLevel(0);

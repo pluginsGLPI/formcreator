@@ -69,7 +69,7 @@ class PluginFormcreatorUpgradeTo2_12 {
       $this->migration->addField($table, 'changetemplates_id', 'integer', ['value' => '0', 'after' => 'target_name']);
 
       $table = 'glpi_plugin_formcreator_targettickets';
-      $DB->query("UPDATE `$table` SET `tickettemplates_id`='0' WHERE `tickettemplates_id` IS NULL");
+      $DB->doQuery("UPDATE `$table` SET `tickettemplates_id`='0' WHERE `tickettemplates_id` IS NULL");
       $this->migration->changeField($table, 'tickettemplates_id', 'tickettemplates_id', 'integer', ['value' => '0', 'after' => 'type_question']);
    }
 

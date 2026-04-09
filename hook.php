@@ -54,6 +54,8 @@ function plugin_formcreator_install() {
       return false;
    }
 
+   $install->upgrade($migration);
+
    // Check if migration to GLPI 11 native forms is needed
    $migration->displayMessage("Migration to GLPI 11 native forms may be available. Check Administration > Plugins > Formcreator for migration status.");
 

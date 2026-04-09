@@ -131,7 +131,7 @@ class PluginFormcreatorUpgradeTo2_7 {
       $defaultKeySign = DBConnection::getDefaultPrimaryKeySignOption();
       $table = 'glpi_plugin_formcreator_questions';
       if ($DB->fieldExists($table, 'regex')) {
-         $DB->query(
+         $DB->doQuery(
             "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionregexes` (
             `id` int(11) $defaultKeySign NOT NULL AUTO_INCREMENT,
             `plugin_formcreator_questions_id`   int(11)       NOT NULL,
@@ -150,7 +150,7 @@ class PluginFormcreatorUpgradeTo2_7 {
             $id = $row['id'];
             $regex = $DB->escape($row['regex']);
             $uuid = plugin_formcreator_getUuid();
-            $DB->query("INSERT INTO `glpi_plugin_formcreator_questionregexes`
+            $DB->doQuery("INSERT INTO `glpi_plugin_formcreator_questionregexes`
                               SET `plugin_formcreator_questions_id`='$id', `fieldname`='regex', `regex`='$regex', `uuid`='$uuid'"
             ) or plugin_formcreator_upgrade_error($migration);
          }
@@ -160,7 +160,7 @@ class PluginFormcreatorUpgradeTo2_7 {
       // Migrate range question parameters
       $table = 'glpi_plugin_formcreator_questions';
       if ($DB->fieldExists($table, 'range_min')) {
-         $DB->query(
+         $DB->doQuery(
             "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionranges` (
                `id` int(11) $defaultKeySign NOT NULL AUTO_INCREMENT,
                `plugin_formcreator_questions_id`   int(11)       NOT NULL,
@@ -181,7 +181,7 @@ class PluginFormcreatorUpgradeTo2_7 {
             $rangeMin = $DB->escape($row['range_min']);
             $rangeMax = $DB->escape($row['range_max']);
             $uuid = plugin_formcreator_getUuid();
-            $DB->query("INSERT INTO `glpi_plugin_formcreator_questionranges`
+            $DB->doQuery("INSERT INTO `glpi_plugin_formcreator_questionranges`
                               SET `plugin_formcreator_questions_id`='$id', `fieldname`='range', `range_min`='$rangeMin', `range_max`='$rangeMax', `uuid`='$uuid'"
             ) or plugin_formcreator_upgrade_error($migration);
          }
@@ -207,7 +207,7 @@ class PluginFormcreatorUpgradeTo2_7 {
          foreach ($DB->request($request) as $row) {
             $answer = Toolbox::addslashes_deep(html_entity_decode($row['answer']));
             $id = $row['id'];
-            $DB->query("UPDATE `glpi_plugin_formcreator_answers` SET `answer`='$answer' WHERE `id` = '$id'");
+            $DB->doQuery("UPDATE `glpi_plugin_formcreator_answers` SET `answer`='$answer' WHERE `id` = '$id'");
          }
       }
 
@@ -222,14 +222,14 @@ class PluginFormcreatorUpgradeTo2_7 {
          $values = Toolbox::addslashes_deep(html_entity_decode($row['values']));
          $defaultValues = Toolbox::addslashes_deep(html_entity_decode($row['default_values']));
          $id = $row['id'];
-         $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `values` = '$values', `default_values` = '$defaultValues' WHERE `id` = '$id'");
+         $DB->doQuery("UPDATE `glpi_plugin_formcreator_questions` SET `values` = '$values', `default_values` = '$defaultValues' WHERE `id` = '$id'");
       }
 
       // decode html entities in name of questions
       foreach ($DB->request(['FROM' => 'glpi_plugin_formcreator_questions']) as $row) {
          $name = Toolbox::addslashes_deep(html_entity_decode($row['name']));
          $id = $row['id'];
-         $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `name`='$name' WHERE `id` = '$id'");
+         $DB->doQuery("UPDATE `glpi_plugin_formcreator_questions` SET `name`='$name' WHERE `id` = '$id'");
       }
 
       // Add properties for dropdown of ticket categories
@@ -250,7 +250,7 @@ class PluginFormcreatorUpgradeTo2_7 {
             }
             $id = $row['id'];
             $values = json_encode($values);
-            $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `values`='$values' WHERE `id` = '$id'");
+            $DB->doQuery("UPDATE `glpi_plugin_formcreator_questions` SET `values`='$values' WHERE `id` = '$id'");
          }
       }
 
@@ -274,7 +274,7 @@ class PluginFormcreatorUpgradeTo2_7 {
          if (!is_array(json_decode($row['answer'], true))) {
             $id = $row['id'];
             $answer = json_encode([$row['answer']]);
-            $DB->query("UPDATE `glpi_plugin_formcreator_answers` SET `answer` = '$answer' WHERE `id` = '$id'");
+            $DB->doQuery("UPDATE `glpi_plugin_formcreator_answers` SET `answer` = '$answer' WHERE `id` = '$id'");
          }
       }
 
@@ -299,7 +299,7 @@ class PluginFormcreatorUpgradeTo2_7 {
          'glpi_plugin_formcreator_issues',
       ];
       foreach ($tables as $table) {
-         $DB->query("UPDATE `$table` SET `name`='' WHERE `name` IS NULL");
+         $DB->doQuery("UPDATE `$table` SET `name`='' WHERE `name` IS NULL");
          $migration->changeField($table, 'name', 'name', 'VARCHAR(255) NOT NULL DEFAULT \'\' AFTER `id`');
       }
 
@@ -312,7 +312,7 @@ class PluginFormcreatorUpgradeTo2_7 {
          $description = Toolbox::addslashes_deep(html_entity_decode($row['description']));
          $content = Toolbox::addslashes_deep(html_entity_decode($row['content']));
          $id = $row['id'];
-         $DB->query("UPDATE `glpi_plugin_formcreator_forms` SET `name` = '$name', `description` = '$description', `content` = '$content' WHERE `id` = '$id'");
+         $DB->doQuery("UPDATE `glpi_plugin_formcreator_forms` SET `name` = '$name', `description` = '$description', `content` = '$content' WHERE `id` = '$id'");
       }
    }
 

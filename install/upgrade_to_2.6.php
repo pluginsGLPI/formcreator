@@ -81,12 +81,12 @@ class PluginFormcreatorUpgradeTo2_6 {
                INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
                SET `users_id_validator` = `validator_id`
                WHERE `$formTable`.`validation_required` = '1'";
-      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+      $DB->doQuery($query) or plugin_formcreator_upgrade_error($migration);
       $query = "UPDATE `$table`
                INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
                SET `groups_id_validator` = `validator_id`
                WHERE `$formTable`.`validation_required` = '2'";
-      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+      $DB->doQuery($query) or plugin_formcreator_upgrade_error($migration);
 
       $migration->dropKey($table, 'validator_id');
       $migration->dropField($table, 'validator_id');
@@ -137,7 +137,7 @@ class PluginFormcreatorUpgradeTo2_6 {
                   INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`),
                   INDEX `item` (`itemtype`,`items_id`)
                   ) ENGINE=InnoDB DEFAULT CHARSET=$defaultCharset COLLATE=$defaultCollation ROW_FORMAT=DYNAMIC;";
-         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+         $DB->doQuery($query) or plugin_formcreator_upgrade_error($migration);
       }
 
       // add uuid and generate for existing rows
@@ -155,7 +155,7 @@ class PluginFormcreatorUpgradeTo2_6 {
          $query = "UPDATE $table
                    SET `uuid` = '" . plugin_formcreator_getUuid() . "'
                    WHERE `id` = " . $targetTicket['id'];
-         $DB->query($query);
+         $DB->doQuery($query);
       }
 
       $enum_category_rule      = "'".implode("', '", ['none', 'specific', 'answer'])."'";
@@ -163,7 +163,7 @@ class PluginFormcreatorUpgradeTo2_6 {
       if (!$DB->fieldExists($table, 'category_rule', false)) {
          $query = "ALTER TABLE `$table`
                   ADD `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none' AFTER `tag_specifics`;";
-         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+         $DB->doQuery($query) or plugin_formcreator_upgrade_error($migration);
       } else {
          $current_enum_category_rule = PluginFormcreatorCommon::getEnumValues($table, 'category_rule');
          if (count($current_enum_category_rule) != count(['none', 'specific', 'answer'])) {
@@ -171,7 +171,7 @@ class PluginFormcreatorUpgradeTo2_6 {
                      CHANGE COLUMN `category_rule` `category_rule`
                      ENUM($enum_category_rule)
                      NOT NULL DEFAULT 'none'";
-            $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+            $DB->doQuery($query) or plugin_formcreator_upgrade_error($migration);
          }
       }
 
@@ -180,7 +180,7 @@ class PluginFormcreatorUpgradeTo2_6 {
       if (!$DB->fieldExists('glpi_plugin_formcreator_targetchanges', 'urgency_rule', false)) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
                   ADD `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none' AFTER `due_date_period`;";
-         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+         $DB->doQuery($query) or plugin_formcreator_upgrade_error($migration);
       } else {
          $current_enum_urgency_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'urgency_rule');
          if (count($current_enum_urgency_rule) != count(['none', 'specific', 'answer'])) {
@@ -188,7 +188,7 @@ class PluginFormcreatorUpgradeTo2_6 {
                      CHANGE COLUMN `urgency_rule` `urgency_rule`
                      ENUM($enum_urgency_rule)
                      NOT NULL DEFAULT 'none'";
-            $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+            $DB->doQuery($query) or plugin_formcreator_upgrade_error($migration);
          }
       }
       $migration->addField('glpi_plugin_formcreator_targetchanges', 'urgency_question', 'integer', ['after' => 'urgency_rule']);
@@ -197,7 +197,7 @@ class PluginFormcreatorUpgradeTo2_6 {
       if (!$DB->fieldExists('glpi_plugin_formcreator_targetchanges', 'category_rule', false)) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
                   ADD `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none' AFTER `tag_specifics`;";
-         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+         $DB->doQuery($query) or plugin_formcreator_upgrade_error($migration);
       } else {
          $current_enum_category_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'category_rule');
          if (count($current_enum_category_rule) != count(['none', 'specific', 'answer'])) {
@@ -205,7 +205,7 @@ class PluginFormcreatorUpgradeTo2_6 {
                      CHANGE COLUMN `category_rule` `category_rule`
                      ENUM($enum_category_rule)
                      NOT NULL DEFAULT 'none'";
-            $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+            $DB->doQuery($query) or plugin_formcreator_upgrade_error($migration);
          }
       }
       $migration->addField('glpi_plugin_formcreator_targetchanges', 'category_question', 'integer', ['after' => 'category_rule']);
