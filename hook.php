@@ -49,6 +49,11 @@ function plugin_formcreator_install() {
    // Use the unified Install class
    $install = new Install();
 
+   if (!$install->isPluginInstalled()) {
+      $migration->displayMessage("ERROR: Installation not allowed");
+      return false;
+   }
+
    $install->upgrade($migration);
 
    // Check if migration to GLPI 11 native forms is needed
