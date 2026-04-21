@@ -50,8 +50,8 @@ function plugin_formcreator_install() {
    $install = new Install();
 
    if (!$install->isPluginInstalled()) {
-      $migration->displayMessage("ERROR: Installation not allowed");
-      return false;
+      $migration->displayMessage("Installation canceled: No data to migrate.");
+      return true;
    }
 
    $install->upgrade($migration);
