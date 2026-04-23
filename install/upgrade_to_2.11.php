@@ -51,7 +51,7 @@ class PluginFormcreatorUpgradeTo2_11 {
       $migration->addPostQuery("UPDATE `$table` SET `width`='4' WHERE `width` < '1'");
       // Reorder questions from 0 instead of 1
       $migration->migrationOneTable($table);
-      $result = $DB->query("SELECT glpi_plugin_formcreator_sections.id FROM glpi_plugin_formcreator_sections
+      $result = $DB->doQuery("SELECT glpi_plugin_formcreator_sections.id FROM glpi_plugin_formcreator_sections
          INNER JOIN glpi_plugin_formcreator_questions ON (glpi_plugin_formcreator_sections.id = glpi_plugin_formcreator_questions.plugin_formcreator_sections_id)
          GROUP BY glpi_plugin_formcreator_sections.id
          HAVING MIN(glpi_plugin_formcreator_questions.`row`) > 0");
@@ -76,7 +76,7 @@ class PluginFormcreatorUpgradeTo2_11 {
       foreach ($DB->request($request) as $row) {
          $id = $row['id'];
          $uuid = plugin_formcreator_getUuid();
-         $DB->query("UPDATE `$table`
+         $DB->doQuery("UPDATE `$table`
             SET `uuid`='$uuid'
             WHERE `id`='$id'"
          ) or plugin_formcreator_upgrade_error($migration);
@@ -159,7 +159,7 @@ class PluginFormcreatorUpgradeTo2_11 {
 
       // Merge targettickets_actors and targetchanges_actors
       // Need a new table now
-      $DB->query("CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets_actors` (
+      $DB->doQuery("CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets_actors` (
          `id` int(11) NOT NULL AUTO_INCREMENT,
          `itemtype` varchar(255) DEFAULT NULL,
          `items_id` int(11) NOT NULL,
@@ -264,7 +264,7 @@ class PluginFormcreatorUpgradeTo2_11 {
       if (!$DB->tableExists($table)) {
          return;
       }
-      $DB->query(
+      $DB->doQuery(
       "INSERT INTO `glpi_plugin_formcreator_targets_actors`
          (`itemtype`, `items_id`, `actor_role`, `actor_type`, `actor_value`, `use_notification`, `uuid`)
          SELECT 'PluginFormcreatorTargetTicket', `plugin_formcreator_targettickets_id`, `actor_role`, `actor_type`, `actor_value`, `use_notification`, `uuid`
@@ -281,7 +281,7 @@ class PluginFormcreatorUpgradeTo2_11 {
          return;
       }
 
-      $DB->query(
+      $DB->doQuery(
          "INSERT INTO `glpi_plugin_formcreator_targets_actors`
             (`itemtype`, `items_id`, `actor_role`, `actor_type`, `actor_value`, `use_notification`, `uuid`)
             SELECT 'PluginFormcreatorTargetChange', `plugin_formcreator_targetchanges_id`, `actor_role`, `actor_type`, `actor_value`, `use_notification`, `uuid`

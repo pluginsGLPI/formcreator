@@ -487,7 +487,7 @@ class PluginFormcreatorUpgradeTo2_13 {
                'FROM' => $table,
             ]);
             $newId = (int) ($rows->current()['max_id'] + 1);
-            $DB->query("UPDATE `$table` SET `id`='$newId' WHERE `id` = 0");
+            $DB->doQuery("UPDATE `$table` SET `id`='$newId' WHERE `id` = 0");
          }
       }
       $this->migration->changeField($table, 'id', 'id', 'int ' . DBConnection::getDefaultPrimaryKeySignOption() . ' not null auto_increment');
@@ -557,7 +557,7 @@ class PluginFormcreatorUpgradeTo2_13 {
          if (!$DB->tableExists($table)) {
             continue;
          }
-         $DB->query("ALTER TABLE `$table` ROW_FORMAT = DYNAMIC");
+         $DB->doQuery("ALTER TABLE `$table` ROW_FORMAT = DYNAMIC");
       }
    }
 }

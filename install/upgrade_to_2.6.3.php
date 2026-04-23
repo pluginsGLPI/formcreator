@@ -41,7 +41,7 @@ class PluginFormcreatorUpgradeTo2_6_3 {
       // Change id of search option for status of form_answer
       $table = 'glpi_displaypreferences';
       $query = "UPDATE `$table` SET `num`='8' WHERE `itemtype`='PluginFormcreatorForm_Answer' AND `num`='1'";
-      $DB->query($query);
+      $DB->doQuery($query);
 
       // Remove abusive encding in sections
       $table = 'glpi_plugin_formcreator_sections';
@@ -51,7 +51,7 @@ class PluginFormcreatorUpgradeTo2_6_3 {
       foreach ($DB->request($request) as $row) {
          $name = Toolbox::addslashes_deep(html_entity_decode($row['name'], ENT_QUOTES|ENT_HTML5));
          $id = $row['id'];
-         $DB->query("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
+         $DB->doQuery("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
       }
 
       // Remove abusive encoding in targets
@@ -62,7 +62,7 @@ class PluginFormcreatorUpgradeTo2_6_3 {
       foreach ($DB->request($request) as $row) {
          $name = Toolbox::addslashes_deep(html_entity_decode($row['name'], ENT_QUOTES|ENT_HTML5));
          $id = $row['id'];
-         $DB->query("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
+         $DB->doQuery("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
       }
 
       // Remove abusive encoding in target tickets
@@ -73,7 +73,7 @@ class PluginFormcreatorUpgradeTo2_6_3 {
       foreach ($DB->request($request) as $row) {
          $name = Toolbox::addslashes_deep(html_entity_decode($row['name'], ENT_QUOTES|ENT_HTML5));
          $id = $row['id'];
-         $DB->query("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
+         $DB->doQuery("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
       }
 
       // Remove abusive encoding in target changes
@@ -84,7 +84,7 @@ class PluginFormcreatorUpgradeTo2_6_3 {
       foreach ($DB->request($request) as $row) {
          $name = Toolbox::addslashes_deep(html_entity_decode($row['name'], ENT_QUOTES|ENT_HTML5));
          $id = $row['id'];
-         $DB->query("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
+         $DB->doQuery("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
       }
    }
 

@@ -300,7 +300,7 @@ class PluginFormcreatorUpgradeTo2_9 {
       $migration->migrationOneTable($table);
 
       // Fix possible nulls (despite those lines are definetely broken not usable; maybe a form does not behaves properly showing / hiding a question)
-      $DB->query("UPDATE `$table` SET `show_field` = 0 WHERE `show_field` IS NULL");
+      $DB->doQuery("UPDATE `$table` SET `show_field` = 0 WHERE `show_field` IS NULL");
 
       $migration->changeField($table, 'show_field', 'plugin_formcreator_questions_id', 'integer', ['value' => '0', 'comment' => 'question to test for the condition']);
       $migration->dropKey($table, 'plugin_formcreator_questions_id');
