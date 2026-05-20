@@ -6,11 +6,11 @@
 # Translators:
 # Jacek Maciol <jmaciol@rabawyzna.pl>, 2021
 # netruner <netruner80@gmail.com>, 2021
-# Agnieszka Pacyga <papilota@gmail.com>, 2022
 # Norbert Błaszczyk, 2022
 # Daniel Wróblewski <dewuer@gmail.com>, 2022
-# Ryszard Jeziorski <ryszard.jeziorski@gmail.com>, 2022
 # Thierry Bugier <tbugier@teclib.com>, 2023
+# Ryszard Jeziorski <ryszard.jeziorski@gmail.com>, 2025
+# Agnieszka Pacyga <papilota@gmail.com>, 2025
 # 
 #, fuzzy
 msgid ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-13 14:56+0100\n"
 "PO-Revision-Date: 2021-08-30 07:22+0000\n"
-"Last-Translator: Thierry Bugier <tbugier@teclib.com>, 2023\n"
+"Last-Translator: Agnieszka Pacyga <papilota@gmail.com>, 2025\n"
 "Language-Team: Polish (Poland) (https://app.transifex.com/teclib/teams/28042/pl_PL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -378,18 +378,18 @@ msgstr "Ostrzeżenie: Wtyczka Tag jest wyłączona lub jej brak"
 #: inc/field/tagfield.class.php:197
 msgid "Tag"
 msgid_plural "Tags"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Tag"
+msgstr[1] "Tagi"
+msgstr[2] "Tagi"
+msgstr[3] "Tagi"
 
 #: inc/field/glpiselectfield.class.php:83 entrée standard:38
 msgid "GLPI object"
 msgid_plural "GLPI objects"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Obiekt GLPI"
+msgstr[1] "Obiekty GLPI"
+msgstr[2] "Obiekty GLPI"
+msgstr[3] "Obiekty GLPI"
 
 #: inc/field/glpiselectfield.class.php:100 inc/field/fieldsfield.class.php:512
 msgid "The field value is required:"
@@ -431,10 +431,10 @@ msgstr "Data i godzina"
 #: inc/field/actorfield.class.php:83
 msgid "Actor"
 msgid_plural "Actors"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Uczestnik"
+msgstr[1] "Uczestnicy"
+msgstr[2] "Uczestnicy"
+msgstr[3] "Uczestnicy"
 
 #: inc/field/actorfield.class.php:267
 #, php-format
@@ -652,10 +652,10 @@ msgstr "Import w trakcie"
 #: inc/issue.class.php:43
 msgid "Issue"
 msgid_plural "Issues"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Problem"
+msgstr[1] "Problemy"
+msgstr[2] "Problemy"
+msgstr[3] "Problemy"
 
 #: inc/issue.class.php:56
 msgid "Update issue data from tickets and form answers"
@@ -1099,10 +1099,10 @@ msgstr "Sprawdź kanały informacji"
 #: inc/formaccesstype.class.php:39 inc/formaccesstype.class.php:64
 msgid "Access type"
 msgid_plural "Access types"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Typ dostępu"
+msgstr[1] "Typy dostępu"
+msgstr[2] "Typów dostępu"
+msgstr[3] "Typy dostępu"
 
 #: inc/formaccesstype.class.php:79
 msgid "Link to the form"
@@ -1496,10 +1496,10 @@ msgstr "Wszystkie języki"
 #: inc/form.class.php:502 inc/form.class.php:572
 msgid "Target"
 msgid_plural "Targets"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Udostępnienie"
+msgstr[1] "Udostępnienia"
+msgstr[2] "Udostępnienia"
+msgstr[3] "Udostępnienia"
 
 #: inc/form.class.php:504
 msgid "Actions"
@@ -1716,10 +1716,10 @@ msgstr ""
 #: inc/targetchange.class.php:44 entrée standard:43
 msgid "Target change"
 msgid_plural "Target changes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Zmiana celu"
+msgstr[1] "Zmiany celu"
+msgstr[2] "Zmiany celu"
+msgstr[3] "Zmiany celu"
 
 #: inc/targetchange.class.php:344 entrée standard:48
 msgid "Change title"
@@ -2003,10 +2003,10 @@ msgstr[3] ""
 #: inc/targetticket.class.php:57 entrée standard:43
 msgid "Target ticket"
 msgid_plural "Target tickets"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Docelowe zgłoszenie"
+msgstr[1] "Docelowe zgłoszenia"
+msgstr[2] "Docelowe zgłoszenia"
+msgstr[3] "Docelowe zgłoszenia"
 
 #: inc/targetticket.class.php:100
 msgid "Specific asset"

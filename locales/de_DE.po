@@ -14,7 +14,7 @@
 # Michael Schieferer, 2023
 # Thierry Bugier <tbugier@teclib.com>, 2023
 # iDazai, 2023
-# Simon Heim, 2023
+# Simon, 2023
 # 
 #, fuzzy
 msgid ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-13 14:56+0100\n"
 "PO-Revision-Date: 2021-08-30 07:22+0000\n"
-"Last-Translator: Simon Heim, 2023\n"
+"Last-Translator: Simon, 2023\n"
 "Language-Team: German (Germany) (https://app.transifex.com/teclib/teams/28042/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

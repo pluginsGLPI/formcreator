@@ -5,8 +5,8 @@
 # 
 # Translators:
 # Daniel Bonet <canosis@gmail.com>, 2021
-# Nuria Costa <nuria.costa@uvic.cat>, 2023
 # Thierry Bugier <tbugier@teclib.com>, 2023
+# Nuria Costa <nuria.costa@uvic.cat>, 2025
 # 
 #, fuzzy
 msgid ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-13 14:56+0100\n"
 "PO-Revision-Date: 2021-08-30 07:22+0000\n"
-"Last-Translator: Thierry Bugier <tbugier@teclib.com>, 2023\n"
+"Last-Translator: Nuria Costa <nuria.costa@uvic.cat>, 2025\n"
 "Language-Team: Catalan (Spain) (https://app.transifex.com/teclib/teams/28042/ca_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -495,12 +495,12 @@ msgstr ""
 #: inc/field/checkboxesfield.class.php:236
 #, php-format
 msgid "The following question needs at least %d answers: %s"
-msgstr ""
+msgstr "Aquesta pregunta necessita com a mínim %d resposta: %s"
 
 #: inc/field/checkboxesfield.class.php:242
 #, php-format
 msgid "The following question does not accept more than %d answers: %s"
-msgstr ""
+msgstr "Aquesta pregunta no accepta més de %d respostes: %s"
 
 #: inc/field/checkboxesfield.class.php:270
 msgid "The default values are not in the list of available values."
@@ -714,19 +714,19 @@ msgstr "Grup que aprova la sol·licitud"
 
 #: inc/issue.class.php:817
 msgid "Ticket approver group"
-msgstr ""
+msgstr "Grup d'aprovadors del tiquet"
 
 #: inc/issue.class.php:857
 msgid "Ticket requester"
-msgstr ""
+msgstr "Sol·licitant del tiquet"
 
 #: inc/issue.class.php:904
 msgid "Ticket observer"
-msgstr ""
+msgstr "Observador del tiquet"
 
 #: inc/issue.class.php:952
 msgid "Ticket technician"
-msgstr ""
+msgstr "Tècnic del tiquet"
 
 #: inc/issue.class.php:1099
 #, php-format
@@ -799,7 +799,7 @@ msgstr "Sol·licitud eliminada"
 
 #: inc/notificationtargetformanswer.class.php:74
 msgid "Form ID"
-msgstr ""
+msgstr "ID del formulari"
 
 #: inc/notificationtargetformanswer.class.php:75
 #: inc/notificationtargetformanswer.class.php:95
@@ -819,7 +819,7 @@ msgstr "Totes les sol·licituds completes"
 
 #: inc/notificationtargetformanswer.class.php:80
 msgid "Validation comment"
-msgstr ""
+msgstr "Comentari de validació"
 
 #: inc/notificationtargetformanswer.class.php:81
 #: inc/notificationtargetformanswer.class.php:101
@@ -828,7 +828,7 @@ msgstr "Enllaç de validació"
 
 #: inc/notificationtargetformanswer.class.php:82
 msgid "Request ID"
-msgstr ""
+msgstr "ID de la sol·licitud"
 
 #: inc/notificationtargetformanswer.class.php:94
 msgid "Form #"
