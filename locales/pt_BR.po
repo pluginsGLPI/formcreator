@@ -18,7 +18,7 @@
 # Jean Vergaças <jvergacas@gmail.com>, 2022
 # Pedro de Oliveira Lira <pedrolira@live.com>, 2022
 # Eduardo Spinola <eduardo.spinola@gmail.com>, 2022
-# Pablo Pierri <pablo.terdulino@gmail.com>, 2023
+# Pablo Pierre <pablo.terdulino@gmail.com>, 2023
 # Matheus Rafael, 2023
 # Eduardo Scott <edu.scott01@gmail.com>, 2023
 # Thierry Bugier <tbugier@teclib.com>, 2023

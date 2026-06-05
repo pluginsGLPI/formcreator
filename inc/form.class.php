@@ -809,11 +809,11 @@ PluginFormcreatorTranslatableInterface
          }
          $formList[] = [
             'id'               => $form['id'],
-            'name'             => __($form['name'], $domain),
-            'icon'             => $form['icon'],
-            'icon_color'       => $form['icon_color'],
-            'background_color' => $form['background_color'],
-            'description'      => __($form['description'], $domain),
+            'name'             => htmlspecialchars(__($form['name'], $domain)),
+            'icon'             => htmlspecialchars($form['icon']),
+            'icon_color'       => htmlspecialchars($form['icon_color']),
+            'background_color' => htmlspecialchars($form['background_color']),
+            'description'      => htmlspecialchars(__($form['description'], $domain) ?? ''),
             'type'             => 'form',
             'usage_count'      => $form['usage_count'],
             'is_default'       => $form['is_default'] ? "true" : "false",
@@ -882,11 +882,11 @@ PluginFormcreatorTranslatableInterface
          foreach ($result_forms as $form) {
             $formList[] = [
                'id'               => $form['id'],
-               'name'             => $form['name'],
-               'icon'             => $form['icon'],
-               'icon_color'       => $form['icon_color'],
-               'background_color' => $form['background_color'],
-               'description'      => $form['description'],
+               'name'             => htmlspecialchars($form['name']),
+               'icon'             => htmlspecialchars($form['icon']),
+               'icon_color'       => htmlspecialchars($form['icon_color']),
+               'background_color' => htmlspecialchars($form['background_color']),
+               'description'      => htmlspecialchars($form['description'] ?? ''),
                'type'             => 'form',
                'usage_count'      => $form['usage_count'],
                'is_default'       => true,

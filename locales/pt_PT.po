@@ -7,7 +7,7 @@
 # Pedro Rocha <jpnr79@gmail.com>, 2021
 # Rui Melo <viper5000pt@gmail.com>, 2022
 # Thierry Bugier <tbugier@teclib.com>, 2023
-# Anxo Jueguen, 2024
+# Ángel Jueguen, 2024
 # Gonçalo Dumas, 2024
 # Pedro B., 2024
 # 
