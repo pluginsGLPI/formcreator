@@ -1180,7 +1180,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $rows = $itemTargetTicket->find([
          self::getForeignKeyField() => $this->getID(),
          [
-            'NOT' => ['itemtype' => [PluginFormcreatorTargetTicket::class, Ticket::class]],
+            'NOT' => ['itemtype' => [PluginFormcreatorTargetTicket::class, PluginFormcreatorQuestion::class, Ticket::class]],
          ],
       ]);
       foreach ($rows as $row) {
@@ -1251,7 +1251,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             $rows = $itemTargetTicket->find([
                self::getForeignKeyField() => $this->getID(),
                [
-                  'NOT' => ['itemtype' => [PluginFormcreatorTargetTicket::class, Ticket::class]],
+                  'NOT' => ['itemtype' => [PluginFormcreatorTargetTicket::class, PluginFormcreatorQuestion::class, Ticket::class]],
                ],
             ]);
             $data['items_id'] = [];
@@ -1551,6 +1551,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             $itemTargetTicket->deleteByCriteria([
                'NOT' => ['itemtype' => [
                   PluginFormcreatorTargetTicket::class,
+                  PluginFormcreatorQuestion::class,
                   Ticket::class,
                ]],
                self::getForeignKeyField() => $this->getID(),
