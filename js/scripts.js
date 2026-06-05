@@ -307,15 +307,6 @@ function showTiles(tiles, defaultForms) {
    //Display tiles
    $('#plugin_formcreator_wizard_forms').empty();
    $('#plugin_formcreator_wizard_forms').prepend(html);
-   $('#plugin_formcreator_formlist').masonry({
-      horizontalOrder: true,
-      gutter: 10
-   });
-   $('#plugin_formcreator_faqlist').masonry({
-      horizontalOrder: true,
-      gutter: 10
-   });
-
 
    $(".plugin_formcreator_formTile_description.tile_design_uniform_height").each(function( index ) {
       var length = 150;
@@ -1257,12 +1248,6 @@ var plugin_formcreator = new function() {
             var html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
             $('#plugin_formcreator_wizard_forms').empty();
             $('#plugin_formcreator_wizard_forms').prepend(html);
-            $('#plugin_formcreator_formlist').masonry({
-               horizontalOrder: true
-            });
-            $('#plugin_formcreator_faqlist').masonry({
-               horizontalOrder: true
-            });
          }
       );
    }
@@ -1281,12 +1266,6 @@ var plugin_formcreator = new function() {
             var html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
             $('#plugin_formcreator_wizard_forms').empty();
             $('#plugin_formcreator_wizard_forms').prepend(html);
-            $('#plugin_formcreator_formlist').masonry({
-               horizontalOrder: true
-            });
-            $('#plugin_formcreator_faqlist').masonry({
-               horizontalOrder: true
-            });
          }
       );
    }
