@@ -1,3 +1,10 @@
+
+## [UNRELEASE]
+
+### Bug Fixes
+
+* Display special chars 
+
 ## [2.13.10](https://github.com/pluginsGLPI/formcreator/compare/2.13.9...2.13.10) (2025-02-26)
 
 
