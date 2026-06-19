@@ -32,6 +32,7 @@
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -809,11 +810,11 @@ PluginFormcreatorTranslatableInterface
          }
          $formList[] = [
             'id'               => $form['id'],
-            'name'             => htmlspecialchars(__($form['name'], $domain)),
+            'name'             => htmlspecialchars(Sanitizer::unsanitize(__($form['name'], $domain))),
             'icon'             => htmlspecialchars($form['icon']),
             'icon_color'       => htmlspecialchars($form['icon_color']),
             'background_color' => htmlspecialchars($form['background_color']),
-            'description'      => htmlspecialchars(__($form['description'], $domain) ?? ''),
+            'description'      => htmlspecialchars(Sanitizer::unsanitize(__($form['description'], $domain) ?? '')),
             'type'             => 'form',
             'usage_count'      => $form['usage_count'],
             'is_default'       => $form['is_default'] ? "true" : "false",
