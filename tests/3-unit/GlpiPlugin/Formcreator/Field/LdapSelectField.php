@@ -150,29 +150,38 @@ class LdapSelectField extends CommonTestCase {
 
 
    public function providerRegex() {
+      $authLdap = new AuthLDAP();
+      $authLdap->add([]);
+
       yield 'value matches regex' => [
-         'value'    => 'foo',
-         'pattern'  => '/foo/',
-         'expected' => true,
+         'value'     => 'foo',
+         'pattern'   => '/foo/',
+         'expected'  => true,
+         'ldap_auth' => $authLdap->getID(),
       ];
       yield 'value does not match regex' => [
-         'value'    => 'foo',
-         'pattern'  => '/bar/',
-         'expected' => false,
+         'value'     => 'foo',
+         'pattern'   => '/bar/',
+         'expected'  => false,
+         'ldap_auth' => $authLdap->getID(),
       ];
       yield 'empty value does not match regex' => [
-         'value'    => '',
-         'pattern'  => '/foo/',
-         'expected' => false,
+         'value'     => '',
+         'pattern'   => '/foo/',
+         'expected'  => false,
+         'ldap_auth' => $authLdap->getID(),
       ];
    }
 
    /**
     * @dataProvider providerRegex
     */
-   public function testRegex($value, $pattern, $expected) {
+   public function testRegex($value, $pattern, $expected, $ldap_auth) {
       $instance = $this->newTestedInstance($this->getQuestion([
-         'fieldtype' => 'ldapselect',
+         'fieldtype'      => 'ldapselect',
+         'ldap_auth'      => $ldap_auth,
+         'ldap_filter'    => '',
+         'ldap_attribute' => '1',
       ]));
       $instance->deserializeValue($value);
       $output = $instance->regex($pattern);
