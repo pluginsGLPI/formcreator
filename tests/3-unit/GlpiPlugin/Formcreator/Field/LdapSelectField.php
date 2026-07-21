@@ -149,6 +149,36 @@ class LdapSelectField extends CommonTestCase {
    }
 
 
+   public function providerRegex() {
+      yield 'value matches regex' => [
+         'value'    => 'foo',
+         'pattern'  => '/foo/',
+         'expected' => true,
+      ];
+      yield 'value does not match regex' => [
+         'value'    => 'foo',
+         'pattern'  => '/bar/',
+         'expected' => false,
+      ];
+      yield 'empty value does not match regex' => [
+         'value'    => '',
+         'pattern'  => '/foo/',
+         'expected' => false,
+      ];
+   }
+
+   /**
+    * @dataProvider providerRegex
+    */
+   public function testRegex($value, $pattern, $expected) {
+      $instance = $this->newTestedInstance($this->getQuestion([
+         'fieldtype' => 'ldapselect',
+      ]));
+      $instance->deserializeValue($value);
+      $output = $instance->regex($pattern);
+      $this->boolean($output)->isEqualTo($expected);
+   }
+
    public function providerPrepareQuestionInputForSave() {
       $authLdap = new AuthLDAP();
       $authLdap->add([]);

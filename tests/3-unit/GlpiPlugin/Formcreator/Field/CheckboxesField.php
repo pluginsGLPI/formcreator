@@ -623,6 +623,21 @@ class CheckboxesField extends CommonAbstractFieldTestCase {
          'pattern'  => '/foo/',
          'expected' => false,
       ];
+      yield 'valid json string value does not throw and returns false' => [
+         'value'    => '"a string"',
+         'pattern'  => '/foo/',
+         'expected' => false,
+      ];
+      yield 'valid json numeric value does not throw and returns false' => [
+         'value'    => '42',
+         'pattern'  => '/foo/',
+         'expected' => false,
+      ];
+      yield 'valid json object value does not throw and returns false' => [
+         'value'    => '{"a":1}',
+         'pattern'  => '/foo/',
+         'expected' => false,
+      ];
    }
 
    /**
