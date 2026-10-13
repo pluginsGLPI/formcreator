@@ -54,7 +54,7 @@
                <tr>
                   <td>{{ row.id }}</td>
                   <td>{{ get_item_link('PluginFormcreatorFormAnswer', row.id) }}</a></td>
-                  <td>{{ row.form_name }}</td>
+                  <td>{{ row.form_name|verbatim_value }}</td>
                   <td>{{ row.requester_name }}</td>
                   <td>{{ row.request_date }}</td>
                </tr>
