@@ -1080,10 +1080,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
                      trigger_error(sprintf("Formanswer ID %s not found", $id), E_USER_WARNING);
                      break;
                   }
-                  try {
-                     $content = $formAnswer->parseTags($formAnswer->getFullForm());
-                  } catch (Exception $e) {
-                     $content = ''; // Exception when computing the tooltip
+                  $content = '';
+                  if ($formAnswer->canViewItem()) {
+                     try {
+                        $content = $formAnswer->parseTags($formAnswer->getFullForm());
+                     } catch (Exception $e) {
+                        $content = ''; // Exception when computing the tooltip
+                     }
                   }
                   break;
             }
@@ -1095,11 +1098,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
             }
 
             $key = 'id';
-            $tooltip = Html::showToolTip(RichText::getEnhancedHtml($content), [
-               'applyto'        => $itemtype.$data['raw'][$key],
-               'display'        => false,
-               'images_gallery' => false
-            ]);
+            $tooltip = '';
+            if ($content !== '') {
+               $tooltip = Html::showToolTip(RichText::getEnhancedHtml($content), [
+                  'applyto'        => $itemtype.$data['raw'][$key],
+                  'display'        => false,
+                  'images_gallery' => false
+               ]);
+            }
             return '<a id="' . $itemtype.$data['raw'][$key] . '" href="' . $link . '">'
                . sprintf(__('%1$s %2$s'), $name, $tooltip)
                . '</a>';
