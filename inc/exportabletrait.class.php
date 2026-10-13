@@ -55,9 +55,16 @@ trait PluginFormcreatorExportableTrait
          }
          $export[$key] = [];
          foreach ($itemtypes as $itemtype) {
-            $allSubItems = $DB->request($itemtype::getSQLCriteriaToSearchForItem($this->getType(), $this->getID()));
-            $list = [];
+            $criteria = $itemtype::getSQLCriteriaToSearchForItem($this->getType(), $this->getID());
+
+            // Add ORDER BY clause if the itemtype has an 'order' field
+            // This ensures sections and other ordered items are exported in the correct order
             $subItem = new $itemtype();
+            if ($subItem->isField('order')) {
+               $criteria['ORDER'] = ['order ASC'];
+            }
+            $allSubItems = $DB->request($criteria);
+            $list = [];
             foreach ($allSubItems as $row) {
                $subItem->getFromDB($row['id']);
                $list[] = $subItem->export($remove_uuid);
