@@ -221,7 +221,7 @@ class LdapselectField extends SelectField
    }
 
    public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
+      return preg_match($value, $this->value) ? true : false;
    }
 
    public function isPublicFormCompatible(): bool {

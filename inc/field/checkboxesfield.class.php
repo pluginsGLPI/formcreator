@@ -141,9 +141,10 @@ class CheckboxesField extends PluginFormcreatorAbstractField
    }
 
    public function deserializeValue($value) {
-      $this->value = ($value !== null && $value !== '')
+      $decoded = ($value !== null && $value !== '')
          ? json_decode($value)
          : [];
+      $this->value = is_array($decoded) ? $decoded : [];
    }
 
    public function getValueForDesign(): string {

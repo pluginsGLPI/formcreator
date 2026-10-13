@@ -602,6 +602,62 @@ class CheckboxesField extends CommonAbstractFieldTestCase {
       $this->boolean($output)->isTrue();
    }
 
+   public function providerRegex() {
+      yield 'valid json value matches regex' => [
+         'value'    => '["foo","bar"]',
+         'pattern'  => '/foo/',
+         'expected' => true,
+      ];
+      yield 'valid json value does not match regex' => [
+         'value'    => '["foo","bar"]',
+         'pattern'  => '/baz/',
+         'expected' => false,
+      ];
+      yield 'corrupted json value does not throw and returns false' => [
+         'value'    => 'not_valid_json',
+         'pattern'  => '/foo/',
+         'expected' => false,
+      ];
+      yield 'null-decoded json value does not throw and returns false' => [
+         'value'    => 'null',
+         'pattern'  => '/foo/',
+         'expected' => false,
+      ];
+      yield 'valid json string value does not throw and returns false' => [
+         'value'    => '"a string"',
+         'pattern'  => '/foo/',
+         'expected' => false,
+      ];
+      yield 'valid json numeric value does not throw and returns false' => [
+         'value'    => '42',
+         'pattern'  => '/foo/',
+         'expected' => false,
+      ];
+      yield 'valid json object value does not throw and returns false' => [
+         'value'    => '{"a":1}',
+         'pattern'  => '/foo/',
+         'expected' => false,
+      ];
+   }
+
+   /**
+    * @dataProvider providerRegex
+    */
+   public function testRegex($value, $pattern, $expected) {
+      $instance = $this->newTestedInstance($this->getQuestion([
+         'fieldtype' => 'checkboxes',
+         'values'    => implode('\r\n', ['foo', 'bar']),
+         '_parameters' => [
+            'checkboxes' => [
+               'range' => ['range_min' => '', 'range_max' => ''],
+            ],
+         ],
+      ]));
+      $instance->deserializeValue($value);
+      $output = $instance->regex($pattern);
+      $this->boolean($output)->isEqualTo($expected);
+   }
+
    public function providerGetValueForApi() {
       return [
          [
