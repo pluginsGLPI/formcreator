@@ -167,6 +167,23 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
 
+      if ($this->userIsTicketActor()) {
+         return true;
+      }
+
+
+      if ($this->userIsTicketValidator()) {
+         return true;
+      }
+
+      return false;
+   }
+
+   public function userIsTicketActor(): bool {
+      global $DB;
+
+      $currentUser = Session::getLoginUserID();
+
       // Check if the current user is a requester of a ticket linked to a form answer typed
       // Matches search option 42, 43 and 44 of PluginFormcreatorIssue (requester, watcher, assigned)
       $ticket_table = Ticket::getTable();
@@ -206,6 +223,52 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       return false;
+   }
+
+   public function userIsTicketValidator(): bool {
+      global $DB;
+
+      $currentUser = Session::getLoginUserID();
+
+      //  Check if the current user is a validator of a ticket linked to a form answer typed
+      $ticket_table = Ticket::getTable();
+      $ticketvalidation_table = TicketValidation::getTable();
+      $item_ticket_table = Item_Ticket::getTable();
+      $request = [
+         'SELECT' => [
+            TicketValidation::getTableField(User::getForeignKeyField() . '_validate'),
+            Ticket::getTableField('id'),
+         ],
+         'FROM' => $ticketvalidation_table,
+         'INNER JOIN' => [
+            $ticket_table => [
+               'FKEY' => [
+                  $ticket_table => 'id',
+                  $ticketvalidation_table => 'tickets_id',
+                  ['AND' => [
+                     TicketValidation::getTableField(User::getForeignKeyField() . '_validate') => $currentUser,
+                  ]],
+               ],
+            ],
+            $item_ticket_table => [
+               'FKEY' => [
+                  $item_ticket_table => 'tickets_id',
+                  $ticket_table => 'id',
+                  ['AND' => [
+                     Item_Ticket::getTableField('itemtype') => self::getType(),
+                     Item_Ticket::getTableField('items_id') => $this->getID(),
+                  ]],
+               ],
+            ],
+         ]
+      ];
+
+      if ($DB->request($request)->count() > 0) {
+         return true;
+      }
+
+      return false;
+
    }
 
    public static function canPurge() {
@@ -581,6 +644,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       if (!isset($ID) || !$this->getFromDB($ID)) {
          Html::displayNotFoundError();
       }
+
+      if ($this->canViewItem() && !$this->userIsTicketActor()) {
+         echo '<div class="alert alert-danger">' . __('You are not allowed to view this answer.') . '</div>';
+         return false;
+      }
+
       $options['canedit'] = false;
 
       // Print css media
